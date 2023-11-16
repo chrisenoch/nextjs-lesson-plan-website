@@ -17,6 +17,18 @@ const theme = createTheme({
       main: "#ec407a",
     },
   },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        html: {
+          height: "100%",
+        },
+        body: {
+          height: "100%",
+        },
+      },
+    },
+  },
   typography: {
     fontFamily: roboto.style.fontFamily,
   },

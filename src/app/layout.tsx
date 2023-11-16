@@ -58,14 +58,13 @@ export default function RootLayout({
             component="main"
             //originally: bgcolor: "background.default",
             sx={{
+              height: "100%",
+              minHeight: "100vh",
               flexGrow: 1,
               bgcolor: "grey.300",
-              mt: {
-                xs: "48px",
-                sm: "56px",
-                md: "64px",
-              },
-              p: 3,
+              px: 3,
+              pb: 3,
+              pt: 11,
             }}>
             {children}
           </Box>
