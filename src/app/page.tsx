@@ -13,10 +13,6 @@ export default function HomePage() {
   return (
     <Box sx={{ display: "flex" }}>
       <div>
-        <Alert severity="info" sx={{ mt: 2, mb: 5 }}>
-          <AlertTitle>Hello 👋</AlertTitle>
-          This app uses the Next.js App Router and Material UI v5.
-        </Alert>
         <Grid container rowSpacing={3} columnSpacing={3}>
           <Grid xs={6}>
             <MediaCard
