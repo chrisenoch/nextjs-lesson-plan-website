@@ -11,7 +11,7 @@ const theme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#7e57c2",
+      main: "#512da8",
     },
     secondary: {
       main: "#ec407a",
@@ -19,17 +19,6 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: roboto.style.fontFamily,
-  },
-  components: {
-    MuiAlert: {
-      styleOverrides: {
-        root: ({ ownerState }) => ({
-          ...(ownerState.severity === "info" && {
-            backgroundColor: "#60a5fa",
-          }),
-        }),
-      },
-    },
   },
 });
 
