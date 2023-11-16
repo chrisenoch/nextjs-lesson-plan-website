@@ -1,0 +1,90 @@
+   ▲ Next.js 14.0.2
+   - Local:        http://localhost:3000
+
+ ✓ Ready in 4.2s
+ ○ Compiling / ...
+ ✓ Compiled / in 2.1s (1806 modules)
+ ✓ Compiled in 347ms (935 modules)
+ ✓ Compiled in 279ms (935 modules)
+ ✓ Compiled in 372ms (1806 modules)
+ ✓ Compiled in 3.7s (2528 modules)
+ ⨯ src\components\ResponsiveAppBar.tsx (49:17) @ map
+ ⨯ TypeError: LINKS.map is not a function
+    at ResponsiveAppBar (./src/components/ResponsiveAppBar.tsx:86:41)
+    at stringify (<anonymous>)
+[0m [90m 47 |[39m         [33m<[39m[33mDivider[39m [33m/[39m[33m>[39m[0m
+[0m [90m 48 |[39m         [33m<[39m[33mList[39m[33m>[39m[0m
+[0m[31m[1m>[22m[39m[90m 49 |[39m           {[33mLINKS[39m[33m.[39mmap(({ text[33m,[39m href[33m,[39m icon[33m:[39m [33mIcon[39m }) [33m=>[39m ([0m
+[0m [90m    |[39m                 [31m[1m^[22m[39m[0m
+[0m [90m 50 |[39m             [33m<[39m[33mListItem[39m key[33m=[39m{href} disablePadding[33m>[39m[0m
+[0m [90m 51 |[39m               [33m<[39m[33mListItemButton[39m component[33m=[39m{[33mLink[39m} href[33m=[39m{href}[33m>[39m[0m
+[0m [90m 52 |[39m                 [33m<[39m[33mListItemIcon[39m[33m>[39m[0m
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⨯ src\components\ResponsiveAppBar.tsx (49:17) @ map
+ ⨯ TypeError: LINKS.map is not a function
+    at ResponsiveAppBar (./src/components/ResponsiveAppBar.tsx:86:41)
+    at stringify (<anonymous>)
+[0m [90m 47 |[39m         [33m<[39m[33mDivider[39m [33m/[39m[33m>[39m[0m
+[0m [90m 48 |[39m         [33m<[39m[33mList[39m[33m>[39m[0m
+[0m[31m[1m>[22m[39m[90m 49 |[39m           {[33mLINKS[39m[33m.[39mmap(({ text[33m,[39m href[33m,[39m icon[33m:[39m [33mIcon[39m }) [33m=>[39m ([0m
+[0m [90m    |[39m                 [31m[1m^[22m[39m[0m
+[0m [90m 50 |[39m             [33m<[39m[33mListItem[39m key[33m=[39m{href} disablePadding[33m>[39m[0m
+[0m [90m 51 |[39m               [33m<[39m[33mListItemButton[39m component[33m=[39m{[33mLink[39m} href[33m=[39m{href}[33m>[39m[0m
+[0m [90m 52 |[39m                 [33m<[39m[33mListItemIcon[39m[33m>[39m[0m
+Warning: Failed prop type: Invalid prop `children` supplied to `ThemeProvider`, expected a ReactNode.
+    at ThemeProvider (webpack-internal:///(ssr)/./node_modules/@mui/material/styles/ThemeProvider.js:26:18)
+    at ThemeRegistry (webpack-internal:///(ssr)/./src/components/ThemeRegistry/ThemeRegistry.tsx:19:26)
+    at Lazy
+    at body
+    at html
+    at RedirectErrorBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/redirect-boundary.js:71:9)
+    at RedirectBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/redirect-boundary.js:79:11)
+    at ReactDevOverlay (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/react-dev-overlay/internal/ReactDevOverlay.js:66:9)
+    at HotReload (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/react-dev-overlay/hot-reloader-client.js:296:11)
+    at Router (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/app-router.js:147:11)
+    at ErrorBoundaryHandler (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/error-boundary.js:99:9)
+    at ErrorBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/error-boundary.js:128:11)
+    at AppRouter (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/app-router.js:415:13)
+    at Lazy
+    at Lazy
+    at C:\IT\Javascript\React\NextJs\my-projects\nextjs-lesson-plan-website\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:379796
+    at C:\IT\Javascript\React\NextJs\my-projects\nextjs-lesson-plan-website\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:379796
+    at ServerInsertedHTMLProvider (C:\IT\Javascript\React\NextJs\my-projects\nextjs-lesson-plan-website\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:38:17279)
+Warning: Failed prop type: Invalid prop `children` supplied to `ThemeProvider`, expected a ReactNode.
+    at ThemeProvider (webpack-internal:///(ssr)/./node_modules/@mui/system/esm/ThemeProvider/ThemeProvider.js:58:13)
+    at ThemeProvider (webpack-internal:///(ssr)/./node_modules/@mui/material/styles/ThemeProvider.js:26:18)
+    at NextAppDirEmotionCacheProvider (webpack-internal:///(ssr)/./src/components/ThemeRegistry/EmotionCache.tsx:20:13)
+    at ThemeRegistry (webpack-internal:///(ssr)/./src/components/ThemeRegistry/ThemeRegistry.tsx:19:26)
+    at Lazy
+    at body
+    at html
+    at RedirectErrorBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/redirect-boundary.js:71:9)
+    at RedirectBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/redirect-boundary.js:79:11)
+    at ReactDevOverlay (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/react-dev-overlay/internal/ReactDevOverlay.js:66:9)
+    at HotReload (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/react-dev-overlay/hot-reloader-client.js:296:11)
+    at Router (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/app-router.js:147:11)
+    at ErrorBoundaryHandler (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/error-boundary.js:99:9)
+    at ErrorBoundary (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/error-boundary.js:128:11)
+    at AppRouter (webpack-internal:///(ssr)/./node_modules/next/dist/client/components/app-router.js:415:13)
+    at Lazy
+    at Lazy
+    at C:\IT\Javascript\React\NextJs\my-projects\nextjs-lesson-plan-website\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:379796
+    at C:\IT\Javascript\React\NextJs\my-projects\nextjs-lesson-plan-website\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:35:379796
+    at ServerInsertedHTMLProvider (C:\IT\Javascript\React\NextJs\my-projects\nextjs-lesson-plan-website\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:38:17279)
+ ⨯ src\components\ResponsiveAppBar.tsx (49:17) @ map
+ ⨯ TypeError: LINKS.map is not a function
+    at ResponsiveAppBar (./src/components/ResponsiveAppBar.tsx:86:41)
+    at stringify (<anonymous>)
+digest: "261495051"
+[0m [90m 47 |[39m         [33m<[39m[33mDivider[39m [33m/[39m[33m>[39m[0m
+[0m [90m 48 |[39m         [33m<[39m[33mList[39m[33m>[39m[0m
+[0m[31m[1m>[22m[39m[90m 49 |[39m           {[33mLINKS[39m[33m.[39mmap(({ text[33m,[39m href[33m,[39m icon[33m:[39m [33mIcon[39m }) [33m=>[39m ([0m
+[0m [90m    |[39m                 [31m[1m^[22m[39m[0m
+[0m [90m 50 |[39m             [33m<[39m[33mListItem[39m key[33m=[39m{href} disablePadding[33m>[39m[0m
+[0m [90m 51 |[39m               [33m<[39m[33mListItemButton[39m component[33m=[39m{[33mLink[39m} href[33m=[39m{href}[33m>[39m[0m
+[0m [90m 52 |[39m                 [33m<[39m[33mListItemIcon[39m[33m>[39m[0m
+ ○ Compiling /favicon.ico ...
+ ✓ Compiled /favicon.ico in 802ms (1321 modules)
+ ✓ Compiled in 373ms (1293 modules)
+ ✓ Compiled /favicon.ico in 151ms (1321 modules)
+ ✓ Compiled in 163ms (1321 modules)
