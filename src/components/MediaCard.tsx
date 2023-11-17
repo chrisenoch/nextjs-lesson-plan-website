@@ -12,9 +12,11 @@ import {
   Divider,
   Stack,
   Box,
+  Chip,
 } from "@mui/material";
 import { red } from "@mui/material/colors";
 import Circle from "@mui/icons-material/Circle";
+import Bookmark from "@mui/icons-material/Bookmark";
 
 export default function MediaCard({
   heading,
@@ -72,7 +74,33 @@ export default function MediaCard({
             A1
           </Typography>
         </Stack>
-        <Divider sx={{ borderBottomWidth: 1 }} />
+        <Divider sx={{ borderBottomWidth: 1, mb: 1 }} />
+        <Stack
+          direction="row"
+          spacing={0.5}
+          useFlexGap
+          flexWrap="wrap"
+          alignItems="center">
+          <Chip
+            size="small"
+            avatar={<Avatar>G</Avatar>}
+            label="First Conditional"
+          />
+          <Chip size="small" avatar={<Avatar>T</Avatar>} label="Speaking" />
+          <Chip size="small" avatar={<Avatar>V</Avatar>} label="Technology" />
+          <Chip size="small" avatar={<Avatar>M</Avatar>} label="Video" />
+          <Chip size="small" avatar={<Avatar>A</Avatar>} label="Role Play" />
+          {/* <Chip
+            size="small"
+            avatar={<Avatar>G</Avatar>}
+            label="First Conditional"
+          /> */}
+          {/* <Chip size="small" avatar={<Avatar>T</Avatar>} label="Speaking" />
+          <Chip size="small" avatar={<Avatar>V</Avatar>} label="Technology" />
+          <Chip size="small" avatar={<Avatar>A</Avatar>} label="Role Play" /> */}
+        </Stack>
+        <Divider sx={{ borderBottomWidth: 1, mt: 1 }} />
+
         <Typography variant="body2" sx={{ mt: 1 }} color="text.secondary">
           {text}
         </Typography>
@@ -82,6 +110,10 @@ export default function MediaCard({
           View
         </Button>
         <Button size="small">Share</Button>
+        <Bookmark
+          sx={{
+            ml: "auto",
+          }}></Bookmark>
       </CardActions>
     </Card>
   );
