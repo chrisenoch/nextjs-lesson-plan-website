@@ -17,6 +17,7 @@ import {
 import { red } from "@mui/material/colors";
 import Circle from "@mui/icons-material/Circle";
 import Bookmark from "@mui/icons-material/Bookmark";
+import Diamond from "@mui/icons-material/Diamond";
 
 export default function MediaCard({
   heading,
@@ -30,7 +31,10 @@ export default function MediaCard({
   alt: string;
 }) {
   return (
-    <Card>
+    <Card
+      sx={{
+        borderRadius: 4,
+      }}>
       <Image
         alt={alt}
         src={imageURL}
@@ -73,6 +77,16 @@ export default function MediaCard({
           <Typography variant="body2" component="div">
             A1
           </Typography>
+
+          <Circle
+            sx={{
+              fontSize: "4px",
+              verticalAlign: "middle",
+            }}
+          />
+          <IconButton aria-label="get premium">
+            <Diamond color="secondary" />
+          </IconButton>
         </Stack>
         <Divider sx={{ borderBottomWidth: 1, mb: 1 }} />
         <Stack
@@ -90,14 +104,6 @@ export default function MediaCard({
           <Chip size="small" avatar={<Avatar>V</Avatar>} label="Technology" />
           <Chip size="small" avatar={<Avatar>M</Avatar>} label="Video" />
           <Chip size="small" avatar={<Avatar>A</Avatar>} label="Role Play" />
-          {/* <Chip
-            size="small"
-            avatar={<Avatar>G</Avatar>}
-            label="First Conditional"
-          /> */}
-          {/* <Chip size="small" avatar={<Avatar>T</Avatar>} label="Speaking" />
-          <Chip size="small" avatar={<Avatar>V</Avatar>} label="Technology" />
-          <Chip size="small" avatar={<Avatar>A</Avatar>} label="Role Play" /> */}
         </Stack>
         <Divider sx={{ borderBottomWidth: 1, mt: 1 }} />
 
@@ -109,11 +115,17 @@ export default function MediaCard({
         <Button variant={"contained"} size="small">
           View
         </Button>
-        <Button size="small">Share</Button>
-        <Bookmark
+        <Button
+          variant={"outlined"}
+          size="small"
           sx={{
-            ml: "auto",
-          }}></Bookmark>
+            mr: "auto",
+          }}>
+          Share
+        </Button>
+        <IconButton aria-label="bookmark">
+          <Bookmark />
+        </IconButton>
       </CardActions>
     </Card>
   );

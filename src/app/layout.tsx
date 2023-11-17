@@ -64,7 +64,7 @@ export default function RootLayout({
               minHeight: "100vh",
 
               flexGrow: 1,
-              bgcolor: "grey.300",
+              bgcolor: "grey.100",
               px: 3,
               pb: 3,
               pt: 11,
