@@ -5,19 +5,33 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import {
+  CardHeader,
+  Avatar,
+  IconButton,
+  Divider,
+  Stack,
+  Box,
+} from "@mui/material";
+import { red } from "@mui/material/colors";
+import Circle from "@mui/icons-material/Circle";
 
 export default function MediaCard({
   heading,
   text,
+  imageURL,
+  alt,
 }: {
   heading: string;
   text: string;
+  imageURL: string;
+  alt: string;
 }) {
   return (
     <Card>
       <Image
-        alt="Random image"
-        src="https://source.unsplash.com/random"
+        alt={alt}
+        src={imageURL}
         width={640}
         height={480}
         style={{
@@ -27,18 +41,47 @@ export default function MediaCard({
         }}
       />
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
+        <Typography variant="h5" component="div">
           {heading}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Stack
+          direction="row"
+          spacing={2}
+          useFlexGap
+          flexWrap="wrap"
+          alignItems="center">
+          <Typography variant="overline" component="div">
+            90 mins
+          </Typography>
+          <Circle
+            sx={{
+              fontSize: "4px",
+              verticalAlign: "middle",
+            }}
+          />
+          <Typography variant="overline" component="div">
+            Prep 10 mins
+          </Typography>
+          <Circle
+            sx={{
+              fontSize: "4px",
+              verticalAlign: "middle",
+            }}
+          />
+          <Typography variant="body2" component="div">
+            A1
+          </Typography>
+        </Stack>
+        <Divider sx={{ borderBottomWidth: 1 }} />
+        <Typography variant="body2" sx={{ mt: 1 }} color="text.secondary">
           {text}
         </Typography>
       </CardContent>
       <CardActions>
         <Button variant={"contained"} size="small">
-          Share
+          View
         </Button>
-        <Button size="small">Learn More</Button>
+        <Button size="small">Share</Button>
       </CardActions>
     </Card>
   );

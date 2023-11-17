@@ -20,6 +20,7 @@ import SupportIcon from "@mui/icons-material/Support";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ThemeRegistry from "@/components/ThemeRegistry/ThemeRegistry";
 import ResponsiveAppBar from "@/components/ResponsiveAppBar";
+import { Container } from "@mui/material";
 
 export const metadata = {
   title: "Next.js App Router + Material UI v5",
@@ -58,8 +59,10 @@ export default function RootLayout({
             component="main"
             //originally: bgcolor: "background.default",
             sx={{
-              height: "100%",
+              //height: "100%",
+              height: "fit-content",
               minHeight: "100vh",
+
               flexGrow: 1,
               bgcolor: "grey.300",
               px: 3,

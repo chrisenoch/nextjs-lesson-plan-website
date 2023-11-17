@@ -14,6 +14,7 @@ import {
   IconButton,
   Box,
   Button,
+  Container,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import Link from "next/link";
@@ -35,7 +36,13 @@ export default function ResponsiveAppBar({
   return (
     <>
       <AppBar position="fixed" sx={{ zIndex: 2000 }}>
-        <Toolbar sx={{ backgroundColor: "primary.main" }}>
+        <Toolbar
+          sx={{
+            backgroundColor: "primary.main",
+            maxWidth: "1200px",
+            width: "100%",
+            margin: "0 auto",
+          }}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -48,7 +55,7 @@ export default function ResponsiveAppBar({
             variant="h6"
             component="div"
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}>
-            MUI App
+            Lesson Planz
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navItems.map((item) => (
