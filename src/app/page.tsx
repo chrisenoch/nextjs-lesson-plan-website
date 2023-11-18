@@ -9,11 +9,41 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import MediaCard from "@/components/MediaCard";
 import Hero from "@/components/Hero";
+import AutoCompleteMultiSelect from "@/components/AutoCompleteMultiSelect";
+import { Stack } from "@mui/material";
+import { Search } from "@mui/icons-material";
 
 export default function HomePage() {
   return (
     <>
       <Hero />
+      {/* <Box
+        sx={{
+          maxWidth: "900px",
+          mt: 10,
+          mb: 4,
+          mx: "auto",
+        }}> */}
+      <Stack
+        spacing={4}
+        sx={{
+          maxWidth: "900px",
+          mt: 10,
+          mb: 4,
+          mx: "auto",
+        }}>
+        <Typography
+          variant="h4"
+          component="h3"
+          borderBottom={4}
+          borderColor={"primary.light"}
+          alignSelf={"center"}>
+          Search lesson plans
+        </Typography>
+
+        <AutoCompleteMultiSelect />
+      </Stack>
+      {/* </Box> */}
       <Box
         sx={{
           // height: "100%",
