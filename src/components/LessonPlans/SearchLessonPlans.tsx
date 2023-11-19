@@ -1,7 +1,6 @@
 import { Stack, Typography } from "@mui/material";
-import AutoCompleteMultiSelect from "../AutoCompleteMultiSelect";
 
-export default function SearchLessonPlans() {
+export default function SearchLessonPlans({ children }) {
   return (
     <Stack
       spacing={4}
@@ -20,7 +19,7 @@ export default function SearchLessonPlans() {
         Search lesson plans
       </Typography>
 
-      <AutoCompleteMultiSelect />
+      {children}
     </Stack>
   );
 }

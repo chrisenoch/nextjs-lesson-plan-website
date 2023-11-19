@@ -4,50 +4,12 @@ import { Search } from "@mui/icons-material";
 import { Autocomplete, Chip, InputAdornment, TextField } from "@mui/material";
 import { useState } from "react";
 
-export default function AutoCompleteMultiSelect() {
-  // const [value, setValue] = useState<{ title: string; year: number }[]>([]);
-  const [selectedLessonPlanCategories, setSelectedLessonPlanCategories] =
-    useState<{ title: string; category: string }[]>([]);
-  console.log(selectedLessonPlanCategories);
-
-  //We get these from the server
-  //Depending on the value of the chip, we render those lesson plans
-  //1. render them in console
-  //2. Lift state up and handle from common parent
-  const lessonPlans = new Map([
-    [
-      "Speaking Class",
-      [{ title: "Driverless Cars" }, { title: "Shopping For Clothes" }],
-    ],
-    ["Technology", [{ title: "Driverless Cars" }]],
-    ["Second Conditional", [{ title: "Your Dream Holiday" }]],
-    [
-      "Video",
-      [{ title: "The Founding of Hollywood" }, { title: "Driverless Cars" }],
-    ],
-    ["Role Play", [{ title: "Shopping For Clothes" }]],
-    [
-      "B1",
-      [{ title: "Your Dream Holiday" }, { title: "Shopping For Clothes" }],
-    ],
-    ["B2", [{ title: "Driverless Cars" }]],
-    ["C1", [{ title: "The Founding of Hollywood" }]],
-  ]);
-
-  let lessonPlanItems;
-  const lessonPlansToRender = new Set();
-  selectedLessonPlanCategories.forEach((lessonPlanCategory) => {
-    lessonPlanItems = lessonPlans.get(lessonPlanCategory.title);
-    lessonPlanItems?.forEach((lessonPlanItem) => {
-      lessonPlansToRender.add(lessonPlanItem.title);
-    });
-  });
-  console.log("lesson plans to render");
-  console.log(lessonPlansToRender);
-
+export default function AutoCompleteMultiSelect({
+  selectedLessonPlanCategories,
+  updateSelectedLessonPlans,
+}) {
   return (
     <Autocomplete
-      //   open={true}
       clearOnBlur={false}
       autoHighlight={true}
       clearText="Clear all filters"
@@ -59,7 +21,7 @@ export default function AutoCompleteMultiSelect() {
       value={selectedLessonPlanCategories}
       onChange={(event, newValue) => {
         console.log(event);
-        setSelectedLessonPlanCategories([...newValue]);
+        updateSelectedLessonPlans([...newValue]);
       }}
       filterSelectedOptions
       getOptionLabel={(option) => option.title}
@@ -116,6 +78,16 @@ export default function AutoCompleteMultiSelect() {
   );
 }
 
+function sortOptionValues(
+  a: { title: string; category: string },
+  b: { title: string; category: string }
+) {
+  if (a.category.toLowerCase() === b.category.toLowerCase()) {
+    return a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1;
+  }
+  return a.category.toLowerCase() > b.category.toLowerCase() ? 1 : -1;
+}
+
 const optionValues = [
   { title: "Conversation Class", category: "Type" },
   { title: "Speaking Class", category: "Type" },
@@ -138,13 +110,3 @@ const optionValues = [
   { title: "C1", category: "Level" },
   { title: "C2", category: "Level" },
 ];
-
-function sortOptionValues(
-  a: { title: string; category: string },
-  b: { title: string; category: string }
-) {
-  if (a.category.toLowerCase() === b.category.toLowerCase()) {
-    return a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1;
-  }
-  return a.category.toLowerCase() > b.category.toLowerCase() ? 1 : -1;
-}
