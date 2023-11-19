@@ -18,6 +18,8 @@ import { red } from "@mui/material/colors";
 import Circle from "@mui/icons-material/Circle";
 import Bookmark from "@mui/icons-material/Bookmark";
 import Diamond from "@mui/icons-material/Diamond";
+import CustomChip from "./ColorFactory";
+import CustomChip2 from "./ColorFactory";
 
 export default function MediaCard({
   heading,
@@ -100,6 +102,28 @@ export default function MediaCard({
             avatar={<Avatar>G</Avatar>}
             label="First Conditional"
           />
+          <CustomChip
+            primary="#ec407a"
+            comp={Chip}
+            color="primary"
+            size="small"
+            avatar={<Avatar>T</Avatar>}
+            label="Speaking"
+          />
+          <CustomChip
+            primary="#1e88e5"
+            comp={Chip}
+            color="primary"
+            size="small"
+            avatar={<Avatar>T</Avatar>}
+            label="Speaking"
+          />
+          {/* <CustomChip
+            color="primary"
+            size="small"
+            avatar={<Avatar>T</Avatar>}
+            label="Speaking"
+          /> */}
           <Chip size="small" avatar={<Avatar>T</Avatar>} label="Speaking" />
           <Chip size="small" avatar={<Avatar>V</Avatar>} label="Technology" />
           <Chip size="small" avatar={<Avatar>M</Avatar>} label="Video" />
