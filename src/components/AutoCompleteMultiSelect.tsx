@@ -45,12 +45,6 @@ export default function AutoCompleteMultiSelect() {
   console.log("lesson plans to render");
   console.log(lessonPlansToRender);
 
-  //Later change title for id
-  //loop over selected lesson plan categories
-  //get array of lesson plans by using category key from the lessonPlans map
-  //store each title in a set
-  //render the final set
-
   return (
     <Autocomplete
       //   open={true}
@@ -66,12 +60,6 @@ export default function AutoCompleteMultiSelect() {
       onChange={(event, newValue) => {
         console.log(event);
         setSelectedLessonPlanCategories([...newValue]);
-      }}
-      onInputChange={(event, value, reason) => {
-        // console.log("onInputchange value");
-        // console.log(value);
-        // console.log(event);
-        // console.log(reason);
       }}
       filterSelectedOptions
       getOptionLabel={(option) => option.title}
@@ -98,7 +86,6 @@ export default function AutoCompleteMultiSelect() {
           label="Find your lesson plan"
           sx={{
             "& .MuiInputBase-root": {
-              // border: "2px solid lightgreen",
               borderRadius: "32px",
 
               "&:hover .MuiOutlinedInput-notchedOutline": {
@@ -129,8 +116,6 @@ export default function AutoCompleteMultiSelect() {
   );
 }
 
-//Later, related tags, e.g. if search for movies films should show.
-//if search for travel holidays should show
 const optionValues = [
   { title: "Conversation Class", category: "Type" },
   { title: "Speaking Class", category: "Type" },
