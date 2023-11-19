@@ -6,25 +6,50 @@ import { useState } from "react";
 
 export default function AutoCompleteMultiSelect() {
   // const [value, setValue] = useState<{ title: string; year: number }[]>([]);
-  const [value, setValue] = useState<{ title: string; category: string }[]>([]);
-  console.log(value);
+  const [selectedLessonPlanCategories, setSelectedLessonPlanCategories] =
+    useState<{ title: string; category: string }[]>([]);
+  console.log(selectedLessonPlanCategories);
 
+  //We get these from the server
   //Depending on the value of the chip, we render those lesson plans
   //1. render them in console
   //2. Lift state up and handle from common parent
   const lessonPlans = new Map([
     [
-      "speaking",
+      "Speaking Class",
       [{ title: "Driverless Cars" }, { title: "Shopping For Clothes" }],
     ],
-    ["technology", [{ title: "Driverless Cars" }]],
-    ["second conditional", [{ title: "Your Dream Holiday" }]],
+    ["Technology", [{ title: "Driverless Cars" }]],
+    ["Second Conditional", [{ title: "Your Dream Holiday" }]],
     [
-      "video",
+      "Video",
       [{ title: "The Founding of Hollywood" }, { title: "Driverless Cars" }],
     ],
-    ["role play", [{ title: "Shopping For Clothes" }]],
+    ["Role Play", [{ title: "Shopping For Clothes" }]],
+    [
+      "B1",
+      [{ title: "Your Dream Holiday" }, { title: "Shopping For Clothes" }],
+    ],
+    ["B2", [{ title: "Driverless Cars" }]],
+    ["C1", [{ title: "The Founding of Hollywood" }]],
   ]);
+
+  let lessonPlanItems;
+  const lessonPlansToRender = new Set();
+  selectedLessonPlanCategories.forEach((lessonPlanCategory) => {
+    lessonPlanItems = lessonPlans.get(lessonPlanCategory.title);
+    lessonPlanItems?.forEach((lessonPlanItem) => {
+      lessonPlansToRender.add(lessonPlanItem.title);
+    });
+  });
+  console.log("lesson plans to render");
+  console.log(lessonPlansToRender);
+
+  //Later change title for id
+  //loop over selected lesson plan categories
+  //get array of lesson plans by using category key from the lessonPlans map
+  //store each title in a set
+  //render the final set
 
   return (
     <Autocomplete
@@ -37,10 +62,10 @@ export default function AutoCompleteMultiSelect() {
       id="tags-outlined"
       options={optionValues.sort()}
       groupBy={(option) => option.category.toString()}
-      value={value}
+      value={selectedLessonPlanCategories}
       onChange={(event, newValue) => {
         console.log(event);
-        setValue([...newValue]);
+        setSelectedLessonPlanCategories([...newValue]);
       }}
       onInputChange={(event, value, reason) => {
         // console.log("onInputchange value");
@@ -119,7 +144,12 @@ const optionValues = [
   { title: "Clothes / Fashion", category: "Vocabulary" },
   { title: "Travel / Holidays", category: "Vocabulary" },
   { title: "Films / Movies", category: "Vocabulary" },
-  { title: "Video", category: "Media" },
+  { title: "Video", category: "Activity" },
   { title: "Role Play", category: "Activity" },
-  { title: "Debate", category: "Activity" },
+  { title: "A1", category: "Level" },
+  { title: "A2", category: "Level" },
+  { title: "B1", category: "Level" },
+  { title: "B2", category: "Level" },
+  { title: "C1", category: "Level" },
+  { title: "C2", category: "Level" },
 ];
