@@ -18,18 +18,29 @@ import { red } from "@mui/material/colors";
 import Circle from "@mui/icons-material/Circle";
 import Bookmark from "@mui/icons-material/Bookmark";
 import Diamond from "@mui/icons-material/Diamond";
+import { LessonPlanType } from "../models/types/lessonPlanType";
 
 export default function MediaCard({
   heading,
   text,
   imageURL,
   alt,
+  chips,
 }: {
   heading: string;
   text: string;
   imageURL: string;
   alt: string;
+  chips: { title: string; category: LessonPlanType }[];
 }) {
+  const lessonChips = chips.map((lessonChip) => (
+    <Chip
+      size="small"
+      avatar={<Avatar>{lessonChip.category}</Avatar>}
+      label={lessonChip.title}
+    />
+  ));
+
   return (
     <Card
       sx={{
@@ -95,15 +106,7 @@ export default function MediaCard({
           useFlexGap
           flexWrap="wrap"
           alignItems="center">
-          <Chip
-            size="small"
-            avatar={<Avatar>G</Avatar>}
-            label="Second Conditional"
-          />
-          <Chip size="small" avatar={<Avatar>T</Avatar>} label="Speaking" />
-          <Chip size="small" avatar={<Avatar>V</Avatar>} label="Technology" />
-          <Chip size="small" avatar={<Avatar>M</Avatar>} label="Video" />
-          <Chip size="small" avatar={<Avatar>A</Avatar>} label="Role Play" />
+          {lessonChips}
         </Stack>
         <Divider sx={{ borderBottomWidth: 1, mt: 1 }} />
 

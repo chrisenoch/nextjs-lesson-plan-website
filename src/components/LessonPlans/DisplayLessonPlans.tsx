@@ -9,6 +9,7 @@ export default function DisplayLessonplans({ lessonPlanItems }) {
         imageURL={lessonPlanItem.imageURL}
         alt={lessonPlanItem.imageAlt}
         text={lessonPlanItem.description}
+        chips={lessonPlanItem.chips}
       />
     </Grid>
   ));

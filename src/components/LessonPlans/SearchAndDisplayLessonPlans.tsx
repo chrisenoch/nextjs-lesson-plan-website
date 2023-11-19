@@ -29,6 +29,8 @@ export default function SearchAndDisplayLessonPlans() {
     ["C1", [{ title: "The Founding of Hollywood" }]],
   ]);
 
+  //get this from the server
+  //Sort chips into the correct order server-side
   const lessonPlansByTitleToDisplay = [
     {
       heading: "Driverless Cars",
@@ -39,6 +41,12 @@ export default function SearchAndDisplayLessonPlans() {
       imageURL:
         "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
       imageAlt: "A man driving a car",
+      chips: [
+        { title: "Speaking Class", category: "T" },
+        { title: "Technology", category: "V" },
+        { title: "Video", category: "A" },
+        { title: "B2", category: "L" },
+      ],
     },
     {
       heading: "The Founding of Hollywood",
@@ -48,6 +56,10 @@ export default function SearchAndDisplayLessonPlans() {
       imageURL:
         "https://raw.githubusercontent.com/chrisenoch/assets/main/hollywood2.jpg",
       imageAlt: "Hollywood",
+      chips: [
+        { title: "Video", category: "A" },
+        { title: "C1", category: "L" },
+      ],
     },
     {
       heading: "Your Dream Holiday",
@@ -57,6 +69,10 @@ export default function SearchAndDisplayLessonPlans() {
       imageURL:
         "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
       imageAlt: "A beach with palm trees",
+      chips: [
+        { title: "Second Conditional", category: "G" },
+        { title: "B1", category: "L" },
+      ],
     },
     {
       heading: "Shopping For Clothes",
@@ -66,6 +82,11 @@ export default function SearchAndDisplayLessonPlans() {
       imageURL:
         "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
       imageAlt: "A woman with shopping bags full of clothes",
+      chips: [
+        { title: "Speaking Class", category: "T" },
+        { title: "Role Play", category: "A" },
+        { title: "B1", category: "L" },
+      ],
     },
   ];
 
