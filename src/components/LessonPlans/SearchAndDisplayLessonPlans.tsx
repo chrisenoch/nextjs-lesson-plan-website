@@ -4,11 +4,22 @@ import { useMemo, useState } from "react";
 import DisplayLessonPlans from "./DisplayLessonPlans";
 import SearchLessonPlans from "./SearchLessonPlans";
 import AutoCompleteMultiSelect from "../AutoCompleteMultiSelect";
-import { Button } from "@mui/material";
 
 export default function SearchAndDisplayLessonPlans() {
+  /***************************************** */
+  // Design Decision
+
+  // We use two arrays (lessonPlansByCategory and lessonPlansByTitle) for performance reasons. Using lessonPlansbyCategory allows the user
+  // to filter lesson plans in O(1) time instead of O(N) time.
+  // This is important because if we have 2000 lesson plans, filtering them would be expensive with O(N) time.
+
+  // We can prepare and sort lessonsPlanByCategory and lessonPlansByTitle on the server and then use NextJS ISR and stale-while-revalidate to ensure
+  // that the search filtering is as fast as possible for the user.
+
+  /***************************************** */
+
   //We get these from the server
-  //Depending on the value of the chip, we render the corresponding lesson plans
+  //Depending on the value of the chip in the search field, we render the corresponding lesson plans
   const lessonPlansByCategory = new Map([
     [
       "Speaking Class",
@@ -29,7 +40,7 @@ export default function SearchAndDisplayLessonPlans() {
     ["C1", [{ title: "The Founding of Hollywood" }]],
   ]);
 
-  //get this from the server
+  //Get this from the server
   //Sort chips into the correct order server-side
   const lessonPlansByTitle = [
     {
@@ -93,6 +104,7 @@ export default function SearchAndDisplayLessonPlans() {
   const [selectedLessonPlanCategories, setSelectedLessonPlanCategories] =
     useState<{ title: string; category: string }[]>([]);
 
+  //using useMemo as warned in MUI docs: https://mui.com/material-ui/react-autocomplete/#controlled-states
   const optionValues = useMemo(
     () => [
       { title: "Conversation Class", category: "Type" },
@@ -119,25 +131,13 @@ export default function SearchAndDisplayLessonPlans() {
     []
   );
 
-  console.log(selectedLessonPlanCategories);
-
   //decide which lesson plans to render - extract to function
-  let lessonPlanItems;
-  const lessonPlansToRender = new Set();
-  selectedLessonPlanCategories.forEach((lessonPlanCategory) => {
-    lessonPlanItems = lessonPlansByCategory.get(lessonPlanCategory.title);
-    lessonPlanItems?.forEach((lessonPlanItem) => {
-      lessonPlansToRender.add(lessonPlanItem.title);
-    });
-  });
-  console.log("lesson plans to render");
-  console.log(lessonPlansToRender);
 
-  const lessonPlansToDisplay = lessonPlansByTitle.filter((lessonPlan) =>
-    lessonPlansToRender.has(lessonPlan.heading)
+  let lessonPlansToDisplay = filterLessonPlansIfFilter(
+    selectedLessonPlanCategories,
+    lessonPlansByTitle,
+    lessonPlansByCategory
   );
-  console.log("final lesson plans below");
-  console.log(lessonPlansToDisplay);
 
   function updateSelectedLessonPlans(value) {
     setSelectedLessonPlanCategories(value);
@@ -156,4 +156,44 @@ export default function SearchAndDisplayLessonPlans() {
       <DisplayLessonPlans lessonPlanItems={lessonPlansToDisplay} />
     </>
   );
+}
+
+function filterLessonPlansIfFilter(
+  selectedLessonPlanCategories: { title: string; category: string }[],
+  lessonPlansByTitle: {
+    heading: string;
+    description: string;
+    imageURL: string;
+    imageAlt: string;
+    chips: { title: string; category: string }[];
+  }[],
+  lessonPlansByCategory: Map<string, { title: string }[]>
+) {
+  let lessonPlansToDisplay;
+  if (selectedLessonPlanCategories.length < 1) {
+    lessonPlansToDisplay = lessonPlansByTitle;
+  } else {
+    const filteredLessonPlans = filterLessonPlans(
+      selectedLessonPlanCategories,
+      lessonPlansByCategory
+    );
+    lessonPlansToDisplay = lessonPlansByTitle.filter((lessonPlan) =>
+      filteredLessonPlans.has(lessonPlan.heading)
+    );
+  }
+  return lessonPlansToDisplay;
+}
+
+function filterLessonPlans(
+  selectedLessonPlanCategories: { title: string; category: string }[],
+  lessonPlansByCategory: Map<string, { title: string }[]>
+) {
+  const lessonPlansToRender = new Set();
+  selectedLessonPlanCategories.forEach((lessonPlanCategory) => {
+    const lessonPlanItems = lessonPlansByCategory.get(lessonPlanCategory.title);
+    lessonPlanItems?.forEach((lessonPlanItem) => {
+      lessonPlansToRender.add(lessonPlanItem.title);
+    });
+  });
+  return lessonPlansToRender;
 }
