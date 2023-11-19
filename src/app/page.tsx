@@ -7,7 +7,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import MediaCard from "@/components/MediaCard";
+import MediaCard from "@/components/LessonPlans/LessonPlanCard";
 import Hero from "@/components/Hero";
 import AutoCompleteMultiSelect from "@/components/AutoCompleteMultiSelect";
 import { Stack } from "@mui/material";

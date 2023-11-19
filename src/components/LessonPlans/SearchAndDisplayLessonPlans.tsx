@@ -9,7 +9,7 @@ import { Button } from "@mui/material";
 export default function SearchAndDisplayLessonPlans() {
   //We get these from the server
   //Depending on the value of the chip, we render the corresponding lesson plans
-  const lessonPlans = new Map([
+  const lessonPlansByCategoryToFilter = new Map([
     [
       "Speaking Class",
       [{ title: "Driverless Cars" }, { title: "Shopping For Clothes" }],
@@ -29,7 +29,46 @@ export default function SearchAndDisplayLessonPlans() {
     ["C1", [{ title: "The Founding of Hollywood" }]],
   ]);
 
-  //Need the value so can inform Display lesson plans
+  const lessonPlansByTitleToDisplay = [
+    {
+      heading: "Driverless Cars",
+      description:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia animi laudantium debitis rerum aperiam itaque quis vero tempore nemo tempora id et," +
+        "voluptas deserunt reprehenderit repellat ullam, dolor neque reiciendis.",
+
+      imageURL:
+        "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
+      imageAlt: "A man driving a car",
+    },
+    {
+      heading: "The Founding of Hollywood",
+      description:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia animi laudantium debitis rerum aperiam itaque quis vero tempore nemo tempora id et," +
+        "voluptas deserunt reprehenderit repellat ullam, dolor neque reiciendis.",
+      imageURL:
+        "https://raw.githubusercontent.com/chrisenoch/assets/main/hollywood2.jpg",
+      imageAlt: "Hollywood",
+    },
+    {
+      heading: "Your Dream Holiday",
+      description:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia animi laudantium debitis rerum aperiam itaque quis vero tempore nemo tempora id et," +
+        "voluptas deserunt reprehenderit repellat ullam, dolor neque reiciendis.",
+      imageURL:
+        "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
+      imageAlt: "A beach with palm trees",
+    },
+    {
+      heading: "Shopping For Clothes",
+      description:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia animi laudantium debitis rerum aperiam itaque quis vero tempore nemo tempora id et," +
+        "voluptas deserunt reprehenderit repellat ullam, dolor neque reiciendis.",
+      imageURL:
+        "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
+      imageAlt: "A woman with shopping bags full of clothes",
+    },
+  ];
+
   const [selectedLessonPlanCategories, setSelectedLessonPlanCategories] =
     useState<{ title: string; category: string }[]>([]);
 
@@ -65,7 +104,9 @@ export default function SearchAndDisplayLessonPlans() {
   let lessonPlanItems;
   const lessonPlansToRender = new Set();
   selectedLessonPlanCategories.forEach((lessonPlanCategory) => {
-    lessonPlanItems = lessonPlans.get(lessonPlanCategory.title);
+    lessonPlanItems = lessonPlansByCategoryToFilter.get(
+      lessonPlanCategory.title
+    );
     lessonPlanItems?.forEach((lessonPlanItem) => {
       lessonPlansToRender.add(lessonPlanItem.title);
     });
@@ -87,7 +128,7 @@ export default function SearchAndDisplayLessonPlans() {
           updateSelectedLessonPlans={updateSelectedLessonPlans}
         />
       </SearchLessonPlans>
-      <DisplayLessonPlans />
+      <DisplayLessonPlans lessonPlanItems={lessonPlansByTitleToDisplay} />
     </>
   );
 }
