@@ -60,7 +60,7 @@ export default function AutoCompleteMultiSelect() {
       disableCloseOnSelect={true}
       multiple
       id="tags-outlined"
-      options={optionValues.sort()}
+      options={optionValues.sort(sortOptionValues)}
       groupBy={(option) => option.category.toString()}
       value={selectedLessonPlanCategories}
       onChange={(event, newValue) => {
@@ -153,3 +153,13 @@ const optionValues = [
   { title: "C1", category: "Level" },
   { title: "C2", category: "Level" },
 ];
+
+function sortOptionValues(
+  a: { title: string; category: string },
+  b: { title: string; category: string }
+) {
+  if (a.category.toLowerCase() === b.category.toLowerCase()) {
+    return a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1;
+  }
+  return a.category.toLowerCase() > b.category.toLowerCase() ? 1 : -1;
+}
