@@ -98,7 +98,7 @@ export default function MediaCard({
           <Chip
             size="small"
             avatar={<Avatar>G</Avatar>}
-            label="First Conditional"
+            label="Second Conditional"
           />
           <Chip size="small" avatar={<Avatar>T</Avatar>} label="Speaking" />
           <Chip size="small" avatar={<Avatar>V</Avatar>} label="Technology" />
