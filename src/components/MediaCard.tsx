@@ -112,10 +112,14 @@ export default function MediaCard({
         </Typography>
       </CardContent>
       <CardActions>
-        <Button variant={"contained"} size="small">
+        <Button
+          onClick={() => console.log("hello from View")}
+          variant={"contained"}
+          size="small">
           View
         </Button>
         <Button
+          onClick={() => console.log("hello from Share")}
           variant={"outlined"}
           size="small"
           sx={{

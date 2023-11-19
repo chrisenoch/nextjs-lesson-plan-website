@@ -2,12 +2,20 @@
 
 import { Search } from "@mui/icons-material";
 import { Autocomplete, Chip, InputAdornment, TextField } from "@mui/material";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 export default function AutoCompleteMultiSelect({
   selectedLessonPlanCategories,
   updateSelectedLessonPlans,
+  optionValues,
 }) {
+  console.log("re-render Auto..");
+
+  const selectedValues = useMemo(() => {
+    console.log("in useMemo");
+
+    return selectedLessonPlanCategories;
+  }, [selectedLessonPlanCategories]);
   return (
     <Autocomplete
       clearOnBlur={false}
@@ -18,7 +26,7 @@ export default function AutoCompleteMultiSelect({
       id="tags-outlined"
       options={optionValues.sort(sortOptionValues)}
       groupBy={(option) => option.category.toString()}
-      value={selectedLessonPlanCategories}
+      value={selectedValues}
       onChange={(event, newValue) => {
         console.log(event);
         updateSelectedLessonPlans([...newValue]);
@@ -87,26 +95,3 @@ function sortOptionValues(
   }
   return a.category.toLowerCase() > b.category.toLowerCase() ? 1 : -1;
 }
-
-const optionValues = [
-  { title: "Conversation Class", category: "Type" },
-  { title: "Speaking Class", category: "Type" },
-  { title: "Listening Class", category: "Type" },
-  { title: "Reading Class", category: "Type" },
-  { title: "Writing Class", category: "Type" },
-  { title: "Grammar Class", category: "Type" },
-  { title: "First Conditional", category: "Grammar" },
-  { title: "Second Conditional", category: "Grammar" },
-  { title: "Technology", category: "Vocabulary" },
-  { title: "Clothes / Fashion", category: "Vocabulary" },
-  { title: "Travel / Holidays", category: "Vocabulary" },
-  { title: "Films / Movies", category: "Vocabulary" },
-  { title: "Video", category: "Activity" },
-  { title: "Role Play", category: "Activity" },
-  { title: "A1", category: "Level" },
-  { title: "A2", category: "Level" },
-  { title: "B1", category: "Level" },
-  { title: "B2", category: "Level" },
-  { title: "C1", category: "Level" },
-  { title: "C2", category: "Level" },
-];
