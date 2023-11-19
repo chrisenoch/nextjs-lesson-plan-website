@@ -35,6 +35,7 @@ export default function MediaCard({
 }) {
   const lessonChips = chips.map((lessonChip) => (
     <Chip
+      key={lessonChip.title}
       size="small"
       avatar={<Avatar>{lessonChip.category}</Avatar>}
       label={lessonChip.title}

@@ -9,7 +9,7 @@ import { Button } from "@mui/material";
 export default function SearchAndDisplayLessonPlans() {
   //We get these from the server
   //Depending on the value of the chip, we render the corresponding lesson plans
-  const lessonPlansByCategoryToFilter = new Map([
+  const lessonPlansByCategory = new Map([
     [
       "Speaking Class",
       [{ title: "Driverless Cars" }, { title: "Shopping For Clothes" }],
@@ -31,7 +31,7 @@ export default function SearchAndDisplayLessonPlans() {
 
   //get this from the server
   //Sort chips into the correct order server-side
-  const lessonPlansByTitleToDisplay = [
+  const lessonPlansByTitle = [
     {
       heading: "Driverless Cars",
       description:
@@ -125,15 +125,19 @@ export default function SearchAndDisplayLessonPlans() {
   let lessonPlanItems;
   const lessonPlansToRender = new Set();
   selectedLessonPlanCategories.forEach((lessonPlanCategory) => {
-    lessonPlanItems = lessonPlansByCategoryToFilter.get(
-      lessonPlanCategory.title
-    );
+    lessonPlanItems = lessonPlansByCategory.get(lessonPlanCategory.title);
     lessonPlanItems?.forEach((lessonPlanItem) => {
       lessonPlansToRender.add(lessonPlanItem.title);
     });
   });
   console.log("lesson plans to render");
   console.log(lessonPlansToRender);
+
+  const lessonPlansToDisplay = lessonPlansByTitle.filter((lessonPlan) =>
+    lessonPlansToRender.has(lessonPlan.heading)
+  );
+  console.log("final lesson plans below");
+  console.log(lessonPlansToDisplay);
 
   function updateSelectedLessonPlans(value) {
     setSelectedLessonPlanCategories(value);
@@ -149,7 +153,7 @@ export default function SearchAndDisplayLessonPlans() {
           updateSelectedLessonPlans={updateSelectedLessonPlans}
         />
       </SearchLessonPlans>
-      <DisplayLessonPlans lessonPlanItems={lessonPlansByTitleToDisplay} />
+      <DisplayLessonPlans lessonPlanItems={lessonPlansToDisplay} />
     </>
   );
 }

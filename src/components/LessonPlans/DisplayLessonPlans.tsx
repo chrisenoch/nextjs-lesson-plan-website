@@ -3,7 +3,7 @@ import MediaCard from "./LessonPlanCard";
 
 export default function DisplayLessonplans({ lessonPlanItems }) {
   const lessonPlansToDisplay = lessonPlanItems.map((lessonPlanItem) => (
-    <Grid item xs={4}>
+    <Grid item xs={4} key={lessonPlanItem.heading}>
       <MediaCard
         heading={lessonPlanItem.heading}
         imageURL={lessonPlanItem.imageURL}
