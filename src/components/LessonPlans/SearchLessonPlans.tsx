@@ -1,6 +1,11 @@
 import { Stack, Typography } from "@mui/material";
+import { ReactNode } from "react";
 
-export default function SearchLessonPlans({ children }) {
+export default function SearchLessonPlans({
+  children,
+}: {
+  children: ReactNode;
+}) {
   return (
     <Stack
       spacing={4}

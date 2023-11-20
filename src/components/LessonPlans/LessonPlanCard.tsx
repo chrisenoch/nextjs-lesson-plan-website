@@ -18,20 +18,23 @@ import { red } from "@mui/material/colors";
 import Circle from "@mui/icons-material/Circle";
 import Bookmark from "@mui/icons-material/Bookmark";
 import Diamond from "@mui/icons-material/Diamond";
-import { LessonPlanType } from "../models/types/lessonPlanType";
+import { LessonPlanType } from "../models/types/LessonPlanCategoryShort";
 
-export default function MediaCard({
-  heading,
-  text,
+export default function LessonPlanCard({
+  title,
+  description,
   imageURL,
-  alt,
+  imageAlt,
   chips,
 }: {
-  heading: string;
-  text: string;
+  title: string;
+  description: string;
   imageURL: string;
-  alt: string;
-  chips: { title: string; category: LessonPlanType }[];
+  imageAlt: string;
+  chips: {
+    title: string;
+    category: LessonPlanType;
+  }[];
 }) {
   const lessonChips = chips.map((lessonChip) => (
     <Chip
@@ -48,7 +51,7 @@ export default function MediaCard({
         borderRadius: 4,
       }}>
       <Image
-        alt={alt}
+        alt={imageAlt}
         src={imageURL}
         width={640}
         height={480}
@@ -60,7 +63,7 @@ export default function MediaCard({
       />
       <CardContent>
         <Typography variant="h5" component="div">
-          {heading}
+          {title}
         </Typography>
         <Stack
           direction="row"
@@ -112,7 +115,7 @@ export default function MediaCard({
         <Divider sx={{ borderBottomWidth: 1, mt: 1 }} />
 
         <Typography variant="body2" sx={{ mt: 1 }} color="text.secondary">
-          {text}
+          {description}
         </Typography>
       </CardContent>
       <CardActions>

@@ -1,15 +1,21 @@
 import { Box, Grid } from "@mui/material";
-import MediaCard from "./LessonPlanCard";
+import LessonPlanCard from "./LessonPlanCard";
+import { LessonPlanType } from "../models/types/LessonPlanCategoryShort";
+import { LessonPlan } from "../models/types/LessonPlan";
 
-export default function DisplayLessonplans({ lessonPlanItems }) {
-  const lessonPlansToDisplay = lessonPlanItems.map((lessonPlanItem) => (
-    <Grid item xs={4} key={lessonPlanItem.heading}>
-      <MediaCard
-        heading={lessonPlanItem.heading}
-        imageURL={lessonPlanItem.imageURL}
-        alt={lessonPlanItem.imageAlt}
-        text={lessonPlanItem.description}
-        chips={lessonPlanItem.chips}
+export default function DisplayLessonplans({
+  lessonPlans,
+}: {
+  lessonPlans: LessonPlan[];
+}) {
+  const lessonPlansToDisplay = lessonPlans.map((lessonPlan) => (
+    <Grid item xs={4} key={lessonPlan.title}>
+      <LessonPlanCard
+        title={lessonPlan.title}
+        imageURL={lessonPlan.imageURL}
+        imageAlt={lessonPlan.imageAlt}
+        description={lessonPlan.description}
+        chips={lessonPlan.chips}
       />
     </Grid>
   ));

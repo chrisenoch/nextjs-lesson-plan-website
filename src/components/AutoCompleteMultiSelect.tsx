@@ -3,14 +3,29 @@
 import { Search } from "@mui/icons-material";
 import { Autocomplete, Chip, InputAdornment, TextField } from "@mui/material";
 import { useMemo, useState } from "react";
+import { LessonPlanType } from "./models/types/LessonPlanCategoryShort";
+import { LessonPlanCategory } from "./models/types/LessonPlanCategory";
 
 export default function AutoCompleteMultiSelect({
   selectedLessonPlanCategories,
   updateSelectedLessonPlans,
   optionValues,
+}: {
+  selectedLessonPlanCategories: {
+    title: string;
+    category: LessonPlanCategory;
+  }[];
+  updateSelectedLessonPlans: (
+    value: {
+      title: string;
+      category: LessonPlanCategory;
+    }[]
+  ) => void;
+  optionValues: {
+    title: string;
+    category: LessonPlanCategory;
+  }[];
 }) {
-  console.log("re-render Auto..");
-
   const selectedValues = useMemo(() => {
     console.log("in useMemo");
 

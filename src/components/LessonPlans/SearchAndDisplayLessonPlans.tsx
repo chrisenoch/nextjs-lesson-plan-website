@@ -4,23 +4,32 @@ import { useMemo, useState } from "react";
 import DisplayLessonPlans from "./DisplayLessonPlans";
 import SearchLessonPlans from "./SearchLessonPlans";
 import AutoCompleteMultiSelect from "../AutoCompleteMultiSelect";
+import { LessonPlanType } from "../models/types/LessonPlanCategoryShort";
+import { LessonPlan } from "../models/types/LessonPlan";
+import { LessonPlanCategory } from "../models/types/LessonPlanCategory";
+import { LessonPlanSubCategory } from "../models/types/LessonPlanSubcategory";
 
 export default function SearchAndDisplayLessonPlans() {
   /***************************************** */
   // Design Decision
 
-  // We use two arrays (lessonPlansByCategory and lessonPlansByTitle) for performance reasons. Using lessonPlansbyCategory allows the user
+  // We use two arrays (lessonPlanTitlesBySubCategory and lessonPlans) for performance reasons. Using lessonPlanTitlesBySubCategory allows the user
   // to filter lesson plans in O(1) time instead of O(N) time.
   // This is important because if we have 2000 lesson plans, filtering them would be expensive with O(N) time.
 
-  // We can prepare and sort lessonsPlanByCategory and lessonPlansByTitle on the server and then use NextJS ISR and stale-while-revalidate to ensure
+  // We can prepare and sort lessonPlanTitlesBySubCategory and lessonPlans on the server and then use NextJS ISR and stale-while-revalidate to ensure
   // that the search filtering is as fast as possible for the user.
 
   /***************************************** */
 
   //We get these from the server
   //Depending on the value of the chip in the search field, we render the corresponding lesson plans
-  const lessonPlansByCategory = new Map([
+  const lessonPlanTitlesBySubCategory: Map<
+    LessonPlanSubCategory,
+    {
+      title: string;
+    }[]
+  > = new Map([
     [
       "Speaking Class",
       [{ title: "Driverless Cars" }, { title: "Shopping For Clothes" }],
@@ -42,9 +51,9 @@ export default function SearchAndDisplayLessonPlans() {
 
   //Get this from the server
   //Sort chips into the correct order server-side
-  const lessonPlansByTitle = [
+  const lessonPlans: LessonPlan[] = [
     {
-      heading: "Driverless Cars",
+      title: "Driverless Cars",
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia animi laudantium debitis rerum aperiam itaque quis vero tempore nemo tempora id et," +
         "voluptas deserunt reprehenderit repellat ullam, dolor neque reiciendis.",
@@ -60,7 +69,7 @@ export default function SearchAndDisplayLessonPlans() {
       ],
     },
     {
-      heading: "The Founding of Hollywood",
+      title: "The Founding of Hollywood",
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia animi laudantium debitis rerum aperiam itaque quis vero tempore nemo tempora id et," +
         "voluptas deserunt reprehenderit repellat ullam, dolor neque reiciendis.",
@@ -73,7 +82,7 @@ export default function SearchAndDisplayLessonPlans() {
       ],
     },
     {
-      heading: "Your Dream Holiday",
+      title: "Your Dream Holiday",
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia animi laudantium debitis rerum aperiam itaque quis vero tempore nemo tempora id et," +
         "voluptas deserunt reprehenderit repellat ullam, dolor neque reiciendis.",
@@ -86,7 +95,7 @@ export default function SearchAndDisplayLessonPlans() {
       ],
     },
     {
-      heading: "Shopping For Clothes",
+      title: "Shopping For Clothes",
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia animi laudantium debitis rerum aperiam itaque quis vero tempore nemo tempora id et," +
         "voluptas deserunt reprehenderit repellat ullam, dolor neque reiciendis.",
@@ -102,10 +111,13 @@ export default function SearchAndDisplayLessonPlans() {
   ];
 
   const [selectedLessonPlanCategories, setSelectedLessonPlanCategories] =
-    useState<{ title: string; category: string }[]>([]);
+    useState<{ title: string; category: LessonPlanCategory }[]>([]);
 
   //using useMemo as warned in MUI docs: https://mui.com/material-ui/react-autocomplete/#controlled-states
-  const optionValues = useMemo(
+  const multiSelectOptionValues: {
+    title: LessonPlanSubCategory;
+    category: LessonPlanCategory;
+  }[] = useMemo(
     () => [
       { title: "Conversation Class", category: "Type" },
       { title: "Speaking Class", category: "Type" },
@@ -131,15 +143,17 @@ export default function SearchAndDisplayLessonPlans() {
     []
   );
 
-  //decide which lesson plans to render - extract to function
-
-  let lessonPlansToDisplay = filterLessonPlansIfFilter(
+  const lessonPlansToDisplay = filterLessonPlansIfFilter(
     selectedLessonPlanCategories,
-    lessonPlansByTitle,
-    lessonPlansByCategory
+    lessonPlans,
+    lessonPlanTitlesBySubCategory
   );
 
-  function updateSelectedLessonPlans(value) {
+  function updateSelectedLessonPlans(
+    value: { title: string; category: LessonPlanCategory }[]
+  ) {
+    console.log("updateSelectedLessonPlans value");
+    console.log(value);
     setSelectedLessonPlanCategories(value);
   }
 
@@ -148,37 +162,40 @@ export default function SearchAndDisplayLessonPlans() {
       <SearchLessonPlans>
         {/* Avoiding prop drilling via SearchLessonPlans by using children */}
         <AutoCompleteMultiSelect
-          optionValues={optionValues}
+          optionValues={multiSelectOptionValues}
           selectedLessonPlanCategories={selectedLessonPlanCategories}
           updateSelectedLessonPlans={updateSelectedLessonPlans}
         />
       </SearchLessonPlans>
-      <DisplayLessonPlans lessonPlanItems={lessonPlansToDisplay} />
+      <DisplayLessonPlans lessonPlans={lessonPlansToDisplay} />
     </>
   );
 }
 
 function filterLessonPlansIfFilter(
-  selectedLessonPlanCategories: { title: string; category: string }[],
-  lessonPlansByTitle: {
-    heading: string;
+  selectedLessonPlanCategories: {
+    title: string;
+    category: LessonPlanCategory;
+  }[],
+  lessonPlans: {
+    title: string;
     description: string;
     imageURL: string;
     imageAlt: string;
-    chips: { title: string; category: string }[];
+    chips: { title: string; category: LessonPlanType }[];
   }[],
-  lessonPlansByCategory: Map<string, { title: string }[]>
+  lessonPlanTitlesBySubCategory: Map<LessonPlanSubCategory, { title: string }[]>
 ) {
   let lessonPlansToDisplay;
   if (selectedLessonPlanCategories.length < 1) {
-    lessonPlansToDisplay = lessonPlansByTitle;
+    lessonPlansToDisplay = lessonPlans;
   } else {
     const filteredLessonPlans = filterLessonPlans(
       selectedLessonPlanCategories,
-      lessonPlansByCategory
+      lessonPlanTitlesBySubCategory
     );
-    lessonPlansToDisplay = lessonPlansByTitle.filter((lessonPlan) =>
-      filteredLessonPlans.has(lessonPlan.heading)
+    lessonPlansToDisplay = lessonPlans.filter((lessonPlan) =>
+      filteredLessonPlans.has(lessonPlan.title)
     );
   }
   return lessonPlansToDisplay;
