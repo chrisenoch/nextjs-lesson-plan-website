@@ -3,10 +3,18 @@
 import { useEffect, useState } from "react";
 
 export default function useIntersectionObserver(
-  rootMargin: string = "0px 0px -90% 0px",
-  targetElementIdentifier: string
+  targetElementIdentifier: string,
+  //"0px 0px -90% 0px"
+  rootMargins: { mt: string; mr: string; mb: string; ml: string } = {
+    mt: "0px",
+    mr: "0px",
+    mb: "-80%",
+    ml: "0px",
+  }
 ) {
-  const [isInterSecting, setIsIntersecting] = useState(false);
+  const [isIntersecting, setIsIntersecting] = useState(false);
+
+  const rootMargin = Object.values(rootMargins).join(" ");
 
   useEffect(() => {
     let options = {
@@ -41,7 +49,7 @@ export default function useIntersectionObserver(
     };
   }, []);
 
-  return isInterSecting;
+  return isIntersecting;
 }
 
 //initIntersect("0px 0px -90% 0px");

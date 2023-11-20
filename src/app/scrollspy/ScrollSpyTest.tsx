@@ -4,8 +4,16 @@ import useIntersectionObserver from "@/customHooks/useIntersectionObserver";
 import { Box, Stack, Typography } from "@mui/material";
 
 export default function ScrolLSpyTest() {
-  const isInterSecting = useIntersectionObserver("0px 0px -80% 0px", "#bop");
-  console.log("isIntersecting: " + isInterSecting);
+  const isBazzIntersecting = useIntersectionObserver("#bazz");
+  const isBopIntersecting = useIntersectionObserver("#bop", {
+    mt: "0px",
+    mr: "0px",
+    mb: "-50%",
+    ml: "0px",
+  });
+
+  console.log("isBopIntersecting: " + isBopIntersecting);
+  console.log("isBazzIntersecting: " + isBopIntersecting);
 
   return (
     <Stack alignItems={"center"}>
@@ -20,12 +28,16 @@ export default function ScrolLSpyTest() {
           Hello from ScrollSpyTest
         </Typography>
       </Box>
-      <Box mb={100} bgcolor={"success.light"}>
+      <Box
+        mb={100}
+        bgcolor={!isBazzIntersecting ? "success.light" : "warning.main"}>
         <Typography id="bazz" gutterBottom variant="h2" component="h2">
           Hello from ScrollSpyTest
         </Typography>
       </Box>
-      <Box mb={100} bgcolor={!isInterSecting ? "info.light" : "primary.main"}>
+      <Box
+        mb={100}
+        bgcolor={!isBopIntersecting ? "info.light" : "primary.main"}>
         <Typography id="bop" gutterBottom variant="h2" component="h2">
           Hello from ScrollSpyTest
         </Typography>
