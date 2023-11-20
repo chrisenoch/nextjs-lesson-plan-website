@@ -1,13 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import DisplayLessonPlans from "./DisplayLessonPlans";
 import SearchLessonPlans from "./SearchLessonPlans";
 import AutoCompleteMultiSelect from "../AutoCompleteMultiSelect";
 import { LessonPlanType } from "../models/types/LessonPlanCategoryShort";
 import { LessonPlan } from "../models/types/LessonPlan";
 import { LessonPlanCategory } from "../models/types/LessonPlanCategory";
-import { LessonPlanSubCategory } from "../models/types/LessonPlanSubcategory";
+import { LessonPlanSubCategory } from "../models/types/LessonPlanSubCategory";
 
 export default function SearchAndDisplayLessonPlans() {
   /***************************************** */
@@ -149,13 +149,14 @@ export default function SearchAndDisplayLessonPlans() {
     lessonPlanTitlesBySubCategory
   );
 
-  function updateSelectedLessonPlans(
-    value: { title: string; category: LessonPlanCategory }[]
-  ) {
-    console.log("updateSelectedLessonPlans value");
-    console.log(value);
-    setSelectedLessonPlanCategories(value);
-  }
+  //value: { title: string; category: LessonPlanCategory }[]
+
+  const updateSelectedLessonPlans = useCallback(
+    (value: { title: string; category: LessonPlanCategory }[]) => {
+      setSelectedLessonPlanCategories(value);
+    },
+    []
+  );
 
   return (
     <>

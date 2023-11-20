@@ -2,11 +2,11 @@
 
 import { Search } from "@mui/icons-material";
 import { Autocomplete, Chip, InputAdornment, TextField } from "@mui/material";
-import { useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { LessonPlanType } from "./models/types/LessonPlanCategoryShort";
 import { LessonPlanCategory } from "./models/types/LessonPlanCategory";
 
-export default function AutoCompleteMultiSelect({
+const AutoCompleteMultiSelect = memo(function AutoCompleteMultiSelect({
   selectedLessonPlanCategories,
   updateSelectedLessonPlans,
   optionValues,
@@ -99,7 +99,7 @@ export default function AutoCompleteMultiSelect({
       )}
     />
   );
-}
+});
 
 function sortOptionValues(
   a: { title: string; category: string },
@@ -110,3 +110,5 @@ function sortOptionValues(
   }
   return a.category.toLowerCase() > b.category.toLowerCase() ? 1 : -1;
 }
+
+export default AutoCompleteMultiSelect;
