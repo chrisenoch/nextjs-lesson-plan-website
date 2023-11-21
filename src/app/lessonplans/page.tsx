@@ -1,3 +1,7 @@
+//To DO: remove this and pass down props to client component
+"use client";
+
+import useIntersectionObserver from "@/customHooks/useIntersectionObserver";
 import {
   Grid,
   Container,
@@ -9,9 +13,21 @@ import {
   ListItemText,
   Stack,
 } from "@mui/material";
-import StarIcon from "@mui/icons-material/Star";
 
 export default function LessonPlansPage() {
+  const isSummaryIntersecting = useIntersectionObserver("#summary");
+  const isWarmerIntersecting = useIntersectionObserver("#warmer");
+  const isTeachVocabIntersecting = useIntersectionObserver("#teach-vocabulary");
+  const isVocabExercisesIntersecting = useIntersectionObserver(
+    "#vocabulary-exercise"
+  );
+  const isSpeakingPhrasesIntersecting = useIntersectionObserver(
+    "#teach-speaking-phrases"
+  );
+  const isRolePlayIntersecting = useIntersectionObserver("#role-play");
+  const isFeedbackIntersecting = useIntersectionObserver("#feedback");
+  const isPlenaryIntersecting = useIntersectionObserver("#plenary");
+
   return (
     <Stack
       direction="row"
@@ -25,50 +41,20 @@ export default function LessonPlansPage() {
             sx={{
               width: "100%",
               maxWidth: 360,
-              // bgcolor: "background.paper",
+              bgcolor: "background.paper",
               position: "fixed",
             }}
-            aria-label="contacts">
+            aria-label="summary">
             <ListItem disablePadding>
               <ListItemButton>
                 {/* <ListItemIcon>
                   <StarIcon />
                 </ListItemIcon> */}
-                <ListItemText primary="Summary" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemText primary="Warmer" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemText primary="Teach Vocabulary" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemText primary="Vocabulary Exercise" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemText primary="Teach Speaking Phrases" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemText primary="Role Play" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton>
                 <ListItemText
-                  primary="Feedback"
+                  primary="Summary"
                   sx={{
                     "& .MuiListItemText-primary": {
-                      fontWeight: "medium",
+                      fontWeight: isSummaryIntersecting ? "bold" : "normal",
                       color: "primary.main",
                     },
                   }}
@@ -77,12 +63,104 @@ export default function LessonPlansPage() {
             </ListItem>
             <ListItem disablePadding>
               <ListItemButton>
-                <ListItemText primary="Plenary" />
+                <ListItemText
+                  primary="Warmer"
+                  sx={{
+                    "& .MuiListItemText-primary": {
+                      fontWeight: isWarmerIntersecting ? "bold" : "normal",
+                      color: "primary.main",
+                    },
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemText
+                  primary="Teach Vocabulary"
+                  sx={{
+                    "& .MuiListItemText-primary": {
+                      fontWeight: isTeachVocabIntersecting ? "bold" : "normal",
+                      color: "primary.main",
+                    },
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemText
+                  primary="Vocabulary Exercise"
+                  sx={{
+                    "& .MuiListItemText-primary": {
+                      fontWeight: isVocabExercisesIntersecting
+                        ? "bold"
+                        : "normal",
+                      color: isVocabExercisesIntersecting
+                        ? "secondary.main"
+                        : "primary.main",
+                    },
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemText
+                  primary="Teach Speaking Phrases"
+                  sx={{
+                    "& .MuiListItemText-primary": {
+                      fontWeight: isSpeakingPhrasesIntersecting
+                        ? "bold"
+                        : "normal",
+                      color: "primary.main",
+                    },
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemText
+                  primary="Role Play"
+                  sx={{
+                    "& .MuiListItemText-primary": {
+                      fontWeight: isRolePlayIntersecting ? "bold" : "normal",
+                      color: "primary.main",
+                    },
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemText
+                  primary="Feedback"
+                  sx={{
+                    "& .MuiListItemText-primary": {
+                      fontWeight: isFeedbackIntersecting ? "bold" : "normal",
+                      color: "primary.main",
+                    },
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemText
+                  primary="Plenary"
+                  sx={{
+                    "& .MuiListItemText-primary": {
+                      fontWeight: isPlenaryIntersecting ? "bold" : "normal",
+                      color: "primary.main",
+                    },
+                  }}
+                />
               </ListItemButton>
             </ListItem>
           </List>
         </Grid>
-        <Grid item xs={8}>
+        <Grid item xs={8} bgcolor={"background.paper"} marginTop={4}>
           <Typography
             gutterBottom
             variant="h2"
