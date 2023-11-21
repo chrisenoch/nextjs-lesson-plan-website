@@ -45,9 +45,6 @@ export default function useIntersectionObserver(
       });
 
       if (activeIntersectors.length > 1) {
-        console.log("******* printing active interceptors");
-        activeIntersectors.forEach((ele) => console.log(ele.id));
-
         const activeIntersector = activeIntersectors.pop(); //only set the last one to active
         setIntersectingStatus(activeIntersector!.id);
       } else if (activeIntersectors.length === 1) {

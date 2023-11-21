@@ -1,6 +1,7 @@
 //To DO: remove this and pass down props to client component
 "use client";
 
+import FloatingId from "@/components/FloatingId";
 import useScrollSpy from "@/customHooks/useScrollSpy";
 import {
   Grid,
@@ -15,16 +16,18 @@ import {
 } from "@mui/material";
 
 export default function LessonPlansPage() {
-  const activeIntersection = useScrollSpy([
-    "summary",
-    "warmer",
-    "teach-vocabulary",
-    "vocabulary-exercise",
-    "teach-speaking-phrases",
-    "role-play",
-    "feedback",
-    "plenary",
-  ]);
+  // let activeIntersection = useScrollSpy([
+  //   "summary",
+  //   "warmer",
+  //   "teach-vocabulary",
+  //   "vocabulary-exercise",
+  //   "teach-speaking-phrases",
+  //   "role-play",
+  //   "feedback",
+  //   "plenary",
+  // ]);
+
+  let activeIntersection: string = "aaassss";
 
   console.log("activeIntersection ");
   console.log(activeIntersection);
@@ -49,7 +52,7 @@ export default function LessonPlansPage() {
             }}
             aria-label="summary">
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton component="a" href="#summary-floating">
                 {/* <ListItemIcon>
                   <StarIcon />
                 </ListItemIcon> */}
@@ -66,7 +69,7 @@ export default function LessonPlansPage() {
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton component="a" href="#warmer-floating">
                 <ListItemText
                   primary="Warmer"
                   sx={{
@@ -80,7 +83,7 @@ export default function LessonPlansPage() {
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton component="a" href="#teach-vocabulary-floating">
                 <ListItemText
                   primary="Teach Vocabulary"
                   sx={{
@@ -96,7 +99,9 @@ export default function LessonPlansPage() {
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton
+                component="a"
+                href="#vocabulary-exercise-floating">
                 <ListItemText
                   primary="Vocabulary Exercise"
                   sx={{
@@ -115,7 +120,9 @@ export default function LessonPlansPage() {
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton
+                component="a"
+                href="#teach-speaking-phrases-floating">
                 <ListItemText
                   primary="Teach Speaking Phrases"
                   sx={{
@@ -131,7 +138,7 @@ export default function LessonPlansPage() {
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton component="a" href="#role-play-floating">
                 <ListItemText
                   primary="Role Play"
                   sx={{
@@ -145,7 +152,7 @@ export default function LessonPlansPage() {
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton component="a" href="#feedback-floating">
                 <ListItemText
                   primary="Feedback"
                   sx={{
@@ -159,7 +166,10 @@ export default function LessonPlansPage() {
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton
+                component="a"
+                href="#plenary"
+                onClick={() => (activeIntersection = "plenary-floating")}>
                 <ListItemText
                   primary="Plenary"
                   sx={{
@@ -182,8 +192,14 @@ export default function LessonPlansPage() {
             marginBottom={4}>
             Driverless Cars
           </Typography>
-          <Typography id="summary" gutterBottom variant="h3">
+          <Typography
+            id="summary"
+            gutterBottom
+            variant="h4"
+            component="h2"
+            position="relative">
             Summary
+            <FloatingId id="summary-floating" />
           </Typography>
           <Typography variant="body1" marginBottom={4}>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae
@@ -191,8 +207,14 @@ export default function LessonPlansPage() {
             vel accusantium, earum, maiores molestiae quasi sed nesciunt nisi,
             ipsa recusandae neque.
           </Typography>
-          <Typography id="warmer" gutterBottom variant="h3">
+          <Typography
+            id="warmer"
+            gutterBottom
+            variant="h4"
+            component="h2"
+            position="relative">
             Warmer
+            <FloatingId id="warmer-floating" />
           </Typography>
           <Typography variant="body1" marginBottom={4}>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae
@@ -203,8 +225,14 @@ export default function LessonPlansPage() {
             cumque placeat amet voluptatum molestias iste! Optio nihil, ratione
             aspernatur reiciendis neque doloremque accusamus repellat quidem?
           </Typography>
-          <Typography id="teach-vocabulary" gutterBottom variant="h3">
+          <Typography
+            id="teach-vocabulary"
+            gutterBottom
+            variant="h4"
+            component="h2"
+            position="relative">
             Teach Vocabulary
+            <FloatingId id="teach-vocabulary-floating" />
           </Typography>
           <Typography variant="body1" marginBottom={4}>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae
@@ -215,8 +243,14 @@ export default function LessonPlansPage() {
             cumque placeat amet voluptatum molestias iste! Optio nihil, ratione
             aspernatur reiciendis neque doloremque accusamus repellat quidem?
           </Typography>
-          <Typography id="vocabulary-exercise" gutterBottom variant="h3">
+          <Typography
+            id="vocabulary-exercise"
+            gutterBottom
+            variant="h4"
+            component="h2"
+            position="relative">
             Vocabulary exercise
+            <FloatingId id="vocabulary-exercise-floating" />
           </Typography>
           <Typography variant="body1" marginBottom={4}>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae
@@ -227,8 +261,14 @@ export default function LessonPlansPage() {
             cumque placeat amet voluptatum molestias iste! Optio nihil, ratione
             aspernatur reiciendis neque doloremque accusamus repellat quidem?
           </Typography>
-          <Typography id="teach-speaking-phrases" gutterBottom variant="h3">
+          <Typography
+            id="teach-speaking-phrases"
+            gutterBottom
+            variant="h4"
+            component="h2"
+            position="relative">
             Teach speaking phrases
+            <FloatingId id="teach-speaking-phrases-floating" />
           </Typography>
           <Typography variant="body1" marginBottom={4}>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae
@@ -239,8 +279,14 @@ export default function LessonPlansPage() {
             cumque placeat amet voluptatum molestias iste! Optio nihil, ratione
             aspernatur reiciendis neque doloremque accusamus repellat quidem?
           </Typography>
-          <Typography id="role-play" gutterBottom variant="h3">
+          <Typography
+            id="role-play"
+            gutterBottom
+            variant="h4"
+            component="h2"
+            position="relative">
             Role play
+            <FloatingId id="role-play-floating" />
           </Typography>
           <Typography variant="body1" marginBottom={4}>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae
@@ -251,8 +297,14 @@ export default function LessonPlansPage() {
             cumque placeat amet voluptatum molestias iste! Optio nihil, ratione
             aspernatur reiciendis neque doloremque accusamus repellat quidem?
           </Typography>
-          <Typography id="feedback" gutterBottom variant="h3">
+          <Typography
+            id="feedback"
+            gutterBottom
+            variant="h4"
+            component="h2"
+            position="relative">
             Feedback
+            <FloatingId id="feedback-floating" />
           </Typography>
           <Typography variant="body1" marginBottom={4}>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae
@@ -263,8 +315,14 @@ export default function LessonPlansPage() {
             cumque placeat amet voluptatum molestias iste! Optio nihil, ratione
             aspernatur reiciendis neque doloremque accusamus repellat quidem?
           </Typography>
-          <Typography id="plenary" gutterBottom variant="h3">
+          <Typography
+            id="plenary"
+            gutterBottom
+            variant="h4"
+            component="h2"
+            position="relative">
             Plenary
+            <FloatingId id="plenary-floating" />
           </Typography>
           <Typography variant="body1" marginBottom={4}>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae
@@ -279,23 +337,4 @@ export default function LessonPlansPage() {
       </Grid>
     </Stack>
   );
-}
-function ensureOnlyOneLinkIsActive(intersectorStatus: {
-  [key: string]: boolean;
-}) {
-  let activeIntersectors: string[] = [];
-  Object.entries(intersectorStatus).forEach(([intersectorName, isActive]) => {
-    if (isActive) {
-      activeIntersectors.push(intersectorName);
-    }
-  });
-
-  if (activeIntersectors.length > 1) {
-    activeIntersectors.pop(); //we keep the last active intersector active
-
-    //make the others inactive
-    activeIntersectors.forEach((intersector) => {
-      intersectorStatus[intersector] = false;
-    });
-  }
 }
