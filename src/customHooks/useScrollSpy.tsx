@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 export default function useIntersectionObserver(
-  targetElementIdentifiers: string[],
+  targetElementIds: string[],
   rootMargins: { mt: string; mr: string; mb: string; ml: string } = {
     mt: "0px",
     mr: "0px",
@@ -12,7 +12,7 @@ export default function useIntersectionObserver(
   }
 ) {
   const [intersectingStatus, setIntersectingStatus] = useState<
-    string | null //id
+    string | null //targetElementId
   >(null);
 
   const rootMargin = Object.values(rootMargins).join(" ");
@@ -23,29 +23,24 @@ export default function useIntersectionObserver(
       threshold: 0,
     };
 
-    const targetDetailsMap = new Map();
+    const targetItemsByTarget = new Map();
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
       console.log("Intersection callback invoked");
       const activeIntersectors: {
         id: string;
-        target: any;
+        target: IntersectionObserverEntry;
         isIntersecting: boolean;
       }[] = [];
-      const inactiveIntersectors: {
-        id: string;
-        target: any;
-        isIntersecting: boolean;
-      }[] = [];
+
       entries.forEach((entry) => {
         console.log("debug here");
-        const targetDetailsInfo = targetDetailsMap.get(entry.target);
+        const targetItem = targetItemsByTarget.get(entry.target);
         if (entry.isIntersecting) {
           console.log("intersecting");
-          targetDetailsInfo.isIntersecting = true;
-          activeIntersectors.push(targetDetailsInfo);
+          targetItem.isIntersecting = true;
+          activeIntersectors.push(targetItem);
         } else {
-          targetDetailsInfo.isIntersecting = false;
-          inactiveIntersectors.push(targetDetailsInfo);
+          targetItem.isIntersecting = false;
         }
       });
 
@@ -58,19 +53,19 @@ export default function useIntersectionObserver(
     };
 
     const observer = new IntersectionObserver(observerCallback, options);
-    const targetDetails = targetElementIdentifiers.map((identifier) => {
+    const targetItems = targetElementIds.map((targetElementId) => {
       return {
-        id: identifier,
-        target: document.querySelector(identifier),
+        id: targetElementId,
+        target: document.getElementById(targetElementId),
         isInterSecting: false,
       };
     });
 
     //observe targets and add them to the map
-    targetDetails.forEach((tDetails) => {
-      if (tDetails.target) {
-        targetDetailsMap.set(tDetails.target, tDetails);
-        observer.observe(tDetails.target);
+    targetItems.forEach((targetItem) => {
+      if (targetItem.target) {
+        targetItemsByTarget.set(targetItem.target, targetItem);
+        observer.observe(targetItem.target);
       } else {
         throw new Error(
           "Unable to observe because targetElement not found in DOM"
@@ -79,9 +74,9 @@ export default function useIntersectionObserver(
     });
 
     return () => {
-      targetDetails.forEach((tDetails) => {
-        if (tDetails.target) {
-          observer.unobserve(tDetails.target);
+      targetItems.forEach((targetItem) => {
+        if (targetItem.target) {
+          observer.unobserve(targetItem.target);
         }
       });
     };
