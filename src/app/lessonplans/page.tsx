@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 
 export default function LessonPlansPage() {
+  console.log(" *** LessonPlanPage rendered");
   const isSummaryIntersecting = useIntersectionObserver("#summary");
   const isWarmerIntersecting = useIntersectionObserver("#warmer");
   const isTeachVocabIntersecting = useIntersectionObserver("#teach-vocabulary");
@@ -27,6 +28,35 @@ export default function LessonPlansPage() {
   const isRolePlayIntersecting = useIntersectionObserver("#role-play");
   const isFeedbackIntersecting = useIntersectionObserver("#feedback");
   const isPlenaryIntersecting = useIntersectionObserver("#plenary");
+
+  const intersectorStatus: { [key: string]: boolean } = {
+    isSummaryIntersecting,
+    isWarmerIntersecting,
+    isTeachVocabIntersecting,
+    isVocabExercisesIntersecting,
+    isSpeakingPhrasesIntersecting,
+    isRolePlayIntersecting,
+    isFeedbackIntersecting,
+    isPlenaryIntersecting,
+  };
+
+  let activeIntersectors: string[] = [];
+  Object.entries(intersectorStatus).forEach(([intersectorName, isActive]) => {
+    if (isActive) {
+      activeIntersectors.push(intersectorName);
+    }
+  });
+
+  if (activeIntersectors.length > 1) {
+    activeIntersectors.pop(); //we keep the last active intersector active
+    //make the others inactive
+    activeIntersectors.forEach((intersector) => {
+      console.log(intersector);
+      console.log(intersectorStatus[intersector]);
+      console.log("-----------------");
+      intersectorStatus[intersector] = false;
+    });
+  }
 
   return (
     <Stack
@@ -54,7 +84,9 @@ export default function LessonPlansPage() {
                   primary="Summary"
                   sx={{
                     "& .MuiListItemText-primary": {
-                      fontWeight: isSummaryIntersecting ? "bold" : "normal",
+                      fontWeight: intersectorStatus.isSummaryIntersecting
+                        ? "bold"
+                        : "normal",
                       color: "primary.main",
                     },
                   }}
@@ -67,7 +99,9 @@ export default function LessonPlansPage() {
                   primary="Warmer"
                   sx={{
                     "& .MuiListItemText-primary": {
-                      fontWeight: isWarmerIntersecting ? "bold" : "normal",
+                      fontWeight: intersectorStatus.isWarmerIntersecting
+                        ? "bold"
+                        : "normal",
                       color: "primary.main",
                     },
                   }}
@@ -80,7 +114,9 @@ export default function LessonPlansPage() {
                   primary="Teach Vocabulary"
                   sx={{
                     "& .MuiListItemText-primary": {
-                      fontWeight: isTeachVocabIntersecting ? "bold" : "normal",
+                      fontWeight: intersectorStatus.isTeachVocabIntersecting
+                        ? "bold"
+                        : "normal",
                       color: "primary.main",
                     },
                   }}
@@ -93,10 +129,10 @@ export default function LessonPlansPage() {
                   primary="Vocabulary Exercise"
                   sx={{
                     "& .MuiListItemText-primary": {
-                      fontWeight: isVocabExercisesIntersecting
+                      fontWeight: intersectorStatus.isVocabExercisesIntersecting
                         ? "bold"
                         : "normal",
-                      color: isVocabExercisesIntersecting
+                      color: intersectorStatus.isVocabExercisesIntersecting
                         ? "secondary.main"
                         : "primary.main",
                     },
@@ -110,9 +146,10 @@ export default function LessonPlansPage() {
                   primary="Teach Speaking Phrases"
                   sx={{
                     "& .MuiListItemText-primary": {
-                      fontWeight: isSpeakingPhrasesIntersecting
-                        ? "bold"
-                        : "normal",
+                      fontWeight:
+                        intersectorStatus.isSpeakingPhrasesIntersecting
+                          ? "bold"
+                          : "normal",
                       color: "primary.main",
                     },
                   }}
@@ -125,7 +162,9 @@ export default function LessonPlansPage() {
                   primary="Role Play"
                   sx={{
                     "& .MuiListItemText-primary": {
-                      fontWeight: isRolePlayIntersecting ? "bold" : "normal",
+                      fontWeight: intersectorStatus.isRolePlayIntersecting
+                        ? "bold"
+                        : "normal",
                       color: "primary.main",
                     },
                   }}
@@ -138,7 +177,9 @@ export default function LessonPlansPage() {
                   primary="Feedback"
                   sx={{
                     "& .MuiListItemText-primary": {
-                      fontWeight: isFeedbackIntersecting ? "bold" : "normal",
+                      fontWeight: intersectorStatus.isFeedbackIntersecting
+                        ? "bold"
+                        : "normal",
                       color: "primary.main",
                     },
                   }}
@@ -151,7 +192,9 @@ export default function LessonPlansPage() {
                   primary="Plenary"
                   sx={{
                     "& .MuiListItemText-primary": {
-                      fontWeight: isPlenaryIntersecting ? "bold" : "normal",
+                      fontWeight: intersectorStatus.isPlenaryIntersecting
+                        ? "bold"
+                        : "normal",
                       color: "primary.main",
                     },
                   }}

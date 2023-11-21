@@ -22,13 +22,11 @@ export default function useIntersectionObserver(
       threshold: 0,
     };
     let callback = (entries: IntersectionObserverEntry[]) => {
-      console.log("Intersection callback invoked");
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           console.log("intersecting");
           setIsIntersecting(true);
         } else {
-          console.log("not intersecting");
           setIsIntersecting(false);
         }
       });
