@@ -1,7 +1,7 @@
 //To DO: remove this and pass down props to client component
 "use client";
 
-import useIntersectionObserver from "@/customHooks/useIntersectionObserver";
+import useScrollSpy from "@/customHooks/useScrollSpy";
 import {
   Grid,
   Container,
@@ -15,25 +15,21 @@ import {
 } from "@mui/material";
 
 export default function LessonPlansPage() {
-  const intersectorStatus: { [key: string]: boolean } = {};
+  const activeIntersection = useScrollSpy([
+    "summary",
+    "warmer",
+    "teach-vocabulary",
+    "vocabulary-exercise",
+    "teach-speaking-phrases",
+    "role-play",
+    "feedback",
+    "plenary",
+  ]);
 
-  intersectorStatus.isSummaryIntersecting = useIntersectionObserver("#summary");
-  intersectorStatus.isWarmerIntersecting = useIntersectionObserver("#warmer");
-  intersectorStatus.isTeachVocabIntersecting =
-    useIntersectionObserver("#teach-vocabulary");
-  intersectorStatus.isVocabExercisesIntersecting = useIntersectionObserver(
-    "#vocabulary-exercise"
-  );
-  intersectorStatus.isSpeakingPhrasesIntersecting = useIntersectionObserver(
-    "#teach-speaking-phrases"
-  );
-  intersectorStatus.isRolePlayIntersecting =
-    useIntersectionObserver("#role-play");
-  intersectorStatus.isFeedbackIntersecting =
-    useIntersectionObserver("#feedback");
-  intersectorStatus.isPlenaryIntersecting = useIntersectionObserver("#plenary");
+  console.log("activeIntersection ");
+  console.log(activeIntersection);
 
-  ensureOnlyOneLinkIsActive(intersectorStatus);
+  //ensureOnlyOneLinkIsActive(intersectorStatus);
 
   return (
     <Stack
@@ -61,9 +57,8 @@ export default function LessonPlansPage() {
                   primary="Summary"
                   sx={{
                     "& .MuiListItemText-primary": {
-                      fontWeight: intersectorStatus.isSummaryIntersecting
-                        ? "bold"
-                        : "normal",
+                      fontWeight:
+                        activeIntersection === "summary" ? "bold" : "normal",
                       color: "primary.main",
                     },
                   }}
@@ -76,9 +71,8 @@ export default function LessonPlansPage() {
                   primary="Warmer"
                   sx={{
                     "& .MuiListItemText-primary": {
-                      fontWeight: intersectorStatus.isWarmerIntersecting
-                        ? "bold"
-                        : "normal",
+                      fontWeight:
+                        activeIntersection === "warmer" ? "bold" : "normal",
                       color: "primary.main",
                     },
                   }}
@@ -91,9 +85,10 @@ export default function LessonPlansPage() {
                   primary="Teach Vocabulary"
                   sx={{
                     "& .MuiListItemText-primary": {
-                      fontWeight: intersectorStatus.isTeachVocabIntersecting
-                        ? "bold"
-                        : "normal",
+                      fontWeight:
+                        activeIntersection === "teach-vocabulary"
+                          ? "bold"
+                          : "normal",
                       color: "primary.main",
                     },
                   }}
@@ -106,12 +101,14 @@ export default function LessonPlansPage() {
                   primary="Vocabulary Exercise"
                   sx={{
                     "& .MuiListItemText-primary": {
-                      fontWeight: intersectorStatus.isVocabExercisesIntersecting
-                        ? "bold"
-                        : "normal",
-                      color: intersectorStatus.isVocabExercisesIntersecting
-                        ? "secondary.main"
-                        : "primary.main",
+                      fontWeight:
+                        activeIntersection === "vocabulary-exercise"
+                          ? "bold"
+                          : "normal",
+                      color:
+                        activeIntersection === "vocabulary-exercise"
+                          ? "secondary.main"
+                          : "primary.main",
                     },
                   }}
                 />
@@ -124,7 +121,7 @@ export default function LessonPlansPage() {
                   sx={{
                     "& .MuiListItemText-primary": {
                       fontWeight:
-                        intersectorStatus.isSpeakingPhrasesIntersecting
+                        activeIntersection === "teach-speaking-phrases"
                           ? "bold"
                           : "normal",
                       color: "primary.main",
@@ -139,9 +136,8 @@ export default function LessonPlansPage() {
                   primary="Role Play"
                   sx={{
                     "& .MuiListItemText-primary": {
-                      fontWeight: intersectorStatus.isRolePlayIntersecting
-                        ? "bold"
-                        : "normal",
+                      fontWeight:
+                        activeIntersection === "role-play" ? "bold" : "normal",
                       color: "primary.main",
                     },
                   }}
@@ -154,9 +150,8 @@ export default function LessonPlansPage() {
                   primary="Feedback"
                   sx={{
                     "& .MuiListItemText-primary": {
-                      fontWeight: intersectorStatus.isFeedbackIntersecting
-                        ? "bold"
-                        : "normal",
+                      fontWeight:
+                        activeIntersection === "feedback" ? "bold" : "normal",
                       color: "primary.main",
                     },
                   }}
@@ -169,9 +164,8 @@ export default function LessonPlansPage() {
                   primary="Plenary"
                   sx={{
                     "& .MuiListItemText-primary": {
-                      fontWeight: intersectorStatus.isPlenaryIntersecting
-                        ? "bold"
-                        : "normal",
+                      fontWeight:
+                        activeIntersection === "plenary" ? "bold" : "normal",
                       color: "primary.main",
                     },
                   }}
