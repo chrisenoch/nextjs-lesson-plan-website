@@ -5,7 +5,7 @@ import ScrollSpyTest2 from "./ScrollSpyTest2";
 
 export default function ScrolLSpyTest() {
   console.log("ScrollSpyTest rendered");
-  const interceptorsMap = useScrollSpy(["#bazz", "#bop"]);
+  const interceptorId = useScrollSpy(["#bazz", "#bop"]);
   // const isBopIntersecting = useIntersectionObserver("#bop", {
   //   mt: "0px",
   //   mr: "0px",
@@ -13,8 +13,8 @@ export default function ScrolLSpyTest() {
   //   ml: "0px",
   // });
 
-  console.log("interceptorsMap: ");
-  console.log(interceptorsMap);
+  console.log("interceptors id: ");
+  console.log(interceptorId);
 
   return (
     <ScrollSpyTest2 isBazzIntersecting={true} isBopIntersecting={true} />

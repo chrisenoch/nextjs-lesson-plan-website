@@ -11,13 +11,9 @@ export default function useIntersectionObserver(
     ml: "0px",
   }
 ) {
-  const [intersectingStatus, setIntersectingStatus] = useState<Map<
-    string, //id
-    {
-      target: any;
-      isIntersecting: boolean;
-    }
-  > | null>(null);
+  const [intersectingStatus, setIntersectingStatus] = useState<
+    string | null //id
+  >(null);
 
   const rootMargin = Object.values(rootMargins).join(" ");
 
@@ -54,24 +50,11 @@ export default function useIntersectionObserver(
       });
 
       if (activeIntersectors.length > 1) {
-        const activeIntersector = activeIntersectors.pop(); //temporarily remove so we don't make it inactive
-        //make the others false
-        activeIntersectors.forEach((intersector) => {
-          intersector.isIntersecting = false;
-        });
-        activeIntersectors.push(activeIntersector!);
+        const activeIntersector = activeIntersectors.pop(); //only set the last one to active
+        setIntersectingStatus(activeIntersector!.id);
+      } else if (activeIntersectors.length === 1) {
+        setIntersectingStatus(activeIntersectors[0].id);
       }
-
-      //set the final state
-      const allInterceptors = [...activeIntersectors, ...inactiveIntersectors];
-      let allInterceptorsMap = new Map();
-      allInterceptors.forEach((interceptor) => {
-        allInterceptorsMap.set(interceptor.id, {
-          target: interceptor.target,
-          isIntersecting: interceptor.isIntersecting,
-        });
-      });
-      setIntersectingStatus(allInterceptorsMap);
     };
 
     const observer = new IntersectionObserver(observerCallback, options);
