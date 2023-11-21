@@ -15,48 +15,25 @@ import {
 } from "@mui/material";
 
 export default function LessonPlansPage() {
-  console.log(" *** LessonPlanPage rendered");
-  const isSummaryIntersecting = useIntersectionObserver("#summary");
-  const isWarmerIntersecting = useIntersectionObserver("#warmer");
-  const isTeachVocabIntersecting = useIntersectionObserver("#teach-vocabulary");
-  const isVocabExercisesIntersecting = useIntersectionObserver(
+  const intersectorStatus: { [key: string]: boolean } = {};
+
+  intersectorStatus.isSummaryIntersecting = useIntersectionObserver("#summary");
+  intersectorStatus.isWarmerIntersecting = useIntersectionObserver("#warmer");
+  intersectorStatus.isTeachVocabIntersecting =
+    useIntersectionObserver("#teach-vocabulary");
+  intersectorStatus.isVocabExercisesIntersecting = useIntersectionObserver(
     "#vocabulary-exercise"
   );
-  const isSpeakingPhrasesIntersecting = useIntersectionObserver(
+  intersectorStatus.isSpeakingPhrasesIntersecting = useIntersectionObserver(
     "#teach-speaking-phrases"
   );
-  const isRolePlayIntersecting = useIntersectionObserver("#role-play");
-  const isFeedbackIntersecting = useIntersectionObserver("#feedback");
-  const isPlenaryIntersecting = useIntersectionObserver("#plenary");
+  intersectorStatus.isRolePlayIntersecting =
+    useIntersectionObserver("#role-play");
+  intersectorStatus.isFeedbackIntersecting =
+    useIntersectionObserver("#feedback");
+  intersectorStatus.isPlenaryIntersecting = useIntersectionObserver("#plenary");
 
-  const intersectorStatus: { [key: string]: boolean } = {
-    isSummaryIntersecting,
-    isWarmerIntersecting,
-    isTeachVocabIntersecting,
-    isVocabExercisesIntersecting,
-    isSpeakingPhrasesIntersecting,
-    isRolePlayIntersecting,
-    isFeedbackIntersecting,
-    isPlenaryIntersecting,
-  };
-
-  let activeIntersectors: string[] = [];
-  Object.entries(intersectorStatus).forEach(([intersectorName, isActive]) => {
-    if (isActive) {
-      activeIntersectors.push(intersectorName);
-    }
-  });
-
-  if (activeIntersectors.length > 1) {
-    activeIntersectors.pop(); //we keep the last active intersector active
-    //make the others inactive
-    activeIntersectors.forEach((intersector) => {
-      console.log(intersector);
-      console.log(intersectorStatus[intersector]);
-      console.log("-----------------");
-      intersectorStatus[intersector] = false;
-    });
-  }
+  ensureOnlyOneLinkIsActive(intersectorStatus);
 
   return (
     <Stack
@@ -308,4 +285,23 @@ export default function LessonPlansPage() {
       </Grid>
     </Stack>
   );
+}
+function ensureOnlyOneLinkIsActive(intersectorStatus: {
+  [key: string]: boolean;
+}) {
+  let activeIntersectors: string[] = [];
+  Object.entries(intersectorStatus).forEach(([intersectorName, isActive]) => {
+    if (isActive) {
+      activeIntersectors.push(intersectorName);
+    }
+  });
+
+  if (activeIntersectors.length > 1) {
+    activeIntersectors.pop(); //we keep the last active intersector active
+
+    //make the others inactive
+    activeIntersectors.forEach((intersector) => {
+      intersectorStatus[intersector] = false;
+    });
+  }
 }
