@@ -19,7 +19,8 @@
     "@mui/material": "latest",
     "next": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/node": "latest",
