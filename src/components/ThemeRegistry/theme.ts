@@ -11,10 +11,22 @@ const theme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#512da8",
+      main: "#7e57c2",
     },
     secondary: {
-      main: "#ec407a",
+      main: "#2196f3",
+    },
+  },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        html: {
+          height: "100%",
+        },
+        body: {
+          height: "100%",
+        },
+      },
     },
   },
   typography: {

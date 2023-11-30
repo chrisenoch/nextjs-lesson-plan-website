@@ -15,6 +15,12 @@ const nextConfig = {
         port: '',
         pathname: '/random',
       },
+      {
+        protocol: 'https',
+        hostname: 'raw.githubusercontent.com',
+        pathname: '/chrisenoch/assets/**'
+
+      },
     ],
   },
 };
