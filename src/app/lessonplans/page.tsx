@@ -16,23 +16,21 @@ import {
 } from "@mui/material";
 
 export default function LessonPlansPage() {
-  // let activeIntersection = useScrollSpy([
-  //   "summary",
-  //   "warmer",
-  //   "teach-vocabulary",
-  //   "vocabulary-exercise",
-  //   "teach-speaking-phrases",
-  //   "role-play",
-  //   "feedback",
-  //   "plenary",
-  // ]);
+  let activeIntersection = useScrollSpy([
+    "summary",
+    "warmer",
+    "teach-vocabulary",
+    "vocabulary-exercise",
+    "teach-speaking-phrases",
+    "role-play",
+    "feedback",
+    "plenary",
+  ]);
 
-  let activeIntersection: string = "aaassss";
+  //let activeIntersection: string = "testing";
 
   console.log("activeIntersection ");
   console.log(activeIntersection);
-
-  //ensureOnlyOneLinkIsActive(intersectorStatus);
 
   return (
     <Stack
@@ -110,10 +108,8 @@ export default function LessonPlansPage() {
                         activeIntersection === "vocabulary-exercise"
                           ? "bold"
                           : "normal",
-                      color:
-                        activeIntersection === "vocabulary-exercise"
-                          ? "secondary.main"
-                          : "primary.main",
+
+                      color: "primary.main",
                     },
                   }}
                 />
