@@ -1,25 +1,23 @@
 "use client";
 
-import useIntersectionObserver from "@/customHooks/useIntersectionObserver";
+import useScrollSpy from "@/customHooks/useScrollSpy";
 import ScrollSpyTest2 from "./ScrollSpyTest2";
 
 export default function ScrolLSpyTest() {
-  const isBazzIntersecting = useIntersectionObserver("#bazz");
-  const isBopIntersecting = useIntersectionObserver("#bop", {
-    mt: "0px",
-    mr: "0px",
-    mb: "-50%",
-    ml: "0px",
-  });
+  console.log("ScrollSpyTest rendered");
+  const interceptorId = useScrollSpy(["bazz", "bop"]);
+  // const isBopIntersecting = useIntersectionObserver("#bop", {
+  //   mt: "0px",
+  //   mr: "0px",
+  //   mb: "-50%",
+  //   ml: "0px",
+  // });
 
-  console.log("isBopIntersecting: " + isBazzIntersecting);
-  console.log("isBazzIntersecting: " + isBopIntersecting);
+  console.log("interceptors id: ");
+  console.log(interceptorId);
 
   return (
-    <ScrollSpyTest2
-      isBazzIntersecting={isBazzIntersecting}
-      isBopIntersecting={isBopIntersecting}
-    />
+    <ScrollSpyTest2 isBazzIntersecting={true} isBopIntersecting={true} />
     // <Stack alignItems={"center"}>
     //   <Box mb={100}>I have lots of bottom margin</Box>
     //   <Box mb={100} bgcolor={"primary.light"}>
