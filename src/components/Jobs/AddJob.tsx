@@ -28,43 +28,28 @@ export function AddJob() {
       ]),
     []
   );
-  const inputRefsInfo = useFormClientStatus(new Map(inputRefs));
-  const errorMessage = state?.message;
+  const inputRefsInfo = useFormClientStatus(inputRefs);
+  const errorMessageFromServer = state?.message;
   const isError = false;
 
   console.log("***inputRefsInfo in AddJob");
   console.log(inputRefsInfo);
 
-  const jobTitleSchema = z.object({
-    jobTitle: z.string().min(2),
-  });
-  const jobDescriptionSchema = z.object({
-    jobDescription: z.string().min(2),
-  });
+  const jobTitleIsValid = z
+    .object({
+      jobTitle: z.string().min(2),
+    })
+    .safeParse({
+      jobTitle,
+    }).success;
 
-  if (jobTitleRef.current !== null) {
-    const parse = jobTitleSchema.safeParse({
-      jobTitle: jobTitleRef.current.value,
-    });
-
-    if (!parse.success) {
-      console.log("jobTitle is invalid");
-    } else {
-      console.log("jobTitle is valid");
-    }
-  }
-
-  if (jobDescriptionRef.current !== null) {
-    const parse = jobDescriptionSchema.safeParse({
-      jobDescription: jobDescriptionRef.current.value,
-    });
-
-    if (!parse.success) {
-      console.log("jobDescription is invalid");
-    } else {
-      console.log("jobDescription is valid");
-    }
-  }
+  const jobDescriptionIsValid = z
+    .object({
+      jobDescription: z.string().min(2),
+    })
+    .safeParse({
+      jobDescription,
+    }).success;
 
   return (
     <Box
@@ -110,13 +95,14 @@ export function AddJob() {
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             setJobTitle(event.target.value);
           }}
-          error={isError}
+          error={
+            !jobTitleIsValid &&
+            inputRefsInfo.elementsStatus?.get("jobTitle")?.isTouched
+          }
           helperText={
-            errorMessage && (
-              <>
-                <p>{errorMessage}</p>
-              </>
-            )
+            !jobTitleIsValid &&
+            inputRefsInfo.elementsStatus?.get("jobTitle")?.isTouched &&
+            "Job Title must be at least two characters"
           }
         />
       )}
@@ -130,6 +116,15 @@ export function AddJob() {
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             setJobDescription(event.target.value);
           }}
+          error={
+            !jobDescriptionIsValid &&
+            inputRefsInfo.elementsStatus?.get("jobDescription")?.isTouched
+          }
+          helperText={
+            !jobDescriptionIsValid &&
+            inputRefsInfo.elementsStatus?.get("jobDescription")?.isTouched &&
+            "Job Description must be at least two characters"
+          }
           multiline
           minRows={4}
         />
