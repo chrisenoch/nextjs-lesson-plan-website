@@ -19,10 +19,7 @@ export async function createJob(prevState: any, formData: FormData) {
   });
 
   if (!parse.success) {
-    //TO DO: delete this?
-    let errors: { fieldName: string; message: string }[] = learnZod(parse);
     return {
-      errors,
       message:
         "Failed to create job. Ensure you insert the correct form values.",
     };
@@ -38,30 +35,6 @@ export async function createJob(prevState: any, formData: FormData) {
     revalidatePath("./");
     return { message: "Failed to create job" + e };
   }
-}
-
-function learnZod(
-  parse: z.SafeParseError<{ jobTitle: string; jobDescription: string }>
-) {
-  console.log("zod - field with error");
-  //console.log(parse.error);
-  console.log("formatted");
-  console.log(parse.error.format());
-  console.log("********");
-  console.log("parse.error.formErrors");
-  console.log(parse.error.formErrors);
-  console.log("-------");
-  console.log(parse.error);
-  let errors: { fieldName: string; message: string }[] = [];
-
-  parse?.error?.errors?.forEach((ele) => {
-    console.log(ele.path);
-    errors.push({
-      fieldName: ele.path[0].toString(),
-      message: ele.message,
-    });
-  });
-  return errors;
 }
 
 export async function deleteJob(prevState: any, formData: FormData) {
@@ -82,4 +55,28 @@ export async function deleteJob(prevState: any, formData: FormData) {
   } catch (e) {
     return { message: "Failed to delete job" };
   }
+}
+
+function learnZod(parse: any) {
+  console.log(typeof parse.error);
+
+  console.log("zod - field with error");
+  //console.log(parse.error);
+  console.log("formatted");
+  console.log(parse.error.format());
+  console.log("********");
+  console.log("parse.error.formErrors");
+  console.log(parse.error.formErrors);
+  console.log("-------");
+  console.log(parse.error);
+  let errors: { fieldName: string; message: string }[] = [];
+
+  parse?.error?.errors?.forEach((ele) => {
+    console.log(ele.path);
+    errors.push({
+      fieldName: ele.path[0].toString(),
+      message: ele.message,
+    });
+  });
+  return errors;
 }

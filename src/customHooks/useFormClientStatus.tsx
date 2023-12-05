@@ -81,6 +81,7 @@ export default function useFormClientStatus(
     elementsStatus,
     resetElement,
     resetAll,
+    setAllToTouched,
   };
 
   /*
@@ -100,6 +101,19 @@ export default function useFormClientStatus(
 
   function resetAll() {
     initAllElements(inputRefsToTrack, setElementsStatus, refsListeners);
+  }
+
+  function setAllToTouched() {
+    console.log("in setAllToTouched");
+    if (elementsStatus !== null) {
+      const nextElementsStatus = new Map(elementsStatus);
+      elementsStatus.forEach((status, id) => {
+        const nextStatus = { ...status };
+        nextStatus.isTouched = true;
+        nextElementsStatus.set(id, nextStatus);
+      });
+      setElementsStatus(nextElementsStatus);
+    }
   }
 }
 

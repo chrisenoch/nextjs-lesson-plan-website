@@ -4,10 +4,11 @@ import { Box, TextField, Button, Stack } from "@mui/material";
 import { createJob } from "@/actions/jobs";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useFormClientStatus from "@/customHooks/useFormClientStatus";
+import { z } from "zod";
+
 const initialFormState: { message: string | null } = {
   message: null,
 };
-import { z } from "zod";
 
 export function AddJob() {
   console.log("add job rendered");
@@ -28,12 +29,16 @@ export function AddJob() {
       ]),
     []
   );
-  const inputRefsInfo = useFormClientStatus(inputRefs);
+  const {
+    elementsStatus: status,
+    resetAll,
+    resetElement,
+    setAllToTouched,
+  } = useFormClientStatus(inputRefs);
   const errorMessageFromServer = state?.message;
-  const isError = false;
 
   console.log("***inputRefsInfo in AddJob");
-  console.log(inputRefsInfo);
+  console.log(status);
 
   const jobTitleIsValid = zodValidator(jobTitle, {
     jobTitle: z.string().min(2),
@@ -42,8 +47,14 @@ export function AddJob() {
   const jobDescriptionIsValid = zodValidator(jobDescription, {
     jobDescription: z.string().min(2),
   });
+
+  // function setAllFieldsToTouched() {
+  //   console.log("Inside setAllFieldsToTouched");
+  //   setAllFieldsToTouched();
+  // }
   return (
     <Box
+      onSubmit={() => setAllToTouched()}
       component="form"
       action={formAction}
       display={"flex"}
@@ -62,14 +73,11 @@ export function AddJob() {
           color="primary">
           Show Job description
         </Button>
-        <Button
-          onClick={() => inputRefsInfo.resetAll()}
-          variant="contained"
-          color="primary">
+        <Button onClick={() => resetAll()} variant="contained" color="primary">
           ResetAll
         </Button>
         <Button
-          onClick={() => inputRefsInfo.resetElement("jobTitle")}
+          onClick={() => resetElement("jobTitle")}
           variant="contained"
           color="primary">
           Reset Job title
@@ -86,13 +94,10 @@ export function AddJob() {
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             setJobTitle(event.target.value);
           }}
-          error={
-            !jobTitleIsValid &&
-            inputRefsInfo.elementsStatus?.get("jobTitle")?.isTouched
-          }
+          error={!jobTitleIsValid && status?.get("jobTitle")?.isTouched}
           helperText={
             !jobTitleIsValid &&
-            inputRefsInfo.elementsStatus?.get("jobTitle")?.isTouched &&
+            status?.get("jobTitle")?.isTouched &&
             "Job Title must be at least two characters"
           }
         />
@@ -108,34 +113,27 @@ export function AddJob() {
             setJobDescription(event.target.value);
           }}
           error={
-            !jobDescriptionIsValid &&
-            inputRefsInfo.elementsStatus?.get("jobDescription")?.isTouched
+            !jobDescriptionIsValid && status?.get("jobDescription")?.isTouched
           }
           helperText={
             !jobDescriptionIsValid &&
-            inputRefsInfo.elementsStatus?.get("jobDescription")?.isTouched &&
+            status?.get("jobDescription")?.isTouched &&
             "Job Description must be at least two characters"
           }
           multiline
           minRows={4}
         />
       )}
+      {/* {errorMessageFromServer && <p>{errorMessageFromServer}</p>} */}
 
       <SubmitButton />
-      <p aria-live="polite" role="status">
-        {state?.message}
-      </p>
+      {errorMessageFromServer && (
+        <p aria-live="polite" role="status">
+          {errorMessageFromServer}
+        </p>
+      )}
     </Box>
   );
-}
-
-function zodValidator(
-  valueToValidate: string,
-  validator: { [key: string]: z.ZodString }
-) {
-  return z.object(validator).safeParse({
-    [Object.keys(validator)[0]]: valueToValidate,
-  }).success;
 }
 
 function SubmitButton() {
@@ -146,4 +144,19 @@ function SubmitButton() {
       Add
     </button>
   );
+}
+
+function zodValidator(
+  valueToValidate: string,
+  validator: { [key: string]: z.ZodString }
+) {
+  if (Object.keys(validator).length > 1) {
+    console.error(
+      "Only one key should be passed to the validator object. Extra keys will be ignored."
+    );
+  }
+
+  return z.object(validator).safeParse({
+    [Object.keys(validator)[0]]: valueToValidate,
+  }).success;
 }
