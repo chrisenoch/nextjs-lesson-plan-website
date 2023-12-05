@@ -25,30 +25,7 @@ export default function useFormClientStatus(
 
   //create the elementStatusObjects. Run useeffect once to init the objects for each ref.
   useEffect(() => {
-    const nextElementsStatus = new Map();
-
-    inputRefsToTrack.forEach((ref, id) => {
-      //To do: add options for form as a whole and for dirty, pristine, etc.
-      //To do: add option to reinit all variables as well.
-      const status: {
-        isTouched: boolean;
-      } = {
-        isTouched: false,
-      };
-      nextElementsStatus.set(id, status);
-      setElementsStatus(nextElementsStatus);
-
-      const listeners: {
-        eventListeners: any[];
-        ref: MutableRefObject<HTMLInputElement | null>;
-      } = {
-        eventListeners: [],
-        ref, //ref is null here because at first the element is not int he dom
-      };
-      if (refsListeners.current) {
-        refsListeners.current.set(id, listeners);
-      }
-    });
+    initAllElements(inputRefsToTrack, setElementsStatus, refsListeners);
   }, []);
 
   //manage event listeners. Should run every render.
@@ -91,7 +68,56 @@ export default function useFormClientStatus(
     };
   });
 
-  return elementsStatus;
+  return {
+    elementsStatus,
+    resetElement,
+    resetAll,
+  };
+
+  //Utility functions
+
+  function resetElement(id: string) {
+    console.log("resetElement called with id: " + id);
+  }
+
+  function resetAll() {
+    initAllElements(inputRefsToTrack, setElementsStatus, refsListeners);
+  }
+}
+
+function initAllElements(
+  inputRefsToTrack: Map<string, MutableRefObject<HTMLInputElement | null>>,
+  setElementsStatus,
+  refsListeners: MutableRefObject<
+    Map<
+      string,
+      { eventListeners: any[]; ref: MutableRefObject<HTMLInputElement | null> }
+    >
+  >
+) {
+  const nextElementsStatus = new Map();
+  inputRefsToTrack.forEach((ref, id) => {
+    //To do: add options for form as a whole and for dirty, pristine, etc.
+    //To do: add option to reinit all variables as well.
+    const status: {
+      isTouched: boolean;
+    } = {
+      isTouched: false,
+    };
+    nextElementsStatus.set(id, status);
+    setElementsStatus(nextElementsStatus);
+
+    const listeners: {
+      eventListeners: any[];
+      ref: MutableRefObject<HTMLInputElement | null>;
+    } = {
+      eventListeners: [],
+      ref, //ref is null here because at first the element is not int he dom
+    };
+    if (refsListeners.current) {
+      refsListeners.current.set(id, listeners);
+    }
+  });
 }
 
 function removeEventListeners(

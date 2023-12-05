@@ -14,38 +14,12 @@ export function AddJob() {
   const [state, formAction] = useFormState(createJob, initialFormState);
   const [showJobTitle, setShowJobTitle] = useState<boolean>(false);
   const jobTitleRef = useRef<null | HTMLInputElement>(null);
-  const [runJobTitleEventListeners, setRunJobTitleEventListeners] =
-    useState<boolean>(false);
 
   const inputRefs = useMemo(() => new Map([["jobTitle", jobTitleRef]]), []);
   const inputRefsInfo = useFormClientStatus(new Map(inputRefs));
 
   console.log("***inputRefsInfo in AddJob");
   console.log(inputRefsInfo);
-
-  console.log("job title ref");
-  console.log(jobTitleRef);
-
-  // const testRef = useCallback((jobTitleInputEle: HTMLInputElement) => {
-  //   if (jobTitleInputEle !== null) {
-  //     console.log("ref was mounted");
-  //     console.log(jobTitleInputEle);
-  //     setRunJobTitleEventListeners(true);
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   if (runJobTitleEventListeners) {
-  //   }
-  //   console.log(testRef);
-
-  //   jobTitleRef.current?.focus();
-  //   console.log(jobTitleRef);
-  //   jobTitleRef.current?.addEventListener("blur", () =>
-  //     console.log("fired on blur event")
-  //   );
-  //   setRunJobTitleEventListeners(false);
-  // }, [runJobTitleEventListeners]);
 
   const errorMessage = state?.message;
   const isError = false;
@@ -62,6 +36,12 @@ export function AddJob() {
         variant="contained"
         color="primary">
         Show Job title
+      </Button>
+      <Button
+        onClick={() => inputRefsInfo.resetAll()}
+        variant="contained"
+        color="primary">
+        ResetAll
       </Button>
       {showJobTitle && (
         <TextField
