@@ -74,8 +74,12 @@ export default function useFormClientStatus(
             }
           };
 
-          refsListeners.current.get(id)?.eventListeners.push(updateTouched);
-          refsListeners.current.get(id)?.eventListeners.push(updateFocused);
+          refsListeners.current
+            .get(id)
+            ?.eventListeners.push({ event: "blur", fn: updateTouched });
+          refsListeners.current
+            .get(id)
+            ?.eventListeners.push({ event: "focus", fn: updateFocused });
           refsListeners.current
             .get(id)
             ?.ref.current?.addEventListener("blur", updateTouched);
@@ -185,9 +189,12 @@ function removeEventListeners(
   >
 ) {
   refsListeners.forEach((status, id) => {
-    status.eventListeners.forEach((eventListenerFn) => {
+    status.eventListeners.forEach((eventListener) => {
       if (status.ref.current) {
-        status.ref.current.removeEventListener("blur", eventListenerFn);
+        status.ref.current.removeEventListener(
+          eventListener.event,
+          eventListener.fn
+        );
       }
     });
     status.eventListeners = [];

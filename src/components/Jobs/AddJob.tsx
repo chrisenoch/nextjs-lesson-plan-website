@@ -4,7 +4,7 @@ import { Box, TextField, Button, Stack } from "@mui/material";
 import { createJob } from "@/actions/jobs";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useFormClientStatus from "@/customHooks/useFormClientStatus";
-import { z } from "zod";
+import { ZodEffects, ZodString, z } from "zod";
 
 const initialFormState: { message: string | null } = {
   message: null,
@@ -150,12 +150,19 @@ function SubmitButton() {
 
 function zodValidator(
   valueToValidate: string,
-  validator: { [key: string]: z.ZodString }
+  validator: {
+    [key: string]: z.ZodString | ZodEffects<ZodString, string, string>;
+  },
+  shouldTrim: boolean = true
 ) {
   if (Object.keys(validator).length > 1) {
     console.error(
       "Only one key should be passed to the validator object. Extra keys will be ignored."
     );
+  }
+
+  if (shouldTrim) {
+    valueToValidate = valueToValidate.trim();
   }
 
   return z.object(validator).safeParse({
