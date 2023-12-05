@@ -97,8 +97,9 @@ export function AddJob() {
           error={!jobTitleIsValid && status?.get("jobTitle")?.isTouched}
           helperText={
             !jobTitleIsValid &&
-            status?.get("jobTitle")?.isTouched &&
-            "Job Title must be at least two characters"
+            (status?.get("jobTitle")?.hasBeenFocused ||
+              status?.get("jobTitle")?.isTouched) &&
+            "Insert two or more characters"
           }
         />
       )}
@@ -117,8 +118,9 @@ export function AddJob() {
           }
           helperText={
             !jobDescriptionIsValid &&
-            status?.get("jobDescription")?.isTouched &&
-            "Job Description must be at least two characters"
+            (status?.get("jobDescription")?.hasBeenFocused ||
+              status?.get("jobDescription")?.isTouched) &&
+            "Insert two or more characters"
           }
           multiline
           minRows={4}

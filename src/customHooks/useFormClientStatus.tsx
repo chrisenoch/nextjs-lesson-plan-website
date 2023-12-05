@@ -16,6 +16,7 @@ export default function useFormClientStatus(
     string,
     {
       isTouched: boolean;
+      hasBeenFocused: boolean;
     }
   >>(null);
 
@@ -61,10 +62,26 @@ export default function useFormClientStatus(
             }
           };
 
+          const updateFocused = function updateFocus() {
+            console.log("in update focus");
+            const nextElementsStatus = new Map(elementsStatus);
+            const currentStatus = nextElementsStatus.get(id);
+            if (currentStatus) {
+              const nextStatus = { ...currentStatus };
+              nextStatus.hasBeenFocused = true;
+              nextElementsStatus.set(id, nextStatus);
+              setElementsStatus(nextElementsStatus);
+            }
+          };
+
           refsListeners.current.get(id)?.eventListeners.push(updateTouched);
+          refsListeners.current.get(id)?.eventListeners.push(updateFocused);
           refsListeners.current
             .get(id)
             ?.ref.current?.addEventListener("blur", updateTouched);
+          refsListeners.current
+            .get(id)
+            ?.ref.current?.addEventListener("focus", updateFocused);
         }
       });
     }
@@ -92,7 +109,7 @@ export default function useFormClientStatus(
     console.log("resetElement called with id: " + id);
     const status = elementsStatus?.get(id);
     if (status) {
-      const newStatus = { ...status, isTouched: false };
+      const newStatus = { ...status, isTouched: false, hasBeenFocused: false };
       const nextElementsStatus = new Map(elementsStatus);
       nextElementsStatus.set(id, newStatus);
       setElementsStatus(nextElementsStatus);
@@ -120,7 +137,10 @@ export default function useFormClientStatus(
 function initAllElements(
   inputRefsToTrack: Map<string, MutableRefObject<HTMLInputElement | null>>,
   setElementsStatus: Dispatch<
-    SetStateAction<Map<string, { isTouched: boolean }> | null>
+    SetStateAction<Map<
+      string,
+      { isTouched: boolean; hasBeenFocused: boolean }
+    > | null>
   >,
   refsListeners: MutableRefObject<
     Map<
@@ -134,8 +154,10 @@ function initAllElements(
     //To do: add options for form as a whole and for dirty, pristine, etc.
     const status: {
       isTouched: boolean;
+      hasBeenFocused: boolean;
     } = {
       isTouched: false,
+      hasBeenFocused: false,
     };
     nextElementsStatus.set(id, status);
     setElementsStatus(nextElementsStatus);
