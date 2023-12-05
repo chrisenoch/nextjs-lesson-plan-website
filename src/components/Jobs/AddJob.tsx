@@ -35,22 +35,13 @@ export function AddJob() {
   console.log("***inputRefsInfo in AddJob");
   console.log(inputRefsInfo);
 
-  const jobTitleIsValid = z
-    .object({
-      jobTitle: z.string().min(2),
-    })
-    .safeParse({
-      jobTitle,
-    }).success;
+  const jobTitleIsValid = zodValidator(jobTitle, {
+    jobTitle: z.string().min(2),
+  });
 
-  const jobDescriptionIsValid = z
-    .object({
-      jobDescription: z.string().min(2),
-    })
-    .safeParse({
-      jobDescription,
-    }).success;
-
+  const jobDescriptionIsValid = zodValidator(jobDescription, {
+    jobDescription: z.string().min(2),
+  });
   return (
     <Box
       component="form"
@@ -136,6 +127,15 @@ export function AddJob() {
       </p>
     </Box>
   );
+}
+
+function zodValidator(
+  valueToValidate: string,
+  validator: { [key: string]: z.ZodString }
+) {
+  return z.object(validator).safeParse({
+    [Object.keys(validator)[0]]: valueToValidate,
+  }).success;
 }
 
 function SubmitButton() {
