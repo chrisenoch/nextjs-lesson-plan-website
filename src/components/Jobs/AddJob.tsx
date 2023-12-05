@@ -2,7 +2,7 @@
 import { useFormState, useFormStatus } from "react-dom";
 import { Box, TextField, Button } from "@mui/material";
 import { createJob } from "@/actions/jobs";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useFormClientStatus from "@/customHooks/useFormClientStatus";
 const initialFormState: { message: string | null } = {
   message: null,
@@ -17,9 +17,11 @@ export function AddJob() {
   const [runJobTitleEventListeners, setRunJobTitleEventListeners] =
     useState<boolean>(false);
 
-  const inputRefsInfo = useFormClientStatus(
-    new Map([["jobTitle", jobTitleRef]])
-  );
+  const inputRefs = useMemo(() => new Map([["jobTitle", jobTitleRef]]), []);
+  const inputRefsInfo = useFormClientStatus(new Map(inputRefs));
+
+  console.log("***inputRefsInfo in AddJob");
+  console.log(inputRefsInfo);
 
   console.log("job title ref");
   console.log(jobTitleRef);
