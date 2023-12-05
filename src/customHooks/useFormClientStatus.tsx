@@ -1,6 +1,13 @@
 "use client";
 
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  MutableRefObject,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 export default function useFormClientStatus(
   inputRefsToTrack: Map<string, MutableRefObject<HTMLInputElement | null>>
@@ -22,6 +29,8 @@ export default function useFormClientStatus(
     >
   >(new Map());
   console.log("useFormClientStatus rendered");
+  console.log("refListenes input ref ");
+  console.log(refsListeners.current.get("jobTitle"));
 
   //create the elementStatusObjects. Run useeffect once to init the objects for each ref.
   useEffect(() => {
@@ -37,7 +46,7 @@ export default function useFormClientStatus(
         //init event listeners if not already initialised
         if (
           refsListeners.current.get(id)?.ref.current !== null &&
-          refsListeners.current.get(id)?.eventListeners.length < 1
+          refsListeners.current.get(id)!.eventListeners.length < 1
         ) {
           //create event listener function
           const updateTouched = function updateTouch() {
@@ -74,10 +83,19 @@ export default function useFormClientStatus(
     resetAll,
   };
 
-  //Utility functions
+  /*
+  Hook utility functions
+   */
 
   function resetElement(id: string) {
     console.log("resetElement called with id: " + id);
+    const status = elementsStatus?.get(id);
+    if (status) {
+      const newStatus = { ...status, isTouched: false };
+      const nextElementsStatus = new Map(elementsStatus);
+      nextElementsStatus.set(id, newStatus);
+      setElementsStatus(nextElementsStatus);
+    }
   }
 
   function resetAll() {
@@ -87,7 +105,9 @@ export default function useFormClientStatus(
 
 function initAllElements(
   inputRefsToTrack: Map<string, MutableRefObject<HTMLInputElement | null>>,
-  setElementsStatus,
+  setElementsStatus: Dispatch<
+    SetStateAction<Map<string, { isTouched: boolean }> | null>
+  >,
   refsListeners: MutableRefObject<
     Map<
       string,
@@ -98,7 +118,6 @@ function initAllElements(
   const nextElementsStatus = new Map();
   inputRefsToTrack.forEach((ref, id) => {
     //To do: add options for form as a whole and for dirty, pristine, etc.
-    //To do: add option to reinit all variables as well.
     const status: {
       isTouched: boolean;
     } = {

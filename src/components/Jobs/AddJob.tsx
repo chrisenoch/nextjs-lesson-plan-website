@@ -1,6 +1,6 @@
 "use client";
 import { useFormState, useFormStatus } from "react-dom";
-import { Box, TextField, Button } from "@mui/material";
+import { Box, TextField, Button, Stack } from "@mui/material";
 import { createJob } from "@/actions/jobs";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useFormClientStatus from "@/customHooks/useFormClientStatus";
@@ -13,9 +13,18 @@ export function AddJob() {
 
   const [state, formAction] = useFormState(createJob, initialFormState);
   const [showJobTitle, setShowJobTitle] = useState<boolean>(false);
+  const [showJobDescription, setShowJobDescription] = useState<boolean>(false);
   const jobTitleRef = useRef<null | HTMLInputElement>(null);
+  const jobDescriptionRef = useRef<null | HTMLInputElement>(null);
 
-  const inputRefs = useMemo(() => new Map([["jobTitle", jobTitleRef]]), []);
+  const inputRefs = useMemo(
+    () =>
+      new Map([
+        ["jobTitle", jobTitleRef],
+        ["jobDescription", jobDescriptionRef],
+      ]),
+    []
+  );
   const inputRefsInfo = useFormClientStatus(new Map(inputRefs));
 
   console.log("***inputRefsInfo in AddJob");
@@ -31,18 +40,32 @@ export function AddJob() {
       display={"flex"}
       flexDirection={"column"}
       gap={2}>
-      <Button
-        onClick={() => setShowJobTitle((t) => !t)}
-        variant="contained"
-        color="primary">
-        Show Job title
-      </Button>
-      <Button
-        onClick={() => inputRefsInfo.resetAll()}
-        variant="contained"
-        color="primary">
-        ResetAll
-      </Button>
+      <Stack direction={"row"} gap={2}>
+        <Button
+          onClick={() => setShowJobTitle((t) => !t)}
+          variant="contained"
+          color="primary">
+          Show Job title
+        </Button>
+        <Button
+          onClick={() => setShowJobDescription((d) => !d)}
+          variant="contained"
+          color="primary">
+          Show Job description
+        </Button>
+        <Button
+          onClick={() => inputRefsInfo.resetAll()}
+          variant="contained"
+          color="primary">
+          ResetAll
+        </Button>
+        <Button
+          onClick={() => inputRefsInfo.resetElement("jobTitle")}
+          variant="contained"
+          color="primary">
+          Reset Job title
+        </Button>
+      </Stack>
       {showJobTitle && (
         <TextField
           id="job-title"
@@ -60,14 +83,17 @@ export function AddJob() {
           }
         />
       )}
+      {showJobDescription && (
+        <TextField
+          id="job-description"
+          name="job-description"
+          label="Job Description"
+          inputRef={jobDescriptionRef}
+          multiline
+          minRows={4}
+        />
+      )}
 
-      <TextField
-        id="job-description"
-        name="job-description"
-        label="Job Description"
-        multiline
-        minRows={4}
-      />
       <SubmitButton />
       <p aria-live="polite" role="status">
         {state?.message}
