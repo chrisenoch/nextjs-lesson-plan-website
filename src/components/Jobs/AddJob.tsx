@@ -9,6 +9,8 @@ import {
   jobDescriptionValidator,
   jobTitleValidator,
 } from "@/app/validation/jobs/jobs-validators";
+import { useDispatch, useSelector } from "react-redux";
+import { addJob } from "@/store";
 
 const initialFormState: { message: string | null; isError: boolean } = {
   message: null,
@@ -43,17 +45,25 @@ export function AddJob() {
     resetElement,
     setAllToTouched,
   } = useFormClientStatus(inputRefs);
-  const resultMessageFromServer = formStateWithServer?.message;
 
+  const dispatch = useDispatch();
+  const resultMessageFromServer = formStateWithServer?.message;
   const jobTitleIsValid = zodValidator(jobTitle, {
     jobTitle: jobTitleValidator,
   });
-
   const jobDescriptionIsValid = zodValidator(jobDescription, {
     jobDescription: jobDescriptionValidator,
   });
-
   const isFormValid = jobTitleIsValid && jobDescriptionIsValid;
+
+  const handleJobAdd = (job: { id: string; title: string }) => {
+    dispatch(addJob(job));
+  };
+  const jobs = useSelector((state) => {
+    console.log("state object redux");
+    console.log(state);
+    return state.jobs;
+  });
 
   return (
     <Box
@@ -63,7 +73,14 @@ export function AddJob() {
       display={"flex"}
       flexDirection={"column"}
       gap={2}>
+      <p>{jobs[0]?.title}</p>
       <Stack direction={"row"} gap={2}>
+        <Button
+          onClick={() => handleJobAdd({ id: "1", title: "Programmer" })}
+          variant="contained"
+          color="primary">
+          Add Job
+        </Button>
         <Button
           onClick={() => setShowJobTitle((t) => !t)}
           variant="contained"
