@@ -2,9 +2,13 @@
 import { useFormState, useFormStatus } from "react-dom";
 import { Box, TextField, Button, Stack } from "@mui/material";
 import { createJob } from "@/actions/jobs";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import useFormClientStatus from "@/customHooks/useFormClientStatus";
-import { ZodEffects, ZodString, z } from "zod";
+import { zodValidator } from "@/app/validation/zod-validator";
+import {
+  jobDescriptionValidator,
+  jobTitleValidator,
+} from "@/app/validation/jobs/jobs-validators";
 
 const initialFormState: { message: string | null; isError: boolean } = {
   message: null,
@@ -38,15 +42,12 @@ export function AddJob() {
   } = useFormClientStatus(inputRefs);
   const errorMessageFromServer = state?.message;
 
-  console.log("***inputRefsInfo in AddJob");
-  console.log(status);
-
   const jobTitleIsValid = zodValidator(jobTitle, {
-    jobTitle: z.string().min(2),
+    jobTitle: jobTitleValidator,
   });
 
   const jobDescriptionIsValid = zodValidator(jobDescription, {
-    jobDescription: z.string().min(2),
+    jobDescription: jobDescriptionValidator,
   });
 
   const isFormValid = jobTitleIsValid && jobDescriptionIsValid;
@@ -151,26 +152,4 @@ function SubmitButton({ formIsValid }: { formIsValid?: boolean }) {
       Add
     </button>
   );
-}
-
-function zodValidator(
-  valueToValidate: string,
-  validator: {
-    [key: string]: z.ZodString | ZodEffects<ZodString, string, string>;
-  },
-  shouldTrim: boolean = true
-) {
-  if (Object.keys(validator).length > 1) {
-    console.error(
-      "Only one key should be passed to the validator object. Extra keys will be ignored."
-    );
-  }
-
-  if (shouldTrim) {
-    valueToValidate = valueToValidate.trim();
-  }
-
-  return z.object(validator).safeParse({
-    [Object.keys(validator)[0]]: valueToValidate,
-  }).success;
 }
