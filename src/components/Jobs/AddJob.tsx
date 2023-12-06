@@ -18,7 +18,10 @@ const initialFormState: { message: string | null; isError: boolean } = {
 export function AddJob() {
   console.log("add job rendered");
 
-  const [state, formAction] = useFormState(createJob, initialFormState);
+  const [formStateWithServer, formAction] = useFormState(
+    createJob,
+    initialFormState
+  );
   const [showJobTitle, setShowJobTitle] = useState<boolean>(false);
   const [showJobDescription, setShowJobDescription] = useState<boolean>(false);
   const jobTitleRef = useRef<null | HTMLInputElement>(null);
@@ -40,7 +43,7 @@ export function AddJob() {
     resetElement,
     setAllToTouched,
   } = useFormClientStatus(inputRefs);
-  const errorMessageFromServer = state?.message;
+  const resultMessageFromServer = formStateWithServer?.message;
 
   const jobTitleIsValid = zodValidator(jobTitle, {
     jobTitle: jobTitleValidator,
@@ -128,13 +131,13 @@ export function AddJob() {
       )}
 
       <SubmitButton formIsValid={isFormValid} />
-      {errorMessageFromServer && (
+      {resultMessageFromServer && (
         <Box
           component="p"
-          color={state.isError ? "error.main" : "success.main"}
+          color={formStateWithServer.isError ? "error.main" : "success.main"}
           aria-live="polite"
           role="status">
-          {errorMessageFromServer}
+          {resultMessageFromServer}
         </Box>
       )}
     </Box>
