@@ -6,8 +6,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useFormClientStatus from "@/customHooks/useFormClientStatus";
 import { ZodEffects, ZodString, z } from "zod";
 
-const initialFormState: { message: string | null } = {
+const initialFormState: { message: string | null; isError: boolean } = {
   message: null,
+  isError: false,
 };
 
 export function AddJob() {
@@ -48,10 +49,6 @@ export function AddJob() {
     jobDescription: z.string().min(2),
   });
 
-  // function setAllFieldsToTouched() {
-  //   console.log("Inside setAllFieldsToTouched");
-  //   setAllFieldsToTouched();
-  // }
   return (
     <Box
       onSubmit={() => setAllToTouched()}
@@ -126,13 +123,16 @@ export function AddJob() {
           minRows={4}
         />
       )}
-      {/* {errorMessageFromServer && <p>{errorMessageFromServer}</p>} */}
 
       <SubmitButton />
       {errorMessageFromServer && (
-        <p aria-live="polite" role="status">
+        <Box
+          component="p"
+          color={state.isError ? "error.main" : "success.main"}
+          aria-live="polite"
+          role="status">
           {errorMessageFromServer}
-        </p>
+        </Box>
       )}
     </Box>
   );
