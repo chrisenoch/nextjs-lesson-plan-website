@@ -49,6 +49,8 @@ export function AddJob() {
     jobDescription: z.string().min(2),
   });
 
+  const isFormValid = jobTitleIsValid && jobDescriptionIsValid;
+
   return (
     <Box
       onSubmit={() => setAllToTouched()}
@@ -124,7 +126,7 @@ export function AddJob() {
         />
       )}
 
-      <SubmitButton />
+      <SubmitButton formIsValid={isFormValid} />
       {errorMessageFromServer && (
         <Box
           component="p"
@@ -138,11 +140,14 @@ export function AddJob() {
   );
 }
 
-function SubmitButton() {
+function SubmitButton({ formIsValid }: { formIsValid?: boolean }) {
   const { pending } = useFormStatus();
 
   return (
-    <button type="submit" aria-disabled={pending} disabled={pending}>
+    <button
+      type="submit"
+      aria-disabled={pending || !formIsValid}
+      disabled={pending || !formIsValid}>
       Add
     </button>
   );
