@@ -13,6 +13,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, addJob, fetchJobs } from "@/store";
 import { JobsPreview } from "./JobsPreview";
+import { selectAllJobs } from "@/store/slices/jobs-slice";
 
 const initialFormState: {
   message: string | null;
@@ -68,9 +69,7 @@ export function AddJob() {
     dispatch(addJob(job));
   };
   const jobs: { id: string; jobTitle: string; jobDescription: string }[] =
-    useSelector((state) => {
-      return state.jobs;
-    });
+    useSelector(selectAllJobs);
 
   //Used as an observer. Runs everytime the form server action returns a response to a form submission.
   //formStateWithServer.emitter only changes when a form response arrives

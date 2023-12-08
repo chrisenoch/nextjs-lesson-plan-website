@@ -27,7 +27,10 @@ export default function ResponsiveAppBar({
   LINKS,
   PLACEHOLDER_LINKS,
 }) {
-  const navItems = ["Home", "About", "Contact"];
+  const navItems = [
+    { title: "Lesson Plans", href: "/lessonplans" },
+    { title: "Jobs", href: "/jobs" },
+  ];
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
@@ -80,7 +83,9 @@ export default function ResponsiveAppBar({
                 display: { xs: "none", sm: "block" },
               }}>
               {navItems.map((item) => (
-                <Button key={item}>{item}</Button>
+                <Button key={item.title} href={item.href} component={Link}>
+                  {item.title}
+                </Button>
               ))}
             </Box>
           </Toolbar>

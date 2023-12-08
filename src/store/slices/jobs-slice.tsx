@@ -39,6 +39,8 @@ export const fetchJobs = createAsyncThunk("job/fetch", async () => {
   await pause(1000);
 
   const jobs = await response.json();
+  console.log("jobs resp");
+  console.log(jobs);
   return jobs;
 });
 

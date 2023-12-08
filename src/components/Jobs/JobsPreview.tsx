@@ -1,4 +1,7 @@
+"use client";
+
 import { SerializedError } from "@reduxjs/toolkit";
+import { useEffect, useState } from "react";
 
 export function JobsPreview({
   jobs,
@@ -11,6 +14,16 @@ export function JobsPreview({
 }) {
   console.log("jobs in jobs preview");
   console.log(jobs.jobs);
+
+  const [hasmounted, sethasmounted] = useState(false);
+
+  useEffect(() => {
+    sethasmounted(true);
+  }, []);
+
+  if (!hasmounted) {
+    return "Loading ...";
+  }
 
   //To do: Turn the jobs into links
   const renderedJobs = jobs.jobs.map((job) => {
