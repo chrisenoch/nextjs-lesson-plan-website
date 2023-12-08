@@ -17,13 +17,13 @@
 export function JobsPreview({
   jobs,
 }: {
-  jobs: { id: string; title: string }[];
+  jobs: { id: string; jobTitle: string; jobDescription: string }[];
 }) {
   //To do: Turn the jobs into links
   const renderedJobs = jobs.map((job) => {
     return (
       <li key={job.id}>
-        {job.id} {job.title}
+        {job.jobTitle} {job.jobDescription}
       </li>
     );
   });

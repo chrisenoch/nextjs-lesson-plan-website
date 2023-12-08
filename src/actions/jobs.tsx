@@ -8,6 +8,7 @@ import {
   jobTitleValidator,
 } from "@/app/validation/jobs/jobs-validators";
 
+let count = 0;
 export async function createJob(prevState: any, formData: FormData) {
   console.log("in create job");
 
@@ -15,10 +16,12 @@ export async function createJob(prevState: any, formData: FormData) {
     jobTitle: jobTitleValidator,
     jobDescription: jobDescriptionValidator,
   });
+  const jobTitle = (formData.get("job-title") as string).trim();
+  const jobDescription = (formData.get("job-description") as string).trim();
 
   const parse = schema.safeParse({
-    jobTitle: (formData.get("job-title") as string).trim(),
-    jobDescription: (formData.get("job-description") as string).trim(),
+    jobTitle,
+    jobDescription,
   });
 
   if (!parse.success) {
@@ -33,15 +36,27 @@ export async function createJob(prevState: any, formData: FormData) {
   const data = parse.data;
 
   try {
-    await delay(() => console.log("create job completed"), 2000);
+    //Save to database. For now, use json-server, db.json to simulate this.
+    const response = await fetch("http://localhost:3001/jobs", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        jobTitle,
+        jobDescription,
+      }),
+    });
 
-    //save to database
+    const result = await response.json();
+    console.log("Success:", result);
 
     revalidatePath("./");
     return {
       message: `Added job ${data.jobTitle}`,
       isError: false,
       emitter: [],
+      payload: result,
     };
   } catch (e) {
     revalidatePath("./");

@@ -3,7 +3,7 @@ import { faker } from "@faker-js/faker";
 import { useFormState, useFormStatus } from "react-dom";
 import { Box, TextField, Button, Stack } from "@mui/material";
 import { createJob } from "@/actions/jobs";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import useFormClientStatus from "@/customHooks/useFormClientStatus";
 import { zodValidator } from "@/app/validation/zod-validator";
 import {
@@ -18,6 +18,7 @@ const initialFormState: {
   message: string | null;
   isError: boolean;
   emitter: any[] | null;
+  payload?: { jobTitle: string; jobDescription: string };
 } = {
   message: null,
   isError: false,
@@ -63,14 +64,15 @@ export function AddJob() {
   });
   const isFormValid = jobTitleIsValid && jobDescriptionIsValid;
 
-  const handleJobAdd = (job: { id: string; title: string }) => {
+  const handleJobAdd = (job: { jobTitle: string; jobDescription: string }) => {
     dispatch(addJob(job));
   };
-  const jobs: { id: string; title: string }[] = useSelector((state) => {
-    console.log("state object redux");
-    console.log(state);
-    return state.jobs;
-  });
+  const jobs: { id: string; jobTitle: string; jobDescription: string }[] =
+    useSelector((state) => {
+      console.log("state object redux");
+      console.log(state);
+      return state.jobs;
+    });
 
   async function fetchJobs() {
     const response = await fetch("http://localhost:3001/jobs");
@@ -78,31 +80,20 @@ export function AddJob() {
     console.log(jobs);
   }
 
-  async function postJob() {
-    try {
-      const response = await fetch("http://localhost:3001/jobs", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ jobTitle: faker.person.fullName() }),
-      });
-
-      const result = await response.json();
-      console.log("Success:", result);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  }
-
   //Used as an observer. Runs everytime the form server action returns a response to a form submission.
-  useMemo(() => {
+  useEffect(() => {
     if (formStateWithServer.emitter === null) {
-      console.log("first time initialised");
+      console.log("first time initialised " + formStateWithServer.emitter);
       return;
     }
 
-    console.log("new form data recived");
+    if (!formStateWithServer.isError && formStateWithServer.payload) {
+      console.log("emitter id below: ");
+      console.log(formStateWithServer.emitter);
+      console.log("payload below");
+      console.log(formStateWithServer.payload);
+      handleJobAdd(formStateWithServer.payload);
+    }
   }, [formStateWithServer.emitter]);
 
   return (
@@ -113,20 +104,17 @@ export function AddJob() {
       display={"flex"}
       flexDirection={"column"}
       gap={2}>
-      <p>{jobs[0]?.title}</p>
+      {/* <p>{jobs[0]?.jobTitle}</p> */}
       <Stack direction={"row"} gap={2}>
-        <Button onClick={postJob} variant="contained" color="primary">
-          Post Job
-        </Button>
         <Button onClick={fetchJobs} variant="contained" color="primary">
           Fetch Jobs
         </Button>
-        <Button
+        {/* <Button
           onClick={() => handleJobAdd({ id: "1", title: "Programmer" })}
           variant="contained"
           color="primary">
           Add Job
-        </Button>
+        </Button> */}
         <Button
           onClick={() => setShowJobTitle((t) => !t)}
           variant="contained"
