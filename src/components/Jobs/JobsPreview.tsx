@@ -1,32 +1,24 @@
-//export default function DisplayLessonplans({
-//     lessonPlans,
-// }: {
-//   lessonPlans: {
-// title: string;
-// description: string;
-// imageURL: string;
-// imageAlt: string;
-// chips: {
-//     title: string;
-//     category: LessonPlanType;
-// }[];
-// }
-
-//{ jobs }: jobs: { id: string; title: string }[])
+import { SerializedError } from "@reduxjs/toolkit";
 
 export function JobsPreview({
   jobs,
 }: {
-  jobs: { id: string; jobTitle: string; jobDescription: string }[];
+  jobs: {
+    jobs: { id: string; jobTitle: string; jobDescription: string }[];
+    isLoading: boolean;
+    error: null | SerializedError;
+  };
 }) {
+  console.log("jobs in jobs preview");
+  console.log(jobs.jobs);
+
   //To do: Turn the jobs into links
-  const renderedJobs = jobs.map((job) => {
+  const renderedJobs = jobs.jobs.map((job) => {
     return (
       <li key={job.id}>
         {job.jobTitle} {job.jobDescription}
       </li>
     );
   });
-
-  return <ul>{renderedJobs}</ul>;
+  return jobs.isLoading ? "Loading ..." : <ul>{renderedJobs}</ul>;
 }

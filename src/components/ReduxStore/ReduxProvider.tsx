@@ -1,8 +1,9 @@
 "use client";
 import * as React from "react";
-import { store } from "../../store";
+import { fetchJobs, store } from "../../store";
 import { Provider } from "react-redux";
 
+store.dispatch(fetchJobs());
 export default function ReduxProvider({
   children,
 }: {

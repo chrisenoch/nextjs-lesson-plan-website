@@ -71,14 +71,6 @@ export function AddJob() {
     useSelector((state) => {
       return state.jobs;
     });
-  console.log("jobs from useSelector");
-  console.log(jobs);
-
-  // async function fetchJobs() {
-  //   const response = await fetch("http://localhost:3001/jobs");
-  //   const jobs = await response.json();
-  //   console.log(jobs);
-  // }
 
   //Used as an observer. Runs everytime the form server action returns a response to a form submission.
   //formStateWithServer.emitter only changes when a form response arrives
@@ -93,9 +85,9 @@ export function AddJob() {
   }, [formStateWithServer.emitter]);
 
   //To do: Remove effect. (just for testing)
-  useEffect(() => {
-    dispatch(fetchJobs());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(fetchJobs());
+  // }, []);
 
   return (
     <Box
@@ -105,17 +97,7 @@ export function AddJob() {
       display={"flex"}
       flexDirection={"column"}
       gap={2}>
-      {/* <p>{jobs[0]?.jobTitle}</p> */}
       <Stack direction={"row"} gap={2}>
-        {/* <Button onClick={fetchJobs} variant="contained" color="primary">
-          Fetch Jobs
-        </Button> */}
-        {/* <Button
-          onClick={() => handleJobAdd({ id: "1", title: "Programmer" })}
-          variant="contained"
-          color="primary">
-          Add Job
-        </Button> */}
         <Button
           onClick={() => setShowJobTitle((t) => !t)}
           variant="contained"
@@ -192,7 +174,7 @@ export function AddJob() {
           {resultMessageFromServer}
         </Box>
       )}
-      {/* <JobsPreview jobs={jobs}></JobsPreview> */}
+      <JobsPreview jobs={jobs}></JobsPreview>
     </Box>
   );
 }
