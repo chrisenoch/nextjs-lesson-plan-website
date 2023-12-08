@@ -29,9 +29,6 @@ export default function useFormClientStatus(
       }
     >
   >(new Map());
-  console.log("useFormClientStatus rendered");
-  console.log("refListenes input ref ");
-  console.log(refsListeners.current.get("jobTitle"));
 
   //create the elementStatusObjects. Run useeffect once to init the objects for each ref.
   useEffect(() => {
@@ -91,7 +88,6 @@ export default function useFormClientStatus(
     }
 
     return () => {
-      console.log("in cleanup function");
       if (elementsStatus) {
         removeEventListeners(refsListeners.current);
       }

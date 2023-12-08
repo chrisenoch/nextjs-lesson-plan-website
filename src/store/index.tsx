@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { jobsReducer, addJob, removeJob } from "./slices/jobs-slice";
+import { jobsReducer, addJob, removeJob, fetchJobs } from "./slices/jobs-slice";
 
 const store = configureStore({
   reducer: {
@@ -7,4 +7,5 @@ const store = configureStore({
   },
 });
 
-export { store, addJob, removeJob };
+export { store, addJob, removeJob, fetchJobs };
+export type AppDispatch = typeof store.dispatch;

@@ -1,18 +1,51 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
 const jobsSlice = createSlice({
   name: "job",
-  initialState: [],
+  initialState: {
+    jobs: [],
+  },
   reducers: {
     addJob(state, action) {
-      state.push(action.payload);
+      state.jobs.push(action.payload);
     },
-    removeJob(state, action) {
-      const index = state.indexOf(action.payload);
-      state.splice(index, 1);
-    },
+    // removeJob(state, action) {
+    //   const index = state.indexOf(action.payload);
+    //   state.splice(index, 1);
+    // },
+  },
+  extraReducers(builder) {
+    builder.addCase(fetchJobs.pending, (state, action) => {
+      state.isLoading = true;
+    });
+    builder.addCase(fetchJobs.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.jobs = action.payload;
+    });
+    builder.addCase(fetchJobs.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error;
+    });
   },
 });
 
+export const fetchJobs = createAsyncThunk("job/fetch", async () => {
+  const response = await fetch("http://localhost:3001/jobs");
+  // DEV ONLY!!!
+  await pause(1000);
+
+  const jobs = await response.json();
+  return jobs;
+});
+
+// DEV ONLY!!!
+const pause = (duration: number) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, duration);
+  });
+};
+
 export const { addJob, removeJob } = jobsSlice.actions;
 export const jobsReducer = jobsSlice.reducer;
+export const selectAllJobs = (state) => state.jobs;

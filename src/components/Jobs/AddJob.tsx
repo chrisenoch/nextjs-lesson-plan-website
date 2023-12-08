@@ -11,7 +11,7 @@ import {
   jobTitleValidator,
 } from "@/app/validation/jobs/jobs-validators";
 import { useDispatch, useSelector } from "react-redux";
-import { addJob } from "@/store";
+import { AppDispatch, addJob, fetchJobs } from "@/store";
 import { JobsPreview } from "./JobsPreview";
 
 const initialFormState: {
@@ -54,7 +54,7 @@ export function AddJob() {
     setAllToTouched,
   } = useFormClientStatus(inputRefs);
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const resultMessageFromServer = formStateWithServer?.message;
   const jobTitleIsValid = zodValidator(jobTitle, {
     jobTitle: jobTitleValidator,
@@ -69,32 +69,33 @@ export function AddJob() {
   };
   const jobs: { id: string; jobTitle: string; jobDescription: string }[] =
     useSelector((state) => {
-      console.log("state object redux");
-      console.log(state);
       return state.jobs;
     });
+  console.log("jobs from useSelector");
+  console.log(jobs);
 
-  async function fetchJobs() {
-    const response = await fetch("http://localhost:3001/jobs");
-    const jobs = await response.json();
-    console.log(jobs);
-  }
+  // async function fetchJobs() {
+  //   const response = await fetch("http://localhost:3001/jobs");
+  //   const jobs = await response.json();
+  //   console.log(jobs);
+  // }
 
   //Used as an observer. Runs everytime the form server action returns a response to a form submission.
+  //formStateWithServer.emitter only changes when a form response arrives
   useEffect(() => {
     if (formStateWithServer.emitter === null) {
-      console.log("first time initialised " + formStateWithServer.emitter);
       return;
     }
 
     if (!formStateWithServer.isError && formStateWithServer.payload) {
-      console.log("emitter id below: ");
-      console.log(formStateWithServer.emitter);
-      console.log("payload below");
-      console.log(formStateWithServer.payload);
       handleJobAdd(formStateWithServer.payload);
     }
   }, [formStateWithServer.emitter]);
+
+  //To do: Remove effect. (just for testing)
+  useEffect(() => {
+    dispatch(fetchJobs());
+  }, []);
 
   return (
     <Box
@@ -106,9 +107,9 @@ export function AddJob() {
       gap={2}>
       {/* <p>{jobs[0]?.jobTitle}</p> */}
       <Stack direction={"row"} gap={2}>
-        <Button onClick={fetchJobs} variant="contained" color="primary">
+        {/* <Button onClick={fetchJobs} variant="contained" color="primary">
           Fetch Jobs
-        </Button>
+        </Button> */}
         {/* <Button
           onClick={() => handleJobAdd({ id: "1", title: "Programmer" })}
           variant="contained"
@@ -191,7 +192,7 @@ export function AddJob() {
           {resultMessageFromServer}
         </Box>
       )}
-      <JobsPreview jobs={jobs}></JobsPreview>
+      {/* <JobsPreview jobs={jobs}></JobsPreview> */}
     </Box>
   );
 }
