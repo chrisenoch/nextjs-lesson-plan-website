@@ -1,4 +1,5 @@
 "use client";
+import { faker } from "@faker-js/faker";
 import { useFormState, useFormStatus } from "react-dom";
 import { Box, TextField, Button, Stack } from "@mui/material";
 import { createJob } from "@/actions/jobs";
@@ -11,10 +12,16 @@ import {
 } from "@/app/validation/jobs/jobs-validators";
 import { useDispatch, useSelector } from "react-redux";
 import { addJob } from "@/store";
+import { JobsPreview } from "./JobsPreview";
 
-const initialFormState: { message: string | null; isError: boolean } = {
+const initialFormState: {
+  message: string | null;
+  isError: boolean;
+  emitter: any[] | null;
+} = {
   message: null,
   isError: false,
+  emitter: null,
 };
 
 export function AddJob() {
@@ -24,8 +31,8 @@ export function AddJob() {
     createJob,
     initialFormState
   );
-  const [showJobTitle, setShowJobTitle] = useState<boolean>(false);
-  const [showJobDescription, setShowJobDescription] = useState<boolean>(false);
+  const [showJobTitle, setShowJobTitle] = useState<boolean>(true);
+  const [showJobDescription, setShowJobDescription] = useState<boolean>(true);
   const jobTitleRef = useRef<null | HTMLInputElement>(null);
   const jobDescriptionRef = useRef<null | HTMLInputElement>(null);
   const [jobTitle, setJobTitle] = useState<string>("");
@@ -59,11 +66,44 @@ export function AddJob() {
   const handleJobAdd = (job: { id: string; title: string }) => {
     dispatch(addJob(job));
   };
-  const jobs = useSelector((state) => {
+  const jobs: { id: string; title: string }[] = useSelector((state) => {
     console.log("state object redux");
     console.log(state);
     return state.jobs;
   });
+
+  async function fetchJobs() {
+    const response = await fetch("http://localhost:3001/jobs");
+    const jobs = await response.json();
+    console.log(jobs);
+  }
+
+  async function postJob() {
+    try {
+      const response = await fetch("http://localhost:3001/jobs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ jobTitle: faker.person.fullName() }),
+      });
+
+      const result = await response.json();
+      console.log("Success:", result);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
+  //Used as an observer. Runs everytime the form server action returns a response to a form submission.
+  useMemo(() => {
+    if (formStateWithServer.emitter === null) {
+      console.log("first time initialised");
+      return;
+    }
+
+    console.log("new form data recived");
+  }, [formStateWithServer.emitter]);
 
   return (
     <Box
@@ -75,6 +115,12 @@ export function AddJob() {
       gap={2}>
       <p>{jobs[0]?.title}</p>
       <Stack direction={"row"} gap={2}>
+        <Button onClick={postJob} variant="contained" color="primary">
+          Post Job
+        </Button>
+        <Button onClick={fetchJobs} variant="contained" color="primary">
+          Fetch Jobs
+        </Button>
         <Button
           onClick={() => handleJobAdd({ id: "1", title: "Programmer" })}
           variant="contained"
@@ -157,6 +203,7 @@ export function AddJob() {
           {resultMessageFromServer}
         </Box>
       )}
+      <JobsPreview jobs={jobs}></JobsPreview>
     </Box>
   );
 }
@@ -167,8 +214,9 @@ function SubmitButton({ formIsValid }: { formIsValid?: boolean }) {
   return (
     <button
       type="submit"
-      aria-disabled={pending || !formIsValid}
-      disabled={pending || !formIsValid}>
+      // aria-disabled={pending || !formIsValid}
+      // disabled={pending || !formIsValid}
+    >
       Add
     </button>
   );

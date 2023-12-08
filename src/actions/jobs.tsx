@@ -26,6 +26,7 @@ export async function createJob(prevState: any, formData: FormData) {
       message:
         "Failed to create job. Ensure you insert the correct form values.",
       isError: true,
+      emitter: [],
     };
   }
 
@@ -33,8 +34,15 @@ export async function createJob(prevState: any, formData: FormData) {
 
   try {
     await delay(() => console.log("create job completed"), 2000);
+
+    //save to database
+
     revalidatePath("./");
-    return { message: `Added job ${data.jobTitle}`, isError: false };
+    return {
+      message: `Added job ${data.jobTitle}`,
+      isError: false,
+      emitter: [],
+    };
   } catch (e) {
     revalidatePath("./");
     return {
@@ -42,6 +50,7 @@ export async function createJob(prevState: any, formData: FormData) {
         "Failed to create job due to an error. Please contact our support team." +
         e,
       isError: true,
+      emitter: [],
     };
   }
 }
