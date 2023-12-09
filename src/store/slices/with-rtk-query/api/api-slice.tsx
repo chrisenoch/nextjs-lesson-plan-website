@@ -5,13 +5,12 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const apiSlice = createApi({
   // The cache reducer expects to be added at `state.api` (already default - this is optional)
   reducerPath: "api",
-
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3001/" }),
-  // The "endpoints" represent operations and requests for this server
+  tagTypes: ["Job"],
   endpoints: (builder) => ({
-    // The `getPosts` endpoint is a "query" operation that returns data
     getJobs: builder.query({
       query: () => "/jobs",
+      providesTags: ["Job"],
     }),
     addNewJob: builder.mutation({
       query: (job) => ({
@@ -19,6 +18,7 @@ export const apiSlice = createApi({
         method: "POST",
         body: job,
       }),
+      invalidatesTags: ["Job"],
     }),
   }),
 });
