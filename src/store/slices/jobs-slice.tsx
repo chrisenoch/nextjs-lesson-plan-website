@@ -11,7 +11,6 @@ const jobsSlice = createSlice({
   reducers: {
     addJob(state, action) {
       state.jobs.push(action.payload);
-      900000;
     },
     // removeJob(state, action) {
     //   const index = state.indexOf(action.payload);
