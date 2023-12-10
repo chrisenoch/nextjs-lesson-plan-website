@@ -19,6 +19,7 @@
     "@mui/material": "latest",
     "@reduxjs/toolkit": "^2.0.1",
     "json-server": "^0.17.4",
+    "jsonwebtoken": "^9.0.2",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",

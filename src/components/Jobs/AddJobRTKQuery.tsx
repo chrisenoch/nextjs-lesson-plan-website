@@ -41,6 +41,7 @@ export function AddJobRTKQuery() {
     isError,
     error,
   } = useGetJobsQuery();
+  const [addNewJob, { isLoading: isAddJobLoading }] = useAddNewJobMutation();
 
   const [showJobTitle, setShowJobTitle] = useState<boolean>(true);
   const [showJobDescription, setShowJobDescription] = useState<boolean>(true);
@@ -71,7 +72,6 @@ export function AddJobRTKQuery() {
     resetElement,
     setAllToTouched,
   } = useFormClientStatus(inputRefs);
-  const [addNewJob, { isLoading: isAddJobLoading }] = useAddNewJobMutation();
 
   const jobTitleIsValid = zodValidator(jobTitle, {
     jobTitle: jobTitleValidator,
