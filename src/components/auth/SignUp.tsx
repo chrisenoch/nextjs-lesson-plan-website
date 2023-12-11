@@ -1,30 +1,36 @@
 "use client";
-import { AppDispatch, userLogin } from "@/store";
+import { AppDispatch, registerUser } from "@/store";
 import { Box, TextField, Button, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { redirect } from "next/navigation";
 
-export function SignIn() {
-  console.log("SignIn page rendered");
+export function SignUp() {
+  console.log("SignUp page rendered");
 
-  const { loading, userInfo, error } = useSelector((state) => state.auth);
+  const { loading, userInfo, error, success } = useSelector(
+    (state) => state.auth
+  );
   const dispatch = useDispatch<AppDispatch>();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   function handleSubmit(e) {
     e.preventDefault();
-    dispatch(userLogin({ email, password }));
+
+    dispatch(registerUser({ email: email.toLowerCase(), password }));
   }
 
-  // Ensure that  previously authenticated users can’t access this page.
-  // redirect authenticated user to homepage
   useEffect(() => {
-    if (userInfo) {
-      redirect("/");
+    // redirect user to login page if registration was successful
+    if (success) {
+      redirect("/login");
     }
-  }, [userInfo]);
+    // redirect authenticated user to premium screen
+    if (userInfo) {
+      redirect("/premium");
+    }
+  }, [userInfo, success]);
 
   return (
     <Box
@@ -60,24 +66,4 @@ export function SignIn() {
       </Button>
     </Box>
   );
-}
-
-//Delete this - this is just for testing
-async function postJSON(data: { email: string; password: string }) {
-  try {
-    const response = await fetch("http://xlocalhost:3000/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    const result = await response.json();
-    console.log("Success:", result);
-  } catch (error) {
-    console.error("Error:", error);
-    console.log("error below");
-    console.log({ error });
-  }
 }

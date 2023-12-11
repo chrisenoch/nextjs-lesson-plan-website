@@ -14,7 +14,6 @@ export async function GET(request: NextRequest) {
     payload = jwt.verify(token.value, "my-secret");
 
     console.log("token below");
-    console.log(token);
     console.log("payload below");
     console.log(payload);
 

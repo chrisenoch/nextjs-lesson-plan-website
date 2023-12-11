@@ -13,7 +13,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, addJob, fetchJobs } from "@/store";
 import { JobsPreview } from "./JobsPreview";
-import { selectAllJobs } from "@/store/slices/jobs-slice";
+import { selectAllJobs } from "@/store/slices/with-thunks/jobs-slice";
 import {
   useAddNewJobMutation,
   useGetJobsQuery,
