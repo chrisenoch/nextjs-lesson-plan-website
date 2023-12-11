@@ -7,10 +7,10 @@ export const internalAPISlice = createApi({
 
   endpoints: (builder) => ({
     getUserDetails: builder.query({
-      query: (userId: number) => {
+      query: () => {
         console.log("userId in getUserDetails query method");
         return {
-          url: `/user/profile?userId=${userId}`,
+          url: "/auth/user-details",
           method: "GET",
         };
       },

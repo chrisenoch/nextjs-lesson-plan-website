@@ -34,10 +34,11 @@ export default function ResponsiveAppBar({
   const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
   // automatically authenticate user if token is found
-  const { data, isFetching } = useGetUserDetailsQuery(0, {
-    // perform a refetch every 15mins
-    //pollingInterval: 900000,
-  });
+  // const { data, isFetching } = useGetUserDetailsQuery(0, {
+  //   // perform a refetch every 15mins
+  //   //pollingInterval: 900000,
+  // });
+  const { data, isFetching, isError, error } = useGetUserDetailsQuery();
 
   console.log("data from useGetUserDetailsQuery");
   console.log(data);
@@ -45,8 +46,9 @@ export default function ResponsiveAppBar({
   const navItems = [
     { title: "Lesson Plans", href: "/lessonplans" },
     { title: "Jobs", href: "/jobs" },
-    { title: "Login", href: "/auth/login" },
+    { title: "Login", href: "/auth/signin" },
     { title: "Logout", href: "/auth/logout" },
+    { title: "Foo", href: "/auth/signin" },
   ];
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -63,6 +65,11 @@ export default function ResponsiveAppBar({
     return React.cloneElement(children, {
       elevation: trigger ? 4 : 0,
     });
+  }
+
+  if (isError) {
+    console.log("Error because of useGetUserDetailsQuery below");
+    console.log(error);
   }
 
   return (

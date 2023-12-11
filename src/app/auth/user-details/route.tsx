@@ -16,13 +16,24 @@ export async function GET(request: NextRequest) {
 
   let resp;
   if (token) {
-    payload = jwt.verify(token.value, "my-secret");
+    try {
+      payload = jwt.verify(token.value, "my-secret");
 
-    console.log("token below");
-    console.log("payload below");
-    console.log(payload);
+      console.log("token below");
+      console.log("payload below");
+      console.log(payload);
 
-    resp = NextResponse.json({ token: token.value, payload: payload });
+      //check if expired. If so, include this information in payload.
+
+      //resp = NextResponse.json({ token: token.value, payload: payload });
+      resp = NextResponse.json({ payload });
+    } catch {
+      console.log("in catch");
+      resp = NextResponse.json(
+        { message: "Invalid jwt token." }, //To do: Change this error message
+        { status: 401 }
+      );
+    }
   } else {
     resp = NextResponse.json(
       { message: "No jwt token cookie found." },

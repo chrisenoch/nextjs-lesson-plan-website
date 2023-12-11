@@ -18,6 +18,9 @@ export function SignIn() {
     dispatch(userLogin({ email, password }));
   }
 
+  console.log("User info below");
+  console.log(userInfo);
+
   // Ensure that  previously authenticated users can’t access this page.
   // redirect authenticated user to homepage
   useEffect(() => {
@@ -60,24 +63,4 @@ export function SignIn() {
       </Button>
     </Box>
   );
-}
-
-//Delete this - this is just for testing
-async function postJSON(data: { email: string; password: string }) {
-  try {
-    const response = await fetch("http://xlocalhost:3000/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    const result = await response.json();
-    console.log("Success:", result);
-  } catch (error) {
-    console.error("Error:", error);
-    console.log("error below");
-    console.log({ error });
-  }
 }

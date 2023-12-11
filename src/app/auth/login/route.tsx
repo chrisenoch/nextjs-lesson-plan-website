@@ -14,7 +14,8 @@ export async function POST(request: Request) {
       email: "foo@bar.com",
       role: "admin",
     };
-    token = jwt.sign(payload, "my-secret");
+    //token = jwt.sign(payload, "my-secret", { expiresIn: "1d" });
+    token = jwt.sign(payload, "my-secret", { expiresIn: "5s" });
   }
 
   //set cookie
@@ -25,7 +26,7 @@ export async function POST(request: Request) {
       { status: 200 }
     );
     nextResponse.cookies.set("jwt", token, {
-      maxAge: 60 * 60 * 24, //To do: Reduce this number.
+      maxAge: 60 * 60 * 24, //To do: Reduce this number?
       httpOnly: true,
       sameSite: "strict",
     });
