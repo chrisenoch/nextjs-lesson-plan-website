@@ -2,31 +2,39 @@ import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  const res: { username: string; password: string } = await request.json();
-  let nextResponse = NextResponse.json(res);
+  const res: { email: string; password: string } = await request.json();
 
   //In reality would do a database lookup here.
   let token;
-  if (res.username.toLowerCase() === "admin" && res.password === "admin") {
+  if (res.email.toLowerCase() === "admin" && res.password === "admin") {
     //Assign jwt token
     const payload = {
-      name: "Chris Enoch",
-      age: "39",
+      id: 0,
+      firstName: "Chris",
+      email: "foo@bar.com",
       role: "admin",
     };
     token = jwt.sign(payload, "my-secret");
   }
 
   //set cookie
+  let nextResponse;
   if (token) {
-    console.log("token exists");
+    nextResponse = NextResponse.json(
+      { message: "Login successful" },
+      { status: 200 }
+    );
     nextResponse.cookies.set("jwt", token, {
       maxAge: 60 * 60 * 24, //To do: Reduce this number.
       httpOnly: true,
       sameSite: "strict",
     });
-    return nextResponse.ok;
+    return nextResponse;
   } else {
-    return NextResponse.json({ error: "Unsuccessful login" }, { status: 401 });
+    nextResponse = NextResponse.json(
+      { error: "Unsuccessful login" },
+      { status: 401 }
+    );
+    return nextResponse;
   }
 }

@@ -12,6 +12,7 @@ export function SignUp() {
     (state) => state.auth
   );
   const dispatch = useDispatch<AppDispatch>();
+  const [firstName, setFirstName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -39,6 +40,16 @@ export function SignUp() {
       display={"flex"}
       flexDirection={"column"}
       gap={2}>
+      <TextField
+        id="first-name"
+        name="first-name"
+        label="First name"
+        variant="outlined"
+        value={firstName}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+          setFirstName(event.target.value);
+        }}
+      />
       <TextField
         id="email"
         name="email"

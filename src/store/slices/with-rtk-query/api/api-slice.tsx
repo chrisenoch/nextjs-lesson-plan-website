@@ -20,7 +20,17 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["Job"],
     }),
+    getUserDetails: builder.query({
+      query: (userId: number) => {
+        console.log("userId in getUserDetails query method");
+        return {
+          url: `/user/profile?userId=${userId}`,
+          method: "GET",
+        };
+      },
+    }),
   }),
 });
 
-export const { useGetJobsQuery, useAddNewJobMutation } = apiSlice;
+export const { useGetJobsQuery, useAddNewJobMutation, useGetUserDetailsQuery } =
+  apiSlice;

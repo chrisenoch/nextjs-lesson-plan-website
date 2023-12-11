@@ -6,6 +6,9 @@ export const userLogin = createAsyncThunk(
   "auth/login",
   async (data: { email: string; password: string }, { rejectWithValue }) => {
     try {
+      console.log("in try and data below");
+      console.log(data);
+
       const response = await fetch(`${BACKEND_URL}/auth/login`, {
         method: "POST",
         headers: {
@@ -26,7 +29,10 @@ export const userLogin = createAsyncThunk(
 
 export const registerUser = createAsyncThunk(
   "auth/register",
-  async (data: { email: string; password: string }, { rejectWithValue }) => {
+  async (
+    data: { firstName: string; email: string; password: string },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await fetch(`${BACKEND_URL}/auth/register`, {
         method: "POST",

@@ -2,14 +2,14 @@ import { createSlice } from "@reduxjs/toolkit";
 import { registerUser, userLogin } from "./auth-thunks";
 
 // initialize userToken from local storage
-const userToken = localStorage.getItem("userToken")
-  ? localStorage.getItem("userToken")
-  : null;
+// const userToken = localStorage.getItem("userToken")
+//   ? localStorage.getItem("userToken")
+//   : null;
 
 const initialState = {
   isLoading: false,
   userInfo: null,
-  userToken,
+  userToken: null,
   error: null,
   success: false,
 };

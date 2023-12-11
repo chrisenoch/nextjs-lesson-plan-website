@@ -21,12 +21,26 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Link from "next/link";
 import { useState } from "react";
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "@/store";
+import { useGetUserDetailsQuery } from "@/store/slices/with-rtk-query/api/api-slice";
 
 export default function ResponsiveAppBar({
   DRAWER_WIDTH,
   LINKS,
   PLACEHOLDER_LINKS,
 }) {
+  const { userInfo } = useSelector((state) => state.auth);
+  const dispatch = useDispatch<AppDispatch>();
+  // automatically authenticate user if token is found
+  const { data, isFetching } = useGetUserDetailsQuery(0, {
+    // perform a refetch every 15mins
+    //pollingInterval: 900000,
+  });
+
+  console.log("data from useGetUserDetailsQuery");
+  console.log(data);
+
   const navItems = [
     { title: "Lesson Plans", href: "/lessonplans" },
     { title: "Jobs", href: "/jobs" },
