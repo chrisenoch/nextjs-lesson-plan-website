@@ -18,12 +18,13 @@ import {
   useScrollTrigger,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import LoadingButton from "@mui/lab/LoadingButton";
 import Link from "next/link";
 import { useState } from "react";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store";
-import { useGetUserDetailsQuery } from "@/store/slices/with-rtk-query/api/api-slice";
+import { useGetUserDetailsQuery } from "@/store/slices/with-rtk-query/api/internal-api-slice";
 
 export default function ResponsiveAppBar({
   DRAWER_WIDTH,
@@ -44,6 +45,8 @@ export default function ResponsiveAppBar({
   const navItems = [
     { title: "Lesson Plans", href: "/lessonplans" },
     { title: "Jobs", href: "/jobs" },
+    { title: "Login", href: "/auth/login" },
+    { title: "Logout", href: "/auth/logout" },
   ];
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -96,11 +99,35 @@ export default function ResponsiveAppBar({
               sx={{
                 display: { xs: "none", sm: "block" },
               }}>
-              {navItems.map((item) => (
-                <Button key={item.title} href={item.href} component={Link}>
-                  {item.title}
-                </Button>
-              ))}
+              {navItems
+                .filter((item) => {
+                  if (item.title === "Login" && data) {
+                    return false;
+                  }
+                  if (item.title === "Logout" && (!data || isFetching)) {
+                    return false;
+                  }
+                  return true;
+                })
+                .map((item) => {
+                  if (item.title === "Login" && isFetching) {
+                    return (
+                      <LoadingButton
+                        key={item.title}
+                        loading
+                        disabled
+                        variant="outlined">
+                        Login
+                      </LoadingButton>
+                    );
+                  }
+
+                  return (
+                    <Button key={item.title} href={item.href} component={Link}>
+                      {item.title}
+                    </Button>
+                  );
+                })}
             </Box>
           </Toolbar>
         </AppBar>

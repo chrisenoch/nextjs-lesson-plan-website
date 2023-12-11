@@ -1,10 +1,8 @@
 // Import the RTK Query methods from the React-specific entry point
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-// Define our single API slice object
-export const apiSlice = createApi({
-  // The cache reducer expects to be added at `state.api` (already default - this is optional)
-  reducerPath: "api",
+export const internalAPISlice = createApi({
+  reducerPath: "internal-api",
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3001/" }),
   tagTypes: ["Job"],
   endpoints: (builder) => ({
@@ -33,4 +31,4 @@ export const apiSlice = createApi({
 });
 
 export const { useGetJobsQuery, useAddNewJobMutation, useGetUserDetailsQuery } =
-  apiSlice;
+  internalAPISlice;

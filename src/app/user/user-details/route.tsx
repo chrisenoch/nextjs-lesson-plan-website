@@ -8,7 +8,7 @@ export const revalidate = 0;
 export async function GET(request: NextRequest) {
   console.log("inside user details get route handler");
 
-  const token = request.cookies.get("lesson-plan-jwt");
+  const token = request.cookies.get("jwt");
   console.log(token);
 
   //let payload: { id: string; firstName: string; email: string; role: string };

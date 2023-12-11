@@ -17,7 +17,7 @@ import { selectAllJobs } from "@/store/slices/with-thunks/jobs-slice";
 import {
   useAddNewJobMutation,
   useGetJobsQuery,
-} from "@/store/slices/with-rtk-query/api/api-slice";
+} from "@/store/slices/with-rtk-query/api/internal-api-slice";
 import { JobsPreviewRTKQuery } from "./JobsPreviewRTKQuery";
 
 const initialFormState: {
@@ -37,6 +37,7 @@ export function AddJobRTKQuery() {
   const {
     data: jobs = [],
     isLoading,
+    isFetching,
     isSuccess,
     isError,
     error,

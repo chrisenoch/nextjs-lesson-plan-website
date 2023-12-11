@@ -7,16 +7,18 @@ import {
 } from "./slices/with-thunks/jobs-slice";
 import { authReducer } from "./slices/with-thunks/auth-slice";
 import { userLogin, registerUser } from "./slices/with-thunks/auth-thunks";
-import { apiSlice } from "./slices/with-rtk-query/api/api-slice";
+import { internalAPISlice } from "./slices/with-rtk-query/api/internal-api-slice";
+import { dbAPISlice } from "./slices/with-rtk-query/api/db-api-slice";
 
 const store = configureStore({
   reducer: {
     jobs: jobsReducer,
     auth: authReducer,
-    [apiSlice.reducerPath]: apiSlice.reducer,
+    [internalAPISlice.reducerPath]: internalAPISlice.reducer,
+    [dbAPISlice.reducerPath]: dbAPISlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiSlice.middleware),
+    getDefaultMiddleware().concat(internalAPISlice.middleware),
 });
 
 export { store, addJob, removeJob, fetchJobs, userLogin, registerUser };

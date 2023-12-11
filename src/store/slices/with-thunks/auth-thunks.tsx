@@ -6,9 +6,6 @@ export const userLogin = createAsyncThunk(
   "auth/login",
   async (data: { email: string; password: string }, { rejectWithValue }) => {
     try {
-      console.log("in try and data below");
-      console.log(data);
-
       const response = await fetch(`${BACKEND_URL}/auth/login`, {
         method: "POST",
         headers: {
