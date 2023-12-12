@@ -22,6 +22,26 @@ export const userLogin = createAsyncThunk(
   }
 );
 
+export const userLogout = createAsyncThunk(
+  "auth/logout",
+  async (_: void, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/auth/logout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        //body: JSON.stringify({shouldLogout:true}),
+      });
+      const result = await response.json();
+      //If successful, http-only cookie with jwt token will have been deleted on the server
+      return result;
+    } catch (error) {
+      return rejectWithValue("Error: Unable to send request.");
+    }
+  }
+);
+
 export const checkAuthenticated = createAsyncThunk(
   "auth/check-authenticated",
   async (_: void, { rejectWithValue }) => {

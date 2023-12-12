@@ -24,7 +24,10 @@ import { useEffect, useState } from "react";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store";
-import { checkAuthenticated } from "@/store/slices/with-thunks/auth-thunks";
+import {
+  checkAuthenticated,
+  userLogout,
+} from "@/store/slices/with-thunks/auth-thunks";
 
 export default function ResponsiveAppBar({
   DRAWER_WIDTH,
@@ -34,12 +37,8 @@ export default function ResponsiveAppBar({
   const dispatch = useDispatch<AppDispatch>();
   const { isLoading, userInfo, error } = useSelector((state) => state.auth);
 
-  console.log("isLoading in ResponsiveAppBar");
-  console.log(isLoading);
-
   // automatically authenticate user if token cookie is found
   useEffect(() => {
-    console.log("in navbar useEffect, userInfo below");
     dispatch(checkAuthenticated());
   }, [dispatch]);
 
@@ -48,7 +47,6 @@ export default function ResponsiveAppBar({
     { title: "Jobs", href: "/jobs" },
     { title: "Login", href: "/auth/signin" },
     { title: "Logout", href: "/auth/logout" },
-    { title: "Foo", href: "/auth/signin" },
   ];
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -124,6 +122,16 @@ export default function ResponsiveAppBar({
                         variant="outlined">
                         Login
                       </LoadingButton>
+                    );
+                  }
+
+                  if (item.title === "Logout") {
+                    return (
+                      <Button
+                        key={item.title}
+                        onClick={() => dispatch(userLogout())}>
+                        {item.title}
+                      </Button>
                     );
                   }
 

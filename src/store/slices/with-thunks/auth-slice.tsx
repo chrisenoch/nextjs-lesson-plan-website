@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { registerUser, userLogin, checkAuthenticated } from "./auth-thunks";
-
-// initialize userToken from local storage
-// const userToken = localStorage.getItem("userToken")
-//   ? localStorage.getItem("userToken")
-//   : null;
+import {
+  registerUser,
+  userLogin,
+  checkAuthenticated,
+  userLogout,
+} from "./auth-thunks";
 
 const initialState = {
   isLoading: true,
@@ -16,14 +16,7 @@ const initialState = {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-    logout: (state) => {
-      localStorage.removeItem("userToken"); // change this, to delete http-only cookie.
-      state.isLoading = false;
-      state.userInfo = null;
-      state.error = null;
-    },
-  },
+  reducers: {},
   extraReducers(builder) {
     //login user
     builder.addCase(userLogin.pending, (state, action) => {
@@ -38,7 +31,20 @@ const authSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     });
-    //Check if authenticated
+    //logout user
+    builder.addCase(userLogout.pending, (state, action) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(userLogout.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.userInfo = null;
+    });
+    builder.addCase(userLogout.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    });
+    //Check if authenticated. For example, when app loads.
     builder.addCase(checkAuthenticated.pending, (state, action) => {
       state.isLoading = true;
       state.error = null;
