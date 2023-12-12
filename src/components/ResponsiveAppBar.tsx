@@ -20,28 +20,28 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store";
-import { useGetUserDetailsQuery } from "@/store/slices/with-rtk-query/api/internal-api-slice";
+import { checkAuthenticated } from "@/store/slices/with-thunks/auth-thunks";
 
 export default function ResponsiveAppBar({
   DRAWER_WIDTH,
   LINKS,
   PLACEHOLDER_LINKS,
 }) {
-  const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
-  // automatically authenticate user if token is found
-  // const { data, isFetching } = useGetUserDetailsQuery(0, {
-  //   // perform a refetch every 15mins
-  //   //pollingInterval: 900000,
-  // });
-  const { data, isFetching, isError, error } = useGetUserDetailsQuery();
+  const { isLoading, userInfo, error } = useSelector((state) => state.auth);
 
-  console.log("data from useGetUserDetailsQuery");
-  console.log(data);
+  console.log("isLoading in ResponsiveAppBar");
+  console.log(isLoading);
+
+  // automatically authenticate user if token cookie is found
+  useEffect(() => {
+    console.log("in navbar useEffect, userInfo below");
+    dispatch(checkAuthenticated());
+  }, [dispatch]);
 
   const navItems = [
     { title: "Lesson Plans", href: "/lessonplans" },
@@ -65,11 +65,6 @@ export default function ResponsiveAppBar({
     return React.cloneElement(children, {
       elevation: trigger ? 4 : 0,
     });
-  }
-
-  if (isError) {
-    console.log("Error because of useGetUserDetailsQuery below");
-    console.log(error);
   }
 
   return (
@@ -108,16 +103,19 @@ export default function ResponsiveAppBar({
               }}>
               {navItems
                 .filter((item) => {
-                  if (item.title === "Login" && data) {
+                  if (item.title === "Login" && userInfo?.isLoggedIn) {
                     return false;
                   }
-                  if (item.title === "Logout" && (!data || isFetching)) {
+                  if (
+                    item.title === "Logout" &&
+                    (!userInfo?.isLoggedIn || isLoading)
+                  ) {
                     return false;
                   }
                   return true;
                 })
                 .map((item) => {
-                  if (item.title === "Login" && isFetching) {
+                  if (item.title === "Login" && isLoading) {
                     return (
                       <LoadingButton
                         key={item.title}

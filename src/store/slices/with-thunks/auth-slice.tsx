@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { registerUser, userLogin } from "./auth-thunks";
+import { registerUser, userLogin, checkAuthenticated } from "./auth-thunks";
 
 // initialize userToken from local storage
 // const userToken = localStorage.getItem("userToken")
@@ -7,9 +7,8 @@ import { registerUser, userLogin } from "./auth-thunks";
 //   : null;
 
 const initialState = {
-  isLoading: false,
+  isLoading: true,
   userInfo: null,
-  userToken: null,
   error: null,
   success: false,
 };
@@ -19,14 +18,10 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
-      localStorage.removeItem("userToken"); // delete token from storage
+      localStorage.removeItem("userToken"); // change this, to delete http-only cookie.
       state.isLoading = false;
       state.userInfo = null;
-      state.userToken = null;
       state.error = null;
-    },
-    setCredentials: (state, action) => {
-      state.userInfo = action.payload;
     },
   },
   extraReducers(builder) {
@@ -38,12 +33,25 @@ const authSlice = createSlice({
     builder.addCase(userLogin.fulfilled, (state, action) => {
       state.isLoading = false;
       state.userInfo = action.payload;
-      state.userToken = action.payload.userToken;
     });
     builder.addCase(userLogin.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
     });
+    //Check if authenticated
+    builder.addCase(checkAuthenticated.pending, (state, action) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(checkAuthenticated.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.userInfo = action.payload;
+    });
+    builder.addCase(checkAuthenticated.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    });
+
     //register user
     builder.addCase(registerUser.pending, (state, action) => {
       state.isLoading = true;

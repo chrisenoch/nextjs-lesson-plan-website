@@ -3,26 +3,26 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   const res: { email: string; password: string } = await request.json();
-
-  //In reality would do a database lookup here.
   let token;
+  let payload;
+  let nextResponse;
+  //In reality would do a database lookup here.
+
   if (res.email.toLowerCase() === "admin" && res.password === "admin") {
     //Assign jwt token
-    const payload = {
+    payload = {
       id: 0,
       firstName: "Chris",
       email: "foo@bar.com",
       role: "admin",
     };
-    //token = jwt.sign(payload, "my-secret", { expiresIn: "1d" });
-    token = jwt.sign(payload, "my-secret", { expiresIn: "5s" });
+    token = jwt.sign(payload, "my-secret", { expiresIn: "1d" });
   }
 
   //set cookie
-  let nextResponse;
   if (token) {
     nextResponse = NextResponse.json(
-      { message: "Login successful" },
+      { ...payload, isLoggedIn: true },
       { status: 200 }
     );
     nextResponse.cookies.set("jwt", token, {
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
     return nextResponse;
   } else {
     nextResponse = NextResponse.json(
-      { error: "Unsuccessful login" },
+      { error: "Unsuccessful login", isLoggedIn: false },
       { status: 401 }
     );
     return nextResponse;

@@ -12,8 +12,6 @@ export const dbAPISlice = createApi({
     }),
     addNewJob: builder.mutation({
       query: (job) => {
-        console.log("inside addNewJob rtq query with job:");
-        console.log(job);
         return {
           url: "/jobs",
           method: "POST",

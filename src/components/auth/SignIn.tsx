@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 export function SignIn() {
   console.log("SignIn page rendered");
 
-  const { loading, userInfo, error } = useSelector((state) => state.auth);
+  const { isLoading, userInfo, error } = useSelector((state) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -18,16 +18,11 @@ export function SignIn() {
     dispatch(userLogin({ email, password }));
   }
 
-  console.log("User info below");
-  console.log(userInfo);
-
   // Ensure that  previously authenticated users can’t access this page.
   // redirect authenticated user to homepage
-  useEffect(() => {
-    if (userInfo) {
-      redirect("/");
-    }
-  }, [userInfo]);
+  if (userInfo?.isLoggedIn) {
+    redirect("/");
+  }
 
   return (
     <Box

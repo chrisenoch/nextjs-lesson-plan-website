@@ -15,10 +15,26 @@ export const userLogin = createAsyncThunk(
       });
       const result = await response.json();
       //If successful, http-only cookie with jwt token will have been set on the server
-      console.log("Success:", result);
       return result;
     } catch (error) {
-      console.error("Error:", error);
+      return rejectWithValue("Error: Unable to send request.");
+    }
+  }
+);
+
+export const checkAuthenticated = createAsyncThunk(
+  "auth/check-authenticated",
+  async (_: void, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/auth/check-authenticated`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const result = await response.json();
+      return result;
+    } catch (error) {
       return rejectWithValue("Error: Unable to send request.");
     }
   }
