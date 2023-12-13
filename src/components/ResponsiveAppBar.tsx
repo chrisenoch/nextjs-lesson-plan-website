@@ -38,7 +38,7 @@ export default function ResponsiveAppBar({
   const dispatch = useDispatch<AppDispatch>();
   const { isLoading, userInfo, error } = useSelector((state) => state.auth);
   //useAutoLogout(1_800_000);
-  useAutoLogout(180_000); //3 mins
+  useAutoLogout(30_000); //30 seconds
 
   // automatically authenticate user if token cookie is found
   useEffect(() => {
@@ -104,13 +104,10 @@ export default function ResponsiveAppBar({
               }}>
               {navItems
                 .filter((item) => {
-                  if (item.title === "Login" && userInfo?.isLoggedIn) {
+                  if (item.title === "Login" && userInfo) {
                     return false;
                   }
-                  if (
-                    item.title === "Logout" &&
-                    (!userInfo?.isLoggedIn || isLoading)
-                  ) {
+                  if (item.title === "Logout" && (!userInfo || isLoading)) {
                     return false;
                   }
                   return true;

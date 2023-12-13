@@ -25,7 +25,7 @@ const authSlice = createSlice({
     });
     builder.addCase(userLogin.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.userInfo = action.payload;
+      setUserInfoFromLoggedInStatus(action, state);
     });
     builder.addCase(userLogin.rejected, (state, action) => {
       state.isLoading = false;
@@ -51,7 +51,7 @@ const authSlice = createSlice({
     });
     builder.addCase(checkAuthenticated.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.userInfo = action.payload;
+      setUserInfoFromLoggedInStatus(action, state);
     });
     builder.addCase(checkAuthenticated.rejected, (state, action) => {
       state.isLoading = false;
@@ -76,3 +76,13 @@ const authSlice = createSlice({
 
 export const { logout, setCredentials } = authSlice.actions;
 export const authReducer = authSlice.reducer;
+function setUserInfoFromLoggedInStatus(
+  action,
+  state: { isLoading: boolean; userInfo: null; error: null; success: boolean }
+) {
+  if (action.payload.isLoggedIn) {
+    state.userInfo = action.payload;
+  } else {
+    state.userInfo = null;
+  }
+}
