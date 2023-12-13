@@ -17,8 +17,7 @@ export async function GET(request: NextRequest) {
       const payload = jwt.verify(token.value, "my-secret") as JwtPayload;
       payload.isLoggedIn = true;
 
-      console.log("token below");
-      console.log("payload below");
+      console.log("payload in check-authenticated below");
       console.log(payload);
 
       resp = NextResponse.json(payload);

@@ -28,7 +28,7 @@ import {
   checkAuthenticated,
   userLogout,
 } from "@/store/slices/with-thunks/auth-thunks";
-import useAutoLogout from "@/customHooks/useAutoLogout";
+import useAutoLogoutWhenJwtTokenExpires from "@/customHooks/useAutoLogoutWhenJwtTokenExpires";
 
 export default function ResponsiveAppBar({
   DRAWER_WIDTH,
@@ -38,7 +38,8 @@ export default function ResponsiveAppBar({
   const dispatch = useDispatch<AppDispatch>();
   const { isLoading, userInfo, error } = useSelector((state) => state.auth);
   //useAutoLogout(1_800_000);
-  useAutoLogout(30_000); //30 seconds
+  const renderModal = useAutoLogoutWhenJwtTokenExpires(120_000, 60_000); //60_000 - 1 minutes //120_000 - 2 mins
+  console.log("renderModal " + renderModal);
 
   // automatically authenticate user if token cookie is found
   useEffect(() => {

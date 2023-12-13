@@ -3,14 +3,16 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   const res: { email: string; password: string } = await request.json();
-  let token;
+  let accessToken;
+  let refreshToken;
   let userDetailsPayload;
-  let jwtPayload;
+  let jwtAccessTokenPayload;
+  let jwtRefreshTokenPayload;
   let nextResponse;
 
   //In reality would do a database lookup here.
   if (res.email.toLowerCase() === "admin" && res.password === "admin") {
-    //Assign jwt token
+    //Prepare jwt access token
     userDetailsPayload = {
       id: 0,
       firstName: "Chris",
@@ -18,28 +20,42 @@ export async function POST(request: Request) {
       role: "admin",
     };
     //token = jwt.sign(payload, "my-secret", { expiresIn: "1d" });
-    token = jwt.sign(userDetailsPayload, "my-secret", { expiresIn: "1m" }); //returns the token
-    jwtPayload = jwt.verify(token, "my-secret") as JwtPayload;
+    accessToken = jwt.sign(userDetailsPayload, "my-secret", {
+      expiresIn: "3m",
+    }); //returns the token
+    jwtAccessTokenPayload = jwt.verify(accessToken, "my-secret") as JwtPayload;
 
-    console.log("token in login");
-    console.log(token);
+    //Prepare jwt refresh token
+    refreshToken = jwt.sign(userDetailsPayload, "another-secret", {
+      expiresIn: "1d",
+    }); //returns the token
+    jwtRefreshTokenPayload = jwt.verify(
+      refreshToken,
+      "another-secret"
+    ) as JwtPayload;
   }
 
   //set cookie
-  if (token) {
+  if (accessToken && refreshToken) {
     nextResponse = NextResponse.json(
       {
         ...userDetailsPayload,
-        iat: jwtPayload!.iat,
-        exp: jwtPayload!.exp,
+        iat: jwtAccessTokenPayload!.iat,
+        exp: jwtAccessTokenPayload!.exp,
         isLoggedIn: true,
       },
       { status: 200 }
     );
-    nextResponse.cookies.set("jwt", token, {
+    nextResponse.cookies.set("jwt", accessToken, {
       maxAge: 60 * 60 * 24, //To do: Reduce this number?
       httpOnly: true,
       sameSite: "strict",
+    });
+    nextResponse.cookies.set("jwt-refresh", refreshToken, {
+      maxAge: 60 * 60 * 24, //To do: Reduce this number?
+      httpOnly: true,
+      sameSite: "strict",
+      path: "/auth/refresh", //Set the path so that the refresh token is not sent with every request. This reduces the possibility of it being stolen.
     });
     return nextResponse;
   } else {
