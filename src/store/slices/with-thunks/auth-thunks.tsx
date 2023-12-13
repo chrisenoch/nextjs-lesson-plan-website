@@ -26,7 +26,7 @@ export const userLogout = createAsyncThunk(
   "auth/logout",
   async (_: void, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${BACKEND_URL}/auth/logout`, {
+      const response = await fetch(`${BACKEND_URL}/auth/with-refresh/logout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

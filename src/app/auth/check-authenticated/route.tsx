@@ -9,7 +9,6 @@ export async function GET(request: NextRequest) {
   console.log("inside check-authenticated get route handler");
 
   const token = request.cookies.get("jwt");
-  console.log(token);
 
   let resp;
   if (token) {
