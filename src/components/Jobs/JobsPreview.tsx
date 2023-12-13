@@ -13,9 +13,6 @@ export function JobsPreview({
     error: null | SerializedError;
   };
 }) {
-  console.log("jobs in jobs preview");
-  console.log(jobs);
-
   const isHydrated = useHydrated();
 
   if (!isHydrated) {

@@ -28,6 +28,7 @@ import {
   checkAuthenticated,
   userLogout,
 } from "@/store/slices/with-thunks/auth-thunks";
+import useAutoLogout from "@/customHooks/useAutoLogout";
 
 export default function ResponsiveAppBar({
   DRAWER_WIDTH,
@@ -36,6 +37,8 @@ export default function ResponsiveAppBar({
 }) {
   const dispatch = useDispatch<AppDispatch>();
   const { isLoading, userInfo, error } = useSelector((state) => state.auth);
+  //useAutoLogout(1_800_000);
+  useAutoLogout(180_000); //3 mins
 
   // automatically authenticate user if token cookie is found
   useEffect(() => {
