@@ -39,7 +39,7 @@ export default function ResponsiveAppBar({
   const { isLoading, userInfo } = useSelector((state) => state.auth);
   //useAutoLogout(1_800_000);
   const renderModal = useAutoLogoutWhenJwtTokenExpires(30_000, 10_000); //30_000 - 30 secs // 10_000 - 10 secs
-  console.log("renderModal " + renderModal);
+  console.log("renderModal " + renderModal.hasAutoLoggedOut);
 
   // automatically authenticate user if token cookie is found
   useEffect(() => {

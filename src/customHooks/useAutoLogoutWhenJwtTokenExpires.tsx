@@ -28,11 +28,12 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   const refreshTokenTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(
     null
   );
-  const warningTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
   const autoLogoutTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(
     null
   );
-  const [renderWarning, setRenderWarning] = useState<boolean>(false);
+  const [renderLogoutWarning, setRenderLogoutWarning] = useState<{
+    hasAutoLoggedOut: boolean;
+  }>({ hasAutoLoggedOut: false });
 
   //Just for testing. Delete this
   console.log("wasLastRefreshSuccessfulbelow");
@@ -101,7 +102,7 @@ export default function useAutoLogoutWhenJwtTokenExpires(
     isAutoLogoutRunning.current = true;
     console.log("sending logout request in autologout ");
     dispatch(userLogout());
-    setRenderWarning(true); //Calling component informed and can then decide if it wants to show a message that explains why the user was logged out.
+    setRenderLogoutWarning({ hasAutoLoggedOut: true }); //Calling component informed and can then decide if it wants to show a message that explains why the user was logged out.
     dispatch(reinitWasLastRefreshSuccessful());
 
     isAutoLogoutRunning.current = false;
@@ -110,10 +111,9 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   function clearTimers() {
     refreshTokenTimeoutId.current &&
       clearTimeout(refreshTokenTimeoutId.current);
-    warningTimeoutId.current && clearTimeout(warningTimeoutId.current);
     intervalId.current && clearInterval(intervalId.current);
     autoLogoutTimeoutId.current && clearInterval(autoLogoutTimeoutId.current);
   }
 
-  return renderWarning;
+  return renderLogoutWarning;
 }
