@@ -35,7 +35,7 @@ export default function useAutoLogoutWhenJwtTokenExpires(
 
   //Check the access token expiry date periodically and send refresh token just before the token expires.
   useEffect(() => {
-    if (!isAutoLogoutRunning.current) {
+    if (!isAutoLogoutRunning.current && userInfo) {
       //Clear any past timers to ensure multiple timers do not get triggered on re-render of useEffect. (Return useEffect clean-up fn is not called on
       //re-render of useEffect.)
       clearTimers();
