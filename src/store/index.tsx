@@ -5,8 +5,16 @@ import {
   removeJob,
   fetchJobs,
 } from "./slices/with-thunks/jobs-slice";
-import { authReducer } from "./slices/with-thunks/auth-slice";
-import { userLogin, registerUser } from "./slices/with-thunks/auth-thunks";
+import {
+  authReducer,
+  reinitWasLastRefreshSuccessful,
+} from "./slices/with-thunks/auth-slice";
+import {
+  userLogin,
+  registerUser,
+  getAccessTokenWithRefreshToken,
+  userLogout,
+} from "./slices/with-thunks/auth-thunks";
 import { dbAPISlice } from "./slices/with-rtk-query/api/db-api-slice";
 
 const store = configureStore({
@@ -19,5 +27,15 @@ const store = configureStore({
     getDefaultMiddleware().concat(dbAPISlice.middleware),
 });
 
-export { store, addJob, removeJob, fetchJobs, userLogin, registerUser };
+export {
+  store,
+  addJob,
+  removeJob,
+  fetchJobs,
+  userLogin,
+  registerUser,
+  reinitWasLastRefreshSuccessful,
+  getAccessTokenWithRefreshToken,
+  userLogout,
+};
 export type AppDispatch = typeof store.dispatch;

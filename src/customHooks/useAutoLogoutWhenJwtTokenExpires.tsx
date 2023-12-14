@@ -1,8 +1,10 @@
-import { AppDispatch } from "@/store";
 import {
+  AppDispatch,
+  reinitWasLastRefreshSuccessful,
   getAccessTokenWithRefreshToken,
   userLogout,
-} from "@/store/slices/with-thunks/auth-thunks";
+} from "@/store";
+
 import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -22,7 +24,6 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   );
   const dispatch = useDispatch<AppDispatch>();
   const isAutoLogoutRunning = useRef<boolean>(false);
-  const accessTokenExpiry = useRef<number>(0);
   const intervalId = useRef<ReturnType<typeof setInterval> | null>(null);
   const refreshTokenTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(
     null
@@ -72,7 +73,6 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   function sendRefreshToken() {
     if (userInfo) {
       const tokenExpiry = new Date(userInfo.exp * 1000); //userInfo.exp is in seconds, new Date(value) is in milliseconds.
-      accessTokenExpiry.current = tokenExpiry.valueOf(); //If autoLogou# is entered, userInfo will be null, so we need to store it here.
       //get the date X time from now
       const timeInFuture = Date.now() + pollingInterval;
 
@@ -102,32 +102,10 @@ export default function useAutoLogoutWhenJwtTokenExpires(
     console.log("sending logout request in autologout ");
     dispatch(userLogout());
     setRenderWarning(true); //Calling component informed and can then decide if it wants to show a message that explains why the user was logged out.
+    dispatch(reinitWasLastRefreshSuccessful());
+
     isAutoLogoutRunning.current = false;
   }
-
-  // function autoLogout() {
-  //   isAutoLogoutRunning.current = true;
-  //   const tokenExpiry = new Date(userInfo.exp * 1000); //userInfo.exp is in seconds, new Date(value) is in milliseconds.
-  //   //get the date X time from now
-  //   const timeInFuture = Date.now() + pollingInterval;
-
-  //   //check if token will expire in the next X time
-  //   if (timeInFuture > tokenExpiry.valueOf()) {
-  //     const timeUntilAutoLogout = tokenExpiry.valueOf() - Date.now();
-
-  //     //const timeUntilWarning = timeUntilAutoLogout - warningTime;
-  //     // warningTimeoutId.current = setTimeout(() => {
-  //     //   setRenderWarning(true); //Calling component informed and can then decide if it wants to show a message that explains why the user was logged out.
-  //     // }, timeUntilWarning);
-  //     console.log("starting autoLogout in " + timeUntilAutoLogout);
-  //     autoLogoutTimeoutId.current = setTimeout(() => {
-  //       console.log("sending logout request in autologout ");
-  //       dispatch(userLogout());
-  //       setRenderWarning(true); //Calling component informed and can then decide if it wants to show a message that explains why the user was logged out.
-  //       isAutoLogoutRunning.current = false;
-  //     }, timeUntilAutoLogout);
-  //   }
-  // }
 
   function clearTimers() {
     refreshTokenTimeoutId.current &&

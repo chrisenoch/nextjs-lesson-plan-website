@@ -20,7 +20,11 @@ const initialState = {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    reinitWasLastRefreshSuccessful(state) {
+      state.wasLastRefreshSuccessful = null;
+    },
+  },
   extraReducers(builder) {
     //login user
     builder.addCase(userLogin.pending, (state, action) => {
@@ -49,15 +53,17 @@ const authSlice = createSlice({
       state.logoutError = action.payload;
     });
     //Get access token with refresh token
+    //Do not change isLoading for any getAccessTokenWithRefreshToken case. The access token being updated should happen
+    //invisibly and in the background and should not be reflected in the UI.
     builder.addCase(getAccessTokenWithRefreshToken.pending, (state, action) => {
-      state.isLoading = true;
+      //Do not set isLoading.
       state.refreshTokenError = null;
       state.wasLastRefreshSuccessful = null;
     });
     builder.addCase(
       getAccessTokenWithRefreshToken.fulfilled,
       (state, action) => {
-        state.isLoading = false;
+        //Do not set isLoading.
         setUserInfoFromLoggedInStatus(action, state);
         if (action.payload.isLoggedIn) {
           state.userInfo = action.payload;
@@ -71,7 +77,7 @@ const authSlice = createSlice({
     builder.addCase(
       getAccessTokenWithRefreshToken.rejected,
       (state, action) => {
-        state.isLoading = false;
+        //Do not set isLoading.
         state.refreshTokenError = action.payload;
       }
     );
@@ -118,4 +124,5 @@ function setUserInfoFromLoggedInStatus(
   }
 }
 
+export const { reinitWasLastRefreshSuccessful } = authSlice.actions;
 export const authReducer = authSlice.reducer;
