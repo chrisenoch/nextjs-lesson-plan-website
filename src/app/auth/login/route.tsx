@@ -7,7 +7,6 @@ export async function POST(request: Request) {
   let refreshToken;
   let userDetailsPayload;
   let jwtAccessTokenPayload;
-  let jwtRefreshTokenPayload;
   let nextResponse;
 
   //In reality would do a database lookup here.
@@ -29,10 +28,6 @@ export async function POST(request: Request) {
     refreshToken = jwt.sign(userDetailsPayload, "another-secret", {
       expiresIn: "2m",
     }); //returns the token
-    jwtRefreshTokenPayload = jwt.verify(
-      refreshToken,
-      "another-secret"
-    ) as JwtPayload;
   }
 
   //set cookie

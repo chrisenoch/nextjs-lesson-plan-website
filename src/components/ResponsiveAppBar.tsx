@@ -52,6 +52,7 @@ export default function ResponsiveAppBar({
   if (renderModal !== previousRenderModal) {
     if (renderModal.hasAutoLoggedOut) {
       setShowLogoutWarning(true);
+      renderModal.hasAutoLoggedOut = false;
     }
     setPreviousRenderModal(renderModal);
   }
