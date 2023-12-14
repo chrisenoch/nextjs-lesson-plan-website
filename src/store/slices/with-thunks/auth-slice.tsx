@@ -4,13 +4,17 @@ import {
   userLogin,
   checkAuthenticated,
   userLogout,
+  getAccessTokenWithRefreshToken,
 } from "./auth-thunks";
 
 const initialState = {
   isLoading: true,
   userInfo: null,
-  error: null,
-  success: false,
+  wasLastRefreshSuccessful: null,
+  loginError: null,
+  logoutError: null,
+  checkAuthenticatedError: null,
+  refreshTokenError: null,
 };
 
 const authSlice = createSlice({
@@ -21,7 +25,7 @@ const authSlice = createSlice({
     //login user
     builder.addCase(userLogin.pending, (state, action) => {
       state.isLoading = true;
-      state.error = null;
+      state.loginError = null;
     });
     builder.addCase(userLogin.fulfilled, (state, action) => {
       state.isLoading = false;
@@ -29,12 +33,12 @@ const authSlice = createSlice({
     });
     builder.addCase(userLogin.rejected, (state, action) => {
       state.isLoading = false;
-      state.error = action.payload;
+      state.loginError = action.payload;
     });
     //logout user
     builder.addCase(userLogout.pending, (state, action) => {
       state.isLoading = true;
-      state.error = null;
+      state.logoutError = null;
     });
     builder.addCase(userLogout.fulfilled, (state, action) => {
       state.isLoading = false;
@@ -42,40 +46,67 @@ const authSlice = createSlice({
     });
     builder.addCase(userLogout.rejected, (state, action) => {
       state.isLoading = false;
-      state.error = action.payload;
+      state.logoutError = action.payload;
     });
+    //Get access token with refresh token
+    builder.addCase(getAccessTokenWithRefreshToken.pending, (state, action) => {
+      state.isLoading = true;
+      state.refreshTokenError = null;
+      state.wasLastRefreshSuccessful = null;
+    });
+    builder.addCase(
+      getAccessTokenWithRefreshToken.fulfilled,
+      (state, action) => {
+        state.isLoading = false;
+        setUserInfoFromLoggedInStatus(action, state);
+        if (action.payload.isLoggedIn) {
+          state.userInfo = action.payload;
+          state.wasLastRefreshSuccessful = true;
+        } else {
+          state.userInfo = null;
+          state.wasLastRefreshSuccessful = false;
+        }
+      }
+    );
+    builder.addCase(
+      getAccessTokenWithRefreshToken.rejected,
+      (state, action) => {
+        state.isLoading = false;
+        state.refreshTokenError = action.payload;
+      }
+    );
     //Check if authenticated. For example, when app loads.
     builder.addCase(checkAuthenticated.pending, (state, action) => {
       state.isLoading = true;
-      state.error = null;
+      state.checkAuthenticatedError = null;
     });
     builder.addCase(checkAuthenticated.fulfilled, (state, action) => {
+      console.log("checkAuthenticated.fulfilled");
       state.isLoading = false;
       setUserInfoFromLoggedInStatus(action, state);
     });
     builder.addCase(checkAuthenticated.rejected, (state, action) => {
+      console.log("checkAuthenticated.rejected");
       state.isLoading = false;
-      state.error = action.payload;
+      state.checkAuthenticatedError = action.payload;
     });
 
-    //register user
-    builder.addCase(registerUser.pending, (state, action) => {
-      state.isLoading = true;
-      state.error = null;
-    });
-    builder.addCase(registerUser.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.success = true; // registration successful
-    });
-    builder.addCase(registerUser.rejected, (state, action) => {
-      state.isLoading = false;
-      state.error = action.payload;
-    });
+    // //register user
+    // builder.addCase(registerUser.pending, (state, action) => {
+    //   state.isLoading = true;
+    //   state.error = null;
+    // });
+    // builder.addCase(registerUser.fulfilled, (state, action) => {
+    //   state.isLoading = false;
+    //   state.success = true; // registration successful
+    // });
+    // builder.addCase(registerUser.rejected, (state, action) => {
+    //   state.isLoading = false;
+    //   state.error = action.payload;
+    // });
   },
 });
 
-export const { logout, setCredentials } = authSlice.actions;
-export const authReducer = authSlice.reducer;
 function setUserInfoFromLoggedInStatus(
   action,
   state: { isLoading: boolean; userInfo: null; error: null; success: boolean }
@@ -86,3 +117,5 @@ function setUserInfoFromLoggedInStatus(
     state.userInfo = null;
   }
 }
+
+export const authReducer = authSlice.reducer;

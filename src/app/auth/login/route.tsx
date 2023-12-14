@@ -21,13 +21,13 @@ export async function POST(request: Request) {
     };
     //token = jwt.sign(payload, "my-secret", { expiresIn: "1d" });
     accessToken = jwt.sign(userDetailsPayload, "my-secret", {
-      expiresIn: "3m",
+      expiresIn: "1m",
     }); //returns the token
     jwtAccessTokenPayload = jwt.verify(accessToken, "my-secret") as JwtPayload;
 
     //Prepare jwt refresh token
     refreshToken = jwt.sign(userDetailsPayload, "another-secret", {
-      expiresIn: "1d",
+      expiresIn: "2m",
     }); //returns the token
     jwtRefreshTokenPayload = jwt.verify(
       refreshToken,
