@@ -14,6 +14,7 @@ import {
   registerUser,
   getAccessTokenWithRefreshToken,
   userLogout,
+  getAccessTokenWithRefreshTokenOnAppMount,
 } from "./slices/with-thunks/auth-thunks";
 import { dbAPISlice } from "./slices/with-rtk-query/api/db-api-slice";
 
@@ -34,8 +35,9 @@ export {
   fetchJobs,
   userLogin,
   registerUser,
+  userLogout,
   reinitWasLastRefreshSuccessful,
   getAccessTokenWithRefreshToken,
-  userLogout,
+  getAccessTokenWithRefreshTokenOnAppMount,
 };
 export type AppDispatch = typeof store.dispatch;

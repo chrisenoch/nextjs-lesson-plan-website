@@ -5,9 +5,11 @@ import {
   checkAuthenticated,
   userLogout,
   getAccessTokenWithRefreshToken,
+  getAccessTokenWithRefreshTokenOnAppMount,
 } from "./auth-thunks";
 
 const initialState = {
+  isAppMounting: false,
   isLoading: true,
   userInfo: null,
   wasLastRefreshSuccessful: null,
@@ -52,9 +54,9 @@ const authSlice = createSlice({
       state.isLoading = false;
       state.logoutError = action.payload;
     });
-    //Get access token with refresh token
+    //Get access token with refresh token in the background.
     //Do not change isLoading for any getAccessTokenWithRefreshToken case. The access token being updated should happen
-    //invisibly and in the background and should not be reflected in the UI.
+    //invisibly and should not be reflected in the UI.
     builder.addCase(getAccessTokenWithRefreshToken.pending, (state, action) => {
       //Do not set isLoading.
       state.refreshTokenError = null;
@@ -64,14 +66,7 @@ const authSlice = createSlice({
       getAccessTokenWithRefreshToken.fulfilled,
       (state, action) => {
         //Do not set isLoading.
-        setUserInfoFromLoggedInStatus(action, state);
-        if (action.payload.isLoggedIn) {
-          state.userInfo = action.payload;
-          state.wasLastRefreshSuccessful = true;
-        } else {
-          state.userInfo = null;
-          state.wasLastRefreshSuccessful = false;
-        }
+        handleRefreshState(action, state);
       }
     );
     builder.addCase(
@@ -81,6 +76,30 @@ const authSlice = createSlice({
         state.refreshTokenError = action.payload;
       }
     );
+    //Send refresh token on app mount. In this case, we DO want to show the loading state
+    builder.addCase(
+      getAccessTokenWithRefreshTokenOnAppMount.pending,
+      (state, action) => {
+        state.isLoading = true;
+        state.refreshTokenError = null;
+        state.wasLastRefreshSuccessful = null;
+      }
+    );
+    builder.addCase(
+      getAccessTokenWithRefreshTokenOnAppMount.fulfilled,
+      (state, action) => {
+        state.isLoading = false;
+        handleRefreshState(action, state);
+      }
+    );
+    builder.addCase(
+      getAccessTokenWithRefreshTokenOnAppMount.rejected,
+      (state, action) => {
+        state.isLoading = false;
+        state.refreshTokenError = action.payload;
+      }
+    );
+
     //Check if authenticated. For example, when app loads.
     builder.addCase(checkAuthenticated.pending, (state, action) => {
       state.isLoading = true;
@@ -113,10 +132,17 @@ const authSlice = createSlice({
   },
 });
 
-function setUserInfoFromLoggedInStatus(
-  action,
-  state: { isLoading: boolean; userInfo: null; error: null; success: boolean }
-) {
+function handleRefreshState(action, state) {
+  if (action.payload.isLoggedIn) {
+    state.userInfo = action.payload;
+    state.wasLastRefreshSuccessful = true;
+  } else {
+    state.userInfo = null;
+    state.wasLastRefreshSuccessful = false;
+  }
+}
+
+function setUserInfoFromLoggedInStatus(action, state) {
   if (action.payload.isLoggedIn) {
     state.userInfo = action.payload;
   } else {

@@ -9,16 +9,10 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 // pollingIntervalInMs must be less than the expiry length of the jwt access token (set on server).
-// pollingIntervalInMs must be greater than warningTimeInMs
-// warningTime must be less than timeBeforeAccessTokenExpiryToSendRefreshToken
 export default function useAutoLogoutWhenJwtTokenExpires(
   pollingInterval: number,
   timeBeforeAccessTokenExpiryToSendRefreshToken: number
 ) {
-  // if (pollingInterval <= warningTime) {
-  //   throw new Error("autoLogoutTimeInMs must be greater than warningTimeInMs");
-  // }
-
   const { userInfo, wasLastRefreshSuccessful } = useSelector(
     (state) => state.auth
   );

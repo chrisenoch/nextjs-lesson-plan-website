@@ -42,8 +42,31 @@ export const userLogout = createAsyncThunk(
   }
 );
 
+//If the refresh happens in the backgrround, we DON'T show the loading state
+//I wrote two functions (getAccessTokenWithRefreshToken and getAccessTokenWithRefreshTokenOnAppMount) to keep the redux logic pure.
 export const getAccessTokenWithRefreshToken = createAsyncThunk(
   "auth/refresh",
+  async (_: void, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/auth/with-refresh/refresh`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const result = await response.json();
+      //If successful, http-only cookie with jwt token will have been set on the server
+      return result;
+    } catch (error) {
+      return rejectWithValue("Error: Unable to send request.");
+    }
+  }
+);
+
+//If the refresh request happens in the foreground (i.e. when the app is being loaded), we DO show the loading state
+//I wrote two functions (getAccessTokenWithRefreshToken and getAccessTokenWithRefreshTokenOnAppMount) to keep the redux logic pure.
+export const getAccessTokenWithRefreshTokenOnAppMount = createAsyncThunk(
+  "auth/refresh-on-app-mount",
   async (_: void, { rejectWithValue }) => {
     try {
       const response = await fetch(`${BACKEND_URL}/auth/with-refresh/refresh`, {

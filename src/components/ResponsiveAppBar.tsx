@@ -23,11 +23,12 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch } from "@/store";
 import {
-  checkAuthenticated,
+  AppDispatch,
   userLogout,
-} from "@/store/slices/with-thunks/auth-thunks";
+  getAccessTokenWithRefreshTokenOnAppMount,
+} from "@/store";
+
 import useAutoLogoutWhenJwtTokenExpires from "@/customHooks/useAutoLogoutWhenJwtTokenExpires";
 
 export default function ResponsiveAppBar({
@@ -41,9 +42,9 @@ export default function ResponsiveAppBar({
   const renderModal = useAutoLogoutWhenJwtTokenExpires(30_000, 10_000); //30_000 - 30 secs // 10_000 - 10 secs
   console.log("renderModal " + renderModal.hasAutoLoggedOut);
 
-  // automatically authenticate user if token cookie is found
+  // automatically authenticate user if refresh token cookie and access token cookies are found on app mount
   useEffect(() => {
-    dispatch(checkAuthenticated());
+    dispatch(getAccessTokenWithRefreshTokenOnAppMount());
   }, [dispatch]);
 
   const navItems = [
