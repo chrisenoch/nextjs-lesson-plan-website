@@ -30,6 +30,7 @@ import {
 } from "@/store";
 
 import useAutoLogoutWhenJwtTokenExpires from "@/customHooks/useAutoLogoutWhenJwtTokenExpires";
+import { LogoutWarning } from "./auth/LogoutWarning";
 
 export default function ResponsiveAppBar({
   DRAWER_WIDTH,
@@ -41,6 +42,19 @@ export default function ResponsiveAppBar({
   //useAutoLogout(1_800_000);
   const renderModal = useAutoLogoutWhenJwtTokenExpires(30_000, 10_000); //30_000 - 30 secs // 10_000 - 10 secs
   console.log("renderModal " + renderModal.hasAutoLoggedOut);
+
+  const [previousRenderModal, setPreviousRenderModal] = useState<{
+    hasAutoLoggedOut: boolean;
+  }>(renderModal);
+  const [showLogoutWarning, setShowLogoutWarning] = useState<boolean>(false);
+
+  //Avoids using an effect and saves a render.
+  if (renderModal !== previousRenderModal) {
+    if (renderModal.hasAutoLoggedOut) {
+      setShowLogoutWarning(true);
+    }
+    setPreviousRenderModal(renderModal);
+  }
 
   // automatically authenticate user if refresh token cookie and access token cookies are found on app mount
   useEffect(() => {
@@ -72,6 +86,10 @@ export default function ResponsiveAppBar({
 
   return (
     <>
+      <LogoutWarning
+        open={showLogoutWarning}
+        handleClose={() => setShowLogoutWarning(false)}
+      />
       <ElevationScroll>
         <AppBar
           position="fixed"

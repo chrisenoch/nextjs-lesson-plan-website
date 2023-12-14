@@ -18,6 +18,7 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   );
   const dispatch = useDispatch<AppDispatch>();
   const isAutoLogoutRunning = useRef<boolean>(false);
+  const hasBeenLoggedIn = useRef<boolean>(false);
   const intervalId = useRef<ReturnType<typeof setInterval> | null>(null);
   const refreshTokenTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(
     null
@@ -32,6 +33,13 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   //Just for testing. Delete this
   console.log("wasLastRefreshSuccessfulbelow");
   console.log(wasLastRefreshSuccessful);
+
+  if (userInfo) {
+    // So we don't run autoLogout when the user hasn't even logged in since page load.
+    console.log("userInfo in if");
+    console.log(userInfo);
+    hasBeenLoggedIn.current = true;
+  }
 
   //Check the access token expiry date periodically and send refresh token just before the token expires.
   useEffect(() => {
@@ -55,7 +63,7 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   //Show a warning and then right after log the user out if refresh token fails.
   useEffect(() => {
     console.log("inside autoLogout effect");
-    if (wasLastRefreshSuccessful === false) {
+    if (wasLastRefreshSuccessful === false && hasBeenLoggedIn.current) {
       clearTimers();
       autoLogout();
     }

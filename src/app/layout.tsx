@@ -22,6 +22,7 @@ import ThemeRegistry from "@/components/ThemeRegistry/ThemeRegistry";
 import ResponsiveAppBar from "@/components/ResponsiveAppBar";
 import { Container } from "@mui/material";
 import ReduxProvider from "@/components/ReduxStore/ReduxProvider";
+import { LogoutWarning } from "@/components/auth/LogoutWarning";
 
 export const metadata = {
   title: "Next.js App Router + Material UI v5",
