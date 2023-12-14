@@ -35,9 +35,7 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   console.log(wasLastRefreshSuccessful);
 
   if (userInfo) {
-    // So we don't run autoLogout when the user hasn't even logged in since page load.
-    console.log("userInfo in if");
-    console.log(userInfo);
+    // So we don't run autoLogout when the user hasn't even been logged in since page load.
     hasBeenLoggedIn.current = true;
   }
 

@@ -61,11 +61,13 @@ export default function ResponsiveAppBar({
     dispatch(getAccessTokenWithRefreshTokenOnAppMount());
   }, [dispatch]);
 
+  console.log("isLoading: " + isLoading);
+
   const navItems = [
     { title: "Lesson Plans", href: "/lessonplans" },
     { title: "Jobs", href: "/jobs" },
-    { title: "Login", href: "/auth/signin" },
-    { title: "Logout", href: "/auth/logout" },
+    // { title: "Login", href: "/auth/signin" },
+    // { title: "Logout", href: "/auth/logout" },
   ];
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -122,45 +124,34 @@ export default function ResponsiveAppBar({
               sx={{
                 display: { xs: "none", sm: "block" },
               }}>
-              {navItems
-                .filter((item) => {
-                  if (item.title === "Login" && userInfo) {
-                    return false;
-                  }
-                  if (item.title === "Logout" && (!userInfo || isLoading)) {
-                    return false;
-                  }
-                  return true;
-                })
-                .map((item) => {
-                  if (item.title === "Login" && isLoading) {
-                    return (
-                      <LoadingButton
-                        key={item.title}
-                        loading
-                        disabled
-                        variant="outlined">
-                        Login
-                      </LoadingButton>
-                    );
-                  }
-
-                  if (item.title === "Logout") {
-                    return (
-                      <Button
-                        key={item.title}
-                        onClick={() => dispatch(userLogout())}>
-                        {item.title}
-                      </Button>
-                    );
-                  }
-
-                  return (
-                    <Button key={item.title} href={item.href} component={Link}>
-                      {item.title}
-                    </Button>
-                  );
-                })}
+              {navItems.map((item) => {
+                return (
+                  <Button key={item.title} href={item.href} component={Link}>
+                    {item.title}
+                  </Button>
+                );
+              })}
+              {/* show login, logout or loading button depending on the status */}
+              {userInfo && !isLoading && (
+                <Button key="Logout" onClick={() => dispatch(userLogout())}>
+                  Logout
+                </Button>
+              )}
+              {!userInfo && !isLoading && (
+                <Button key="Login" href={"/auth/signin"} component={Link}>
+                  Login
+                </Button>
+              )}
+              {isLoading && (
+                <LoadingButton
+                  key={"loading-placeholder"}
+                  loading
+                  disabled
+                  variant="outlined">
+                  {/* could be any value here as it is not shown */}
+                  Login
+                </LoadingButton>
+              )}
             </Box>
           </Toolbar>
         </AppBar>
