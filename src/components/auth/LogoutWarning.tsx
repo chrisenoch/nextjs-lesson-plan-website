@@ -38,7 +38,7 @@ export function LogoutWarning({
         <DialogContentText sx={{ mb: 1 }}>
           - You can check the console to see the automatic refresh token
           behaviour I implemented with my cutom hook:
-          <strong>useAutoLogoutWhenJwtTokenExpires</strong>
+          <strong> useAutoLogoutWhenJwtTokenExpires</strong>
         </DialogContentText>
       </DialogContent>
       <DialogActions>
