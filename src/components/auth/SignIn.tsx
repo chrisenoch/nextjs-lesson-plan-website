@@ -6,7 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { redirect } from "next/navigation";
 
 export function SignIn() {
-  const { isLoading, userInfo, error } = useSelector((state) => state.auth);
+  const { isLoading, userInfo, error } = useSelector(
+    (state) => state.authSlice
+  );
   const dispatch = useDispatch<AppDispatch>();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");

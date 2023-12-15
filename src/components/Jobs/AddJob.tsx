@@ -11,9 +11,16 @@ import {
   jobTitleValidator,
 } from "@/app/validation/jobs/jobs-validators";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, addJob, fetchJobs } from "@/store";
+import {
+  AppDispatch,
+  addJob,
+  removeJob,
+  selectAllJobs,
+  selectJobsError,
+  selectJobsIsLoading,
+} from "@/store";
 import { JobsPreview } from "./JobsPreview";
-import { selectAllJobs } from "@/store/slices/with-thunks/jobs-slice";
+import { SerializedError } from "@reduxjs/toolkit";
 
 const initialFormState: {
   message: string | null;
@@ -70,6 +77,13 @@ export function AddJob() {
   };
   const jobs: { id: string; jobTitle: string; jobDescription: string }[] =
     useSelector(selectAllJobs);
+  const jobsIsLoading = useSelector(selectJobsIsLoading);
+
+  const jobsError: { id: string; jobTitle: string; jobDescription: string }[] =
+    useSelector(selectJobsError);
+
+  console.log("jobs in AddJob");
+  console.log(jobs);
 
   //Used as an observer. Runs everytime the form server action returns a response to a form submission.
   //formStateWithServer.emitter only changes when a form response arrives
@@ -83,10 +97,9 @@ export function AddJob() {
     }
   }, [formStateWithServer.emitter]);
 
-  //To do: Remove effect. (just for testing)
-  // useEffect(() => {
-  //   dispatch(fetchJobs());
-  // }, []);
+  function handleJobRemove(id: string) {
+    dispatch(removeJob(id));
+  }
 
   return (
     <Box
@@ -173,7 +186,7 @@ export function AddJob() {
           {resultMessageFromServer}
         </Box>
       )}
-      <JobsPreview jobs={jobs}></JobsPreview>
+      <JobsPreview jobs={jobs} handleJobRemove={handleJobRemove}></JobsPreview>
     </Box>
   );
 }

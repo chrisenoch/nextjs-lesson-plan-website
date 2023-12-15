@@ -38,7 +38,7 @@ export default function ResponsiveAppBar({
   PLACEHOLDER_LINKS,
 }) {
   const dispatch = useDispatch<AppDispatch>();
-  const { isLoading, userInfo } = useSelector((state) => state.auth);
+  const { isLoading, userInfo } = useSelector((state) => state.authSlice);
   //useAutoLogout(1_800_000);
   const renderModal = useAutoLogoutWhenJwtTokenExpires(30_000, 10_000); //30_000 - 30 secs // 10_000 - 10 secs
   console.log("renderModal " + renderModal.hasAutoLoggedOut);

@@ -9,7 +9,7 @@ export function SignUp() {
   console.log("SignUp page rendered");
 
   const { loading, userInfo, error, success } = useSelector(
-    (state) => state.auth
+    (state) => state.authSlice
   );
   const dispatch = useDispatch<AppDispatch>();
   const [firstName, setFirstName] = useState<string>("");

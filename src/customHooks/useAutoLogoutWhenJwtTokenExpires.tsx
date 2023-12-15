@@ -14,7 +14,7 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   timeBeforeAccessTokenExpiryToSendRefreshToken: number
 ) {
   const { userInfo, wasLastRefreshSuccessful } = useSelector(
-    (state) => state.auth
+    (state) => state.authSlice
   );
   const dispatch = useDispatch<AppDispatch>();
   const isAutoLogoutRunning = useRef<boolean>(false);

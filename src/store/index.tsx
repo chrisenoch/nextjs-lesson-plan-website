@@ -4,6 +4,9 @@ import {
   addJob,
   removeJob,
   fetchJobs,
+  selectAllJobs,
+  selectJobsError,
+  selectJobsIsLoading,
 } from "./slices/with-thunks/jobs-slice";
 import {
   authReducer,
@@ -19,8 +22,8 @@ import { dbAPISlice } from "./slices/with-rtk-query/api/db-api-slice";
 
 const store = configureStore({
   reducer: {
-    jobs: jobsReducer,
-    auth: authReducer,
+    jobsSlice: jobsReducer,
+    authSlice: authReducer,
     [dbAPISlice.reducerPath]: dbAPISlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -37,5 +40,8 @@ export {
   reinitWasLastRefreshSuccessful,
   getAccessTokenWithRefreshToken,
   getAccessTokenWithRefreshTokenOnAppMount,
+  selectAllJobs,
+  selectJobsError,
+  selectJobsIsLoading,
 };
 export type AppDispatch = typeof store.dispatch;

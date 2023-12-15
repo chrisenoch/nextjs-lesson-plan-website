@@ -1,44 +1,20 @@
 {
   "jobs": [
     {
-      "jobTitle": "programmer",
-      "jobDescription": "creating stuff",
+      "jobTitle": "Programmer",
+      "jobDescription": "Creates apps",
       "id": 42
     },
     {
       "jobTitle": "Policeman",
-      "jobDescription": "catching criminals",
+      "jobDescription": "Catches criminals",
       "id": 43
     },
-    {
-      "jobTitle": "aa",
-      "jobDescription": "aa",
-      "id": 44
-    },
+
     {
       "jobTitle": "Plumber",
-      "jobDescription": "fixing pipes",
+      "jobDescription": "Fixes pipes",
       "id": 45
-    },
-    {
-      "jobTitle": "aa",
-      "jobDescription": "aa",
-      "id": 46
-    },
-    {
-      "jobTitle": "bb",
-      "jobDescription": "bb",
-      "id": 47
-    },
-    {
-      "jobTitle": "rr",
-      "jobDescription": "rr",
-      "id": 48
-    },
-    {
-      "jobTitle": "AA",
-      "jobDescription": "aa",
-      "id": 49
     }
   ]
 }

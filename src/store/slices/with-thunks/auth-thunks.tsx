@@ -3,7 +3,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 const BACKEND_URL = "http://localhost:3000/";
 
 export const userLogin = createAsyncThunk(
-  "auth/login",
+  "authSlice/login",
   async (data: { email: string; password: string }, { rejectWithValue }) => {
     try {
       const response = await fetch(`${BACKEND_URL}/auth/login`, {
@@ -23,7 +23,7 @@ export const userLogin = createAsyncThunk(
 );
 
 export const userLogout = createAsyncThunk(
-  "auth/logout",
+  "authSlice/logout",
   async (_: void, { rejectWithValue }) => {
     try {
       const response = await fetch(`${BACKEND_URL}/auth/with-refresh/logout`, {
@@ -45,7 +45,7 @@ export const userLogout = createAsyncThunk(
 //If the refresh happens in the backgrround, we DON'T show the loading state
 //I wrote two functions (getAccessTokenWithRefreshToken and getAccessTokenWithRefreshTokenOnAppMount) to keep the redux logic pure.
 export const getAccessTokenWithRefreshToken = createAsyncThunk(
-  "auth/refresh",
+  "authSlice/refresh",
   async (_: void, { rejectWithValue }) => {
     try {
       const response = await fetch(`${BACKEND_URL}/auth/with-refresh/refresh`, {
@@ -66,7 +66,7 @@ export const getAccessTokenWithRefreshToken = createAsyncThunk(
 //If the refresh request happens in the foreground (i.e. when the app is being loaded), we DO show the loading state
 //I wrote two functions (getAccessTokenWithRefreshToken and getAccessTokenWithRefreshTokenOnAppMount) to keep the redux logic pure.
 export const getAccessTokenWithRefreshTokenOnAppMount = createAsyncThunk(
-  "auth/refresh-on-app-mount",
+  "authSlice/refresh-on-app-mount",
   async (_: void, { rejectWithValue }) => {
     try {
       const response = await fetch(`${BACKEND_URL}/auth/with-refresh/refresh`, {
@@ -85,7 +85,7 @@ export const getAccessTokenWithRefreshTokenOnAppMount = createAsyncThunk(
 );
 
 export const checkAuthenticated = createAsyncThunk(
-  "auth/check-authenticated",
+  "authSlice/check-authenticated",
   async (_: void, { rejectWithValue }) => {
     try {
       const response = await fetch(`${BACKEND_URL}/auth/check-authenticated`, {

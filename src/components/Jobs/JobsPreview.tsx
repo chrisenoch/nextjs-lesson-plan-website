@@ -1,6 +1,7 @@
 "use client";
 
 import { useHydrated } from "@/customHooks/useHydrated";
+import { Delete } from "@mui/icons-material";
 import {
   Card,
   CardContent,
@@ -11,17 +12,18 @@ import {
   IconButton,
 } from "@mui/material";
 import { SerializedError } from "@reduxjs/toolkit";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Delete } from "@mui/icons-material";
+import { useDispatch, useSelector } from "react-redux";
 
 export function JobsPreview({
   jobs,
+  isLoading,
+  error,
+  handleJobRemove,
 }: {
-  jobs: {
-    jobs: { id: string; jobTitle: string; jobDescription: string }[];
-    isLoading: boolean;
-    error: null | SerializedError;
-  };
+  jobs: { id: string; jobTitle: string; jobDescription: string }[];
+  isLoading: boolean;
+  error: null | SerializedError;
+  handleJobRemove: (id: string) => void;
 }) {
   const isHydrated = useHydrated();
 
@@ -29,26 +31,27 @@ export function JobsPreview({
     return "Loading ...";
   }
 
+  console.log("jobs in JobsPreview");
+  console.log(jobs);
+
   //To do: Turn the jobs into links
-  const renderedJobs = jobs.jobs.map((job) => {
+  const renderedJobs = jobs.map((job) => {
     return (
-      <>
-        <Card sx={{ mb: 1, maxWidth: 400, minWidth: 300 }} key={job.id}>
-          <CardHeader
-            action={
-              <IconButton
-                onClick={() => console.log("job deleted")}
-                aria-label="delete-job">
-                <Delete />
-              </IconButton>
-            }
-            title={job.jobTitle}
-          />
-          <CardContent>
-            <Typography variant="body2">{job.jobDescription}</Typography>
-          </CardContent>
-        </Card>
-      </>
+      <Card sx={{ mb: 1, maxWidth: 400, minWidth: 300 }} key={job.id}>
+        <CardHeader
+          action={
+            <IconButton
+              onClick={() => handleJobRemove(job.id)}
+              aria-label="delete-job">
+              <Delete />
+            </IconButton>
+          }
+          title={job.jobTitle}
+        />
+        <CardContent>
+          <Typography variant="body2">{job.jobDescription}</Typography>
+        </CardContent>
+      </Card>
     );
   });
 
