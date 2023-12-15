@@ -48,7 +48,6 @@ export default function useFormClientStatus(
         ) {
           //create event listener function
           const updateTouched = function updateTouch() {
-            console.log("in update touched");
             const nextElementsStatus = new Map(elementsStatus);
             const currentStatus = nextElementsStatus.get(id);
             if (currentStatus) {
@@ -60,7 +59,6 @@ export default function useFormClientStatus(
           };
 
           const updateFocused = function updateFocus() {
-            console.log("in update focus");
             const nextElementsStatus = new Map(elementsStatus);
             const currentStatus = nextElementsStatus.get(id);
             if (currentStatus) {
@@ -106,7 +104,6 @@ export default function useFormClientStatus(
    */
 
   function resetElement(id: string) {
-    console.log("resetElement called with id: " + id);
     const status = elementsStatus?.get(id);
     if (status) {
       const newStatus = { ...status, isTouched: false, hasBeenFocused: false };
@@ -121,7 +118,6 @@ export default function useFormClientStatus(
   }
 
   function setAllToTouched() {
-    console.log("in setAllToTouched");
     if (elementsStatus !== null) {
       const nextElementsStatus = new Map(elementsStatus);
       elementsStatus.forEach((status, id) => {

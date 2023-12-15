@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import {
   jobsReducer,
   addJob,
-  removeJob,
+  deleteJob,
   fetchJobs,
   selectAllJobs,
   selectJobsError,
@@ -33,7 +33,7 @@ const store = configureStore({
 export {
   store,
   addJob,
-  removeJob,
+  deleteJob,
   fetchJobs,
   userLogin,
   userLogout,

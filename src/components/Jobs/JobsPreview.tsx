@@ -18,21 +18,18 @@ export function JobsPreview({
   jobs,
   isLoading,
   error,
-  handleJobRemove,
+  handleJobDelete,
 }: {
   jobs: { id: string; jobTitle: string; jobDescription: string }[];
   isLoading: boolean;
   error: null | SerializedError;
-  handleJobRemove: (id: string) => void;
+  handleJobDelete: (id: string) => void;
 }) {
   const isHydrated = useHydrated();
 
   if (!isHydrated) {
     return "Loading ...";
   }
-
-  console.log("jobs in JobsPreview");
-  console.log(jobs);
 
   //To do: Turn the jobs into links
   const renderedJobs = jobs.map((job) => {
@@ -41,7 +38,7 @@ export function JobsPreview({
         <CardHeader
           action={
             <IconButton
-              onClick={() => handleJobRemove(job.id)}
+              onClick={() => handleJobDelete(job.id)}
               aria-label="delete-job">
               <Delete />
             </IconButton>
@@ -54,9 +51,6 @@ export function JobsPreview({
       </Card>
     );
   });
-
-  console.log("renderedJobs");
-  console.log(renderedJobs);
 
   return jobs.isLoading ? (
     "Loading ..."

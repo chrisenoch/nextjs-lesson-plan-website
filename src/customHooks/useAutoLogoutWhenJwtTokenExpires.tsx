@@ -81,18 +81,18 @@ export default function useAutoLogoutWhenJwtTokenExpires(
       if (timeInFuture > tokenExpiry.valueOf()) {
         const timeUntilAutoLogout = tokenExpiry.valueOf() - Date.now();
         console.log(
-          "getAccessTokenWithRefreshToken will run in ( " +
+          "getAccessTokenWithRefreshToken will run in (" +
             timeUntilAutoLogout +
             " - " +
             timeBeforeAccessTokenExpiryToSendRefreshToken +
-            ": " +
+            "): " +
             (timeUntilAutoLogout -
               timeBeforeAccessTokenExpiryToSendRefreshToken)
         );
         refreshTokenTimeoutId.current = setTimeout(() => {
           console.log("getAccessTokenWithRefreshToken about to run");
           dispatch(getAccessTokenWithRefreshToken());
-          console.log("getAccessTokenWithRefreshToken about to ran");
+          console.log("getAccessTokenWithRefreshToken has just ran");
         }, timeUntilAutoLogout - timeBeforeAccessTokenExpiryToSendRefreshToken);
       }
     }
@@ -100,7 +100,7 @@ export default function useAutoLogoutWhenJwtTokenExpires(
 
   function autoLogout() {
     isAutoLogoutRunning.current = true;
-    console.log("sending logout request in autologout ");
+    console.log("sending Logout request in autologout ");
     dispatch(userLogout());
     setRenderLogoutWarning({ hasAutoLoggedOut: true }); //Calling component informed and can then decide if it wants to show a message that explains why the user was logged out.
     dispatch(reinitWasLastRefreshSuccessful());

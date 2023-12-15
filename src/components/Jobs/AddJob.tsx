@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   AppDispatch,
   addJob,
-  removeJob,
+  deleteJob,
   selectAllJobs,
   selectJobsError,
   selectJobsIsLoading,
@@ -63,6 +63,12 @@ export function AddJob() {
   } = useFormClientStatus(inputRefs);
 
   const dispatch = useDispatch<AppDispatch>();
+  const jobs: { id: string; jobTitle: string; jobDescription: string }[] =
+    useSelector(selectAllJobs);
+  const jobsIsLoading = useSelector(selectJobsIsLoading);
+
+  const jobsError: { id: string; jobTitle: string; jobDescription: string }[] =
+    useSelector(selectJobsError);
   const resultMessageFromServer = formStateWithServer?.message;
   const jobTitleIsValid = zodValidator(jobTitle, {
     jobTitle: jobTitleValidator,
@@ -75,18 +81,17 @@ export function AddJob() {
   const handleJobAdd = (job: { jobTitle: string; jobDescription: string }) => {
     dispatch(addJob(job));
   };
-  const jobs: { id: string; jobTitle: string; jobDescription: string }[] =
-    useSelector(selectAllJobs);
-  const jobsIsLoading = useSelector(selectJobsIsLoading);
 
-  const jobsError: { id: string; jobTitle: string; jobDescription: string }[] =
-    useSelector(selectJobsError);
+  function handleJobDelete(id: string) {
+    dispatch(deleteJob(id));
+  }
 
-  console.log("jobs in AddJob");
-  console.log(jobs);
-
-  //Used as an observer. Runs everytime the form server action returns a response to a form submission.
-  //formStateWithServer.emitter only changes when a form response arrives
+  // Used as an observer. Runs everytime the form server action returns a response to the add-job form submission.
+  // formStateWithServer.emitter only changes when a form response arrives
+  // As I am using Redux, in reality I would add the job using an async thunk and not do this. However, I started off learning about NextJS server actions.
+  // I am adding the job to redux state when the job has successfully been added via the NextJS server action. I couldn't find a native way to listen
+  // to when the server action was complete so I chose this solution.
+  // I wouldn't do it like this though. I would use redux async thunks, like I did for the login page.
   useEffect(() => {
     if (formStateWithServer.emitter === null) {
       return;
@@ -96,10 +101,6 @@ export function AddJob() {
       handleJobAdd(formStateWithServer.payload);
     }
   }, [formStateWithServer.emitter]);
-
-  function handleJobRemove(id: string) {
-    dispatch(removeJob(id));
-  }
 
   return (
     <Box
@@ -186,7 +187,7 @@ export function AddJob() {
           {resultMessageFromServer}
         </Box>
       )}
-      <JobsPreview jobs={jobs} handleJobRemove={handleJobRemove}></JobsPreview>
+      <JobsPreview jobs={jobs} handleJobDelete={handleJobDelete}></JobsPreview>
     </Box>
   );
 }
