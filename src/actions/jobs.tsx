@@ -62,8 +62,7 @@ export async function createJob(prevState: any, formData: FormData) {
     revalidatePath("./");
     return {
       message:
-        "Failed to create job due to an error. Please contact our support team." +
-        e,
+        "Failed to create job due to an error. Please contact our support team.",
       isError: true,
       emitter: [],
     };

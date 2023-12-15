@@ -52,9 +52,9 @@ export function JobsPreview({
     );
   });
 
-  return jobs.isLoading ? (
+  return isLoading ? (
     "Loading ..."
-  ) : jobs.error ? (
+  ) : error ? (
     "Error: There was a problem fetching the jobs. Please reload the page and try again."
   ) : (
     <div>{renderedJobs}</div>

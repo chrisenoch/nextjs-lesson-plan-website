@@ -65,10 +65,9 @@ export function AddJob() {
   const dispatch = useDispatch<AppDispatch>();
   const jobs: { id: string; jobTitle: string; jobDescription: string }[] =
     useSelector(selectAllJobs);
-  const jobsIsLoading = useSelector(selectJobsIsLoading);
+  const jobsIsLoading: boolean = useSelector(selectJobsIsLoading);
 
-  const jobsError: { id: string; jobTitle: string; jobDescription: string }[] =
-    useSelector(selectJobsError);
+  const jobsError: null | SerializedError = useSelector(selectJobsError);
   const resultMessageFromServer = formStateWithServer?.message;
   const jobTitleIsValid = zodValidator(jobTitle, {
     jobTitle: jobTitleValidator,
@@ -187,7 +186,11 @@ export function AddJob() {
           {resultMessageFromServer}
         </Box>
       )}
-      <JobsPreview jobs={jobs} handleJobDelete={handleJobDelete}></JobsPreview>
+      <JobsPreview
+        jobs={jobs}
+        isLoading={jobsIsLoading}
+        error={jobsError}
+        handleJobDelete={handleJobDelete}></JobsPreview>
     </Box>
   );
 }
