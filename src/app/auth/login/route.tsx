@@ -21,8 +21,8 @@ export async function POST(request: Request) {
   //In reality would do a database lookup here.
   if (res.email.toLowerCase() === "admin" && res.password === "admin") {
     //Prepare the expiry times
-    accessTokenExp = iat + 60 * 5; // 5 mins
-    refreshTokenExp = iat + 60 * 5; // 10 mins
+    accessTokenExp = iat + 60 * 1; // 1 minute
+    refreshTokenExp = iat + 60 * 2; // 2 mins
 
     //Prepare jwt access token
     userDetailsPayload = {
@@ -59,6 +59,7 @@ export async function POST(request: Request) {
       .sign(new TextEncoder().encode("another-secret"));
 
     refreshToken = await refreshTokenPromise;
+
     // refreshToken = jwt.sign(userDetailsPayload, "another-secret", {
     //   expiresIn: "10m",
     // }); //returns the token

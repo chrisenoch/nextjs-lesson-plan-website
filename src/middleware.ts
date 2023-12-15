@@ -5,52 +5,59 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import * as jose from "jose";
 
 export function middleware(request: NextRequest) {
-  console.log("middleware ran and cookies below");
-  console.log(request.cookies.getAll());
+  // console.log("middleware ran and cookies below");
+  // console.log(request.cookies.getAll());
   const response = NextResponse.next();
+
   //   if (request.nextUrl.pathname.startsWith("/lessonplans")) {
   //     console.log("jose below");
   //     console.log(jose);
 
-  //   async function testJose() {
-  //     try {
-  //       const iat = Math.floor(Date.now() / 1000);
-  //       const exp = iat + 60 * 60; // one hour
+  // async function testJose() {
+  //   try {
+  //     const iat = Math.floor(Date.now() / 1000);
+  //     const exp = iat + 60 * 60; // one hour
 
-  //       const payload = {
-  //         id: 0,
-  //         name: "Chris",
-  //         foo: "bar",
-  //         age: 39,
-  //       };
+  //     const payload = {
+  //       id: 0,
+  //       name: "Chris",
+  //       foo: "bar",
+  //       age: 39,
+  //     };
 
-  //       const tokenPromise = new jose.SignJWT({ ...payload })
-  //         .setProtectedHeader({ alg: "HS256", typ: "JWT" })
-  //         .setExpirationTime(exp)
-  //         .setIssuedAt(iat)
-  //         .setNotBefore(iat)
-  //         .sign(new TextEncoder().encode("jose-secret"));
+  //     const tokenPromise = new jose.SignJWT({ ...payload })
+  //       .setProtectedHeader({ alg: "HS256", typ: "JWT" })
+  //       .setExpirationTime(exp)
+  //       .setIssuedAt(iat)
+  //       .setNotBefore(iat)
+  //       .sign(new TextEncoder().encode("jose-secret"));
 
-  //       const token = await tokenPromise;
-  //       console.log("what I think is token below:");
-  //       console.log(token);
+  //     //const token = await tokenPromise;
 
-  //       const { payload: receivedPayload } = await jose.jwtVerify(
-  //         token,
-  //         new TextEncoder().encode("jose-secret")
-  //       );
-  //       console.log("received payload below");
-  //       console.log(receivedPayload);
+  //     const token =
+  //       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwiZmlyc3ROYW1lIjoiQ2hyaXMiLCJlbWFpbCI6ImZvb0BiYXIuY29tIiwicm9sZSI6IkFETUlOIiwiZXhwIjoxNzAyNjcyOTQ3LCJpYXQiOjE3MDI2NzI4ODd9.ZJYnEM7rVgCOWj7kWj5NKm3hA0dVo7m4aUt8YgBAVEU";
+  //     console.log("what I think is token below:");
+  //     console.log(token);
+  //     console.log("typeof token");
+  //     console.log(typeof token);
 
-  //       console.log("decoding claims");
-  //       const claims = jose.decodeJwt(token);
-  //       console.log(claims);
-  //     } catch {
-  //       console.log("catch jose entered");
-  //     }
+  //     const { payload: receivedPayload } = await jose.jwtVerify(
+  //       token,
+  //       new TextEncoder().encode("jose-secret"),
+  //       { clockTolerance: 604_800 }
+  //     );
+  //     console.log("received payload below");
+  //     console.log(receivedPayload);
+
+  //     console.log("decoding claims");
+  //     const claims = jose.decodeJwt(token);
+  //     console.log(claims);
+  //   } catch {
+  //     console.log("catch jose entered");
   //   }
+  // }
 
-  //   testJose();
+  // testJose();
   return response;
 
   //const accessToken = request.cookies.get("jwt");

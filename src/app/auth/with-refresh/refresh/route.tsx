@@ -16,7 +16,6 @@ export const revalidate = 0;
 
 export async function GET(request: NextRequest) {
   console.log("inside refresh get route handler");
-
   const accessToken = request.cookies.get("jwt");
   const refreshToken = request.cookies.get("jwt-refresh");
 
@@ -37,20 +36,7 @@ export async function GET(request: NextRequest) {
         refreshToken.value,
         new TextEncoder().encode("another-secret")
       );
-
-      // const oldAccessTokenPayload = jwt.verify(
-      //   accessToken.value,
-      //   "my-secret",
-      //   { ignoreExpiration: true } //In this app, we want the user to be able to leave the website and come back to a logged-in session.
-      //   //Alternatively, to ensure the user is logged out when the user navigates away, the ignoreExpiration option could be removed.
-      //   //The old access token is still needed to ensure that the correct refresh token is associated with the correct user.
-      // ) as JwtPayload;
-      // const refreshTokenPayload = jwt.verify(
-      //   refreshToken.value,
-      //   "another-secret"
-      // ) as JwtPayload;
-
-      console.log("after verifies");
+      console.log("after verifies both refresh and access");
 
       //Should stop User A's refresh token being used to get a new access token for User B.
       if (oldAccessTokenPayload.id !== refreshTokenPayload.id) {
@@ -64,25 +50,16 @@ export async function GET(request: NextRequest) {
       const { iat, exp, ...rest } = oldAccessTokenPayload;
       const newAccessTokenPromise = new jose.SignJWT({ ...rest })
         .setProtectedHeader({ alg: "HS256", typ: "JWT" })
-        .setExpirationTime(Math.floor(Date.now() / 1000) + 60 * 5) // 5 mins
+        .setExpirationTime(Math.floor(Date.now() / 1000) + 60 * 1) // 1 minute
         .setIssuedAt()
         .sign(new TextEncoder().encode("my-secret"));
 
       const newAccessToken = await newAccessTokenPromise;
 
-      // const newAccessToken = jwt.sign(rest, "my-secret", {
-      //   expiresIn: "5m",
-      // });
-
-      const jwtAccessTokenPayload = await jose.jwtVerify(
+      const { payload: jwtAccessTokenPayload } = await jose.jwtVerify(
         newAccessToken,
         new TextEncoder().encode("my-secret")
       );
-
-      // const jwtAccessTokenPayload = jwt.verify(
-      //   newAccessToken,
-      //   "my-secret"
-      // ) as JwtPayload;
 
       resp = NextResponse.json({
         ...jwtAccessTokenPayload,
@@ -95,6 +72,7 @@ export async function GET(request: NextRequest) {
         sameSite: "strict",
       });
     } catch {
+      console.log("in catch refresh endpoint");
       resp = NextResponse.json(
         { message: "Invalid jwt token.", isLoggedIn: false }, //To do: Change this error message
         { status: 401 }

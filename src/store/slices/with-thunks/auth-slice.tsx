@@ -66,6 +66,7 @@ const authSlice = createSlice({
       getAccessTokenWithRefreshToken.fulfilled,
       (state, action) => {
         //Do not set isLoading.
+
         handleRefreshState(action, state);
       }
     );

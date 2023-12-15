@@ -40,7 +40,7 @@ export default function ResponsiveAppBar({
   const dispatch = useDispatch<AppDispatch>();
   const { isLoading, userInfo } = useSelector((state) => state.authSlice);
   //useAutoLogout(1_800_000);
-  const renderModal = useAutoLogoutWhenJwtTokenExpires(240_000, 10_000); //240_000 - 4 mins // 10_000 - 10 secs
+  const renderModal = useAutoLogoutWhenJwtTokenExpires(30_000, 10_000); //240_000 - 4 mins // 30_000 - 30 secs //10_000 - 10 secs
   console.log("renderModal " + renderModal.hasAutoLoggedOut);
 
   const [previousRenderModal, setPreviousRenderModal] = useState<{
