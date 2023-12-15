@@ -97,7 +97,6 @@ export default function ResponsiveAppBar({
         <AppBar
           position="fixed"
           sx={{
-            zIndex: 2000,
             backgroundColor: "grey.100",
             color: "primary.main",
           }}>

@@ -11,7 +11,6 @@ import {
 } from "./slices/with-thunks/auth-slice";
 import {
   userLogin,
-  registerUser,
   getAccessTokenWithRefreshToken,
   userLogout,
   getAccessTokenWithRefreshTokenOnAppMount,
@@ -34,7 +33,6 @@ export {
   removeJob,
   fetchJobs,
   userLogin,
-  registerUser,
   userLogout,
   reinitWasLastRefreshSuccessful,
   getAccessTokenWithRefreshToken,
