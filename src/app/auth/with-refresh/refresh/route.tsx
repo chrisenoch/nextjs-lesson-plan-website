@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import * as jose from "jose";
 
 //To do
 //CSRF protection with double-submit cookie method.
@@ -21,19 +22,33 @@ export async function GET(request: NextRequest) {
 
   let resp;
   if (accessToken && refreshToken) {
-    //The access token must also still be valid. So if somebody steals only the refresh token, this is not enough to get access.
     try {
-      const oldAccessTokenPayload = jwt.verify(
+      // In this app, we want the user to be able to leave the website and come back to a logged-in session. Consequently, the accessToken can be expired here.
+      // Alternatively, to ensure the user is logged out when the user navigates away, we could use the verify method here to ensure
+      // an acive access token is needed to get a new access token.
+      // The old access token is still needed to ensure that the correct refresh token is associated with the correct user.
+      const { payload: oldAccessTokenPayload } = await jose.jwtVerify(
         accessToken.value,
-        "my-secret",
-        { ignoreExpiration: true } //In this app, we want the user to be able to leave the website and come back to a logged-in session.
-        //Alternatively, to ensure the user is logged out when the user navigates away, the ignoreExpiration option could be removed.
-        //The old access token is still needed to ensure that the correct refresh token is associated with the correct user.
-      ) as JwtPayload;
-      const refreshTokenPayload = jwt.verify(
+        new TextEncoder().encode("my-secret"),
+        { clockTolerance: 604_800 } // 604_800 seconds = 1 week.
+      );
+
+      const { payload: refreshTokenPayload } = await jose.jwtVerify(
         refreshToken.value,
-        "another-secret"
-      ) as JwtPayload;
+        new TextEncoder().encode("another-secret")
+      );
+
+      // const oldAccessTokenPayload = jwt.verify(
+      //   accessToken.value,
+      //   "my-secret",
+      //   { ignoreExpiration: true } //In this app, we want the user to be able to leave the website and come back to a logged-in session.
+      //   //Alternatively, to ensure the user is logged out when the user navigates away, the ignoreExpiration option could be removed.
+      //   //The old access token is still needed to ensure that the correct refresh token is associated with the correct user.
+      // ) as JwtPayload;
+      // const refreshTokenPayload = jwt.verify(
+      //   refreshToken.value,
+      //   "another-secret"
+      // ) as JwtPayload;
 
       console.log("after verifies");
 
@@ -47,14 +62,27 @@ export async function GET(request: NextRequest) {
 
       //erase iat and exp properties from the object
       const { iat, exp, ...rest } = oldAccessTokenPayload;
-      const newAccessToken = jwt.sign(rest, "my-secret", {
-        expiresIn: "1m",
-      });
+      const newAccessTokenPromise = new jose.SignJWT({ ...rest })
+        .setProtectedHeader({ alg: "HS256", typ: "JWT" })
+        .setExpirationTime(Math.floor(Date.now() / 1000) + 60 * 5) // 5 mins
+        .setIssuedAt()
+        .sign(new TextEncoder().encode("my-secret"));
 
-      const jwtAccessTokenPayload = jwt.verify(
+      const newAccessToken = await newAccessTokenPromise;
+
+      // const newAccessToken = jwt.sign(rest, "my-secret", {
+      //   expiresIn: "5m",
+      // });
+
+      const jwtAccessTokenPayload = await jose.jwtVerify(
         newAccessToken,
-        "my-secret"
-      ) as JwtPayload;
+        new TextEncoder().encode("my-secret")
+      );
+
+      // const jwtAccessTokenPayload = jwt.verify(
+      //   newAccessToken,
+      //   "my-secret"
+      // ) as JwtPayload;
 
       resp = NextResponse.json({
         ...jwtAccessTokenPayload,
