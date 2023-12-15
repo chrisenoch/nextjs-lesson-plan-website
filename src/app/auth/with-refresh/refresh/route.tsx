@@ -2,13 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import * as jose from "jose";
 
-//To do
-//CSRF protection with double-submit cookie method.
-//Query database to check if regresh token has been revoked.
-//Cors
-//Content Security Policy
-//Add a separate authentication server?
-//Research other threats.
+// To do
+// CSRF protection with double-submit cookie method.
+// Query database to check if refresh token has been revoked.
+// Cors
+// Content Security Policy
+// Add a separate authentication server?
+// secure flag to cookies
+// Research other threats.
 
 //Ensure NextJS does not cache this request.
 export const dynamic = "force-dynamic";
@@ -36,7 +37,6 @@ export async function GET(request: NextRequest) {
         refreshToken.value,
         new TextEncoder().encode("another-secret")
       );
-      console.log("after verifies both refresh and access");
 
       //Should stop User A's refresh token being used to get a new access token for User B.
       if (oldAccessTokenPayload.id !== refreshTokenPayload.id) {

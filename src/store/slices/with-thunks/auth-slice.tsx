@@ -107,12 +107,10 @@ const authSlice = createSlice({
       state.checkAuthenticatedError = null;
     });
     builder.addCase(checkAuthenticated.fulfilled, (state, action) => {
-      console.log("checkAuthenticated.fulfilled");
       state.isLoading = false;
       setUserInfoFromLoggedInStatus(action, state);
     });
     builder.addCase(checkAuthenticated.rejected, (state, action) => {
-      console.log("checkAuthenticated.rejected");
       state.isLoading = false;
       state.checkAuthenticatedError = action.payload;
     });

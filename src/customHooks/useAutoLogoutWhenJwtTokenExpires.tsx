@@ -100,7 +100,7 @@ export default function useAutoLogoutWhenJwtTokenExpires(
 
   function autoLogout() {
     isAutoLogoutRunning.current = true;
-    console.log("sending Logout request in autologout ");
+    console.log("sending Logout request in autoLogout ");
     dispatch(userLogout());
     setRenderLogoutWarning({ hasAutoLoggedOut: true }); //Calling component informed and can then decide if it wants to show a message that explains why the user was logged out.
     dispatch(reinitWasLastRefreshSuccessful());

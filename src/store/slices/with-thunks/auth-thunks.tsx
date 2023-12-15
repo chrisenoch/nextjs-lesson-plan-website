@@ -55,8 +55,6 @@ export const getAccessTokenWithRefreshToken = createAsyncThunk(
         },
       });
       const result = await response.json();
-      console.log("result in refresh thunk");
-      console.log(result);
       //If successful, http-only cookie with jwt token will have been set on the server
       return result;
     } catch (error) {
