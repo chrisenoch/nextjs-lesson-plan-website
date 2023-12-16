@@ -84,24 +84,6 @@ export const getAccessTokenWithRefreshTokenOnAppMount = createAsyncThunk(
   }
 );
 
-export const checkAuthenticated = createAsyncThunk(
-  "authSlice/check-authenticated",
-  async (_: void, { rejectWithValue }) => {
-    try {
-      const response = await fetch(`${BACKEND_URL}/auth/check-authenticated`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      return rejectWithValue("Error: Unable to send request.");
-    }
-  }
-);
-
 // export const registerUser = createAsyncThunk(
 //   "auth/register",
 //   async (

@@ -1,8 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  registerUser,
   userLogin,
-  checkAuthenticated,
   userLogout,
   getAccessTokenWithRefreshToken,
   getAccessTokenWithRefreshTokenOnAppMount,
@@ -28,7 +26,7 @@ const authSlice = createSlice({
     },
   },
   extraReducers(builder) {
-    //login user
+    //Login user
     builder.addCase(userLogin.pending, (state, action) => {
       state.isLoading = true;
       state.loginError = null;
@@ -41,7 +39,7 @@ const authSlice = createSlice({
       state.isLoading = false;
       state.loginError = action.payload;
     });
-    //logout user
+    //Logout user
     builder.addCase(userLogout.pending, (state, action) => {
       state.isLoading = true;
       state.logoutError = null;
@@ -100,20 +98,6 @@ const authSlice = createSlice({
         state.refreshTokenError = action.payload;
       }
     );
-
-    //Check if authenticated. For example, when app loads.
-    builder.addCase(checkAuthenticated.pending, (state, action) => {
-      state.isLoading = true;
-      state.checkAuthenticatedError = null;
-    });
-    builder.addCase(checkAuthenticated.fulfilled, (state, action) => {
-      state.isLoading = false;
-      setUserInfoFromLoggedInStatus(action, state);
-    });
-    builder.addCase(checkAuthenticated.rejected, (state, action) => {
-      state.isLoading = false;
-      state.checkAuthenticatedError = action.payload;
-    });
 
     // //register user
     // builder.addCase(registerUser.pending, (state, action) => {
