@@ -182,6 +182,12 @@ export default function ResponsiveAppBar({
                 ---
               </Button>
               <NextLinkWrapper href="/premium" label="Next Wrapper Premium" />
+              <Button
+                key="aa"
+                href={"/lessonplans"}
+                component={NextLinkWrapper}>
+                Lesson Plans MUI NextLink
+              </Button>
             </Box>
           </Toolbar>
         </AppBar>
