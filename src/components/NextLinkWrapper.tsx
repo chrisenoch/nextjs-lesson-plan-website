@@ -1,14 +1,17 @@
 import { v4 as uuidv4 } from "uuid";
 import Link from "next/link";
-import { ReactElement, forwardRef } from "react";
+import { MutableRefObject, ReactElement, forwardRef, useRef } from "react";
 import { useHydrated } from "@/customHooks/useHydrated";
 
 const NextLinkWrapper = forwardRef(function Wrapper(props: any, ref: any) {
-  const { href, children, ...otherProps } = props;
-  const isHydrated = useHydrated();
+  const {
+    href,
+    children,
+    ...otherProps
+  }: { href: string; children: ReactElement } = props;
 
+  const isHydrated = useHydrated();
   if (!isHydrated) {
-    //return <Link href={href}>{label}</Link>;
     return (
       <Link {...otherProps} ref={ref} href={href}>
         {children}
@@ -16,8 +19,7 @@ const NextLinkWrapper = forwardRef(function Wrapper(props: any, ref: any) {
     );
   }
 
-  const finalHref = href + "/remove-me/" + uuidv4();
-  //return <Link href={finalHref}>{label}</Link>;
+  const finalHref = href + "/next-link-wrapper-id/" + uuidv4();
   return (
     <Link {...otherProps} ref={ref} href={finalHref}>
       {children}

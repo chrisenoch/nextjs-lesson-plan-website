@@ -163,30 +163,17 @@ export default function ResponsiveAppBar({
                   Login
                 </LoadingButton>
               )}
-
-              <a href="/lessonplans">Lesson plans reg link</a>
-              <a href="/jobs">Jobs reg link</a>
-
               <Button key="yyyn" href={"#"} component={Link}>
                 ---
               </Button>
-              <NextLinkWrapper href="/jobs" label="Next Wrapper Jobs" />
-              <Button key="zz" href={"#"} component={Link}>
-                ---
-              </Button>
-              <NextLinkWrapper
-                href="/lessonplans"
-                label="Next Wrapper LessonPlans"
-              />
-              <Button key="zt" href={"#"} component={Link}>
-                ---
-              </Button>
-              <NextLinkWrapper href="/premium" label="Next Wrapper Premium" />
               <Button
                 key="aa"
                 href={"/lessonplans"}
                 component={NextLinkWrapper}>
                 Lesson Plans MUI NextLink
+              </Button>
+              <Button key="bb" href={"/jobs"} component={NextLinkWrapper}>
+                Jobs MUI NextLink
               </Button>
             </Box>
           </Toolbar>

@@ -20,14 +20,14 @@ export default function LessonPlansPage() {
   const { userInfo } = useSelector((state) => state.authSlice);
   const [isFirstRender, setIsFirstRender] = useState<boolean>(true);
 
-  //   useEffect(() => {
-  //     if (isFirstRender) {
-  //       setIsFirstRender(false);
-  //     }
-  //     if (!userInfo && !isFirstRender) {
-  //       redirect("/auth/signin");
-  //     }
-  //   }, [userInfo]);
+  useEffect(() => {
+    if (isFirstRender) {
+      setIsFirstRender(false);
+    }
+    if (!userInfo && !isFirstRender) {
+      redirect("/auth/signin");
+    }
+  }, [userInfo]);
 
   let activeIntersection = useScrollSpy([
     "summary",
