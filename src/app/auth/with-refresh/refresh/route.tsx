@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import jwt, { JwtPayload } from "jsonwebtoken";
 import * as jose from "jose";
 
 // To do

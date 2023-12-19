@@ -20,6 +20,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -37,6 +38,8 @@ export default function ResponsiveAppBar({
   LINKS,
   PLACEHOLDER_LINKS,
 }) {
+  console.log("Responsive AppBar mounts");
+  const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const { isLoading, userInfo } = useSelector((state) => state.authSlice);
   //useAutoLogout(1_800_000);
@@ -152,6 +155,9 @@ export default function ResponsiveAppBar({
                   Login
                 </LoadingButton>
               )}
+
+              <a href="/lessonplans">Lesson plans reg link</a>
+              <a href="/jobs">Jobs reg link</a>
             </Box>
           </Toolbar>
         </AppBar>

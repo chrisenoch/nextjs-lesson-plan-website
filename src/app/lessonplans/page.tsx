@@ -2,7 +2,9 @@
 "use client";
 
 import FloatingId from "@/components/FloatingId";
+import withAuth from "@/components/auth/withAuth";
 import useScrollSpy from "@/customHooks/useScrollSpy";
+
 import {
   Grid,
   Container,
@@ -14,8 +16,9 @@ import {
   ListItemText,
   Stack,
 } from "@mui/material";
+import { redirect } from "next/navigation";
 
-export default function LessonPlansPage() {
+const LessonPlansPage = () => {
   let activeIntersection = useScrollSpy([
     "summary",
     "warmer",
@@ -333,4 +336,6 @@ export default function LessonPlansPage() {
       </Grid>
     </Stack>
   );
-}
+};
+
+export default withAuth(LessonPlansPage);
