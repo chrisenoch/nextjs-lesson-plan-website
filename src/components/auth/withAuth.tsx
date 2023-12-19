@@ -1,14 +1,10 @@
-import HomePage from "@/app/page";
-import { redirect } from "next/navigation";
-import { SignIn } from "./SignIn";
+import { session } from "@/session/session";
 import Loading from "./Loading";
+import { cookies } from "next/headers";
 
 export default function withAuth(Component) {
   return function WithAuth(props: any) {
-    const isLoggedIn = false;
-    let hideComponent = true;
-
-    if (isLoggedIn) {
+    if (session.isAuthenticated) {
       //redirect("/");
       //return null;
       return <Component {...props} />;

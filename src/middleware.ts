@@ -4,6 +4,7 @@ import { UserRole } from "./models/types/UserRole";
 import * as jose from "jose";
 import { v4 as uuidv4 } from "uuid";
 import { revalidatePath } from "next/cache";
+import { session } from "./session/session";
 
 let count = 0;
 export function middleware(request: NextRequest) {
@@ -11,11 +12,11 @@ export function middleware(request: NextRequest) {
   //const resp = NextResponse.redirect(`${request.url}?foo=${count}`);
   //revalidatePath("/lessonplans");
 
-  console.log("in middleware count " + ++count);
-  console.log("randomId below");
-  console.log(uuidv4());
-  console.log("print referrer header");
-  console.log(request.headers);
+  // console.log("in middleware count " + ++count);
+  // console.log("randomId below");
+  // console.log(uuidv4());
+  // console.log("print referrer header");
+  // console.log(request.headers);
 
   let resp;
   resp = NextResponse.next();
