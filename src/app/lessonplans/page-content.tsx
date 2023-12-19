@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import FloatingId from "@/components/FloatingId";
 
-export default function LessonPlansPage() {
+export default function LessonPlansPageContent() {
   console.log("LessonPlansPageContent rendered");
   const { userInfo } = useSelector((state) => state.authSlice);
   const [isFirstRender, setIsFirstRender] = useState<boolean>(true);

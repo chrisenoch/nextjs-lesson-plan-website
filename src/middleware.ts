@@ -5,9 +5,54 @@ import * as jose from "jose";
 import { v4 as uuidv4 } from "uuid";
 import { revalidatePath } from "next/cache";
 import { session } from "./session/session";
+import { access } from "fs";
 
 let count = 0;
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
+  console.log("middleware ran: " + ++count);
+  const originalPath = request.nextUrl.pathname;
+
+  console.log("originalPath " + originalPath);
+  if (originalPath.includes("/remove-me")) {
+    const index = originalPath.indexOf("/remove-me");
+    const newRelativeUrl = originalPath.substring(0, index);
+    console.log("new relative url");
+    console.log(newRelativeUrl);
+
+    if (
+      originalPath.includes("jobs") ||
+      originalPath.includes("lessonplans") ||
+      originalPath.includes("premium")
+    ) {
+      console.log("in middleware if");
+      const authCookie = request.cookies.get("jwt");
+      if (authCookie) {
+        const accessToken = authCookie.value;
+        console.log("access token below: ");
+        console.log(accessToken);
+        if (accessToken) {
+          //verify token
+          try {
+            const { payload } = await jose.jwtVerify(
+              accessToken,
+              new TextEncoder().encode("my-secret")
+            );
+            console.log("payload from middleware below: " + count);
+            console.log(payload);
+            //If get to here, token has passed validation
+            return NextResponse.redirect(new URL(newRelativeUrl, request.url));
+          } catch {
+            //token fails verification
+            return NextResponse.redirect(new URL("/", request.url));
+          }
+        }
+      } else {
+        return NextResponse.redirect(new URL("/", request.url));
+      }
+    }
+
+    return NextResponse.next();
+  }
   //const resp = NextResponse.next();
   //const resp = NextResponse.redirect(`${request.url}?foo=${count}`);
   //revalidatePath("/lessonplans");
@@ -71,18 +116,18 @@ export function middleware(request: NextRequest) {
   //   }
 }
 
-export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    "/((?!auth/|lessonplans).*)",
-  ],
-};
+// export const config = {
+//   matcher: [
+//     /*
+//      * Match all request paths except for the ones starting with:
+//      * - api (API routes)
+//      * - _next/static (static files)
+//      * - _next/image (image optimization files)
+//      * - favicon.ico (favicon file)
+//      */
+//     "/((?!auth/|lessonplans).*)",
+//   ],
+// };
 
 async function checkPermissions(
   role: UserRole,

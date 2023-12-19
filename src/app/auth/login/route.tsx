@@ -1,10 +1,12 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import * as jose from "jose";
 import { NextResponse } from "next/server";
-
+import { revalidatePath } from "next/cache";
 //To do: change the userId to something that is harder to guess.
 
 export async function POST(request: Request) {
+  revalidatePath("/");
+
   const res: { email: string; password: string } = await request.json();
   const iat = Math.floor(Date.now() / 1000);
   let accessToken;

@@ -32,6 +32,8 @@ import {
 
 import useAutoLogoutWhenJwtTokenExpires from "@/customHooks/useAutoLogoutWhenJwtTokenExpires";
 import { LogoutWarning } from "./auth/LogoutWarning";
+import BasicLink from "./BasicLink";
+import NextLinkWrapper from "./NextLinkWrapper";
 
 export default function ResponsiveAppBar({
   DRAWER_WIDTH,
@@ -94,7 +96,9 @@ export default function ResponsiveAppBar({
     <>
       <LogoutWarning
         open={showLogoutWarning}
-        handleClose={() => setShowLogoutWarning(false)}
+        handleClose={() => {
+          setShowLogoutWarning(false);
+        }}
       />
       <ElevationScroll>
         <AppBar
@@ -136,7 +140,11 @@ export default function ResponsiveAppBar({
               })}
               {/* show login, logout or loading button depending on the status */}
               {userInfo && !isLoading && (
-                <Button key="Logout" onClick={() => dispatch(userLogout())}>
+                <Button
+                  key="Logout"
+                  onClick={() => {
+                    dispatch(userLogout());
+                  }}>
                   Logout
                 </Button>
               )}
@@ -158,6 +166,22 @@ export default function ResponsiveAppBar({
 
               <a href="/lessonplans">Lesson plans reg link</a>
               <a href="/jobs">Jobs reg link</a>
+
+              <Button key="yyyn" href={"#"} component={Link}>
+                ---
+              </Button>
+              <NextLinkWrapper href="/jobs" label="Next Wrapper Jobs" />
+              <Button key="zz" href={"#"} component={Link}>
+                ---
+              </Button>
+              <NextLinkWrapper
+                href="/lessonplans"
+                label="Next Wrapper LessonPlans"
+              />
+              <Button key="zt" href={"#"} component={Link}>
+                ---
+              </Button>
+              <NextLinkWrapper href="/premium" label="Next Wrapper Premium" />
             </Box>
           </Toolbar>
         </AppBar>

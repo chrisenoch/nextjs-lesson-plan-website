@@ -10,7 +10,7 @@ export default function PremiumPage() {
       mx={"auto"}
       marginTop={2}
       marginBottom={2}>
-      <p>This is the premoum area!</p>
+      <p>This is the premium area!</p>
     </Stack>
   );
 }

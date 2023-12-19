@@ -1,5 +1,4 @@
 "use client";
-import { faker } from "@faker-js/faker";
 import { useFormState, useFormStatus } from "react-dom";
 import { Box, TextField, Button, Stack } from "@mui/material";
 import { createJob } from "@/actions/jobs";
