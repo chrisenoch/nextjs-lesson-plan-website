@@ -19,8 +19,6 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import LoadingButton from "@mui/lab/LoadingButton";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -33,6 +31,7 @@ import {
 import useAutoLogoutWhenJwtTokenExpires from "@/customHooks/useAutoLogoutWhenJwtTokenExpires";
 import { LogoutWarning } from "./auth/LogoutWarning";
 import SecureNextLink from "./SecureNextLink";
+import InsecureNextLink from "next/link";
 
 export default function ResponsiveAppBar({
   DRAWER_WIDTH,
@@ -40,13 +39,10 @@ export default function ResponsiveAppBar({
   PLACEHOLDER_LINKS,
 }) {
   console.log("Responsive AppBar mounts");
-  const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const { isLoading, userInfo } = useSelector((state) => state.authSlice);
   //useAutoLogout(1_800_000);
   const renderModal = useAutoLogoutWhenJwtTokenExpires(30_000, 10_000); //240_000 - 4 mins // 30_000 - 30 secs //10_000 - 10 secs
-  console.log("renderModal " + renderModal.hasAutoLoggedOut);
-
   const [previousRenderModal, setPreviousRenderModal] = useState<{
     hasAutoLoggedOut: boolean;
   }>(renderModal);
@@ -66,13 +62,9 @@ export default function ResponsiveAppBar({
     dispatch(getAccessTokenWithRefreshTokenOnAppMount());
   }, [dispatch]);
 
-  console.log("isLoading: " + isLoading);
-
   const navItems = [
     { title: "Lesson Plans", href: "/lessonplans" },
     { title: "Jobs", href: "/jobs" },
-    // { title: "Login", href: "/auth/signin" },
-    // { title: "Logout", href: "/auth/logout" },
   ];
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -132,7 +124,10 @@ export default function ResponsiveAppBar({
               }}>
               {navItems.map((item) => {
                 return (
-                  <Button key={item.title} href={item.href} component={Link}>
+                  <Button
+                    key={item.title}
+                    href={item.href}
+                    component={SecureNextLink}>
                     {item.title}
                   </Button>
                 );
@@ -148,7 +143,11 @@ export default function ResponsiveAppBar({
                 </Button>
               )}
               {!userInfo && !isLoading && (
-                <Button key="Login" href={"/auth/signin"} component={Link}>
+                <Button
+                  key="Login"
+                  href={"/auth/signin"}
+                  component={InsecureNextLink}>
+                  {/* We don't need to check the login route in middleware */}
                   Login
                 </Button>
               )}
@@ -162,15 +161,6 @@ export default function ResponsiveAppBar({
                   Login
                 </LoadingButton>
               )}
-              <Button key="yyyn" href={"#"} component={Link}>
-                ---
-              </Button>
-              <Button key="aa" href={"/lessonplans"} component={SecureNextLink}>
-                Lesson Plans MUI NextLink
-              </Button>
-              <Button key="bb" href={"/jobs"} component={SecureNextLink}>
-                Jobs MUI NextLink
-              </Button>
             </Box>
           </Toolbar>
         </AppBar>
@@ -195,7 +185,7 @@ export default function ResponsiveAppBar({
           <List>
             {LINKS.map(({ text, href, icon: Icon }) => (
               <ListItem key={href} disablePadding>
-                <ListItemButton component={Link} href={href}>
+                <ListItemButton component={SecureNextLink} href={href}>
                   <ListItemIcon>
                     <Icon />
                   </ListItemIcon>
