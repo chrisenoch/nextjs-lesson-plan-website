@@ -1,33 +1,44 @@
 import { UserRole } from "./UserRole";
 
-// const protectedRoutes: ProtectedRoutes = {
+// const protectedRoutesExample: {
+//   [key: string]: {
+//     roles: string[];
+//     children?: (
+//       | {
+//           [key: string]: {
+//             roles: string[];
+//           };
+//         }
+//       | {
+//           [key: string]: {
+//             roles: string[];
+//           };
+//         }
+//     )[];
+//   };
+// } = {
 //   lessonplans: { roles: ["USER"] },
 //   premium: { roles: ["ADMIN", "USER"] },
 //   users: {
+//     roles: ["ADMIN", "USER"],
 //     children: [
 //       { account: { roles: ["USER"] } },
-//       { "account/statistics": { roles: ["ADMIN"] } },
+//       { "account/secrets": { roles: ["ADMIN"] } },
+//     ],
+//   },
+//   shop: {
+//     roles: ["ADMIN", "USER"],
+//     children: [
+//       { fashion: { roles: ["USER"] } },
+//       { "fashion/secrets": { roles: ["ADMIN"] } },
 //     ],
 //   },
 // };
 
 export type ProtectedRoutes = {
-  [key: string]: ProtectedRoute;
-};
-
-//need a type for this below:
-
-// {
-//   "account": {
-//     "roles": [
-//       "USER"
-//     ]
-//   }
-// }
-
-export type ProtectedRouteRolesByRoute = {
   [key: string]: {
-    roles: ["USER"];
+    roles: UserRole[];
+    children?: ProtectedRouteRolesByRoute[];
   };
 };
 
@@ -43,6 +54,12 @@ export type ProtectedRouteChildren = {
 
 export type ProtectedRouteRoles = {
   roles: UserRole[];
+};
+
+export type ProtectedRouteRolesByRoute = {
+  [key: string]: {
+    roles: UserRole[];
+  };
 };
 
 export type ProtectedRouteInfo = ProtectedRouteChildren | ProtectedRouteRoles;

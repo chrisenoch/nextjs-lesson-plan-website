@@ -187,11 +187,19 @@ async function checkPermissions(
 // //Will match the most specific routes first. E.g. accounts/statistics/... will be matched before account
 const protectedRoutes: ProtectedRoutes = {
   lessonplans: { roles: ["USER"] },
-  premium: { roles: ["ADMIN", "USER"] },
+  premium: { roles: ["ADMIN"] },
   users: {
+    roles: ["USER"],
     children: [
       { account: { roles: ["USER"] } },
-      { "account/statistics": { roles: ["ADMIN"] } },
+      { "account/secrets": { roles: ["ADMIN"] } },
+    ],
+  },
+  shop: {
+    roles: ["USER"],
+    children: [
+      { fashion: { roles: ["USER"] } },
+      { "fashion/secrets": { roles: ["ADMIN"] } },
     ],
   },
 };
@@ -222,16 +230,18 @@ function getAllProtectedRoutes(protectedRoutes: ProtectedRoutes) {
 // function getAllProtectedRoutes(protectedRoutes: ProtectedRoutes) {
 //   const allProtectedRoutes = new Set();
 //   Object.entries(protectedRoutes).forEach(
-//     ([primaryRoute, value]: [any, any]) => {
+//     ([primaryRoute, protectedRoute]: [string, ProtectedRoute]) => {
 //       allProtectedRoutes.add(primaryRoute);
 
-//       if (value?.children) {
-//         console.log("children below");
-//         console.log(value.children);
-
-//         Object.entries(value.children).forEach(
-//           ([secondaryRoute, roles]: [string, any]) => {
-//             allProtectedRoutes.add(primaryRoute + "/" + secondaryRoute);
+//       if (isProtectedRouteChildren(protectedRoute)) {
+//         Object.values(protectedRoute.children).forEach(
+//           (protectedRouteRolesByRoute: ProtectedRouteRolesByRoute) => {
+//             //loop over the role route-role pairs
+//             Object.keys(protectedRouteRolesByRoute).forEach(
+//               (secondaryRoute: string) => {
+//                 allProtectedRoutes.add(primaryRoute + "/" + secondaryRoute);
+//               }
+//             );
 //           }
 //         );
 //       }
