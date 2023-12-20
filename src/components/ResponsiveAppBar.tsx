@@ -32,8 +32,7 @@ import {
 
 import useAutoLogoutWhenJwtTokenExpires from "@/customHooks/useAutoLogoutWhenJwtTokenExpires";
 import { LogoutWarning } from "./auth/LogoutWarning";
-import BasicLink from "./BasicLink";
-import NextLinkWrapper from "./NextLinkWrapper";
+import SecureNextLink from "./SecureNextLink";
 
 export default function ResponsiveAppBar({
   DRAWER_WIDTH,
@@ -166,13 +165,10 @@ export default function ResponsiveAppBar({
               <Button key="yyyn" href={"#"} component={Link}>
                 ---
               </Button>
-              <Button
-                key="aa"
-                href={"/lessonplans"}
-                component={NextLinkWrapper}>
+              <Button key="aa" href={"/lessonplans"} component={SecureNextLink}>
                 Lesson Plans MUI NextLink
               </Button>
-              <Button key="bb" href={"/jobs"} component={NextLinkWrapper}>
+              <Button key="bb" href={"/jobs"} component={SecureNextLink}>
                 Jobs MUI NextLink
               </Button>
             </Box>
