@@ -4,7 +4,6 @@ import { Box, TextField, Button, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { redirect } from "next/navigation";
-import { session } from "@/session/session";
 
 export function SignIn() {
   const { isLoading, userInfo, error } = useSelector(
