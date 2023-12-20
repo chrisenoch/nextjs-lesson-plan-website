@@ -2,6 +2,13 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { UserRole } from "./models/types/UserRole";
 import * as jose from "jose";
+import {
+  ProtectedRoute,
+  ProtectedRouteRoles,
+  ProtectedRouteRolesByRoute,
+  ProtectedRoutes,
+  isProtectedRouteChildren,
+} from "./models/types/ProtectedRoutes";
 
 const protectedRoutesAdmin = ["/jobs"];
 const protectedRoutesUser = ["/lessonplans", "/premium"];
@@ -177,19 +184,8 @@ async function checkPermissions(
   }
 }
 
-const protectedRoutes: {
-  [key: string]:
-    | {
-        children: {
-          [key: string]: {
-            roles: UserRole[];
-          };
-        }[];
-      }
-    | {
-        roles: UserRole[];
-      };
-} = {
+// //Will match the most specific routes first. E.g. accounts/statistics/... will be matched before account
+const protectedRoutes: ProtectedRoutes = {
   lessonplans: { roles: ["USER"] },
   premium: { roles: ["ADMIN", "USER"] },
   users: {
@@ -200,36 +196,49 @@ const protectedRoutes: {
   },
 };
 
-// //Will match the most specific routes first. E.g. accounts/statistics/... will be matched before account
-// const protectedRoutes: {
-//   [key: string]: { roles: string[]
-//     |
+function getAllProtectedRoutes(protectedRoutes: ProtectedRoutes) {
+  const allProtectedRoutes = new Set();
+  Object.entries(protectedRoutes).forEach(
+    ([primaryRoute, protectedRoute]: [string, ProtectedRoute]) => {
+      allProtectedRoutes.add(primaryRoute);
 
-//     // children: {
-//     //   [key: string]: {
-//     //     roles: string[];
-//     //   };
-//     // };
+      if (isProtectedRouteChildren(protectedRoute)) {
+        Object.values(protectedRoute.children).forEach(
+          (protectedRouteRolesByRoute: ProtectedRouteRolesByRoute) => {
+            //loop over the role route-role pairs
+            Object.keys(protectedRouteRolesByRoute).forEach(
+              (secondaryRoute: string) => {
+                allProtectedRoutes.add(primaryRoute + "/" + secondaryRoute);
+              }
+            );
+          }
+        );
+      }
+    }
+  );
+  return allProtectedRoutes;
+}
 
-// } = {
-//   lessonplans: { roles: ["USER"] },
-//   premium: { roles: ["ADMIN", "USER"] },
-//   users: {
-//     children: [
-//       { "account": { roles: ["USER"] } },
-//       { "account/statistics": { roles: ["ADMIN"] } },
-//     ],
-//   },
-//   // //Below is wrong
-//   // test: {
-//   //   children: [
-//   //     ["account", { roles: ["USER"] }],
-//   //     [{ roles: ["USER"] }, "account"],
-//   //   ],
-//   // },
-// };
+// function getAllProtectedRoutes(protectedRoutes: ProtectedRoutes) {
+//   const allProtectedRoutes = new Set();
+//   Object.entries(protectedRoutes).forEach(
+//     ([primaryRoute, value]: [any, any]) => {
+//       allProtectedRoutes.add(primaryRoute);
 
-function getAllProtectedRoutes(pathName: string) {}
+//       if (value?.children) {
+//         console.log("children below");
+//         console.log(value.children);
+
+//         Object.entries(value.children).forEach(
+//           ([secondaryRoute, roles]: [string, any]) => {
+//             allProtectedRoutes.add(primaryRoute + "/" + secondaryRoute);
+//           }
+//         );
+//       }
+//     }
+//   );
+//   return allProtectedRoutes;
+// }
 
 function getUrl(request: NextRequest, role: UserRole) {
   if (role === "ADMIN") {
