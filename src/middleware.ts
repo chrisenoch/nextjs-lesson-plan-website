@@ -16,43 +16,50 @@ let count = 0;
 export async function middleware(request: NextRequest) {
   console.log("middleware count " + ++count);
   const originalPath = request.nextUrl.pathname;
-  let isUser = false;
-  let isAdmin = false;
-  let accessToken;
-
-  //Get the authentication roles
-  const authCookie = request.cookies.get("jwt");
-  if (authCookie) {
-    accessToken = authCookie.value;
-    const isAdminPromise = checkPermissions("ADMIN", accessToken);
-    isAdmin = await isAdminPromise;
-    const isUserPromise = checkPermissions("USER", accessToken);
-    isUser = await isUserPromise;
+  console.log("originalPath in middleware " + originalPath);
+  if (originalPath === "/jobs") {
+    console.log("original path EQUALS /jobs");
+  } else {
+    console.log("original path does NOT EQUALS /jobs");
   }
 
-  console.log("isAdmin " + isAdmin);
-  console.log("isUser " + isUser);
+  // let isUser = false;
+  // let isAdmin = false;
+  // let accessToken;
 
-  console.log("before handleAuthWithNextWrapperI 1, count " + count);
-  handleAuthWithNextWrapperId(
-    request,
-    isAdmin,
-    protectedRoutesAdmin,
-    "/auth/signin"
-  );
-  console.log("before handleAuthWithNextWrapperI 2, count " + count);
-  handleAuthWithNextWrapperId(
-    request,
-    isUser,
-    protectedRoutesUser,
-    "/auth/signin"
-  );
+  // //Get the authentication roles
+  // const authCookie = request.cookies.get("jwt");
+  // if (authCookie) {
+  //   accessToken = authCookie.value;
+  //   const isAdminPromise = checkPermissions("ADMIN", accessToken);
+  //   isAdmin = await isAdminPromise;
+  //   const isUserPromise = checkPermissions("USER", accessToken);
+  //   isUser = await isUserPromise;
+  // }
 
-  console.log("before handleAuth 1, count " + count);
-  handleAuth(request, isAdmin, protectedRoutesAdmin, "/auth/signin");
+  // console.log("isAdmin " + isAdmin);
+  // console.log("isUser " + isUser);
 
-  console.log("before handleAuth 2, count " + count);
-  handleAuth(request, isUser, protectedRoutesUser, "/auth/signin");
+  // console.log("before handleAuthWithNextWrapperI 1, count " + count);
+  // handleAuthWithNextWrapperId(
+  //   request,
+  //   isAdmin,
+  //   protectedRoutesAdmin,
+  //   "/auth/signin"
+  // );
+  // console.log("before handleAuthWithNextWrapperI 2, count " + count);
+  // handleAuthWithNextWrapperId(
+  //   request,
+  //   isUser,
+  //   protectedRoutesUser,
+  //   "/auth/signin"
+  // );
+
+  // console.log("before handleAuth 1, count " + count);
+  // handleAuth(request, isAdmin, protectedRoutesAdmin, "/auth/signin");
+
+  // console.log("before handleAuth 2, count " + count);
+  // handleAuth(request, isUser, protectedRoutesUser, "/auth/signin");
 
   // if (originalPath.includes("/next-link-wrapper-id")) {
   //   const newRelativeUrl = removeSecureNextLinkSuffix(originalPath);
@@ -205,18 +212,21 @@ const protectedRoutes: ProtectedRoutes = {
 };
 
 function getAllProtectedRoutes(protectedRoutes: ProtectedRoutes) {
-  const allProtectedRoutes = new Set();
+  const allProtectedRoutes = new Set<string>();
   Object.entries(protectedRoutes).forEach(
     ([primaryRoute, protectedRoute]: [string, ProtectedRoute]) => {
-      allProtectedRoutes.add(primaryRoute);
+      allProtectedRoutes.add(primaryRoute.toLowerCase());
 
       if (isProtectedRouteChildren(protectedRoute)) {
         Object.values(protectedRoute.children).forEach(
           (protectedRouteRolesByRoute: ProtectedRouteRolesByRoute) => {
-            //loop over the role route-role pairs
             Object.keys(protectedRouteRolesByRoute).forEach(
               (secondaryRoute: string) => {
-                allProtectedRoutes.add(primaryRoute + "/" + secondaryRoute);
+                allProtectedRoutes.add(
+                  primaryRoute.toLowerCase() +
+                    "/" +
+                    secondaryRoute.toLowerCase()
+                );
               }
             );
           }
@@ -257,16 +267,108 @@ function getUrl(request: NextRequest, role: UserRole) {
   }
 }
 
-//NEW STRATEGY
-//STEP ONE
-//First check if route protected
+function cleanedUrlPath(request: NextRequest) {
+  const originalPath = request.nextUrl.pathname;
+  if (originalPath.includes("/next-link-wrapper-id")) {
+    const newPath = removeSecureNextLinkSuffix(originalPath);
+    return newPath.toLowerCase();
+  }
+  return originalPath.toLowerCase();
+}
+
+function getPrimaryUrlSegment(urlPath: string) {
+  let urlPathNoStartSlash;
+  let primaryUrlSegment;
+  if (urlPath.startsWith("/")) {
+    urlPathNoStartSlash = urlPath.substring(1);
+  } else {
+    urlPathNoStartSlash = urlPath;
+  }
+
+  if (urlPathNoStartSlash.indexOf("/") !== -1) {
+    primaryUrlSegment = urlPathNoStartSlash.substring(
+      0,
+      urlPathNoStartSlash.indexOf("/")
+    );
+    return primaryUrlSegment;
+  } else {
+    primaryUrlSegment = urlPathNoStartSlash;
+    return primaryUrlSegment;
+  }
+}
+
+//STEP ZERO
+const allProtectedRoutes: Set<string> = getAllProtectedRoutes(protectedRoutes);
+
+// STEP ONE
+// First check if route protected
 // get all map jkeys, put them in a set and decide if route is protected
+
+// superAdmin field is not if the user is superAdmin. It is the role that you choose
+// which has superAdmin powers (access to everything), if you decide such a role
+// should exist.
+
+//If the user does not have a role, pass an empty array for roles.
+function getUrlBasedOnPermissions(
+  request: NextRequest,
+  allProtectedRoutes: Set<string>,
+  roles: UserRole[],
+  failureRedirectUrlPath: string,
+  superAdmin?: UserRole
+) {
+  const urlPath = cleanedUrlPath(request);
+  //superAdmin has access to all if superAdmin exists
+  //To do?: Change superAdmin to an array so that developer can assign multiple superAdmins
+  if (superAdmin && roles.includes(superAdmin)) {
+    return urlPath;
+  }
+
+  //If route not protected, return unchanged url so user can go where he wants.
+  if (!allProtectedRoutes.has(urlPath)) {
+    return urlPath;
+  }
+
+  // If user doesn't have a role. E.g. he does not have an auth cookie or if his token is invalid.
+  // To do?: Change so that developer can add different failureRedirectPaths for different urls in 'protectedRoutes.'
+  if (roles.length < 1) {
+    return failureRedirectUrlPath;
+  }
+
+  //get primaryUrlSegment
+  const primaryUrlSegment = getPrimaryUrlSegment(urlPath);
+
+  //loop over protectedRoutes object keys.
+  //If primaryUrlSegment matches any object key:
+  //Check if children exists
+  //If children DOES NOT exist:
+  //Get allowed roles for route -> protectedRoutes.<primaryUlSegment>.roles
+  //Check if user role is in returned roles
+  //if yes, return urlPath
+  //If no return failureRedirectUrlPath
+  //If children EXISTS:
+  //
+
+  //Url:       www.foo.com/users/account
+  //urlPath = /jobs/foo/bar
+  //Primary    route: users
+
+  //check if object key is the start of the relative part of the url.
+}
+
+//NEW STRATEGY
+
+//Check if next-wrapper an if so, return the url
+//At the end of this stage we need the relative url to redirect to upon success. Called newRelativeUrl in the next-wrapper function
+//Al ready have the method if includes next-wrapper. Now I need to get it if it does not.
 
 //STEP TWO. get user role (must match to the map keys later).
 //checkPermissions will need to return the roles. Plural
+// can separate with commas and then use string.split method
+//Function: will need to accept an array of user roles.
+
 //STEP THREE - boolean userHasRole/userIsLoggedIn
 
-//let urltoreturn;
+//let urlToReturn;
 //STEP FOUR
 // if (includes-next-wrapper-id){
 //urltoreturn = getUrlNextWrapper
