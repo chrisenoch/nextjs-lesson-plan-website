@@ -10,86 +10,112 @@ import {
   isProtectedRouteChildren,
 } from "./models/types/ProtectedRoutes";
 
-const protectedRoutesAdmin = ["/jobs"];
-const protectedRoutesUser = ["/lessonplans", "/premium"];
+// const protectedRoutesAdmin = ["/jobs"];
+// const protectedRoutesUser = ["/lessonplans", "/premium"];
 let count = 0;
 export async function middleware(request: NextRequest) {
   console.log("middleware count " + ++count);
   const originalPath = request.nextUrl.pathname;
-  console.log("originalPath in middleware " + originalPath);
-  if (originalPath === "/jobs") {
-    console.log("original path EQUALS /jobs");
+
+  //Modify path of SecueNextLink
+  if (originalPath.includes("/next-link-wrapper-id")) {
+    const index = originalPath.indexOf("/next-link-wrapper-id");
+    const newRelativeUrl = originalPath.substring(0, index);
+    return NextResponse.redirect(new URL(newRelativeUrl, request.url));
   } else {
-    console.log("original path does NOT EQUALS /jobs");
+    // //To do - delete userRoles array - just for testing
+    const userRoles: UserRole[] = ["USER"];
+
+    const urlPath = getUrlPathBasedOnPermissions({
+      request,
+      protectedRoutes,
+      userRoles,
+      notLoggedInRedirectUrlPath: "/auth/signin",
+      incorrrectRoleRedirectUrlPath: "/",
+      superAdmin: "ADMIN",
+    });
+
+    if (urlPath) {
+      const urlPathNoStartSlash = removeStartSlashIfPresent(urlPath);
+      const originalPathNoStartSlash = removeStartSlashIfPresent(originalPath);
+
+      if (urlPathNoStartSlash !== originalPathNoStartSlash) {
+        return NextResponse.redirect(new URL(urlPath, request.url));
+        //return NextResponse.next();
+      } else {
+        return NextResponse.next();
+      }
+    }
   }
-
-  // let isUser = false;
-  // let isAdmin = false;
-  // let accessToken;
-
-  // //Get the authentication roles
-  // const authCookie = request.cookies.get("jwt");
-  // if (authCookie) {
-  //   accessToken = authCookie.value;
-  //   const isAdminPromise = checkPermissions("ADMIN", accessToken);
-  //   isAdmin = await isAdminPromise;
-  //   const isUserPromise = checkPermissions("USER", accessToken);
-  //   isUser = await isUserPromise;
-  // }
-
-  // console.log("isAdmin " + isAdmin);
-  // console.log("isUser " + isUser);
-
-  // console.log("before handleAuthWithNextWrapperI 1, count " + count);
-  // handleAuthWithNextWrapperId(
-  //   request,
-  //   isAdmin,
-  //   protectedRoutesAdmin,
-  //   "/auth/signin"
-  // );
-  // console.log("before handleAuthWithNextWrapperI 2, count " + count);
-  // handleAuthWithNextWrapperId(
-  //   request,
-  //   isUser,
-  //   protectedRoutesUser,
-  //   "/auth/signin"
-  // );
-
-  // console.log("before handleAuth 1, count " + count);
-  // handleAuth(request, isAdmin, protectedRoutesAdmin, "/auth/signin");
-
-  // console.log("before handleAuth 2, count " + count);
-  // handleAuth(request, isUser, protectedRoutesUser, "/auth/signin");
-
-  // if (originalPath.includes("/next-link-wrapper-id")) {
-  //   const newRelativeUrl = removeSecureNextLinkSuffix(originalPath);
-
-  //   if (protectedRoutes.includes(newRelativeUrl)) {
-  //     if (isAdmin) {
-  //       return NextResponse.redirect(new URL(newRelativeUrl, request.url));
-  //     } else {
-  //       return NextResponse.redirect(new URL("/auth/signin", request.url));
-  //     }
-  //   }
-  //   //not a protected route, but route includes a next-link-wrapper-id
-  //   return NextResponse.redirect(new URL(newRelativeUrl, request.url));
-  // }
-
-  // //route was not reached via a SecureNextLink link component. E.g. The user loaded the page directly or was redirected from a route.tsx
-  // if (
-  //   protectedRoutes.includes(originalPath) &&
-  //   !originalPath.includes("/next-link-wrapper-id")
-  // ) {
-  //   if (isAdmin) {
-  //     return NextResponse.next();
-  //   } else {
-  //     return NextResponse.redirect(new URL("/auth/signin", request.url));
-  //   }
-  // }
-
-  //not a protected route and does not include a next-link-wrapper-id
-  return NextResponse.next();
 }
+
+// let isUser = false;
+// let isAdmin = false;
+// let accessToken;
+
+// //Get the authentication roles
+// const authCookie = request.cookies.get("jwt");
+// if (authCookie) {
+//   accessToken = authCookie.value;
+//   const isAdminPromise = checkPermissions("ADMIN", accessToken);
+//   isAdmin = await isAdminPromise;
+//   const isUserPromise = checkPermissions("USER", accessToken);
+//   isUser = await isUserPromise;
+// }
+
+// console.log("isAdmin " + isAdmin);
+// console.log("isUser " + isUser);
+
+// console.log("before handleAuthWithNextWrapperI 1, count " + count);
+// handleAuthWithNextWrapperId(
+//   request,
+//   isAdmin,
+//   protectedRoutesAdmin,
+//   "/auth/signin"
+// );
+// console.log("before handleAuthWithNextWrapperI 2, count " + count);
+// handleAuthWithNextWrapperId(
+//   request,
+//   isUser,
+//   protectedRoutesUser,
+//   "/auth/signin"
+// );
+
+// console.log("before handleAuth 1, count " + count);
+// handleAuth(request, isAdmin, protectedRoutesAdmin, "/auth/signin");
+
+// console.log("before handleAuth 2, count " + count);
+// handleAuth(request, isUser, protectedRoutesUser, "/auth/signin");
+
+// if (originalPath.includes("/next-link-wrapper-id")) {
+//   const newRelativeUrl = removeSecureNextLinkSuffix(originalPath);
+
+//   if (protectedRoutes.includes(newRelativeUrl)) {
+//     if (isAdmin) {
+//       return NextResponse.redirect(new URL(newRelativeUrl, request.url));
+//     } else {
+//       return NextResponse.redirect(new URL("/auth/signin", request.url));
+//     }
+//   }
+//   //not a protected route, but route includes a next-link-wrapper-id
+//   return NextResponse.redirect(new URL(newRelativeUrl, request.url));
+// }
+
+// //route was not reached via a SecureNextLink link component. E.g. The user loaded the page directly or was redirected from a route.tsx
+// if (
+//   protectedRoutes.includes(originalPath) &&
+//   !originalPath.includes("/next-link-wrapper-id")
+// ) {
+//   if (isAdmin) {
+//     return NextResponse.next();
+//   } else {
+//     return NextResponse.redirect(new URL("/auth/signin", request.url));
+//   }
+// }
+
+//not a protected route and does not include a next-link-wrapper-id
+//return NextResponse.next();
+
 //
 //Helper functions
 
@@ -193,8 +219,9 @@ async function checkPermissions(
 
 // //Will match the most specific routes first. E.g. accounts/statistics/... will be matched before account
 const protectedRoutes: ProtectedRoutes = {
-  lessonplans: { roles: ["USER"] },
-  premium: { roles: ["ADMIN"] },
+  jobs: { roles: ["USER"] },
+  lessonplans: { roles: ["ADMIN"] },
+  //premium: { roles: ["ADMIN"] },
   users: {
     roles: ["USER"],
     children: [
@@ -260,20 +287,12 @@ function getAllProtectedRoutes(protectedRoutes: ProtectedRoutes) {
 //   return allProtectedRoutes;
 // }
 
-function getUrl(request: NextRequest, role: UserRole) {
-  if (role === "ADMIN") {
-    //To do: change to return the route requested
-    return true;
+function removeStartSlashIfPresent(urlPath: string) {
+  if (urlPath.startsWith("/")) {
+    return urlPath.substring(1);
+  } else {
+    return urlPath;
   }
-}
-
-function cleanedUrlPath(request: NextRequest) {
-  const originalPath = request.nextUrl.pathname;
-  if (originalPath.includes("/next-link-wrapper-id")) {
-    const newPath = removeSecureNextLinkSuffix(originalPath);
-    return newPath.toLowerCase();
-  }
-  return originalPath.toLowerCase();
 }
 
 function getPrimaryUrlSegment(urlPath: string) {
@@ -298,7 +317,7 @@ function getPrimaryUrlSegment(urlPath: string) {
 }
 
 //STEP ZERO
-const allProtectedRoutes: Set<string> = getAllProtectedRoutes(protectedRoutes);
+//const allProtectedRoutes: Set<string> = getAllProtectedRoutes(protectedRoutes);
 
 // STEP ONE
 // First check if route protected
@@ -309,50 +328,130 @@ const allProtectedRoutes: Set<string> = getAllProtectedRoutes(protectedRoutes);
 // should exist.
 
 //If the user does not have a role, pass an empty array for roles.
-function getUrlBasedOnPermissions(
-  request: NextRequest,
-  allProtectedRoutes: Set<string>,
-  roles: UserRole[],
-  failureRedirectUrlPath: string,
-  superAdmin?: UserRole
-) {
-  const urlPath = cleanedUrlPath(request);
+function getUrlPathBasedOnPermissions({
+  request,
+  protectedRoutes,
+  userRoles,
+  notLoggedInRedirectUrlPath,
+  incorrrectRoleRedirectUrlPath,
+  superAdmin,
+}: {
+  request: NextRequest;
+  protectedRoutes: ProtectedRoutes;
+  userRoles: UserRole[];
+  notLoggedInRedirectUrlPath: string;
+  incorrrectRoleRedirectUrlPath: string;
+  superAdmin?: UserRole;
+}) {
+  const urlPath = removeStartSlashIfPresent(
+    request.nextUrl.pathname
+  ).toLowerCase();
+
+  const allProtectedRoutes: Set<string> =
+    getAllProtectedRoutes(protectedRoutes);
+
+  console.log("after const allProtectedRoutes");
+
   //superAdmin has access to all if superAdmin exists
   //To do?: Change superAdmin to an array so that developer can assign multiple superAdmins
-  if (superAdmin && roles.includes(superAdmin)) {
+  if (superAdmin && userRoles.includes(superAdmin)) {
     return urlPath;
   }
+
+  console.log("after superAdmin && userRoles.includes(superAdmin");
 
   //If route not protected, return unchanged url so user can go where he wants.
   if (!allProtectedRoutes.has(urlPath)) {
+    console.log(
+      "after if (!allProtectedRoutes.has(urlPath allProtectedRoutes and urlPath below"
+    );
+    console.log(allProtectedRoutes);
+    console.log(urlPath);
+
     return urlPath;
   }
+  //If get to here, route is protected.
+
+  console.log("after if (!allProtectedRoutes.has(urlPath)");
 
   // If user doesn't have a role. E.g. he does not have an auth cookie or if his token is invalid.
   // To do?: Change so that developer can add different failureRedirectPaths for different urls in 'protectedRoutes.'
-  if (roles.length < 1) {
-    return failureRedirectUrlPath;
+  if (userRoles.length < 1) {
+    return notLoggedInRedirectUrlPath;
   }
+
+  console.log("after if (userRoles.length < 1)");
 
   //get primaryUrlSegment
   const primaryUrlSegment = getPrimaryUrlSegment(urlPath);
 
+  console.log(
+    "after primaryUrlSegment, primaryUrlSegment: " + primaryUrlSegment
+  );
+
+  //roles should alwasy exist here
+  const protectedRoute: ProtectedRoute = protectedRoutes[primaryUrlSegment];
+  if (protectedRoute) {
+    console.log("after if (protectedRoute)");
+    //if entry does not have children
+    if (!isProtectedRouteChildren(protectedRoute)) {
+      console.log("after: if (!isProtectedRouteChildren(protectedRoute))");
+      const requiredRolesThatUserHas = protectedRoute.roles.filter((role) =>
+        userRoles.includes(role)
+      );
+      if (requiredRolesThatUserHas.length > 0) {
+        console.log("after: if (requiredRolesThatUserHas.length > 0) ");
+        //user is authorised
+        return urlPath;
+      } else {
+        console.log("after: ELSE (requiredRolesThatUserHas.length > 0) ");
+        return incorrrectRoleRedirectUrlPath;
+      }
+    } else {
+      //if entry does not have children
+      //to do
+      console.log("entry no children ");
+    }
+  } else {
+    // If get to here, there has been an error. At this point, we know that the route
+    // is protected and so allowedRoles should have a value.
+    console.log("in else error ");
+    return notLoggedInRedirectUrlPath;
+  }
+
+  // Object.entries(protectedRoutes).forEach(
+  //   ([primaryRoute, protectedRoute]: [string, ProtectedRoute]) => {
+  //     if (primaryRoute === primaryUrlSegment) {
+  //       //if entry does not have children
+  //       if (!isProtectedRouteChildren(protectedRoute)){
+  //         allowedRoles = protectedRoute.roles;
+  //         //return from forEach because the first match
+  //       }
+
+  //     }
+  //   }
+  // );
+
+  // If no 'primaryRoute === primaryUrlSegment' match, return failuReredirectUrl
+  // because there has been an error.
+
   //loop over protectedRoutes object keys.
   //If primaryUrlSegment matches any object key:
   //Check if children exists
-  //If children DOES NOT exist:
-  //Get allowed roles for route -> protectedRoutes.<primaryUlSegment>.roles
-  //Check if user role is in returned roles
-  //if yes, return urlPath
-  //If no return failureRedirectUrlPath
-  //If children EXISTS:
-  //
-
-  //Url:       www.foo.com/users/account
-  //urlPath = /jobs/foo/bar
-  //Primary    route: users
-
-  //check if object key is the start of the relative part of the url.
+  //----If children DOES NOT exist:
+  //--------Get allowed roles for route -> protectedRoutes.<primaryUlSegment>.roles
+  //--------Check if user role is in returned roles. Use Set Intersection method?
+  //------------if yes, return urlPath
+  //------------If no return failureRedirectUrlPath
+  //----If children EXISTS:
+  //---------reverse the children array
+  //---------loop over children array
+  //------------------loop over each array entry
+  //---------------------------loop over object entries
+  //---------------------------remove any trailing slashes of the key
+  //---------------------------see if urlPath is included in the key
+  //---------------------------first one that matches, return the value (which will be the roles)
+  //---------------------------Check if user role is in returned roles. Use Set Intersection method?
 }
 
 //NEW STRATEGY
