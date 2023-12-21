@@ -16,6 +16,7 @@ let count = 0;
 export async function middleware(request: NextRequest) {
   console.log("middleware count " + ++count);
   const originalPath = request.nextUrl.pathname;
+  console.log("originalPath -- " + originalPath);
 
   //Modify path of SecueNextLink
   if (originalPath.includes("/next-link-wrapper-id")) {
@@ -220,20 +221,14 @@ async function checkPermissions(
 // //Will match the most specific routes first. E.g. accounts/statistics/... will be matched before account
 const protectedRoutes: ProtectedRoutes = {
   jobs: { roles: ["USER"] },
-  lessonplans: { roles: ["ADMIN"] },
+  lessonplans: { roles: ["USER"] },
   //premium: { roles: ["ADMIN"] },
-  users: {
-    roles: ["USER"],
+  user: {
+    roles: ["ADMIN"],
     children: [
-      { account: { roles: ["USER"] } },
-      { "account/secrets": { roles: ["ADMIN"] } },
-    ],
-  },
-  shop: {
-    roles: ["USER"],
-    children: [
-      { fashion: { roles: ["USER"] } },
-      { "fashion/secrets": { roles: ["ADMIN"] } },
+      { profile: { roles: ["USER"] } },
+      { "profile/account": { roles: ["ADMIN"] } },
+      { "profile/secret": { roles: ["USER"] } },
     ],
   },
 };
@@ -343,36 +338,24 @@ function getUrlPathBasedOnPermissions({
   incorrrectRoleRedirectUrlPath: string;
   superAdmin?: UserRole;
 }) {
-  const urlPath = removeStartSlashIfPresent(
+  const enteredUrlPath = removeStartSlashIfPresent(
     request.nextUrl.pathname
   ).toLowerCase();
 
   const allProtectedRoutes: Set<string> =
     getAllProtectedRoutes(protectedRoutes);
 
-  console.log("after const allProtectedRoutes");
-
   //superAdmin has access to all if superAdmin exists
   //To do?: Change superAdmin to an array so that developer can assign multiple superAdmins
   if (superAdmin && userRoles.includes(superAdmin)) {
-    return urlPath;
+    return enteredUrlPath;
   }
-
-  console.log("after superAdmin && userRoles.includes(superAdmin");
 
   //If route not protected, return unchanged url so user can go where he wants.
-  if (!allProtectedRoutes.has(urlPath)) {
-    console.log(
-      "after if (!allProtectedRoutes.has(urlPath allProtectedRoutes and urlPath below"
-    );
-    console.log(allProtectedRoutes);
-    console.log(urlPath);
-
-    return urlPath;
+  if (!allProtectedRoutes.has(enteredUrlPath)) {
+    return enteredUrlPath;
   }
   //If get to here, route is protected.
-
-  console.log("after if (!allProtectedRoutes.has(urlPath)");
 
   // If user doesn't have a role. E.g. he does not have an auth cookie or if his token is invalid.
   // To do?: Change so that developer can add different failureRedirectPaths for different urls in 'protectedRoutes.'
@@ -380,42 +363,75 @@ function getUrlPathBasedOnPermissions({
     return notLoggedInRedirectUrlPath;
   }
 
-  console.log("after if (userRoles.length < 1)");
-
   //get primaryUrlSegment
-  const primaryUrlSegment = getPrimaryUrlSegment(urlPath);
+  const primaryUrlSegment = getPrimaryUrlSegment(enteredUrlPath);
 
-  console.log(
-    "after primaryUrlSegment, primaryUrlSegment: " + primaryUrlSegment
-  );
-
-  //roles should alwasy exist here
-  const protectedRoute: ProtectedRoute = protectedRoutes[primaryUrlSegment];
-  if (protectedRoute) {
-    console.log("after if (protectedRoute)");
+  //roles should always exist here
+  const protectedPrimaryRoute: ProtectedRoute =
+    protectedRoutes[primaryUrlSegment];
+  if (protectedPrimaryRoute) {
     //if entry does not have children
-    if (!isProtectedRouteChildren(protectedRoute)) {
-      console.log("after: if (!isProtectedRouteChildren(protectedRoute))");
-      const requiredRolesThatUserHas = protectedRoute.roles.filter((role) =>
-        userRoles.includes(role)
+    if (!isProtectedRouteChildren(protectedPrimaryRoute)) {
+      const rolesUserHasForPrimaryRoute = protectedPrimaryRoute.roles.filter(
+        (role) => userRoles.includes(role)
       );
-      if (requiredRolesThatUserHas.length > 0) {
-        console.log("after: if (requiredRolesThatUserHas.length > 0) ");
+      if (rolesUserHasForPrimaryRoute.length > 0) {
         //user is authorised
-        return urlPath;
+        return enteredUrlPath;
       } else {
-        console.log("after: ELSE (requiredRolesThatUserHas.length > 0) ");
         return incorrrectRoleRedirectUrlPath;
       }
     } else {
-      //if entry does not have children
-      //to do
-      console.log("entry no children ");
+      //If entry DOES have children
+      let rolesUserHasForChildrenRoute = [];
+      const children = protectedPrimaryRoute.children;
+      //Array method toReversed() does not work. Maybe because NextJS middleware uses the Edge environment
+      const childrenReversed = [...children].reverse(); //Search from most specific to least specific and then return the first match.
+
+      childrenBlock: for (const protectedRouteRolesByRoute of childrenReversed) {
+        for (const [
+          secondaryUrlSegments,
+          rolesForSecondaryRoute,
+        ] of Object.entries(protectedRouteRolesByRoute)) {
+          const protectedUrlPath =
+            primaryUrlSegment + "/" + secondaryUrlSegments;
+
+          if (enteredUrlPath.includes(protectedUrlPath)) {
+            rolesUserHasForChildrenRoute = rolesForSecondaryRoute.roles.filter(
+              (role) => userRoles.includes(role)
+            );
+            break childrenBlock;
+          }
+        }
+      }
+
+      //check if user role is one of the required roles
+      if (rolesUserHasForChildrenRoute.length > 0) {
+        //user is authorised
+        return enteredUrlPath;
+      } else {
+        //Check to see if the user navigated to the primary route segment
+        if (primaryUrlSegment.includes(enteredUrlPath)) {
+          //check if the primary route matches
+          const requiredRolesThatUserHas = protectedPrimaryRoute.roles.filter(
+            (role) => userRoles.includes(role)
+          );
+
+          if (requiredRolesThatUserHas.length > 0) {
+            //user is authorised
+            return enteredUrlPath;
+          } else {
+            return incorrrectRoleRedirectUrlPath;
+          }
+        } else {
+          return incorrrectRoleRedirectUrlPath;
+        }
+      }
     }
   } else {
     // If get to here, there has been an error. At this point, we know that the route
-    // is protected and so allowedRoles should have a value.
-    console.log("in else error ");
+    // is protected and so protectedPrimaryRoute should have a value.
+
     return notLoggedInRedirectUrlPath;
   }
 
