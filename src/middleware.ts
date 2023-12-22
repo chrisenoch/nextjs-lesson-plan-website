@@ -1,10 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import {
-  UserRole,
-  UserRoles,
-  isSpecifiedUserRole,
-} from "./models/types/UserRole";
+import { UserRole, isSpecifiedUserRole } from "./models/types/UserRole";
 import * as jose from "jose";
 import {
   ProtectedRoute,
@@ -27,7 +23,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(newRelativeUrl, request.url));
   }
 
-  let accessTokenRole = await getAccessTokenRole(request);
+  const accessTokenRole = await getAccessTokenRole(request);
   const userRoles: UserRole[] = getUserRolesIfExist(accessTokenRole);
 
   const urlPath = getUrlPathBasedOnPermissions({
@@ -74,7 +70,7 @@ async function getAccessTokenRole(request: NextRequest) {
 //
 //Helper functions
 
-//returns the role or null if no role
+//returns the role, or null if no role exists
 async function extractRoleFromAccessToken(
   accessToken: string | undefined,
   secret: string
@@ -153,7 +149,6 @@ function getAllProtectedRoutes(protectedRoutes: ProtectedRoutes) {
 
 // superAdmin parameter is the role that you choose which has superAdmin powers
 // (access to everything), if you decide such a role should exist.
-
 //If the user does not have a role, pass an empty array for userRoles.
 function getUrlPathBasedOnPermissions({
   request,
@@ -195,14 +190,12 @@ function getUrlPathBasedOnPermissions({
     return notLoggedInRedirectUrlPath;
   }
 
-  //get primaryUrlSegment
   const primaryUrlSegment = getPrimaryUrlSegment(enteredUrlPath);
 
   //roles should always exist here
   const protectedPrimaryRoute: ProtectedRoute =
     protectedRoutes[primaryUrlSegment];
   if (protectedPrimaryRoute) {
-    //if entry does not have children
     if (!isProtectedRouteChildren(protectedPrimaryRoute)) {
       const rolesUserHasForPrimaryRoute = getArrayIntersection(
         protectedPrimaryRoute.roles,
@@ -247,8 +240,6 @@ function getUrlPathBasedOnPermissions({
       } else {
         //Check to see if the user navigated to the primary route segment
         if (primaryUrlSegment.includes(enteredUrlPath)) {
-          //check if the primary route matches
-
           const rolesUserHasForPrimaryRoute = getArrayIntersection(
             protectedPrimaryRoute.roles,
             userRoles

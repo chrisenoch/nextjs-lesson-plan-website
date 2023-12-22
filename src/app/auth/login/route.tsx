@@ -2,6 +2,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import * as jose from "jose";
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { UserRole } from "@/models/types/UserRole";
 //To do: change the userId to something that is harder to guess.
 
 export async function POST(request: Request) {
@@ -13,7 +14,14 @@ export async function POST(request: Request) {
   let accessTokenPromise;
   let refreshToken;
   let refreshTokenPromise;
-  let userDetailsPayload;
+  let userDetailsPayload:
+    | {
+        id: string;
+        firstName: string;
+        email: string;
+        role: UserRole;
+      }
+    | Record<string, never> = {}; //See https://stackoverflow.com/questions/45339065/typescript-empty-object-for-a-typed-variable
   let jwtAccessTokenPayload;
   let nextResponse;
 
@@ -28,7 +36,7 @@ export async function POST(request: Request) {
 
     //Prepare jwt access token
     userDetailsPayload = {
-      id: 0,
+      id: "0",
       firstName: "Chris",
       email: "foo@bar.com",
       role: "ADMIN",
