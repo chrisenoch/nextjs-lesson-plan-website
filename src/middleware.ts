@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { UserRole } from "./models/types/UserRole";
+import {
+  UserRole,
+  UserRoles,
+  isSpecifiedUserRole,
+} from "./models/types/UserRole";
 import * as jose from "jose";
 import {
   ProtectedRoute,
@@ -21,140 +25,86 @@ export async function middleware(request: NextRequest) {
     const index = originalPath.indexOf("/next-link-wrapper-id");
     const newRelativeUrl = originalPath.substring(0, index);
     return NextResponse.redirect(new URL(newRelativeUrl, request.url));
-  } else {
-    // //To do - delete userRoles array - just for testing
-    const userRoles: UserRole[] = ["USER"];
+  }
 
-    const urlPath = getUrlPathBasedOnPermissions({
-      request,
-      protectedRoutes,
-      userRoles,
-      notLoggedInRedirectUrlPath: "/auth/signin",
-      incorrrectRoleRedirectUrlPath: "/",
-      superAdmin: "ADMIN",
-    });
+  //Get role if exists
+  let accessTokenRole;
+  const accessToken = request.cookies.get("jwt");
+  if (accessToken) {
+    const accessTokenRolePromise = getRoleFromAccessToken(
+      accessToken.value,
+      "my-secret"
+    );
+    accessTokenRole = await accessTokenRolePromise;
+  }
 
-    if (urlPath) {
-      const urlPathNoStartSlash = removeStartSlashIfPresent(urlPath);
-      const originalPathNoStartSlash = removeStartSlashIfPresent(originalPath);
-
-      if (urlPathNoStartSlash !== originalPathNoStartSlash) {
-        return NextResponse.redirect(new URL(urlPath, request.url));
-        //return NextResponse.next();
-      } else {
-        return NextResponse.next();
-      }
+  const userRoles: UserRole[] = [];
+  if (accessTokenRole) {
+    if (isSpecifiedUserRole(accessTokenRole, ["ADMIN", "USER"])) {
+      userRoles.push(accessTokenRole);
     }
   }
+
+  const urlPath = getUrlPathBasedOnPermissions({
+    request,
+    protectedRoutes,
+    userRoles,
+    notLoggedInRedirectUrlPath: "/auth/signin",
+    incorrrectRoleRedirectUrlPath: "/",
+    superAdmin: "ADMIN",
+  });
+
+  const urlPathNoStartSlash = removeStartSlashIfPresent(urlPath);
+  const originalPathNoStartSlash = removeStartSlashIfPresent(originalPath);
+
+  if (urlPathNoStartSlash !== originalPathNoStartSlash) {
+    return NextResponse.redirect(new URL(urlPath, request.url));
+    //return NextResponse.next();
+  } else {
+    return NextResponse.next();
+  }
 }
-
-// let isUser = false;
-// let isAdmin = false;
-// let accessToken;
-
-// //Get the authentication roles
-// const authCookie = request.cookies.get("jwt");
-// if (authCookie) {
-//   accessToken = authCookie.value;
-//   const isAdminPromise = checkPermissions("ADMIN", accessToken);
-//   isAdmin = await isAdminPromise;
-//   const isUserPromise = checkPermissions("USER", accessToken);
-//   isUser = await isUserPromise;
-// }
-
-// console.log("isAdmin " + isAdmin);
-// console.log("isUser " + isUser);
-
-// console.log("before handleAuthWithNextWrapperI 1, count " + count);
-// handleAuthWithNextWrapperId(
-//   request,
-//   isAdmin,
-//   protectedRoutesAdmin,
-//   "/auth/signin"
-// );
-// console.log("before handleAuthWithNextWrapperI 2, count " + count);
-// handleAuthWithNextWrapperId(
-//   request,
-//   isUser,
-//   protectedRoutesUser,
-//   "/auth/signin"
-// );
-
-// console.log("before handleAuth 1, count " + count);
-// handleAuth(request, isAdmin, protectedRoutesAdmin, "/auth/signin");
-
-// console.log("before handleAuth 2, count " + count);
-// handleAuth(request, isUser, protectedRoutesUser, "/auth/signin");
-
-// if (originalPath.includes("/next-link-wrapper-id")) {
-//   const newRelativeUrl = removeSecureNextLinkSuffix(originalPath);
-
-//   if (protectedRoutes.includes(newRelativeUrl)) {
-//     if (isAdmin) {
-//       return NextResponse.redirect(new URL(newRelativeUrl, request.url));
-//     } else {
-//       return NextResponse.redirect(new URL("/auth/signin", request.url));
-//     }
-//   }
-//   //not a protected route, but route includes a next-link-wrapper-id
-//   return NextResponse.redirect(new URL(newRelativeUrl, request.url));
-// }
-
-// //route was not reached via a SecureNextLink link component. E.g. The user loaded the page directly or was redirected from a route.tsx
-// if (
-//   protectedRoutes.includes(originalPath) &&
-//   !originalPath.includes("/next-link-wrapper-id")
-// ) {
-//   if (isAdmin) {
-//     return NextResponse.next();
-//   } else {
-//     return NextResponse.redirect(new URL("/auth/signin", request.url));
-//   }
-// }
-
-//not a protected route and does not include a next-link-wrapper-id
-//return NextResponse.next();
 
 //
 //Helper functions
 
-async function checkPermissions(
-  role: UserRole,
-  accessToken: string | undefined
-) {
-  console.log("accessToken in c-p");
+//returns the role or null if no role
+async function getRoleFromAccessToken(
+  accessToken: string | undefined,
+  secret: string
+): Promise<string | null> {
+  console.log("accessToken in getRoleFromAccessToken: " + accessToken);
   console.log(accessToken);
   if (!accessToken) {
-    return false;
+    return null;
   }
   if (accessToken) {
     try {
       console.log("in try checkPermissions");
       const { payload: accessTokenPayload } = await jose.jwtVerify(
         accessToken,
-        new TextEncoder().encode("my-secret")
+        new TextEncoder().encode(secret)
       );
+      //Token has been verified
       const userRole = accessTokenPayload.role;
-
-      if (userRole === role) {
-        console.log("successful role check");
-        return true;
+      //check is of UserRole type
+      if (typeof userRole === "string") {
+        return userRole;
       } else {
-        console.log("failed role check");
-        return false;
+        return null;
       }
     } catch {
       console.log(
         "in catch in check-permissions: access token verification failed"
       );
-      return false;
+      return null;
     }
   } else {
-    return false;
+    return null;
   }
 }
 
-// //Will match the most specific routes first. E.g. accounts/statistics/... will be matched before account
+//Will match the most specific routes first. E.g. accounts/statistics/... will be matched before account
 const protectedRoutes: ProtectedRoutes = {
   jobs: { roles: ["USER"] },
   lessonplans: { roles: ["USER"] },
@@ -195,11 +145,10 @@ function getAllProtectedRoutes(protectedRoutes: ProtectedRoutes) {
   return allProtectedRoutes;
 }
 
-// superAdmin field is not if the user is superAdmin. It is the role that you choose
-// which has superAdmin powers (access to everything), if you decide such a role
-// should exist.
+// superAdmin parameter is the role that you choose which has superAdmin powers
+// (access to everything), if you decide such a role should exist.
 
-//If the user does not have a role, pass an empty array for roles.
+//If the user does not have a role, pass an empty array for userRoles.
 function getUrlPathBasedOnPermissions({
   request,
   protectedRoutes,
@@ -319,7 +268,7 @@ function getUrlPathBasedOnPermissions({
 
 function getUrlPathOnceRolesAreKnown({
   rolesUserHas,
-  successUrlPath: successUrlPath,
+  successUrlPath,
   incorrrectRoleRedirectUrlPath,
 }: {
   rolesUserHas: UserRole[];
