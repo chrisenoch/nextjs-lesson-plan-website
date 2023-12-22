@@ -9,6 +9,7 @@ import {
   ProtectedRoutes,
   isProtectedRouteChildren,
 } from "./models/types/ProtectedRoutes";
+import { getArrayIntersection } from "./utils/array-functions";
 
 let count = 0;
 export async function middleware(request: NextRequest) {
@@ -248,8 +249,9 @@ function getUrlPathBasedOnPermissions({
   if (protectedPrimaryRoute) {
     //if entry does not have children
     if (!isProtectedRouteChildren(protectedPrimaryRoute)) {
-      const rolesUserHasForPrimaryRoute = protectedPrimaryRoute.roles.filter(
-        (role) => userRoles.includes(role)
+      const rolesUserHasForPrimaryRoute = getArrayIntersection(
+        protectedPrimaryRoute.roles,
+        userRoles
       );
 
       return getUrlPathOnceRolesAreKnown({
@@ -274,8 +276,9 @@ function getUrlPathBasedOnPermissions({
             primaryUrlSegment + "/" + secondaryUrlSegments;
 
           if (enteredUrlPath.includes(protectedUrlPath)) {
-            rolesUserHasForChildrenRoute = rolesForSecondaryRoute.roles.filter(
-              (role) => userRoles.includes(role)
+            rolesUserHasForChildrenRoute = getArrayIntersection(
+              rolesForSecondaryRoute.roles,
+              userRoles
             );
             break childrenBlock;
           }
@@ -290,10 +293,11 @@ function getUrlPathBasedOnPermissions({
         //Check to see if the user navigated to the primary route segment
         if (primaryUrlSegment.includes(enteredUrlPath)) {
           //check if the primary route matches
-          const rolesUserHasForPrimaryRoute =
-            protectedPrimaryRoute.roles.filter((role) =>
-              userRoles.includes(role)
-            );
+
+          const rolesUserHasForPrimaryRoute = getArrayIntersection(
+            protectedPrimaryRoute.roles,
+            userRoles
+          );
 
           return getUrlPathOnceRolesAreKnown({
             rolesUserHas: rolesUserHasForPrimaryRoute,
