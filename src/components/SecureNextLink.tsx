@@ -34,7 +34,23 @@ const SecureNextLink = forwardRef(function Wrapper(props: any, ref: any) {
     );
   }
 
-  const finalHref = href + "/next-link-wrapper-id/" + uuidv4();
+  //deal with query params if they exist
+  let urlBeforeSearchParams;
+  let searchParams;
+  let finalHref;
+  const indexOfQuestionMark = href.indexOf("?");
+  if (indexOfQuestionMark !== -1) {
+    urlBeforeSearchParams = href.substring(0, indexOfQuestionMark);
+    searchParams = href.substring(indexOfQuestionMark);
+    finalHref =
+      urlBeforeSearchParams +
+      "/next-link-wrapper-id/" +
+      uuidv4() +
+      searchParams;
+  } else {
+    finalHref = href + "/next-link-wrapper-id/" + uuidv4();
+  }
+
   return (
     <Link {...otherProps} ref={ref} href={finalHref}>
       {children}

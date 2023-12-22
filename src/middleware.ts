@@ -16,11 +16,10 @@ export async function middleware(request: NextRequest) {
   console.log("middleware count " + ++count);
   const originalPath = request.nextUrl.pathname;
 
-  //Modify path of SecueNextLink
-  if (originalPath.includes("/next-link-wrapper-id")) {
-    const index = originalPath.indexOf("/next-link-wrapper-id");
-    const newRelativeUrl = originalPath.substring(0, index);
-    return NextResponse.redirect(new URL(newRelativeUrl, request.url));
+  //Modify path if navigated from a SecueNextLink component
+  const nextLinkRelativeUrl = handleSecureNextLink(request);
+  if (nextLinkRelativeUrl) {
+    return NextResponse.redirect(new URL(nextLinkRelativeUrl, request.url));
   }
 
   const accessTokenRole = await getAccessTokenRole(request);
@@ -46,14 +45,12 @@ export async function middleware(request: NextRequest) {
 
 // IMPORTANT: For childen, you MUST define the routes from least specific to most specific because the first
 // match wins. For example,
-
 // DO THIS:
 // children: [
 //   { shop: { roles: ["USER"] } },
 //   { "shop/secret": { roles: ["ADMIN"] } },    // "shop/secret" is more specific than "shop" so it is defined after.
 //   { "shop/account": { roles: ["USER"] } },
 // ],
-
 //DO NOT do this:
 // children: [
 //   { "shop/secret": { roles: ["ADMIN"] } },    // Danger! User with the role "USER" will be able to navigate here.
@@ -322,5 +319,27 @@ function getPrimaryUrlSegment(urlPath: string) {
   } else {
     primaryUrlSegment = urlPathNoStartSlash;
     return primaryUrlSegment;
+  }
+}
+
+function handleSecureNextLink(request: NextRequest) {
+  const originalPath = request.nextUrl.pathname;
+  const searchParams = request.nextUrl.searchParams;
+  let queryString = "?";
+  for (const [key, value] of searchParams.entries()) {
+    queryString += key + "=" + value + "&";
+  }
+  if (queryString.length <= 1) {
+    queryString = "";
+  } else {
+    queryString = queryString.substring(0, queryString.length - 1); // remove last amperstand
+  }
+  if (originalPath.includes("/next-link-wrapper-id")) {
+    const index = originalPath.indexOf("/next-link-wrapper-id");
+
+    const newRelativeUrl = originalPath.substring(0, index);
+    return newRelativeUrl + queryString;
+  } else {
+    return null;
   }
 }
