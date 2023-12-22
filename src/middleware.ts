@@ -44,69 +44,22 @@ export async function middleware(request: NextRequest) {
   }
 }
 
-function getUserRolesIfExist(accessTokenRole: string | null) {
-  const userRoles: UserRole[] = [];
-  if (accessTokenRole) {
-    if (isSpecifiedUserRole(accessTokenRole, ["ADMIN", "USER"])) {
-      userRoles.push(accessTokenRole);
-    }
-  }
-  return userRoles;
-}
+// IMPORTANT: For childen, you MUST define the routes from least specific to most specific because the first
+// match wins. For example,
 
-async function getAccessTokenRole(request: NextRequest) {
-  let accessTokenRole = null;
-  const accessToken = request.cookies.get("jwt");
-  if (accessToken) {
-    const accessTokenRolePromise = extractRoleFromAccessToken(
-      accessToken.value,
-      "my-secret"
-    );
-    accessTokenRole = await accessTokenRolePromise;
-  }
-  return accessTokenRole;
-}
+// DO THIS:
+// children: [
+//   { shop: { roles: ["USER"] } },
+//   { "shop/secret": { roles: ["ADMIN"] } },    // "shop/secret" is more specific than "shop" so it is defined after.
+//   { "shop/account": { roles: ["USER"] } },
+// ],
 
-//
-//Helper functions
-
-//returns the role, or null if no role exists
-async function extractRoleFromAccessToken(
-  accessToken: string | undefined,
-  secret: string
-): Promise<string | null> {
-  console.log("accessToken in getRoleFromAccessToken: " + accessToken);
-  console.log(accessToken);
-  if (!accessToken) {
-    return null;
-  }
-  if (accessToken) {
-    try {
-      console.log("in try checkPermissions");
-      const { payload: accessTokenPayload } = await jose.jwtVerify(
-        accessToken,
-        new TextEncoder().encode(secret)
-      );
-      //Token has been verified
-      const userRole = accessTokenPayload.role;
-      //check is of UserRole type
-      if (typeof userRole === "string") {
-        return userRole;
-      } else {
-        return null;
-      }
-    } catch {
-      console.log(
-        "in catch in check-permissions: access token verification failed"
-      );
-      return null;
-    }
-  } else {
-    return null;
-  }
-}
-
-//Will match the most specific routes first. E.g. accounts/statistics/... will be matched before account
+//DO NOT do this:
+// children: [
+//   { "shop/secret": { roles: ["ADMIN"] } },    // Danger! User with the role "USER" will be able to navigate here.
+//   { shop: { roles: ["USER"] } },              // "shop" matches before "shop/secret"
+//   { "shop/account": { roles: ["USER"] } },
+// ],
 const protectedRoutes: ProtectedRoutes = {
   jobs: { roles: ["USER"] },
   lessonplans: { roles: ["USER"] },
@@ -115,41 +68,19 @@ const protectedRoutes: ProtectedRoutes = {
     roles: ["ADMIN"],
     children: [
       { profile: { roles: ["USER"] } },
-      { "profile/account": { roles: ["ADMIN"] } },
-      { "profile/secret": { roles: ["USER"] } },
+      { "profile/secret": { roles: ["ADMIN"] } },
+      { "profile/account": { roles: ["USER"] } },
     ],
   },
 };
 
-function getAllProtectedRoutes(protectedRoutes: ProtectedRoutes) {
-  const allProtectedRoutes = new Set<string>();
-  Object.entries(protectedRoutes).forEach(
-    ([primaryRoute, protectedRoute]: [string, ProtectedRoute]) => {
-      allProtectedRoutes.add(primaryRoute.toLowerCase());
-
-      if (isProtectedRouteChildren(protectedRoute)) {
-        Object.values(protectedRoute.children).forEach(
-          (protectedRouteRolesByRoute: ProtectedRouteRolesByRoute) => {
-            Object.keys(protectedRouteRolesByRoute).forEach(
-              (secondaryRoute: string) => {
-                allProtectedRoutes.add(
-                  primaryRoute.toLowerCase() +
-                    "/" +
-                    secondaryRoute.toLowerCase()
-                );
-              }
-            );
-          }
-        );
-      }
-    }
-  );
-  return allProtectedRoutes;
-}
+//
+//Helper functions
 
 // superAdmin parameter is the role that you choose which has superAdmin powers
 // (access to everything), if you decide such a role should exist.
 //If the user does not have a role, pass an empty array for userRoles.
+//To do? Add :ANY PARAM. E.g. users/:ANY/profile  :ANY could be any number
 function getUrlPathBasedOnPermissions({
   request,
   protectedRoutes,
@@ -263,6 +194,32 @@ function getUrlPathBasedOnPermissions({
   }
 }
 
+function getAllProtectedRoutes(protectedRoutes: ProtectedRoutes) {
+  const allProtectedRoutes = new Set<string>();
+  Object.entries(protectedRoutes).forEach(
+    ([primaryRoute, protectedRoute]: [string, ProtectedRoute]) => {
+      allProtectedRoutes.add(primaryRoute.toLowerCase());
+
+      if (isProtectedRouteChildren(protectedRoute)) {
+        Object.values(protectedRoute.children).forEach(
+          (protectedRouteRolesByRoute: ProtectedRouteRolesByRoute) => {
+            Object.keys(protectedRouteRolesByRoute).forEach(
+              (secondaryRoute: string) => {
+                allProtectedRoutes.add(
+                  primaryRoute.toLowerCase() +
+                    "/" +
+                    secondaryRoute.toLowerCase()
+                );
+              }
+            );
+          }
+        );
+      }
+    }
+  );
+  return allProtectedRoutes;
+}
+
 function getUrlPathOnceRolesAreKnown({
   rolesUserHas,
   successUrlPath,
@@ -277,6 +234,65 @@ function getUrlPathOnceRolesAreKnown({
     return successUrlPath;
   } else {
     return incorrrectRoleRedirectUrlPath;
+  }
+}
+
+function getUserRolesIfExist(accessTokenRole: string | null) {
+  const userRoles: UserRole[] = [];
+  if (accessTokenRole) {
+    if (isSpecifiedUserRole(accessTokenRole, ["ADMIN", "USER"])) {
+      userRoles.push(accessTokenRole);
+    }
+  }
+  return userRoles;
+}
+
+async function getAccessTokenRole(request: NextRequest) {
+  let accessTokenRole = null;
+  const accessToken = request.cookies.get("jwt");
+  if (accessToken) {
+    const accessTokenRolePromise = extractRoleFromAccessToken(
+      accessToken.value,
+      "my-secret"
+    );
+    accessTokenRole = await accessTokenRolePromise;
+  }
+  return accessTokenRole;
+}
+
+//returns the role, or null if no role exists
+async function extractRoleFromAccessToken(
+  accessToken: string | undefined,
+  secret: string
+): Promise<string | null> {
+  console.log("accessToken in getRoleFromAccessToken: " + accessToken);
+  console.log(accessToken);
+  if (!accessToken) {
+    return null;
+  }
+  if (accessToken) {
+    try {
+      console.log("in try checkPermissions");
+      const { payload: accessTokenPayload } = await jose.jwtVerify(
+        accessToken,
+        new TextEncoder().encode(secret)
+      );
+      //Token has been verified
+      const userRole = accessTokenPayload.role;
+      //check is of UserRole type
+      if (typeof userRole === "string") {
+        return userRole;
+      } else {
+        return null;
+      }
+    } catch {
+      console.log(
+        "in catch in check-permissions: access token verification failed"
+      );
+      return null;
+    }
+  } else {
+    return null;
   }
 }
 
@@ -308,7 +324,3 @@ function getPrimaryUrlSegment(urlPath: string) {
     return primaryUrlSegment;
   }
 }
-
-//To do?
-//Add :ANY PARAM
-//E.g. users/:ANY/profile  :ANY could be any number

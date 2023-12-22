@@ -14,14 +14,12 @@ export async function POST(request: Request) {
   let accessTokenPromise;
   let refreshToken;
   let refreshTokenPromise;
-  let userDetailsPayload:
-    | {
-        id: string;
-        firstName: string;
-        email: string;
-        role: UserRole;
-      }
-    | Record<string, never> = {}; //See https://stackoverflow.com/questions/45339065/typescript-empty-object-for-a-typed-variable
+  let userDetailsPayload: {
+    id: string;
+    firstName: string;
+    email: string;
+    role: UserRole;
+  } | null = null;
   let jwtAccessTokenPayload;
   let nextResponse;
 
@@ -76,7 +74,7 @@ export async function POST(request: Request) {
   }
 
   //set cookie
-  if (accessToken && refreshToken) {
+  if (accessToken && refreshToken && userDetailsPayload) {
     nextResponse = NextResponse.json(
       {
         ...userDetailsPayload,
