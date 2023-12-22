@@ -27,23 +27,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(newRelativeUrl, request.url));
   }
 
-  //Get role if exists
-  let accessTokenRole;
-  const accessToken = request.cookies.get("jwt");
-  if (accessToken) {
-    const accessTokenRolePromise = getRoleFromAccessToken(
-      accessToken.value,
-      "my-secret"
-    );
-    accessTokenRole = await accessTokenRolePromise;
-  }
-
-  const userRoles: UserRole[] = [];
-  if (accessTokenRole) {
-    if (isSpecifiedUserRole(accessTokenRole, ["ADMIN", "USER"])) {
-      userRoles.push(accessTokenRole);
-    }
-  }
+  let accessTokenRole = await getAccessTokenRole(request);
+  const userRoles: UserRole[] = getUserRolesIfExist(accessTokenRole);
 
   const urlPath = getUrlPathBasedOnPermissions({
     request,
@@ -56,20 +41,41 @@ export async function middleware(request: NextRequest) {
 
   const urlPathNoStartSlash = removeStartSlashIfPresent(urlPath);
   const originalPathNoStartSlash = removeStartSlashIfPresent(originalPath);
-
   if (urlPathNoStartSlash !== originalPathNoStartSlash) {
     return NextResponse.redirect(new URL(urlPath, request.url));
-    //return NextResponse.next();
   } else {
     return NextResponse.next();
   }
+}
+
+function getUserRolesIfExist(accessTokenRole: string | null) {
+  const userRoles: UserRole[] = [];
+  if (accessTokenRole) {
+    if (isSpecifiedUserRole(accessTokenRole, ["ADMIN", "USER"])) {
+      userRoles.push(accessTokenRole);
+    }
+  }
+  return userRoles;
+}
+
+async function getAccessTokenRole(request: NextRequest) {
+  let accessTokenRole = null;
+  const accessToken = request.cookies.get("jwt");
+  if (accessToken) {
+    const accessTokenRolePromise = extractRoleFromAccessToken(
+      accessToken.value,
+      "my-secret"
+    );
+    accessTokenRole = await accessTokenRolePromise;
+  }
+  return accessTokenRole;
 }
 
 //
 //Helper functions
 
 //returns the role or null if no role
-async function getRoleFromAccessToken(
+async function extractRoleFromAccessToken(
   accessToken: string | undefined,
   secret: string
 ): Promise<string | null> {
