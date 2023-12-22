@@ -194,35 +194,6 @@ function getAllProtectedRoutes(protectedRoutes: ProtectedRoutes) {
   return allProtectedRoutes;
 }
 
-function removeStartSlashIfPresent(urlPath: string) {
-  if (urlPath.startsWith("/")) {
-    return urlPath.substring(1);
-  } else {
-    return urlPath;
-  }
-}
-
-function getPrimaryUrlSegment(urlPath: string) {
-  let urlPathNoStartSlash;
-  let primaryUrlSegment;
-  if (urlPath.startsWith("/")) {
-    urlPathNoStartSlash = urlPath.substring(1);
-  } else {
-    urlPathNoStartSlash = urlPath;
-  }
-
-  if (urlPathNoStartSlash.indexOf("/") !== -1) {
-    primaryUrlSegment = urlPathNoStartSlash.substring(
-      0,
-      urlPathNoStartSlash.indexOf("/")
-    );
-    return primaryUrlSegment;
-  } else {
-    primaryUrlSegment = urlPathNoStartSlash;
-    return primaryUrlSegment;
-  }
-}
-
 // superAdmin field is not if the user is superAdmin. It is the role that you choose
 // which has superAdmin powers (access to everything), if you decide such a role
 // should exist.
@@ -280,12 +251,12 @@ function getUrlPathBasedOnPermissions({
       const rolesUserHasForPrimaryRoute = protectedPrimaryRoute.roles.filter(
         (role) => userRoles.includes(role)
       );
-      if (rolesUserHasForPrimaryRoute.length > 0) {
-        //user is authorised
-        return enteredUrlPath;
-      } else {
-        return incorrrectRoleRedirectUrlPath;
-      }
+
+      return getUrlPathOnceRolesAreKnown({
+        rolesUserHas: rolesUserHasForPrimaryRoute,
+        successUrlPath: enteredUrlPath,
+        incorrrectRoleRedirectUrlPath,
+      });
     } else {
       //If entry DOES have children
       let rolesUserHasForChildrenRoute = [];
@@ -319,16 +290,16 @@ function getUrlPathBasedOnPermissions({
         //Check to see if the user navigated to the primary route segment
         if (primaryUrlSegment.includes(enteredUrlPath)) {
           //check if the primary route matches
-          const requiredRolesThatUserHas = protectedPrimaryRoute.roles.filter(
-            (role) => userRoles.includes(role)
-          );
+          const rolesUserHasForPrimaryRoute =
+            protectedPrimaryRoute.roles.filter((role) =>
+              userRoles.includes(role)
+            );
 
-          if (requiredRolesThatUserHas.length > 0) {
-            //user is authorised
-            return enteredUrlPath;
-          } else {
-            return incorrrectRoleRedirectUrlPath;
-          }
+          return getUrlPathOnceRolesAreKnown({
+            rolesUserHas: rolesUserHasForPrimaryRoute,
+            successUrlPath: enteredUrlPath,
+            incorrrectRoleRedirectUrlPath,
+          });
         } else {
           return incorrrectRoleRedirectUrlPath;
         }
@@ -339,6 +310,52 @@ function getUrlPathBasedOnPermissions({
     // is protected and so protectedPrimaryRoute should have a value.
 
     return notLoggedInRedirectUrlPath;
+  }
+}
+
+function getUrlPathOnceRolesAreKnown({
+  rolesUserHas,
+  successUrlPath: successUrlPath,
+  incorrrectRoleRedirectUrlPath,
+}: {
+  rolesUserHas: UserRole[];
+  successUrlPath: string;
+  incorrrectRoleRedirectUrlPath: string;
+}) {
+  if (rolesUserHas.length > 0) {
+    //user is authorised
+    return successUrlPath;
+  } else {
+    return incorrrectRoleRedirectUrlPath;
+  }
+}
+
+function removeStartSlashIfPresent(urlPath: string) {
+  if (urlPath.startsWith("/")) {
+    return urlPath.substring(1);
+  } else {
+    return urlPath;
+  }
+}
+
+function getPrimaryUrlSegment(urlPath: string) {
+  let urlPathNoStartSlash;
+  let primaryUrlSegment;
+  if (urlPath.startsWith("/")) {
+    urlPathNoStartSlash = urlPath.substring(1);
+  } else {
+    urlPathNoStartSlash = urlPath;
+  }
+
+  if (urlPathNoStartSlash.indexOf("/") !== -1) {
+    primaryUrlSegment = urlPathNoStartSlash.substring(
+      0,
+      urlPathNoStartSlash.indexOf("/")
+    );
+    return primaryUrlSegment;
+  } else {
+    primaryUrlSegment = urlPathNoStartSlash;
+    return primaryUrlSegment;
   }
 }
 
