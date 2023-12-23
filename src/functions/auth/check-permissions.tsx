@@ -22,8 +22,9 @@ export async function checkPermissions({
   request: NextRequest;
   accessTokenName: string;
   accessTokenSecret: string;
-  validUserRole: UserRole;
+  validUserRole: UserRole[];
   superAdmins?: UserRole[];
+  callback: () => void;
 }) {
   const accessToken = request.cookies.get(accessTokenName);
   if (accessToken) {
@@ -41,11 +42,22 @@ export async function checkPermissions({
         if (superAdmins && superAdmins.includes(userRoleFromAccessToken)) {
           return "SUCCESS";
         }
-        if (userRoleFromAccessToken === validUserRole) {
-          return "SUCCESS";
+
+        let permissionStatus;
+        if (validUserRole.includes(userRoleFromAccessToken)) {
+          permissionStatus = "SUCCESS";
+          if (
+            accessTokenPayload.id === request.nextUrl.searchParams.get("userId")
+          ) {
+            permissionStatus = "SUCCESS";
+          } else {
+            permissionStatus = "CUSTOM_RESPONSE";
+          }
         } else {
-          return "ROLE_UNAUTHORISED";
+          permissionStatus = "ROLE_UNAUTHORISED";
         }
+
+        return permissionStatus;
       }
       return "ROLE_UNRECOGNISED";
     } catch {

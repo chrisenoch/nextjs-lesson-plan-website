@@ -5,6 +5,3 @@ export type UserRole = (typeof userRoles)[number]; //See: //www.reddit.com/r/typ
 export function isUserRole(role: string): role is UserRole {
   return userRoles.includes(role as UserRole);
 }
-
-export const fruits = ["apple", "banana", "orange"] as const;
-export type Fruit = (typeof fruits)[number];
