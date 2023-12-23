@@ -93,7 +93,7 @@ export async function POST(request: Request) {
       maxAge: 60 * 60 * 24, //To do: Reduce this number?
       httpOnly: true,
       sameSite: "strict",
-      path: "/auth/with-refresh", //Set the path so that the refresh token is not sent with every request. This reduces the possibility of it being stolen.
+      path: "/api/auth/with-refresh", //Set the path so that the refresh token is not sent with every request. This reduces the possibility of it being stolen.
     });
     return nextResponse;
   } else {

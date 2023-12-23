@@ -1,7 +1,6 @@
 "use client";
-import { session } from "@/session/session";
 import { redirect } from "next/navigation";
-import { useEffect, useLayoutEffect } from "react";
+import { useLayoutEffect } from "react";
 
 export default function Loading({ redirectTo }: { redirectTo: string }) {
   useLayoutEffect(() => {

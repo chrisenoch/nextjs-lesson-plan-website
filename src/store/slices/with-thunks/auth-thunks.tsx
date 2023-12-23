@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-const BACKEND_URL = "http://localhost:3000/";
+const BACKEND_URL = "http://localhost:3000/api";
 
 export const userLogin = createAsyncThunk(
   "authSlice/login",

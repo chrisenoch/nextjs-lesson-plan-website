@@ -13,7 +13,7 @@ import { getArrayIntersection } from "./utils/array-functions";
 
 let count = 0;
 export async function middleware(request: NextRequest) {
-  console.log("middleware count " + ++count);
+  //console.log("middleware count " + ++count);
   const originalPath = request.nextUrl.pathname;
 
   //Modify path if navigated from a SecueNextLink component
@@ -262,14 +262,11 @@ async function extractRoleFromAccessToken(
   accessToken: string | undefined,
   secret: string
 ): Promise<string | null> {
-  console.log("accessToken in getRoleFromAccessToken: " + accessToken);
-  console.log(accessToken);
   if (!accessToken) {
     return null;
   }
   if (accessToken) {
     try {
-      console.log("in try checkPermissions");
       const { payload: accessTokenPayload } = await jose.jwtVerify(
         accessToken,
         new TextEncoder().encode(secret)

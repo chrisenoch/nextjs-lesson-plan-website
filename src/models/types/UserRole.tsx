@@ -1,5 +1,4 @@
 export type UserRole = "ADMIN" | "USER";
-//export type UserRoles = UserRole[];
 
 export function isSpecifiedUserRole(
   role: string,
