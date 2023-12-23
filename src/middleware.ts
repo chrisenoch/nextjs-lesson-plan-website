@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { UserRole, isSpecifiedUserRole } from "./models/types/UserRole";
+import { UserRole, isUserRole } from "./models/types/UserRole";
 import * as jose from "jose";
 import {
   ProtectedRoute,
@@ -240,7 +240,7 @@ function getUrlPathOnceRolesAreKnown({
 function getUserRolesIfExist(accessTokenRole: string | null) {
   const userRoles: UserRole[] = [];
   if (accessTokenRole) {
-    if (isSpecifiedUserRole(accessTokenRole, ["ADMIN", "USER"])) {
+    if (isUserRole(accessTokenRole)) {
       userRoles.push(accessTokenRole);
     }
   }

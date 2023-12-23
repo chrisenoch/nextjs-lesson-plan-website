@@ -1,6 +1,6 @@
 "use server";
 
-import { UserRole } from "@/models/types/UserRole";
+import { UserRole, isUserRole } from "@/models/types/UserRole";
 import { NextRequest } from "next/server";
 import * as jose from "jose";
 
@@ -12,34 +12,46 @@ export async function joseVerifyToken(accessToken: string, secret: string) {
   return tokenData;
 }
 
-export async function checkPermissions(
-  request: NextRequest,
-  validUserRole: UserRole
-) {
-  const accessToken = request.cookies.get("jwt");
-  console.log("accessToken in c-p");
-  console.log(accessToken);
+export async function checkPermissions({
+  request,
+  accessTokenName,
+  accessTokenSecret,
+  validUserRole,
+  superAdmins,
+}: {
+  request: NextRequest;
+  accessTokenName: string;
+  accessTokenSecret: string;
+  validUserRole: UserRole;
+  superAdmins?: UserRole[];
+}) {
+  const accessToken = request.cookies.get(accessTokenName);
   if (accessToken) {
     try {
-      console.log("in try checkPermissions");
-      const { payload: accessTokenPayload } = await jose.jwtVerify(
+      const { payload: accessTokenPayload } = await joseVerifyToken(
         accessToken.value,
-        new TextEncoder().encode("my-secret")
+        accessTokenSecret
       );
       const userRoleFromAccessToken = accessTokenPayload.role;
 
-      if (userRoleFromAccessToken === validUserRole) {
-        console.log("successful role check");
-        return true;
-      } else {
-        console.log("failed role check");
-        return false;
+      if (
+        typeof userRoleFromAccessToken === "string" &&
+        isUserRole(userRoleFromAccessToken)
+      ) {
+        if (superAdmins && superAdmins.includes(userRoleFromAccessToken)) {
+          return "SUCCESS";
+        }
+        if (userRoleFromAccessToken === validUserRole) {
+          return "SUCCESS";
+        } else {
+          return "ROLE_UNAUTHORISED";
+        }
       }
+      return "ROLE_UNRECOGNISED";
     } catch {
-      console.log("in catch in check-permissions");
-      return false;
+      return "TOKEN_INVALID";
     }
   } else {
-    return false;
+    return "TOKEN_NOT_FOUND";
   }
 }
