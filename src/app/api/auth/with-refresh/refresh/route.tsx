@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as jose from "jose";
+import { joseVerifyToken } from "@/functions/auth/check-permissions";
 
 // To do
 // CSRF protection with double-submit cookie method.
@@ -32,9 +33,9 @@ export async function GET(request: NextRequest) {
         { clockTolerance: 604_800 } // 604_800 seconds = 1 week.
       );
 
-      const { payload: refreshTokenPayload } = await jose.jwtVerify(
+      const { payload: refreshTokenPayload } = await joseVerifyToken(
         refreshToken.value,
-        new TextEncoder().encode("another-secret")
+        "another-secret"
       );
 
       //Should stop User A's refresh token being used to get a new access token for User B.
@@ -55,9 +56,9 @@ export async function GET(request: NextRequest) {
 
       const newAccessToken = await newAccessTokenPromise;
 
-      const { payload: jwtAccessTokenPayload } = await jose.jwtVerify(
+      const { payload: jwtAccessTokenPayload } = await joseVerifyToken(
         newAccessToken,
-        new TextEncoder().encode("my-secret")
+        "my-secret"
       );
 
       resp = NextResponse.json({

@@ -4,7 +4,18 @@ import { UserRole } from "@/models/types/UserRole";
 import { NextRequest } from "next/server";
 import * as jose from "jose";
 
-export async function checkPermissions(request: NextRequest, role: UserRole) {
+export async function joseVerifyToken(accessToken: string, secret: string) {
+  const tokenData = await jose.jwtVerify(
+    accessToken,
+    new TextEncoder().encode(secret)
+  );
+  return tokenData;
+}
+
+export async function checkPermissions(
+  request: NextRequest,
+  validUserRole: UserRole
+) {
   const accessToken = request.cookies.get("jwt");
   console.log("accessToken in c-p");
   console.log(accessToken);
@@ -15,9 +26,9 @@ export async function checkPermissions(request: NextRequest, role: UserRole) {
         accessToken.value,
         new TextEncoder().encode("my-secret")
       );
-      const userRole = accessTokenPayload.role;
+      const userRoleFromAccessToken = accessTokenPayload.role;
 
-      if (userRole === role) {
+      if (userRoleFromAccessToken === validUserRole) {
         console.log("successful role check");
         return true;
       } else {

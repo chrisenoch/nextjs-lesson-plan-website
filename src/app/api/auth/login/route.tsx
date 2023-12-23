@@ -3,6 +3,7 @@ import * as jose from "jose";
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { UserRole } from "@/models/types/UserRole";
+import { joseVerifyToken } from "@/functions/auth/check-permissions";
 //To do: change the userId to something that is harder to guess.
 
 export async function POST(request: Request) {
@@ -47,11 +48,8 @@ export async function POST(request: Request) {
       .sign(new TextEncoder().encode("my-secret"));
 
     accessToken = await accessTokenPromise;
+    const { payload } = await joseVerifyToken(accessToken, "my-secret");
 
-    const { payload } = await jose.jwtVerify(
-      accessToken,
-      new TextEncoder().encode("my-secret")
-    );
     jwtAccessTokenPayload = payload;
 
     // accessToken = jwt.sign(userDetailsPayload, "my-secret", {

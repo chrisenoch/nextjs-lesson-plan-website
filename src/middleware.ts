@@ -10,6 +10,7 @@ import {
   isProtectedRouteChildren,
 } from "./models/types/ProtectedRoutes";
 import { getArrayIntersection } from "./utils/array-functions";
+import { joseVerifyToken } from "./functions/auth/check-permissions";
 
 let count = 0;
 export async function middleware(request: NextRequest) {
@@ -269,9 +270,9 @@ async function extractRoleFromAccessToken(
   }
   if (accessToken) {
     try {
-      const { payload: accessTokenPayload } = await jose.jwtVerify(
+      const { payload: accessTokenPayload } = await joseVerifyToken(
         accessToken,
-        new TextEncoder().encode(secret)
+        secret
       );
       //Token has been verified
       const userRole = accessTokenPayload.role;

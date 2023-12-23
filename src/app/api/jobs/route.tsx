@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as jose from "jose";
+import { joseVerifyToken } from "@/functions/auth/check-permissions";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -28,9 +29,9 @@ export async function GET(request: NextRequest) {
       let userIdFromAccessToken: string;
       if (accessToken) {
         try {
-          const { payload } = await jose.jwtVerify(
+          const { payload } = await joseVerifyToken(
             accessToken.value,
-            new TextEncoder().encode("my-secret")
+            "my-secret"
           );
           userIdFromAccessToken = payload.id as string;
 
@@ -86,7 +87,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           error:
-            "Unable to fetch jobs. You must be logged in to view any jobs you added.",
+            "Unable to fetch jobs due to invalid query parameter(s). If you are trying to fetch all jobs, do not add any query parameters.",
         },
         { status: 401 }
       );
@@ -94,32 +95,4 @@ export async function GET(request: NextRequest) {
 
     //To do? If any other params exist, return error saying must only include the necessary query params. Did you mean to set userId?
   }
-
-  //   const accessToken = request.cookies.get("jwt");
-
-  //   if (accessToken) {
-  //     try {
-  //       const { payload } = await jose.jwtVerify(
-  //         accessToken.value,
-  //         new TextEncoder().encode("my-secret")
-  //       );
-
-  //       //get user role
-
-  //       resp = NextResponse.json({
-  //         ...jwtAccessTokenPayload,
-  //         isLoggedIn: true,
-  //       });
-  //     } catch {
-  //       console.log("in catch jobs endpoint");
-  //       resp = NextResponse.json({ message: "Access Denied." }, { status: 403 });
-  //     }
-  //   } else {
-  //     resp = NextResponse.json(
-  //       { message: "Missing jwt token." },
-  //       { status: 401 }
-  //     );
-  //   }
-
-  //   return resp;
 }

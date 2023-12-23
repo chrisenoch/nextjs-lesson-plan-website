@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import * as jose from "jose";
 import LessonPlansPageContent from "./page-content";
+import { joseVerifyToken } from "@/functions/auth/check-permissions";
 
 export default async function LessonPlansPage() {
   console.log("in lesson plans page");
@@ -16,10 +17,8 @@ export default async function LessonPlansPage() {
 
   if (accessToken) {
     try {
-      const { payload } = await jose.jwtVerify(
-        accessToken.value,
-        new TextEncoder().encode("my-secret")
-      );
+      const { payload } = await joseVerifyToken(accessToken.value, "my-secret");
+
       console.log("payload below");
       console.log(payload);
       return <LessonPlansPageContent />;

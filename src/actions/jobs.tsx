@@ -9,6 +9,7 @@ import {
 } from "@/app/validation/jobs/jobs-validators";
 import { cookies } from "next/headers";
 import * as jose from "jose";
+import { joseVerifyToken } from "@/functions/auth/check-permissions";
 
 let count = 0;
 export async function createJob(prevState: any, formData: FormData) {
@@ -18,10 +19,7 @@ export async function createJob(prevState: any, formData: FormData) {
   let userId = null;
   if (accessToken) {
     try {
-      const { payload } = await jose.jwtVerify(
-        accessToken.value,
-        new TextEncoder().encode("my-secret")
-      );
+      const { payload } = await joseVerifyToken(accessToken.value, "my-secret");
       userId = payload.id;
       console.log("userId in jobs server action " + userId);
     } catch {
