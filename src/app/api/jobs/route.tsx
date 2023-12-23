@@ -7,8 +7,8 @@ export const revalidate = 0;
 export async function GET(request: NextRequest) {
   console.log("in jobs api");
   //let resp;
-  //If no query string, the request is for all jobs. All users are granted GET access to all jobs
   const searchParams = request.nextUrl.searchParams;
+  //If no query string, the request is for all jobs. All users are granted GET access to all jobs
   if (searchParams.size < 1) {
     try {
       const data = await fetch("http://localhost:3001/jobs"); // This is used in place of a database. There would be a database look-up here.
@@ -22,7 +22,8 @@ export async function GET(request: NextRequest) {
       );
     }
   } else {
-    //check params
+    //check params. If userId exists, return jobs for that specific user.
+    //If any otherr params exist, return error sayig must only include the necessary query params. Did you mean to set userId?
   }
 
   //   const accessToken = request.cookies.get("jwt");

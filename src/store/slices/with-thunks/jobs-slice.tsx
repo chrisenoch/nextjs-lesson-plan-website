@@ -43,11 +43,11 @@ const jobsSlice = createSlice({
 });
 
 export const fetchJobs = createAsyncThunk("jobsSlice/fetch", async () => {
-  const response = await fetch("http://localhost:3001/jobs");
+  const response = await fetch("http://localhost:3000/api/jobs");
   // DEV ONLY!!!
   await pause(1000);
-  const jobs = await response.json();
-  return jobs;
+  const payload = await response.json();
+  return payload.jobs;
 });
 
 export const deleteJob = createAsyncThunk(
