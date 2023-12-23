@@ -41,6 +41,8 @@ export async function middleware(request: NextRequest) {
   } else {
     return NextResponse.next();
   }
+
+  // return NextResponse.next();
 }
 
 // IMPORTANT: For childen, you MUST define the routes from least specific to most specific because the first

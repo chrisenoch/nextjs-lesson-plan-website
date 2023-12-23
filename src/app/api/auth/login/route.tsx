@@ -15,7 +15,7 @@ export async function POST(request: Request) {
   let refreshToken;
   let refreshTokenPromise;
   let userDetailsPayload: {
-    id: string;
+    id: string; //Because query params are strings. This makes equality checks easier.
     firstName: string;
     email: string;
     role: UserRole;
@@ -34,10 +34,10 @@ export async function POST(request: Request) {
 
     //Prepare jwt access token
     userDetailsPayload = {
-      id: "0",
+      id: "1",
       firstName: "Chris",
       email: "foo@bar.com",
-      role: "ADMIN",
+      role: "USER",
     };
 
     accessTokenPromise = new jose.SignJWT({ ...userDetailsPayload })
