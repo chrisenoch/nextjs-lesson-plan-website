@@ -60,7 +60,7 @@ export const deleteJob = createAsyncThunk(
           "Content-Type": "application/json",
         },
       });
-      const result = await response.json();
+      //const result = await response.json();
       return id;
     } catch (error) {
       return rejectWithValue("Error: Unable to delete job.");

@@ -59,7 +59,6 @@ export default function ResponsiveAppBar({
 
   // automatically authenticate user if refresh token cookie and access token cookies are found on app mount
   useEffect(() => {
-    console.log("----- in useEffect ResponsiveAppBar");
     dispatch(getAccessTokenWithRefreshTokenOnAppMount());
   }, [dispatch]);
 

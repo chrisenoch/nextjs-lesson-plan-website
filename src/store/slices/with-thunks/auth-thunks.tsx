@@ -1,12 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-const BACKEND_URL = "http://localhost:3000/api";
+const API_URL = "http://localhost:3000/api";
 
 export const userLogin = createAsyncThunk(
   "authSlice/login",
   async (data: { email: string; password: string }, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${BACKEND_URL}/auth/login`, {
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -26,7 +26,7 @@ export const userLogout = createAsyncThunk(
   "authSlice/logout",
   async (_: void, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${BACKEND_URL}/auth/with-refresh/logout`, {
+      const response = await fetch(`${API_URL}/auth/with-refresh/logout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -48,7 +48,7 @@ export const getAccessTokenWithRefreshToken = createAsyncThunk(
   "authSlice/refresh",
   async (_: void, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${BACKEND_URL}/auth/with-refresh/refresh`, {
+      const response = await fetch(`${API_URL}/auth/with-refresh/refresh`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -69,7 +69,7 @@ export const getAccessTokenWithRefreshTokenOnAppMount = createAsyncThunk(
   "authSlice/refresh-on-app-mount",
   async (_: void, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${BACKEND_URL}/auth/with-refresh/refresh`, {
+      const response = await fetch(`${API_URL}/auth/with-refresh/refresh`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
