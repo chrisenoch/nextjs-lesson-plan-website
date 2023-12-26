@@ -14,10 +14,15 @@ import { joseVerifyToken } from "./functions/auth/check-permissions";
 
 let count = 0;
 export async function middleware(request: NextRequest) {
-  //console.log("middleware count " + ++count);
-  const originalPath = request.nextUrl.pathname;
+  console.log("middleware count " + ++count);
+  const originalPath = request.nextUrl.pathname; //Do not convert to lowercase here. If you do if (urlPathNoStartSlash !== originalPathNoStartSlash)
+  //will pass and the final url will NOT be converted to lowercase.
   console.log("originalPath: ");
   console.log(originalPath);
+  const removeMultipleSlashes = /\/\/+/g;
+  const enteredUrlPathCleaned = removeStartSlashIfPresent(
+    request.nextUrl.pathname.replaceAll(removeMultipleSlashes, "/")
+  ).toLowerCase();
 
   //Modify path if navigated from a SecueNextLink component
   const nextLinkRelativeUrl = handleSecureNextLink(request);
@@ -29,7 +34,7 @@ export async function middleware(request: NextRequest) {
   const userRoles: UserRole[] = getUserRolesIfExist(accessTokenRole);
 
   const urlPath = getUrlPathBasedOnPermissions({
-    request,
+    enteredUrlPath: enteredUrlPathCleaned,
     protectedRoutes,
     userRoles,
     notLoggedInRedirectUrlPath: "/auth/signin",
@@ -37,15 +42,24 @@ export async function middleware(request: NextRequest) {
     superAdmin: "ADMIN",
   });
 
+  console.log("urlPath returned: " + urlPath);
+
   const urlPathNoStartSlash = removeStartSlashIfPresent(urlPath);
+
   const originalPathNoStartSlash = removeStartSlashIfPresent(originalPath);
+  console.log("urlPathNoStartSlash " + urlPathNoStartSlash);
+  console.log("originalPathNoStartSlash " + originalPathNoStartSlash);
+
+  //If always convert originalPath to lowercase, if user enters uppercase,
+  //it will never get translated into lowercase
+
   if (urlPathNoStartSlash !== originalPathNoStartSlash) {
     return NextResponse.redirect(new URL(urlPath, request.url));
   } else {
     return NextResponse.next();
   }
 
-  // return NextResponse.next();
+  //return NextResponse.next();
 }
 
 // IMPORTANT: For childen, you MUST define the routes from least specific to most specific because the first
@@ -84,23 +98,23 @@ const protectedRoutes: ProtectedRoutes = {
 //If the user does not have a role, pass an empty array for userRoles.
 //To do? Add :ANY PARAM. E.g. users/:ANY/profile  :ANY could be any number
 function getUrlPathBasedOnPermissions({
-  request,
+  enteredUrlPath,
   protectedRoutes,
   userRoles,
   notLoggedInRedirectUrlPath,
   incorrrectRoleRedirectUrlPath,
   superAdmin,
 }: {
-  request: NextRequest;
+  enteredUrlPath: string;
   protectedRoutes: ProtectedRoutes;
   userRoles: UserRole[];
   notLoggedInRedirectUrlPath: string;
   incorrrectRoleRedirectUrlPath: string;
   superAdmin?: UserRole;
 }) {
-  const enteredUrlPath = removeStartSlashIfPresent(
-    request.nextUrl.pathname
-  ).toLowerCase();
+  // const enteredUrlPath = removeStartSlashIfPresent(
+  //   request.nextUrl.pathname
+  // ).toLowerCase();
 
   const allProtectedRoutes: Set<string> =
     getAllProtectedRoutes(protectedRoutes);
@@ -110,11 +124,17 @@ function getUrlPathBasedOnPermissions({
   if (superAdmin && userRoles.includes(superAdmin)) {
     return enteredUrlPath;
   }
+  console.log("after if (superAdmin && userRoles.includes(superAdmin))");
+  console.log("--------allProtectedRoutes ");
+  console.log(allProtectedRoutes);
+  console.log("--------enteredUrlPath in main " + enteredUrlPath);
 
   //If route not protected, return unchanged url so user can go where he wants.
   if (!allProtectedRoutes.has(enteredUrlPath)) {
+    console.log("!allProtectedRoutes.has(enteredUrlPath)");
     return enteredUrlPath;
   }
+  console.log("if (!allProtectedRoutes.has(enteredUrlPath))");
   //If get to here, route is protected.
 
   // If user doesn't have a role. E.g. he does not have an auth cookie or if his token is invalid.
@@ -122,6 +142,7 @@ function getUrlPathBasedOnPermissions({
   if (userRoles.length < 1) {
     return notLoggedInRedirectUrlPath;
   }
+  console.log("if (userRoles.length < 1) {");
 
   const primaryUrlSegment = getPrimaryUrlSegment(enteredUrlPath);
 
@@ -325,7 +346,7 @@ function getPrimaryUrlSegment(urlPath: string) {
 }
 
 function handleSecureNextLink(request: NextRequest) {
-  const originalPath = request.nextUrl.pathname;
+  const originalPath = request.nextUrl.pathname.toLowerCase();
   const searchParams = request.nextUrl.searchParams;
   let queryString = "?";
   for (const [key, value] of searchParams.entries()) {
