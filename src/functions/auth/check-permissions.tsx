@@ -16,15 +16,19 @@ export async function checkPermissions({
   request,
   accessTokenName,
   accessTokenSecret,
-  validUserRole,
+  validUserRoles,
   superAdmins,
+  callback,
 }: {
   request: NextRequest;
   accessTokenName: string;
   accessTokenSecret: string;
-  validUserRole: UserRole[];
+  validUserRoles: UserRole[];
   superAdmins?: UserRole[];
-  callback: () => void;
+  callback?: (
+    request: NextRequest,
+    accessTokenPayload: jose.JWTPayload
+  ) => string;
 }) {
   const accessToken = request.cookies.get(accessTokenName);
   if (accessToken) {
@@ -44,14 +48,12 @@ export async function checkPermissions({
         }
 
         let permissionStatus;
-        if (validUserRole.includes(userRoleFromAccessToken)) {
+        if (validUserRoles.includes(userRoleFromAccessToken)) {
           permissionStatus = "SUCCESS";
-          if (
-            accessTokenPayload.id === request.nextUrl.searchParams.get("userId")
-          ) {
-            permissionStatus = "SUCCESS";
-          } else {
-            permissionStatus = "CUSTOM_RESPONSE";
+
+          //Only call the callback if the user has a valid role and user does not have a superAdmin role.
+          if (callback) {
+            permissionStatus = callback(request, accessTokenPayload);
           }
         } else {
           permissionStatus = "ROLE_UNAUTHORISED";
@@ -67,3 +69,21 @@ export async function checkPermissions({
     return "TOKEN_NOT_FOUND";
   }
 }
+
+//Example callback:
+// function callback(request: NextRequest, accessTokenPayload: jose.JWTPayload) {
+//   let permissionStatus;
+//   if (
+//     request.nextUrl.searchParams.get("userId") === null ||
+//     request.nextUrl.searchParams.get("userId") === undefined
+//   ) {
+//     permissionStatus = "INVALID_QUERY_PARAMETER(S)";
+//   } else if (
+//     accessTokenPayload.id === request.nextUrl.searchParams.get("userId")
+//   ) {
+//     permissionStatus = "SUCCESS";
+//   } else {
+//     permissionStatus = "ACCESS_DENIED_INVALID_USER_ID"; //Error message: Access Denied. You only have access to jobs for your own userId. Please check that you have entered the correct userId.
+//   }
+//   return permissionStatus;
+// }

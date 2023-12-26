@@ -16,6 +16,8 @@ let count = 0;
 export async function middleware(request: NextRequest) {
   //console.log("middleware count " + ++count);
   const originalPath = request.nextUrl.pathname;
+  console.log("originalPath: ");
+  console.log(originalPath);
 
   //Modify path if navigated from a SecueNextLink component
   const nextLinkRelativeUrl = handleSecureNextLink(request);
