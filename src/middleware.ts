@@ -15,24 +15,29 @@ import { joseVerifyToken } from "./functions/auth/check-permissions";
 let count = 0;
 export async function middleware(request: NextRequest) {
   console.log("middleware count " + ++count);
-  const originalPath = request.nextUrl.pathname; //Do not convert to lowercase here. If you do if (urlPathNoStartSlash !== originalPathNoStartSlash)
-  //will pass and the final url will NOT be converted to lowercase.
-  console.log("originalPath: ");
-  console.log(originalPath);
+  const originalPath = request.nextUrl.pathname; //Do not convert to lowerCase here. If you do if (urlPathNoStartSlash !== originalPathNoStartSlash)
+  //will pass and the final url will NOT be converted to lowerCase.
   const removeMultipleSlashes = /\/\/+/g;
   const enteredUrlPathCleaned = removeStartSlashIfPresent(
     request.nextUrl.pathname.replaceAll(removeMultipleSlashes, "/")
-  ).toLowerCase();
+  );
 
-  //Modify path if navigated from a SecueNextLink component
+  //modify path if navigated from a SecueNextLink component
   const nextLinkRelativeUrl = handleSecureNextLink(request);
   if (nextLinkRelativeUrl) {
     return NextResponse.redirect(new URL(nextLinkRelativeUrl, request.url));
   }
 
+  //convert path to lowerCase if necessary
+  if (originalPath !== originalPath.toLowerCase()) {
+    return NextResponse.redirect(
+      new URL(originalPath.toLowerCase(), request.url)
+    );
+  }
+
+  //check permissions and redirect if necessary
   const accessTokenRole = await getAccessTokenRole(request);
   const userRoles: UserRole[] = getUserRolesIfExist(accessTokenRole);
-
   const urlPath = getUrlPathBasedOnPermissions({
     enteredUrlPath: enteredUrlPathCleaned,
     protectedRoutes,
@@ -42,19 +47,10 @@ export async function middleware(request: NextRequest) {
     superAdmin: "ADMIN",
   });
 
-  console.log("urlPath returned: " + urlPath);
-
   const urlPathNoStartSlash = removeStartSlashIfPresent(urlPath);
-
   const originalPathNoStartSlash = removeStartSlashIfPresent(originalPath);
-  console.log("urlPathNoStartSlash " + urlPathNoStartSlash);
-  console.log("originalPathNoStartSlash " + originalPathNoStartSlash);
-
-  //If always convert originalPath to lowercase, if user enters uppercase,
-  //it will never get translated into lowercase
-
   if (urlPathNoStartSlash !== originalPathNoStartSlash) {
-    return NextResponse.redirect(new URL(urlPath, request.url));
+    return NextResponse.redirect(new URL(urlPath.toLowerCase(), request.url));
   } else {
     return NextResponse.next();
   }
@@ -98,7 +94,7 @@ const protectedRoutes: ProtectedRoutes = {
 //If the user does not have a role, pass an empty array for userRoles.
 //To do? Add :ANY PARAM. E.g. users/:ANY/profile  :ANY could be any number
 function getUrlPathBasedOnPermissions({
-  enteredUrlPath,
+  enteredUrlPath: enteredUrlPathToReturn,
   protectedRoutes,
   userRoles,
   notLoggedInRedirectUrlPath,
@@ -112,9 +108,7 @@ function getUrlPathBasedOnPermissions({
   incorrrectRoleRedirectUrlPath: string;
   superAdmin?: UserRole;
 }) {
-  // const enteredUrlPath = removeStartSlashIfPresent(
-  //   request.nextUrl.pathname
-  // ).toLowerCase();
+  const enteredUrlPathLowerCase = enteredUrlPathToReturn.toLowerCase();
 
   const allProtectedRoutes: Set<string> =
     getAllProtectedRoutes(protectedRoutes);
@@ -122,19 +116,13 @@ function getUrlPathBasedOnPermissions({
   //superAdmin has access to all routes if superAdmin exists
   //To do?: Change superAdmin to an array so that developer can assign multiple superAdmins
   if (superAdmin && userRoles.includes(superAdmin)) {
-    return enteredUrlPath;
+    return enteredUrlPathToReturn;
   }
-  console.log("after if (superAdmin && userRoles.includes(superAdmin))");
-  console.log("--------allProtectedRoutes ");
-  console.log(allProtectedRoutes);
-  console.log("--------enteredUrlPath in main " + enteredUrlPath);
 
   //If route not protected, return unchanged url so user can go where he wants.
-  if (!allProtectedRoutes.has(enteredUrlPath)) {
-    console.log("!allProtectedRoutes.has(enteredUrlPath)");
-    return enteredUrlPath;
+  if (!allProtectedRoutes.has(enteredUrlPathLowerCase)) {
+    return enteredUrlPathToReturn;
   }
-  console.log("if (!allProtectedRoutes.has(enteredUrlPath))");
   //If get to here, route is protected.
 
   // If user doesn't have a role. E.g. he does not have an auth cookie or if his token is invalid.
@@ -142,9 +130,8 @@ function getUrlPathBasedOnPermissions({
   if (userRoles.length < 1) {
     return notLoggedInRedirectUrlPath;
   }
-  console.log("if (userRoles.length < 1) {");
 
-  const primaryUrlSegment = getPrimaryUrlSegment(enteredUrlPath);
+  const primaryUrlSegment = getPrimaryUrlSegment(enteredUrlPathLowerCase);
 
   //roles should always exist here
   const protectedPrimaryRoute: ProtectedRoute =
@@ -158,7 +145,7 @@ function getUrlPathBasedOnPermissions({
 
       return getUrlPathOnceRolesAreKnown({
         rolesUserHas: rolesUserHasForPrimaryRoute,
-        successUrlPath: enteredUrlPath,
+        successUrlPath: enteredUrlPathToReturn,
         incorrrectRoleRedirectUrlPath,
       });
     } else {
@@ -177,7 +164,7 @@ function getUrlPathBasedOnPermissions({
           const protectedUrlPath =
             primaryUrlSegment + "/" + secondaryUrlSegments;
 
-          if (enteredUrlPath.includes(protectedUrlPath)) {
+          if (enteredUrlPathLowerCase.includes(protectedUrlPath)) {
             rolesUserHasForChildrenRoute = getArrayIntersection(
               rolesForSecondaryRoute.roles,
               userRoles
@@ -190,10 +177,10 @@ function getUrlPathBasedOnPermissions({
       //check if user role is one of the required roles
       if (rolesUserHasForChildrenRoute.length > 0) {
         //user is authorised
-        return enteredUrlPath;
+        return enteredUrlPathToReturn;
       } else {
         //Check to see if the user navigated to the primary route segment
-        if (primaryUrlSegment.includes(enteredUrlPath)) {
+        if (primaryUrlSegment.includes(enteredUrlPathLowerCase)) {
           const rolesUserHasForPrimaryRoute = getArrayIntersection(
             protectedPrimaryRoute.roles,
             userRoles
@@ -201,7 +188,7 @@ function getUrlPathBasedOnPermissions({
 
           return getUrlPathOnceRolesAreKnown({
             rolesUserHas: rolesUserHasForPrimaryRoute,
-            successUrlPath: enteredUrlPath,
+            successUrlPath: enteredUrlPathToReturn,
             incorrrectRoleRedirectUrlPath,
           });
         } else {
@@ -212,7 +199,6 @@ function getUrlPathBasedOnPermissions({
   } else {
     // If get to here, there has been an error. At this point, we know that the route
     // is protected and so protectedPrimaryRoute should have a value.
-
     return notLoggedInRedirectUrlPath;
   }
 }
