@@ -91,10 +91,13 @@ const protectedRoutes: ProtectedRoutes = {
 
 // superAdmin parameter is the role that you choose which has superAdmin powers
 // (access to everything), if you decide such a role should exist.
-//If the user does not have a role, pass an empty array for userRoles.
+// If the user does not have a role, pass an empty array for userRoles.
+// enteredUrlPath must be lowercase and have the path segments separated by one slash and not multiple slashes.
+// OK: http://localhost:3000/user/profile/
+// Not OK: http://localhost:3000/usER//profile/
 //To do? Add :ANY PARAM. E.g. users/:ANY/profile  :ANY could be any number
 function getUrlPathBasedOnPermissions({
-  enteredUrlPath: enteredUrlPathToReturn,
+  enteredUrlPath,
   protectedRoutes,
   userRoles,
   notLoggedInRedirectUrlPath,
@@ -108,20 +111,18 @@ function getUrlPathBasedOnPermissions({
   incorrrectRoleRedirectUrlPath: string;
   superAdmin?: UserRole;
 }) {
-  const enteredUrlPathLowerCase = enteredUrlPathToReturn.toLowerCase();
-
   const allProtectedRoutes: Set<string> =
     getAllProtectedRoutes(protectedRoutes);
 
   //superAdmin has access to all routes if superAdmin exists
   //To do?: Change superAdmin to an array so that developer can assign multiple superAdmins
   if (superAdmin && userRoles.includes(superAdmin)) {
-    return enteredUrlPathToReturn;
+    return enteredUrlPath;
   }
 
   //If route not protected, return unchanged url so user can go where he wants.
-  if (!allProtectedRoutes.has(enteredUrlPathLowerCase)) {
-    return enteredUrlPathToReturn;
+  if (!allProtectedRoutes.has(enteredUrlPath)) {
+    return enteredUrlPath;
   }
   //If get to here, route is protected.
 
@@ -131,7 +132,7 @@ function getUrlPathBasedOnPermissions({
     return notLoggedInRedirectUrlPath;
   }
 
-  const primaryUrlSegment = getPrimaryUrlSegment(enteredUrlPathLowerCase);
+  const primaryUrlSegment = getPrimaryUrlSegment(enteredUrlPath);
 
   //roles should always exist here
   const protectedPrimaryRoute: ProtectedRoute =
@@ -145,7 +146,7 @@ function getUrlPathBasedOnPermissions({
 
       return getUrlPathOnceRolesAreKnown({
         rolesUserHas: rolesUserHasForPrimaryRoute,
-        successUrlPath: enteredUrlPathToReturn,
+        successUrlPath: enteredUrlPath,
         incorrrectRoleRedirectUrlPath,
       });
     } else {
@@ -164,7 +165,7 @@ function getUrlPathBasedOnPermissions({
           const protectedUrlPath =
             primaryUrlSegment + "/" + secondaryUrlSegments;
 
-          if (enteredUrlPathLowerCase.includes(protectedUrlPath)) {
+          if (enteredUrlPath.includes(protectedUrlPath)) {
             rolesUserHasForChildrenRoute = getArrayIntersection(
               rolesForSecondaryRoute.roles,
               userRoles
@@ -177,10 +178,10 @@ function getUrlPathBasedOnPermissions({
       //check if user role is one of the required roles
       if (rolesUserHasForChildrenRoute.length > 0) {
         //user is authorised
-        return enteredUrlPathToReturn;
+        return enteredUrlPath;
       } else {
         //Check to see if the user navigated to the primary route segment
-        if (primaryUrlSegment.includes(enteredUrlPathLowerCase)) {
+        if (primaryUrlSegment.includes(enteredUrlPath)) {
           const rolesUserHasForPrimaryRoute = getArrayIntersection(
             protectedPrimaryRoute.roles,
             userRoles
@@ -188,7 +189,7 @@ function getUrlPathBasedOnPermissions({
 
           return getUrlPathOnceRolesAreKnown({
             rolesUserHas: rolesUserHasForPrimaryRoute,
-            successUrlPath: enteredUrlPathToReturn,
+            successUrlPath: enteredUrlPath,
             incorrrectRoleRedirectUrlPath,
           });
         } else {
