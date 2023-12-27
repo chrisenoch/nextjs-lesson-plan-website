@@ -1,24 +1,6 @@
 {
   "jobs": [
     {
-      "userId": "1",
-      "jobTitle": "user 1 job 1",
-      "jobDescription": "user 1 job 1",
-      "id": 1
-    },
-    {
-      "userId": "1",
-      "jobTitle": "user 1 job 2",
-      "jobDescription": "user 1 job 2",
-      "id": 2
-    },
-    {
-      "userId": "1",
-      "jobTitle": "user 1 job 4",
-      "jobDescription": "user 1 job 4",
-      "id": 4
-    },
-    {
       "userId": "0",
       "jobTitle": "admin 1 job 1",
       "jobDescription": "admin 1 job 1",
@@ -41,12 +23,6 @@
       "jobTitle": "admin 1 job 4",
       "jobDescription": "admin 1 job 4",
       "id": 8
-    },
-    {
-      "userId": "1",
-      "jobTitle": "user 1 job 5",
-      "jobDescription": "user 1 job 5",
-      "id": 9
     },
     {
       "userId": "1",

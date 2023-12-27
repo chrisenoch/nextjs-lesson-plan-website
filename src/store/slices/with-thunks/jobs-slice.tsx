@@ -78,7 +78,7 @@ export const fetchJobsByUserId = createAsyncThunk(
 
 export const deleteJob = createAsyncThunk(
   "jobsSlice/delete-job",
-  async (id: string, { rejectWithValue }) => {
+  async (id: string, { rejectWithValue, dispatch, getState }) => {
     try {
       const response = await fetch(`http://localhost:3001/jobs/${id}`, {
         method: "DELETE",
@@ -86,6 +86,12 @@ export const deleteJob = createAsyncThunk(
           "Content-Type": "application/json",
         },
       });
+      const stateInDeleteJobs = getState();
+      const userInfoId = stateInDeleteJobs.authSlice?.userInfo?.id;
+      if (userInfoId) {
+        await dispatch(fetchJobsByUserId(userInfoId));
+      }
+
       //const result = await response.json();
       return id;
     } catch (error) {
