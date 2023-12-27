@@ -15,11 +15,13 @@ import {
   addJob,
   deleteJob,
   selectAllJobs,
+  selectJobsByUserId,
   selectJobsError,
   selectJobsIsLoading,
 } from "@/store";
 import { JobsPreview } from "./JobsPreview";
 import { SerializedError } from "@reduxjs/toolkit";
+import { fetchJobsByUserId } from "@/store/slices/with-thunks/jobs-slice";
 
 const initialFormState: {
   message: string | null;
@@ -64,8 +66,11 @@ export function AddJob() {
   const dispatch = useDispatch<AppDispatch>();
   const jobs:
     | { id: string; jobTitle: string; jobDescription: string }[]
-    | undefined = useSelector(selectAllJobs);
-  console.log("jobs selectAllJobs ");
+    | undefined = useSelector(selectJobsByUserId);
+  // const jobs:
+  //   | { id: string; jobTitle: string; jobDescription: string }[]
+  //   | undefined = useSelector(selectAllJobs);
+  console.log("jobs selectAllJobsByUserId ");
   console.log(jobs);
   const jobsIsLoading: boolean = useSelector(selectJobsIsLoading);
   console.log("jobsIsLoading " + jobsIsLoading);
@@ -88,6 +93,10 @@ export function AddJob() {
   function handleJobDelete(id: string) {
     dispatch(deleteJob(id));
   }
+
+  useEffect(() => {
+    dispatch(fetchJobsByUserId());
+  });
 
   // Used as an observer. Runs everytime the form server action returns a response to the add-job form submission.
   // formStateWithServer.emitter only changes when a form response arrives

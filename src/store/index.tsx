@@ -8,6 +8,7 @@ import {
   selectJobsError,
   selectJobsIsLoading,
   selectJobsByUserId,
+  fetchJobsByUserId,
 } from "./slices/with-thunks/jobs-slice";
 import {
   authReducer,
@@ -36,6 +37,7 @@ export {
   addJob,
   deleteJob,
   fetchJobs,
+  fetchJobsByUserId,
   userLogin,
   userLogout,
   reinitWasLastRefreshSuccessful,
