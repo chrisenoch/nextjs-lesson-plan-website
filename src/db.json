@@ -2,21 +2,9 @@
   "jobs": [
     {
       "userId": "1",
-      "jobTitle": "dd",
-      "jobDescription": "dd",
-      "id": 8
-    },
-    {
-      "userId": "1",
       "jobTitle": "zz",
       "jobDescription": "zz",
       "id": 10
-    },
-    {
-      "userId": "1",
-      "jobTitle": "tt",
-      "jobDescription": "tt",
-      "id": 11
     },
     {
       "userId": "1",
