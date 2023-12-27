@@ -49,12 +49,15 @@ export const fetchJobs = createAsyncThunk(
     let response;
     if (userId !== null && userId !== undefined) {
       response = response = await fetch(
-        `http://localhost:3000/api/jobs?userId=${userId}`
+        `http://localhost:3000/api/jobs-dry?userId=${userId}`
       );
     } else {
-      response = await fetch("http://localhost:3000/api/jobs");
+      response = await fetch("http://localhost:3000/api/jobs-dry");
     }
     const payload = await response.json();
+
+    console.log("jobs payload in jobs-slice ");
+    console.log(payload);
     return payload.jobs;
   }
 );
@@ -80,5 +83,6 @@ export const deleteJob = createAsyncThunk(
 export const { addJob } = jobsSlice.actions;
 export const jobsReducer = jobsSlice.reducer;
 export const selectAllJobs = (state) => state.jobsSlice.jobs;
+export const selectJobsByUserId = (state) => state.jobsSlice.jobs;
 export const selectJobsError = (state) => state.jobsSlice.error;
 export const selectJobsIsLoading = (state) => state.jobsSlice.isLoading;
