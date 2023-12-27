@@ -13,6 +13,7 @@ import {
 import {
   authReducer,
   reinitWasLastRefreshSuccessful,
+  selectUserInfo,
 } from "./slices/with-thunks/auth-slice";
 import {
   userLogin,
@@ -38,14 +39,15 @@ export {
   deleteJob,
   fetchJobs,
   fetchJobsByUserId,
+  selectAllJobs,
+  selectJobsByUserId,
+  selectJobsError,
+  selectJobsIsLoading,
   userLogin,
   userLogout,
   reinitWasLastRefreshSuccessful,
   getAccessTokenWithRefreshToken,
   getAccessTokenWithRefreshTokenOnAppMount,
-  selectAllJobs,
-  selectJobsByUserId,
-  selectJobsError,
-  selectJobsIsLoading,
+  selectUserInfo,
 };
 export type AppDispatch = typeof store.dispatch;

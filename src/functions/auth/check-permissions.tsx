@@ -29,7 +29,14 @@ export async function checkPermissions({
     request: NextRequest,
     accessTokenPayload: jose.JWTPayload
   ) => string;
-}) {
+}): Promise<
+  | "SUCCESS"
+  | "ROLE_UNAUTHORISED"
+  | "ROLE_UNRECOGNISED"
+  | "TOKEN_INVALID"
+  | "TOKEN_NOT_FOUND"
+  | string
+> {
   const accessToken = request.cookies.get(accessTokenName);
   if (accessToken) {
     try {

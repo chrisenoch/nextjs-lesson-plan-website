@@ -6,7 +6,7 @@ export const userLogin = createAsyncThunk(
   "authSlice/login",
   async (data: { email: string; password: string }, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${API_URL}/auth/loginXX`, {
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

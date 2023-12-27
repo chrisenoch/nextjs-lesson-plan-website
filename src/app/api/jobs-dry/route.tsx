@@ -29,7 +29,10 @@ export async function GET(request: NextRequest) {
         { status: 500 }
       );
     }
-  } else {
+  }
+
+  const userIdFromQueryParam = request.nextUrl.searchParams.get("userId");
+  if (userIdFromQueryParam) {
     const permissionStatusPromise = checkPermissions({
       request,
       accessTokenName: "jwt",
@@ -40,9 +43,34 @@ export async function GET(request: NextRequest) {
     });
     const permissionStatus = await permissionStatusPromise;
 
-    //Just for testing. To do: replace this.
-    return NextResponse.json({ permissionStatus }, { status: 200 });
+    //To do: "make the response more fine-grained, depending on the error-type"
+    if (permissionStatus !== "SUCCESS") {
+      return NextResponse.json(
+        { error: "Error fetching jobs." },
+        { status: 401 }
+      );
+    }
+    try {
+      const data = await fetch("http://localhost:3001/jobs"); // This is used in place of a database. There would be a database look-up here.
+      const jobs = await data.json();
+      const jobsAddedByUser = jobs.filter(
+        (job) => job.userId === userIdFromQueryParam
+      );
+      return NextResponse.json({ jobs: jobsAddedByUser }, { status: 200 });
+    } catch {
+      return NextResponse.json(
+        { error: "Unable to fetch jobs due to a network failure." },
+        { status: 500 }
+      );
+    }
   }
+  return NextResponse.json(
+    {
+      error:
+        "Unable to fetch jobs due to invalid query parameter(s). If you are trying to fetch all jobs, do not add any query parameters.",
+    },
+    { status: 401 }
+  );
 }
 
 function callback(request: NextRequest, accessTokenPayload: jose.JWTPayload) {

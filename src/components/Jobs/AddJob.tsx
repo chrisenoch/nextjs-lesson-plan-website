@@ -18,10 +18,12 @@ import {
   selectJobsByUserId,
   selectJobsError,
   selectJobsIsLoading,
+  selectUserInfo,
 } from "@/store";
 import { JobsPreview } from "./JobsPreview";
 import { SerializedError } from "@reduxjs/toolkit";
 import { fetchJobsByUserId } from "@/store/slices/with-thunks/jobs-slice";
+import { UserInfo } from "@/models/types/UserInfo";
 
 const initialFormState: {
   message: string | null;
@@ -64,19 +66,20 @@ export function AddJob() {
   } = useFormClientStatus(inputRefs);
 
   const dispatch = useDispatch<AppDispatch>();
-  const jobs:
+  const userInfo: null | UserInfo = useSelector(selectUserInfo);
+  const jobsAddedByLoggedInUser:
     | { id: string; jobTitle: string; jobDescription: string }[]
     | undefined = useSelector(selectJobsByUserId);
+
+  console.log("jobsAddedByLoggedInUser ");
+  console.log(jobsAddedByLoggedInUser);
   // const jobs:
   //   | { id: string; jobTitle: string; jobDescription: string }[]
   //   | undefined = useSelector(selectAllJobs);
-  console.log("jobs selectAllJobsByUserId ");
-  console.log(jobs);
+  // console.log("jobs selectAllJobs ");
+  // console.log(jobs);
   const jobsIsLoading: boolean = useSelector(selectJobsIsLoading);
-  console.log("jobsIsLoading " + jobsIsLoading);
-
   const jobsError: null | SerializedError = useSelector(selectJobsError);
-  console.log("jobsError " + jobsError);
   const resultMessageFromServer = formStateWithServer?.message;
   const jobTitleIsValid = zodValidator(jobTitle, {
     jobTitle: jobTitleValidator,
@@ -95,8 +98,11 @@ export function AddJob() {
   }
 
   useEffect(() => {
-    dispatch(fetchJobsByUserId());
-  });
+    if (userInfo) {
+      console.log("dispatching fetchJobsByUserId with userId: " + userInfo.id);
+      dispatch(fetchJobsByUserId(userInfo.id));
+    }
+  }, [dispatch, userInfo]);
 
   // Used as an observer. Runs everytime the form server action returns a response to the add-job form submission.
   // formStateWithServer.emitter only changes when a form response arrives
@@ -105,11 +111,13 @@ export function AddJob() {
   // to when the server action was complete so I chose this solution.
   // I wouldn't do it like this though. I would use redux async thunks, like I did for the login page.
   useEffect(() => {
+    console.log("in useEffect observer");
     if (formStateWithServer.emitter === null) {
       return;
     }
 
     if (!formStateWithServer.isError && formStateWithServer.payload) {
+      console.log("in useEffect observer - about to call handleJob()");
       handleJobAdd(formStateWithServer.payload);
     }
   }, [formStateWithServer.emitter]);
@@ -200,7 +208,7 @@ export function AddJob() {
         </Box>
       )}
       <JobsPreview
-        jobs={jobs}
+        jobs={jobsAddedByLoggedInUser}
         isLoading={jobsIsLoading}
         error={jobsError}
         handleJobDelete={handleJobDelete}></JobsPreview>

@@ -65,18 +65,20 @@ export const fetchJobs = createAsyncThunk("jobsSlice/fetchJobs", async () => {
 
 export const fetchJobsByUserId = createAsyncThunk(
   "jobsSlice/fetchJobsByUserId",
-  async (userId: number) => {
+  async (userId: string) => {
     const response = await fetch(
       `http://localhost:3000/api/jobs-dry?userId=${userId}`
     );
     const payload = await response.json();
+    console.log("payload in fetchJobsByUserId");
+    console.log(payload);
     return payload.jobs;
   }
 );
 
 export const deleteJob = createAsyncThunk(
   "jobsSlice/delete-job",
-  async (id: number, { rejectWithValue }) => {
+  async (id: string, { rejectWithValue }) => {
     try {
       const response = await fetch(`http://localhost:3001/jobs/${id}`, {
         method: "DELETE",

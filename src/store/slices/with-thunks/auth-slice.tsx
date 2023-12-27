@@ -149,3 +149,4 @@ function setUserInfoFromLoggedInStatus(action, state) {
 
 export const { reinitWasLastRefreshSuccessful } = authSlice.actions;
 export const authReducer = authSlice.reducer;
+export const selectUserInfo = (state) => state.authSlice.userInfo;
