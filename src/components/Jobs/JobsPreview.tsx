@@ -20,7 +20,7 @@ export function JobsPreview({
   error,
   handleJobDelete,
 }: {
-  jobs: { id: string; jobTitle: string; jobDescription: string }[];
+  jobs: { id: string; jobTitle: string; jobDescription: string }[] | undefined;
   isLoading: boolean;
   error: null | SerializedError;
   handleJobDelete: (id: string) => void;
@@ -32,26 +32,27 @@ export function JobsPreview({
   }
 
   //To do: Turn the jobs into links
-  const renderedJobs = jobs.map((job) => {
-    return (
-      <Card sx={{ mb: 1, maxWidth: 400, minWidth: 300 }} key={job.id}>
-        <CardHeader
-          action={
-            <IconButton
-              onClick={() => handleJobDelete(job.id)}
-              aria-label="delete-job">
-              <Delete />
-            </IconButton>
-          }
-          title={job.jobTitle}
-        />
-        <CardContent>
-          <Typography variant="body2">{job.jobDescription}</Typography>
-        </CardContent>
-      </Card>
-    );
-  });
-
+  const renderedJobs = !jobs
+    ? []
+    : jobs.map((job) => {
+        return (
+          <Card sx={{ mb: 1, maxWidth: 400, minWidth: 300 }} key={job.id}>
+            <CardHeader
+              action={
+                <IconButton
+                  onClick={() => handleJobDelete(job.id)}
+                  aria-label="delete-job">
+                  <Delete />
+                </IconButton>
+              }
+              title={job.jobTitle}
+            />
+            <CardContent>
+              <Typography variant="body2">{job.jobDescription}</Typography>
+            </CardContent>
+          </Card>
+        );
+      });
   return isLoading ? (
     "Loading ..."
   ) : error ? (

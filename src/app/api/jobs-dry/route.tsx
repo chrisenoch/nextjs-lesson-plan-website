@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     try {
       const data = await fetch("http://localhost:3001/jobs"); // This is used in place of a database. There would be a database look-up here.
       const jobs = await data.json();
-      //Don't return the userId so users cannot see which jobs were added by which user..
+      //Don't return the userId so users cannot see which jobs were added by which user.
       const jobsWithNoUserId = jobs.map((job) => {
         const { userId, ...jobWithNoUserId } = job;
         return jobWithNoUserId;

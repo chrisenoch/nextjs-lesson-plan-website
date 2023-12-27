@@ -7,6 +7,7 @@ import {
   selectAllJobs,
   selectJobsError,
   selectJobsIsLoading,
+  selectJobsByUserId,
 } from "./slices/with-thunks/jobs-slice";
 import {
   authReducer,
@@ -41,6 +42,7 @@ export {
   getAccessTokenWithRefreshToken,
   getAccessTokenWithRefreshTokenOnAppMount,
   selectAllJobs,
+  selectJobsByUserId,
   selectJobsError,
   selectJobsIsLoading,
 };

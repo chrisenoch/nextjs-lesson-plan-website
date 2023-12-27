@@ -62,11 +62,13 @@ export function AddJob() {
   } = useFormClientStatus(inputRefs);
 
   const dispatch = useDispatch<AppDispatch>();
-  const jobs: { id: string; jobTitle: string; jobDescription: string }[] =
-    useSelector(selectAllJobs);
+  const jobs:
+    | { id: string; jobTitle: string; jobDescription: string }[]
+    | undefined = useSelector(selectAllJobs);
   console.log("jobs selectAllJobs ");
   console.log(jobs);
   const jobsIsLoading: boolean = useSelector(selectJobsIsLoading);
+  console.log("jobsIsLoading " + jobsIsLoading);
 
   const jobsError: null | SerializedError = useSelector(selectJobsError);
   console.log("jobsError " + jobsError);

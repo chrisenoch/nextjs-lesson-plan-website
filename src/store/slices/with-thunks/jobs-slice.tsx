@@ -5,6 +5,7 @@ const jobsSlice = createSlice({
   name: "jobsSlice",
   initialState: {
     jobs: [],
+    jobsAddedByLoggedInUser: [],
     error: null,
     isLoading: true,
   },
@@ -15,7 +16,7 @@ const jobsSlice = createSlice({
   },
   extraReducers(builder) {
     //fetch jobs
-    builder.addCase(fetchJobs.pending, (state, action) => {
+    builder.addCase(fetchJobs.pending, (state) => {
       state.isLoading = true;
     });
     builder.addCase(fetchJobs.fulfilled, (state, action) => {
@@ -27,8 +28,21 @@ const jobsSlice = createSlice({
       state.error = action.error;
     });
 
+    //fetch jobs by userId
+    builder.addCase(fetchJobsByUserId.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(fetchJobsByUserId.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.jobsAddedByLoggedInUser = action.payload;
+    });
+    builder.addCase(fetchJobsByUserId.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error;
+    });
+
     //delete job
-    builder.addCase(deleteJob.pending, (state, action) => {
+    builder.addCase(deleteJob.pending, (state) => {
       state.isLoading = true;
     });
     builder.addCase(deleteJob.fulfilled, (state, action) => {
@@ -43,21 +57,19 @@ const jobsSlice = createSlice({
   },
 });
 
-export const fetchJobs = createAsyncThunk(
-  "jobsSlice/fetchJobs",
-  async (userId?: number) => {
-    let response;
-    if (userId !== null && userId !== undefined) {
-      response = response = await fetch(
-        `http://localhost:3000/api/jobs-dry?userId=${userId}`
-      );
-    } else {
-      response = await fetch("http://localhost:3000/api/jobs-dry");
-    }
-    const payload = await response.json();
+export const fetchJobs = createAsyncThunk("jobsSlice/fetchJobs", async () => {
+  const response = await fetch(`http://localhost:3000/api/jobs-dry`);
+  const payload = await response.json();
+  return payload.jobs;
+});
 
-    console.log("jobs payload in jobs-slice ");
-    console.log(payload);
+export const fetchJobsByUserId = createAsyncThunk(
+  "jobsSlice/fetchJobsByUserId",
+  async (userId: number) => {
+    const response = await fetch(
+      `http://localhost:3000/api/jobs-dry?userId=${userId}`
+    );
+    const payload = await response.json();
     return payload.jobs;
   }
 );
@@ -83,6 +95,7 @@ export const deleteJob = createAsyncThunk(
 export const { addJob } = jobsSlice.actions;
 export const jobsReducer = jobsSlice.reducer;
 export const selectAllJobs = (state) => state.jobsSlice.jobs;
-export const selectJobsByUserId = (state) => state.jobsSlice.jobs;
+export const selectJobsByUserId = (state) =>
+  state.jobsSlice.jobsAddedByLoggedInUser;
 export const selectJobsError = (state) => state.jobsSlice.error;
 export const selectJobsIsLoading = (state) => state.jobsSlice.isLoading;
