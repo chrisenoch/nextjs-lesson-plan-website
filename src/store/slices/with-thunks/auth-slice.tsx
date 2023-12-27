@@ -27,7 +27,7 @@ const authSlice = createSlice({
   },
   extraReducers(builder) {
     //Login user
-    builder.addCase(userLogin.pending, (state, action) => {
+    builder.addCase(userLogin.pending, (state) => {
       state.isLoading = true;
       state.loginError = null;
     });
@@ -40,11 +40,11 @@ const authSlice = createSlice({
       state.loginError = action.payload;
     });
     //Logout user
-    builder.addCase(userLogout.pending, (state, action) => {
+    builder.addCase(userLogout.pending, (state) => {
       state.isLoading = true;
       state.logoutError = null;
     });
-    builder.addCase(userLogout.fulfilled, (state, action) => {
+    builder.addCase(userLogout.fulfilled, (state) => {
       state.isLoading = false;
       state.userInfo = null;
     });
@@ -55,7 +55,7 @@ const authSlice = createSlice({
     //Get access token with refresh token in the background.
     //Do not change isLoading for any getAccessTokenWithRefreshToken case. The access token being updated should happen
     //invisibly and should not be reflected in the UI.
-    builder.addCase(getAccessTokenWithRefreshToken.pending, (state, action) => {
+    builder.addCase(getAccessTokenWithRefreshToken.pending, (state) => {
       //Do not set isLoading.
       state.refreshTokenError = null;
       state.wasLastRefreshSuccessful = null;
@@ -78,7 +78,7 @@ const authSlice = createSlice({
     //Send refresh token on app mount. In this case, we DO want to show the loading state
     builder.addCase(
       getAccessTokenWithRefreshTokenOnAppMount.pending,
-      (state, action) => {
+      (state) => {
         state.isLoading = true;
         state.refreshTokenError = null;
         state.wasLastRefreshSuccessful = null;
