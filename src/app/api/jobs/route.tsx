@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as jose from "jose";
-import { joseVerifyToken } from "@/functions/auth/check-permissions";
+import {
+  checkPermissions,
+  joseVerifyToken,
+} from "@/functions/auth/check-permissions";
+import { revalidatePath } from "next/cache";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export async function GET(request: NextRequest) {
-  console.log("in jobs api");
+  console.log("in jobs get method");
   const searchParams = request.nextUrl.searchParams;
 
   //If no query string, the request is for all jobs. All users are granted GET access to all jobs
@@ -14,85 +18,136 @@ export async function GET(request: NextRequest) {
     try {
       const data = await fetch("http://localhost:3001/jobs"); // This is used in place of a database. There would be a database look-up here.
       const jobs = await data.json();
-      return NextResponse.json({ jobs }, { status: 200 });
+      //Don't return the userId so users cannot see which jobs were added by which user.
+      const jobsWithNoUserId = jobs.map((job) => {
+        const { userId, ...jobWithNoUserId } = job;
+        return jobWithNoUserId;
+      });
+      return NextResponse.json({ jobs: jobsWithNoUserId }, { status: 200 });
     } catch {
       return NextResponse.json(
         { error: "Unable to fetch jobs." },
         { status: 500 }
       );
     }
-  } else {
-    const userIdFromQueryParam = searchParams.get("userId");
-    //check params. If userId exists, return jobs for that specific user.
-    if (userIdFromQueryParam) {
-      const accessToken = request.cookies.get("jwt");
-      let userIdFromAccessToken: string;
-      if (accessToken) {
-        try {
-          const { payload } = await joseVerifyToken(
-            accessToken.value,
-            "my-secret"
-          );
-          userIdFromAccessToken = payload.id as string;
+  }
 
-          if (payload.role === "ADMIN") {
-            const data = await fetch("http://localhost:3001/jobs"); // This is used in place of a database. There would be a database look-up here.
-            const jobs = (await data.json()) as any[];
-            const userSpecificJobs = jobs.filter(
-              (job) => job.userId === userIdFromAccessToken
-            );
-            return NextResponse.json(
-              { usersJobs: userSpecificJobs },
-              { status: 200 }
-            );
-          }
+  const userIdFromQueryParam = request.nextUrl.searchParams.get("userId");
+  if (userIdFromQueryParam) {
+    const permissionStatusPromise = checkPermissions({
+      request,
+      accessTokenName: "jwt",
+      accessTokenSecret: "my-secret",
+      validUserRoles: ["USER"],
+      superAdmins: [],
+      callback: GETCallback,
+    });
+    const permissionStatus = await permissionStatusPromise;
 
-          if (userIdFromAccessToken === userIdFromQueryParam) {
-            const data = await fetch("http://localhost:3001/jobs"); // This is used in place of a database. There would be a database look-up here.
-            const jobs = await data.json();
-            const userSpecificJobs = jobs.filter(
-              (job) => job.userId === userIdFromAccessToken
-            );
-            return NextResponse.json({ userSpecificJobs }, { status: 200 });
-          } else {
-            return NextResponse.json(
-              {
-                error: "Access denied. You may only view jobs that you added.",
-              },
-              { status: 403 }
-            );
-          }
-        } catch {
-          //token verification failed
-          return NextResponse.json(
-            {
-              error:
-                "Unable to fetch jobs. You must be logged in to view any jobs you added.",
-            },
-            { status: 401 }
-          );
-        }
-      } else {
-        //no access token
-        return NextResponse.json(
-          {
-            error:
-              "Unable to fetch jobs. You must be logged in to view any jobs you added.",
-          },
-          { status: 401 }
-        );
-      }
-    } else {
-      //no userId query parameter
+    //To do: "make the response more fine-grained, depending on the error-type"
+    if (permissionStatus !== "SUCCESS") {
       return NextResponse.json(
-        {
-          error:
-            "Unable to fetch jobs due to invalid query parameter(s). If you are trying to fetch all jobs, do not add any query parameters.",
-        },
+        { error: "Error fetching jobs." },
         { status: 401 }
       );
     }
-
-    //To do? If any other params exist, return error saying must only include the necessary query params. Did you mean to set userId?
+    try {
+      const data = await fetch("http://localhost:3001/jobs"); // This is used in place of a database. There would be a database look-up here.
+      const jobs = await data.json();
+      const jobsAddedByUser = jobs.filter(
+        (job) => job.userId === userIdFromQueryParam
+      );
+      return NextResponse.json({ jobs: jobsAddedByUser }, { status: 200 });
+    } catch {
+      return NextResponse.json(
+        { error: "Unable to fetch jobs due to a network failure." },
+        { status: 500 }
+      );
+    }
   }
+  return NextResponse.json(
+    {
+      error:
+        "Unable to fetch jobs due to invalid query parameter(s). If you are trying to fetch all jobs, do not add any query parameters.",
+    },
+    { status: 401 }
+  );
+}
+
+export async function POST(request: NextRequest) {
+  console.log("in jobs post method");
+
+  const data: { jobTitle: string; jobDescription: string } =
+    await request.json();
+
+  console.log("data in jobs route");
+  console.log(data);
+
+  //get jobTitle and jobDescription
+
+  // const permissionStatusPromise = checkPermissions({
+  //   request,
+  //   accessTokenName: "jwt",
+  //   accessTokenSecret: "my-secret",
+  //   validUserRoles: ["USER"],
+  //   superAdmins: [],
+  // });
+  // const permissionStatus = await permissionStatusPromise;
+
+  const permissionStatus = "SUCCESS"; //To do: Remove. Just for testing.
+  const userId = "1"; //To do: Get userId from token - Just for testing.
+  if (permissionStatus !== "SUCCESS") {
+    return NextResponse.json({ error: "Error deleting job." }, { status: 401 });
+  }
+
+  try {
+    const response = await fetch("http://localhost:3001/jobs", {
+      // This is used in place of a database. There would be a database look-up here.
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId,
+        jobTitle: data.jobTitle,
+        jobDescription: data.jobDescription,
+      }),
+    });
+
+    await response.json();
+
+    revalidatePath("./");
+    return NextResponse.json({
+      message: `Added job ${data.jobTitle}`,
+      isError: false,
+    });
+  } catch {
+    console.log("in catch in jobs route");
+    revalidatePath("./");
+    return NextResponse.json({
+      message:
+        "Failed to create job due to an error. Please contact our support team.",
+      isError: true,
+    });
+  }
+}
+
+function GETCallback(
+  request: NextRequest,
+  accessTokenPayload: jose.JWTPayload
+) {
+  let permissionStatus;
+  if (
+    request.nextUrl.searchParams.get("userId") === null ||
+    request.nextUrl.searchParams.get("userId") === undefined
+  ) {
+    permissionStatus = "INVALID_QUERY_PARAMETER(S)";
+  } else if (
+    accessTokenPayload.id === request.nextUrl.searchParams.get("userId")
+  ) {
+    permissionStatus = "SUCCESS";
+  } else {
+    permissionStatus = "ACCESS_DENIED_INVALID_USER_ID";
+  }
+  return permissionStatus;
 }

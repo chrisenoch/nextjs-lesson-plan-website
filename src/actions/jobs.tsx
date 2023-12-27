@@ -89,23 +89,3 @@ export async function createJob(prevState: any, formData: FormData) {
     };
   }
 }
-
-// export async function deleteJob(prevState: any, formData: FormData) {
-//   const schema = z.object({
-//     id: z.string().min(1),
-//     job: z.string().min(1),
-//   });
-//   const data = schema.parse({
-//     id: formData.get("id"),
-//     job: formData.get("job"),
-//   });
-
-//   try {
-//     await delay(() => console.log("delete job completed"), 2000);
-
-//     revalidatePath("./");
-//     return { message: `Deleted job ${data.job}` };
-//   } catch (e) {
-//     return { message: "Failed to delete job" };
-//   }
-// }

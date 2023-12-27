@@ -22,27 +22,20 @@ import {
 } from "@/store";
 import { JobsPreview } from "./JobsPreview";
 import { SerializedError } from "@reduxjs/toolkit";
-import { fetchJobsByUserId } from "@/store/slices/with-thunks/jobs-slice";
+import {
+  addJobThunk,
+  fetchJobsByUserId,
+  selectAddJobThunkResponse,
+} from "@/store/slices/with-thunks/jobs-slice";
 import { UserInfo } from "@/models/types/UserInfo";
-
-const initialFormState: {
-  message: string | null;
-  isError: boolean;
-  emitter: any[] | null;
-  payload?: { jobTitle: string; jobDescription: string };
-} = {
-  message: null,
-  isError: false,
-  emitter: null,
-};
 
 export function AddJob() {
   console.log("add job rendered");
 
-  const [formStateWithServer, formAction] = useFormState(
-    createJob,
-    initialFormState
-  );
+  // const [formStateWithServer, formAction] = useFormState(
+  //   createJob,
+  //   initialFormState
+  // );
   const [showJobTitle, setShowJobTitle] = useState<boolean>(true);
   const [showJobDescription, setShowJobDescription] = useState<boolean>(true);
   const jobTitleRef = useRef<null | HTMLInputElement>(null);
@@ -67,20 +60,19 @@ export function AddJob() {
 
   const dispatch = useDispatch<AppDispatch>();
   const userInfo: null | UserInfo = useSelector(selectUserInfo);
+  const userInfoId = userInfo?.id;
+  const addJobResponse: null | {
+    message: string;
+    isError: boolean;
+  } = useSelector(selectAddJobThunkResponse);
+  console.log("addJobResponse");
+  console.log(addJobResponse);
+
   const jobsAddedByLoggedInUser:
     | { id: string; jobTitle: string; jobDescription: string }[]
     | undefined = useSelector(selectJobsByUserId);
-
-  console.log("jobsAddedByLoggedInUser ");
-  console.log(jobsAddedByLoggedInUser);
-  // const jobs:
-  //   | { id: string; jobTitle: string; jobDescription: string }[]
-  //   | undefined = useSelector(selectAllJobs);
-  // console.log("jobs selectAllJobs ");
-  // console.log(jobs);
   const jobsIsLoading: boolean = useSelector(selectJobsIsLoading);
   const jobsError: null | SerializedError = useSelector(selectJobsError);
-  const resultMessageFromServer = formStateWithServer?.message;
   const jobTitleIsValid = zodValidator(jobTitle, {
     jobTitle: jobTitleValidator,
   });
@@ -89,9 +81,10 @@ export function AddJob() {
   });
   const isFormValid = jobTitleIsValid && jobDescriptionIsValid;
 
-  const handleJobAdd = (job: { jobTitle: string; jobDescription: string }) => {
-    dispatch(addJob(job));
-  };
+  function handleSubmit(e) {
+    e.preventDefault();
+    dispatch(addJobThunk({ jobTitle, jobDescription }));
+  }
 
   function handleJobDelete(id: string) {
     dispatch(deleteJob(id));
@@ -99,34 +92,18 @@ export function AddJob() {
 
   useEffect(() => {
     if (userInfo) {
-      console.log("dispatching fetchJobsByUserId with userId: " + userInfo.id);
+      console.log("dispatching fetchJobsByUserId with userId: " + userInfoId);
       dispatch(fetchJobsByUserId(userInfo.id));
     }
-  }, [dispatch, userInfo]);
-
-  // Used as an observer. Runs everytime the form server action returns a response to the add-job form submission.
-  // formStateWithServer.emitter only changes when a form response arrives
-  // As I am using Redux, in reality I would add the job using an async thunk and not do this. However, I started off learning about NextJS server actions.
-  // I am adding the job to redux state when the job has successfully been added via the NextJS server action. I couldn't find a native way to listen
-  // to when the server action was complete so I chose this solution.
-  // I wouldn't do it like this though. I would use redux async thunks, like I did for the login page.
-  useEffect(() => {
-    console.log("in useEffect observer");
-    if (formStateWithServer.emitter === null) {
-      return;
-    }
-
-    if (!formStateWithServer.isError && formStateWithServer.payload) {
-      console.log("in useEffect observer - about to call handleJob()");
-      handleJobAdd(formStateWithServer.payload);
-    }
-  }, [formStateWithServer.emitter]);
+  }, [dispatch, userInfoId]);
 
   return (
     <Box
-      onSubmit={() => setAllToTouched()}
+      onSubmit={(e) => {
+        setAllToTouched();
+        handleSubmit(e);
+      }}
       component="form"
-      action={formAction}
       display={"flex"}
       flexDirection={"column"}
       gap={2}>
@@ -198,13 +175,13 @@ export function AddJob() {
       )}
 
       <SubmitButton formIsValid={isFormValid} />
-      {resultMessageFromServer && (
+      {addJobResponse?.message && (
         <Box
           component="p"
-          color={formStateWithServer.isError ? "error.main" : "success.main"}
+          color={addJobResponse?.isError ? "error.main" : "success.main"}
           aria-live="polite"
           role="status">
-          {resultMessageFromServer}
+          {addJobResponse.message}
         </Box>
       )}
       <JobsPreview
