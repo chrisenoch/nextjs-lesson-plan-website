@@ -17,7 +17,7 @@ const jobsSlice = createSlice({
     },
   },
   extraReducers(builder) {
-    //fetch jobs
+    //addJobThunk
     builder.addCase(addJobThunk.pending, (state) => {
       state.isLoading = true;
       state.addJobThunkError = null;
@@ -25,6 +25,11 @@ const jobsSlice = createSlice({
     builder.addCase(addJobThunk.fulfilled, (state, action) => {
       state.isLoading = false;
       state.addJobThunkResponse = action.payload;
+      console.log("addjobThunk payload action");
+      console.log(action);
+      state.jobsAddedByLoggedInUser.push(action.payload.job);
+      const { userId, ...jobWithNoUserId } = action.payload.job;
+      state.jobs.push(jobWithNoUserId);
     });
     builder.addCase(addJobThunk.rejected, (state, action) => {
       state.isLoading = false;

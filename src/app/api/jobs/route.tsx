@@ -77,11 +77,11 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   console.log("in jobs post method");
 
-  const data: { jobTitle: string; jobDescription: string } =
+  const postedData: { jobTitle: string; jobDescription: string } =
     await request.json();
 
   console.log("data in jobs route");
-  console.log(data);
+  console.log(postedData);
 
   //get jobTitle and jobDescription
 
@@ -109,17 +109,20 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify({
         userId,
-        jobTitle: data.jobTitle,
-        jobDescription: data.jobDescription,
+        jobTitle: postedData.jobTitle,
+        jobDescription: postedData.jobDescription,
       }),
     });
 
-    await response.json();
+    const job = await response.json();
+    console.log("addedJobData");
+    console.log(job);
 
     revalidatePath("./");
     return NextResponse.json({
-      message: `Added job ${data.jobTitle}`,
+      message: `Added job ${postedData.jobTitle}`,
       isError: false,
+      job,
     });
   } catch {
     console.log("in catch in jobs route");

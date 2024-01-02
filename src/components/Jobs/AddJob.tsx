@@ -68,9 +68,16 @@ export function AddJob() {
   console.log("addJobResponse");
   console.log(addJobResponse);
 
+  const jobsTest = useSelector(selectAllJobs);
   const jobsAddedByLoggedInUser:
     | { id: string; jobTitle: string; jobDescription: string }[]
     | undefined = useSelector(selectJobsByUserId);
+
+  console.log("jobs below");
+  console.log(jobsTest);
+  console.log("jobs by logegdinuser below");
+  console.log(jobsAddedByLoggedInUser);
+
   const jobsIsLoading: boolean = useSelector(selectJobsIsLoading);
   const jobsError: null | SerializedError = useSelector(selectJobsError);
   const jobTitleIsValid = zodValidator(jobTitle, {
