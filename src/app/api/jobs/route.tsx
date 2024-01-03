@@ -5,6 +5,7 @@ import {
   joseVerifyToken,
 } from "@/functions/auth/check-permissions";
 import { revalidatePath } from "next/cache";
+import { getAccessTokenInfo } from "@/functions/auth/get-access-token-info";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -31,29 +32,36 @@ export async function POST(request: NextRequest) {
   const postedData: { jobTitle: string; jobDescription: string } =
     await request.json();
 
-  console.log("data in jobs route");
-  console.log(postedData);
+  //check user is logged in
+  const permissionStatusPromise = checkPermissions({
+    request,
+    accessTokenName: "jwt",
+    accessTokenSecret: "my-secret",
+    validUserRoles: ["USER"],
+    superAdmins: ["ADMIN"],
+  });
+  const permissionStatus = await permissionStatusPromise;
 
-  //get jobTitle and jobDescription
-
-  // const permissionStatusPromise = checkPermissions({
-  //   request,
-  //   accessTokenName: "jwt",
-  //   accessTokenSecret: "my-secret",
-  //   validUserRoles: ["USER"],
-  //   superAdmins: [],
-  // });
-  // const permissionStatus = await permissionStatusPromise;
-
-  const permissionStatus = "SUCCESS"; //To do: Remove. Just for testing.
-  const userId = "1"; //To do: Get userId from token - Just for testing.
   if (permissionStatus !== "SUCCESS") {
-    return NextResponse.json({ error: "Error deleting job." }, { status: 401 });
+    return NextResponse.json({ error: "Error adding job." }, { status: 401 });
   }
 
+  //get userId
+  const accessTokenInfoPromise = getAccessTokenInfo({
+    request,
+    accessTokenName: "jwt",
+    accessTokenSecret: "my-secret",
+  });
+  const accessTokenInfo = await accessTokenInfoPromise;
+  if (!accessTokenInfo) {
+    return NextResponse.json({ error: "Error adding job." }, { status: 401 });
+  }
+  const userId = accessTokenInfo.id;
+
+  //Add to "database"
   try {
+    // This is used in place of a database.
     const response = await fetch("http://localhost:3001/jobs", {
-      // This is used in place of a database. There would be a database look-up here.
       method: "POST",
       headers: {
         "Content-Type": "application/json",
