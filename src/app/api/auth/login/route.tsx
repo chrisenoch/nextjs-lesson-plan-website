@@ -46,10 +46,13 @@ export async function POST(request: Request) {
       .setProtectedHeader({ alg: "HS256", typ: "JWT" })
       .setExpirationTime(accessTokenExpiry)
       .setIssuedAt()
-      .sign(new TextEncoder().encode("my-secret"));
+      .sign(new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET));
 
     accessToken = await accessTokenPromise;
-    const { payload } = await joseVerifyToken(accessToken, "my-secret");
+    const { payload } = await joseVerifyToken(
+      accessToken,
+      process.env.ACCESS_TOKEN_SECRET!
+    );
 
     jwtAccessTokenPayload = payload;
 
@@ -58,7 +61,7 @@ export async function POST(request: Request) {
       .setProtectedHeader({ alg: "HS256", typ: "JWT" })
       .setExpirationTime(refreshTokenExpiry)
       .setIssuedAt()
-      .sign(new TextEncoder().encode("another-secret"));
+      .sign(new TextEncoder().encode(process.env.REFRESH_TOKEN_SECRET));
 
     refreshToken = await refreshTokenPromise;
   }
@@ -74,17 +77,25 @@ export async function POST(request: Request) {
       },
       { status: 200 }
     );
-    nextResponse.cookies.set("jwt", accessToken, {
-      maxAge: accessTokenCookieExpiry,
-      httpOnly: true,
-      sameSite: "strict",
-    });
-    nextResponse.cookies.set("jwt-refresh", refreshToken, {
-      maxAge: refreshTokenCookieExpiry,
-      httpOnly: true,
-      sameSite: "strict",
-      path: "/api/auth/with-refresh", //Set the path so that the refresh token is not sent with every request. This reduces the possibility of it being stolen.
-    });
+    nextResponse.cookies.set(
+      process.env.ACCESS_TOKEN_COOKIE_NAME!,
+      accessToken,
+      {
+        maxAge: accessTokenCookieExpiry,
+        httpOnly: true,
+        sameSite: "strict",
+      }
+    );
+    nextResponse.cookies.set(
+      process.env.REFRESH_TOKEN_COOKIE_NAME!,
+      refreshToken,
+      {
+        maxAge: refreshTokenCookieExpiry,
+        httpOnly: true,
+        sameSite: "strict",
+        path: "/api/auth/with-refresh", //Set the path so that the refresh token is not sent with every request. This reduces the possibility of it being stolen.
+      }
+    );
     return nextResponse;
   } else {
     nextResponse = NextResponse.json(

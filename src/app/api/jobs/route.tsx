@@ -1,18 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import * as jose from "jose";
-import {
-  checkPermissions,
-  joseVerifyToken,
-} from "@/functions/auth/check-permissions";
-import { revalidatePath } from "next/cache";
+import { checkPermissions } from "@/functions/auth/check-permissions";
 import { getAccessTokenInfo } from "@/functions/auth/get-access-token-info";
-import { z } from "zod";
-import {
-  isAddJobValid,
-  jobDescriptionValidator,
-  jobTitleValidator,
-} from "@/app/validation/jobs/jobs-validators";
-import { zodValidator } from "@/app/validation/zod-validator";
+import { isAddJobValid } from "@/app/validation/jobs/jobs-validators";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -44,8 +33,8 @@ export async function POST(request: NextRequest) {
   //check user is logged in
   const permissionStatusPromise = checkPermissions({
     request,
-    accessTokenName: "jwt",
-    accessTokenSecret: "my-secret",
+    accessTokenName: process.env.ACCESS_TOKEN_COOKIE_NAME!,
+    accessTokenSecret: process.env.ACCESS_TOKEN_SECRET!,
     validUserRoles: ["USER"],
     superAdmins: ["ADMIN"],
   });
@@ -61,8 +50,8 @@ export async function POST(request: NextRequest) {
   //get userId
   const accessTokenInfoPromise = getAccessTokenInfo({
     request,
-    accessTokenName: "jwt",
-    accessTokenSecret: "my-secret",
+    accessTokenName: process.env.ACCESS_TOKEN_COOKIE_NAME!,
+    accessTokenSecret: process.env.ACCESS_TOKEN_SECRET!,
   });
   const accessTokenInfo = await accessTokenInfoPromise;
   if (!accessTokenInfo) {
@@ -136,15 +125,10 @@ export async function DELETE(request: NextRequest) {
   //get userId
   const accessTokenInfoPromise = getAccessTokenInfo({
     request,
-    accessTokenName: "jwt",
-    accessTokenSecret: "my-secret",
+    accessTokenName: process.env.ACCESS_TOKEN_COOKIE_NAME!,
+    accessTokenSecret: process.env.ACCESS_TOKEN_SECRET!,
   });
   const accessTokenInfo = await accessTokenInfoPromise;
-
-  console.log("accessTokeninfo");
-  console.log(accessTokenInfo);
-  console.log("jobToBeDeleted");
-  console.log(jobToBeDeleted);
 
   if (
     !accessTokenInfo ||

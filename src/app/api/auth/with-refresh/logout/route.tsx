@@ -13,8 +13,12 @@ export async function POST(request: NextRequest) {
     { message: "JWT access cookie and refresh cookie deleted" },
     { status: 200 }
   );
-  const isDeleted = nextResponse.cookies.delete("jwt");
-  const isRefreshDeleted = nextResponse.cookies.delete("jwt-refresh");
+  const isDeleted = nextResponse.cookies.delete(
+    process.env.ACCESS_TOKEN_COOKIE_NAME!
+  );
+  const isRefreshDeleted = nextResponse.cookies.delete(
+    process.env.REFRESH_TOKEN_COOKIE_NAME!
+  );
   if (isDeleted && isRefreshDeleted) {
     return nextResponse;
   } else if (isDeleted && !isRefreshDeleted) {

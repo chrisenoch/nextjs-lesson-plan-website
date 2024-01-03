@@ -259,11 +259,13 @@ function getUserRolesIfExist(accessTokenRole: string | null) {
 
 async function getAccessTokenRole(request: NextRequest) {
   let accessTokenRole = null;
-  const accessToken = request.cookies.get("jwt");
+  const accessToken = request.cookies.get(
+    process.env.ACCESS_TOKEN_COOKIE_NAME!
+  );
   if (accessToken) {
     const accessTokenRolePromise = extractRoleFromAccessToken(
       accessToken.value,
-      "my-secret"
+      process.env.ACCESS_TOKEN_SECRET!
     );
     accessTokenRole = await accessTokenRolePromise;
   }
