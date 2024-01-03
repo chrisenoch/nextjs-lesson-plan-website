@@ -20,7 +20,12 @@ const jobsSlice = createSlice({
     builder.addCase(addJob.fulfilled, (state, action) => {
       state.isLoading = false;
       state.addJobResponse = action.payload;
-      state.jobs.push(action.payload.job);
+      console.log("addJob fulfilled, action ");
+      console.log(action);
+
+      if (!action.payload.isError) {
+        state.jobs.push(action.payload.job);
+      }
     });
     builder.addCase(addJob.rejected, (state, action) => {
       state.isLoading = false;
@@ -114,7 +119,12 @@ export const selectJobsByUserId = (state, userId: string | undefined) => {
     return [];
   }
 
-  return state.jobsSlice.jobs.filter((job) => job.userId === userId);
+  return state.jobsSlice.jobs.filter((job) => {
+    console.log("job in filter method");
+    console.log(job);
+
+    return job.userId === userId;
+  });
 };
 
 export const selectJobsError = (state) => state.jobsSlice.error;

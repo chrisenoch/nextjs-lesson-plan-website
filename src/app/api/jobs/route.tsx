@@ -6,6 +6,11 @@ import {
 } from "@/functions/auth/check-permissions";
 import { revalidatePath } from "next/cache";
 import { getAccessTokenInfo } from "@/functions/auth/get-access-token-info";
+import { z } from "zod";
+import {
+  jobDescriptionValidator,
+  jobTitleValidator,
+} from "@/app/validation/jobs/jobs-validators";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -15,7 +20,7 @@ export async function GET(request: NextRequest) {
 
   //All users are granted GET access to all jobs
   try {
-    const data = await fetch("http://localhost:3001/jobs"); // This is used in place of a database. There would be a database look-up here.
+    const data = await fetch("http://localhost:3001/jobs"); // This is used in place of a database.
     const jobs = await data.json();
     return NextResponse.json({ jobs }, { status: 200 });
   } catch {
@@ -41,9 +46,12 @@ export async function POST(request: NextRequest) {
     superAdmins: ["ADMIN"],
   });
   const permissionStatus = await permissionStatusPromise;
-
   if (permissionStatus !== "SUCCESS") {
-    return NextResponse.json({ error: "Error adding job." }, { status: 401 });
+    return NextResponse.json({
+      message: "Error adding job.",
+      isError: true,
+      status: 401,
+    });
   }
 
   //get userId
@@ -54,11 +62,34 @@ export async function POST(request: NextRequest) {
   });
   const accessTokenInfo = await accessTokenInfoPromise;
   if (!accessTokenInfo) {
-    return NextResponse.json({ error: "Error adding job." }, { status: 401 });
+    return NextResponse.json({
+      message: "Error adding job.",
+      isError: true,
+      status: 401,
+    });
   }
   const userId = accessTokenInfo.id;
 
-  //Add to "database"
+  //validate user input
+  const schema = z.object({
+    jobTitle: jobTitleValidator,
+    jobDescription: jobDescriptionValidator,
+  });
+  const jobTitle = postedData.jobTitle;
+  const jobDescription = postedData.jobDescription;
+  const parse = schema.safeParse({
+    jobTitle,
+    jobDescription,
+  });
+  if (!parse.success) {
+    return NextResponse.json({
+      message: "Error adding job. The form input is not in the correct format.",
+      isError: true,
+      status: 400,
+    });
+  }
+
+  //add to "database"
   try {
     // This is used in place of a database.
     const response = await fetch("http://localhost:3001/jobs", {
@@ -80,6 +111,7 @@ export async function POST(request: NextRequest) {
       message: `Added job ${postedData.jobTitle}`,
       isError: false,
       job,
+      status: 200,
     });
   } catch {
     console.log("in catch in jobs route");
@@ -88,26 +120,7 @@ export async function POST(request: NextRequest) {
       message:
         "Failed to create job due to an error. Please contact our support team.",
       isError: true,
+      status: 500,
     });
   }
-}
-
-function GETCallback(
-  request: NextRequest,
-  accessTokenPayload: jose.JWTPayload
-) {
-  let permissionStatus;
-  if (
-    request.nextUrl.searchParams.get("userId") === null ||
-    request.nextUrl.searchParams.get("userId") === undefined
-  ) {
-    permissionStatus = "INVALID_QUERY_PARAMETER(S)";
-  } else if (
-    accessTokenPayload.id === request.nextUrl.searchParams.get("userId")
-  ) {
-    permissionStatus = "SUCCESS";
-  } else {
-    permissionStatus = "ACCESS_DENIED_INVALID_USER_ID";
-  }
-  return permissionStatus;
 }
