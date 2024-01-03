@@ -5,39 +5,31 @@ const jobsSlice = createSlice({
   name: "jobsSlice",
   initialState: {
     jobs: [],
-    jobsAddedByLoggedInUser: [],
-    addJobThunkError: null,
-    addJobThunkResponse: null,
+    addJobError: null,
+    addJobResponse: null,
     error: null,
     isLoading: true,
   },
-  reducers: {
-    addJob(state, action) {
-      state.jobs.push(action.payload);
-    },
-  },
+  reducers: {},
   extraReducers(builder) {
-    //addJobThunk
-    builder.addCase(addJobThunk.pending, (state) => {
+    //addJob
+    builder.addCase(addJob.pending, (state) => {
+      state.error = null;
       state.isLoading = true;
-      state.addJobThunkError = null;
     });
-    builder.addCase(addJobThunk.fulfilled, (state, action) => {
+    builder.addCase(addJob.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.addJobThunkResponse = action.payload;
-      console.log("addjobThunk payload action");
-      console.log(action);
-      state.jobsAddedByLoggedInUser.push(action.payload.job);
-      const { userId, ...jobWithNoUserId } = action.payload.job;
-      state.jobs.push(jobWithNoUserId);
+      state.addJobResponse = action.payload;
+      state.jobs.push(action.payload.job);
     });
-    builder.addCase(addJobThunk.rejected, (state, action) => {
+    builder.addCase(addJob.rejected, (state, action) => {
       state.isLoading = false;
-      state.addJobThunkError = action.error;
+      state.error = action.error;
     });
 
     //fetch jobs
     builder.addCase(fetchJobs.pending, (state) => {
+      state.error = null;
       state.isLoading = true;
     });
     builder.addCase(fetchJobs.fulfilled, (state, action) => {
@@ -49,21 +41,9 @@ const jobsSlice = createSlice({
       state.error = action.error;
     });
 
-    //fetch jobs by userId
-    builder.addCase(fetchJobsByUserId.pending, (state) => {
-      state.isLoading = true;
-    });
-    builder.addCase(fetchJobsByUserId.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.jobsAddedByLoggedInUser = action.payload;
-    });
-    builder.addCase(fetchJobsByUserId.rejected, (state, action) => {
-      state.isLoading = false;
-      state.error = action.error;
-    });
-
     //delete job
     builder.addCase(deleteJob.pending, (state) => {
+      state.error = null;
       state.isLoading = true;
     });
     builder.addCase(deleteJob.fulfilled, (state, action) => {
@@ -84,17 +64,6 @@ export const fetchJobs = createAsyncThunk("jobsSlice/fetchJobs", async () => {
   return payload.jobs;
 });
 
-export const fetchJobsByUserId = createAsyncThunk(
-  "jobsSlice/fetchJobsByUserId",
-  async (userId: string) => {
-    const response = await fetch(
-      `http://localhost:3000/api/jobs?userId=${userId}`
-    );
-    const payload = await response.json();
-    return payload.jobs;
-  }
-);
-
 export const deleteJob = createAsyncThunk(
   "jobsSlice/delete-job",
   async (id: string, { rejectWithValue, dispatch, getState }) => {
@@ -105,11 +74,6 @@ export const deleteJob = createAsyncThunk(
           "Content-Type": "application/json",
         },
       });
-      const stateInDeleteJobs = getState();
-      const userInfoId = stateInDeleteJobs.authSlice?.userInfo?.id;
-      if (userInfoId) {
-        await dispatch(fetchJobsByUserId(userInfoId));
-      }
 
       //const result = await response.json();
       return id;
@@ -119,11 +83,11 @@ export const deleteJob = createAsyncThunk(
   }
 );
 
-export const addJobThunk = createAsyncThunk(
+export const addJob = createAsyncThunk(
   "jobsSlice/add-job",
   async (
     data: { jobTitle: string; jobDescription: string },
-    { rejectWithValue, getState, dispatch }
+    { rejectWithValue }
   ) => {
     try {
       const response = await fetch("http://localhost:3000/api/jobs", {
@@ -134,14 +98,6 @@ export const addJobThunk = createAsyncThunk(
         body: JSON.stringify(data),
       });
       const result = await response.json();
-
-      // const stateInAddJobThunk = getState();
-      // const userInfoId = stateInAddJobThunk.authSlice?.userInfo?.id;
-      // if (userInfoId) {
-      //   await dispatch(fetchJobsByUserId(userInfoId));
-      // }
-      // await dispatch(fetchJobs());
-
       return result;
     } catch (error) {
       return rejectWithValue("Error: Unable to send request.");
@@ -149,12 +105,17 @@ export const addJobThunk = createAsyncThunk(
   }
 );
 
-export const { addJob } = jobsSlice.actions;
 export const jobsReducer = jobsSlice.reducer;
-export const selectAddJobThunkResponse = (state) =>
+export const selectAddJobResponse = (state) =>
   state.jobsSlice.addJobThunkResponse;
 export const selectAllJobs = (state) => state.jobsSlice.jobs;
-export const selectJobsByUserId = (state) =>
-  state.jobsSlice.jobsAddedByLoggedInUser;
+export const selectJobsByUserId = (state, userId: string | undefined) => {
+  if (userId === null || userId === undefined) {
+    return [];
+  }
+
+  return state.jobsSlice.jobs.filter((job) => job.userId === userId);
+};
+
 export const selectJobsError = (state) => state.jobsSlice.error;
 export const selectJobsIsLoading = (state) => state.jobsSlice.isLoading;

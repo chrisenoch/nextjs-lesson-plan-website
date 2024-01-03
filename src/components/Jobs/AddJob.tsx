@@ -18,24 +18,16 @@ import {
   selectJobsByUserId,
   selectJobsError,
   selectJobsIsLoading,
+  selectAddJobResponse,
   selectUserInfo,
 } from "@/store";
 import { JobsPreview } from "./JobsPreview";
 import { SerializedError } from "@reduxjs/toolkit";
-import {
-  addJobThunk,
-  fetchJobsByUserId,
-  selectAddJobThunkResponse,
-} from "@/store/slices/with-thunks/jobs-slice";
 import { UserInfo } from "@/models/types/UserInfo";
 
 export function AddJob() {
   console.log("add job rendered");
 
-  // const [formStateWithServer, formAction] = useFormState(
-  //   createJob,
-  //   initialFormState
-  // );
   const [showJobTitle, setShowJobTitle] = useState<boolean>(true);
   const [showJobDescription, setShowJobDescription] = useState<boolean>(true);
   const jobTitleRef = useRef<null | HTMLInputElement>(null);
@@ -64,19 +56,14 @@ export function AddJob() {
   const addJobResponse: null | {
     message: string;
     isError: boolean;
-  } = useSelector(selectAddJobThunkResponse);
-  console.log("addJobResponse");
-  console.log(addJobResponse);
+  } = useSelector(selectAddJobResponse);
 
-  const jobsTest = useSelector(selectAllJobs);
-  const jobsAddedByLoggedInUser:
-    | { id: string; jobTitle: string; jobDescription: string }[]
-    | undefined = useSelector(selectJobsByUserId);
+  const jobs:
+    | { id: string; jobTitle: string; jobDescription: string; userId: string }[]
+    | undefined = useSelector((state) => selectJobsByUserId(state, userInfoId));
 
   console.log("jobs below");
-  console.log(jobsTest);
-  console.log("jobs by logegdinuser below");
-  console.log(jobsAddedByLoggedInUser);
+  console.log(jobs);
 
   const jobsIsLoading: boolean = useSelector(selectJobsIsLoading);
   const jobsError: null | SerializedError = useSelector(selectJobsError);
@@ -90,19 +77,12 @@ export function AddJob() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    dispatch(addJobThunk({ jobTitle, jobDescription }));
+    dispatch(addJob({ jobTitle, jobDescription }));
   }
 
   function handleJobDelete(id: string) {
     dispatch(deleteJob(id));
   }
-
-  useEffect(() => {
-    if (userInfo) {
-      console.log("dispatching fetchJobsByUserId with userId: " + userInfoId);
-      dispatch(fetchJobsByUserId(userInfo.id));
-    }
-  }, [dispatch, userInfoId]);
 
   return (
     <Box
@@ -192,7 +172,7 @@ export function AddJob() {
         </Box>
       )}
       <JobsPreview
-        jobs={jobsAddedByLoggedInUser}
+        jobs={jobs}
         isLoading={jobsIsLoading}
         error={jobsError}
         handleJobDelete={handleJobDelete}></JobsPreview>

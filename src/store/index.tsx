@@ -1,15 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import {
   jobsReducer,
-  addJob,
   deleteJob,
   fetchJobs,
   selectAllJobs,
   selectJobsError,
   selectJobsIsLoading,
   selectJobsByUserId,
-  fetchJobsByUserId,
-  selectAddJobThunkResponse,
+  selectAddJobResponse,
+  addJob,
 } from "./slices/with-thunks/jobs-slice";
 import {
   authReducer,
@@ -39,12 +38,11 @@ export {
   addJob,
   deleteJob,
   fetchJobs,
-  fetchJobsByUserId,
   selectAllJobs,
   selectJobsByUserId,
   selectJobsError,
   selectJobsIsLoading,
-  selectAddJobThunkResponse,
+  selectAddJobResponse,
   userLogin,
   userLogout,
   reinitWasLastRefreshSuccessful,
