@@ -11,6 +11,7 @@ import {
   jobDescriptionValidator,
   jobTitleValidator,
 } from "@/app/validation/jobs/jobs-validators";
+import { zodValidator } from "@/app/validation/zod-validator";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -34,8 +35,6 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   console.log("in jobs post method");
 
-  // const postedData: { jobTitle: string; jobDescription: string } =
-  //   await request.json();
   const {
     jobTitle,
     jobDescription,
@@ -75,16 +74,15 @@ export async function POST(request: NextRequest) {
   const userId = accessTokenInfo.id;
 
   //validate user input
-  const schema = z.object({
+  const jobTitleIsValid = zodValidator(jobTitle, {
     jobTitle: jobTitleValidator,
+  });
+  const jobDescriptionIsValid = zodValidator(jobDescription, {
     jobDescription: jobDescriptionValidator,
   });
+  const isFormValid = jobTitleIsValid && jobDescriptionIsValid;
 
-  const parse = schema.safeParse({
-    jobTitle,
-    jobDescription,
-  });
-  if (!parse.success) {
+  if (!isFormValid) {
     return NextResponse.json({
       message: "Error adding job. The form input is not in the correct format.",
       isError: true,
