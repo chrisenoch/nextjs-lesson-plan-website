@@ -8,6 +8,7 @@ import { revalidatePath } from "next/cache";
 import { getAccessTokenInfo } from "@/functions/auth/get-access-token-info";
 import { z } from "zod";
 import {
+  isAddJobValid,
   jobDescriptionValidator,
   jobTitleValidator,
 } from "@/app/validation/jobs/jobs-validators";
@@ -73,15 +74,7 @@ export async function POST(request: NextRequest) {
   }
   const userId = accessTokenInfo.id;
 
-  //validate user input
-  const jobTitleIsValid = zodValidator(jobTitle, {
-    jobTitle: jobTitleValidator,
-  });
-  const jobDescriptionIsValid = zodValidator(jobDescription, {
-    jobDescription: jobDescriptionValidator,
-  });
-  const isFormValid = jobTitleIsValid && jobDescriptionIsValid;
-
+  const isFormValid = isAddJobValid(jobTitle, jobDescription);
   if (!isFormValid) {
     return NextResponse.json({
       message: "Error adding job. The form input is not in the correct format.",
@@ -107,7 +100,6 @@ export async function POST(request: NextRequest) {
 
     const job = await response.json();
 
-    revalidatePath("./");
     return NextResponse.json({
       message: `Added job ${jobTitle}`,
       isError: false,
@@ -116,7 +108,7 @@ export async function POST(request: NextRequest) {
     });
   } catch {
     console.log("in catch in jobs route");
-    revalidatePath("./");
+
     return NextResponse.json({
       message:
         "Failed to create job due to an error. Please contact our support team.",
