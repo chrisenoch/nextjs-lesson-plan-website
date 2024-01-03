@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as jose from "jose";
 import { joseVerifyToken } from "@/functions/auth/check-permissions";
-import { authTimeHelper } from "@/functions/auth/to-jwt-time";
+import { authTimeHelper } from "@/functions/auth/auth-time-helper";
+import { ACCESS_TOKEN_MINS, REFRESH_TOKEN_MINS } from "@/auth-config";
 
 // To do
 // CSRF protection with double-submit cookie method.
@@ -24,6 +25,14 @@ export async function GET(request: NextRequest) {
   let resp;
   if (accessToken && refreshToken) {
     try {
+      //Prepare the expiry times
+      const { jwtTime: accessTokenExpiry, seconds: accessTokenCookieExpiry } =
+        authTimeHelper({ minutes: ACCESS_TOKEN_MINS });
+
+      const { seconds: oldAccessTokenClockTolerance } = authTimeHelper({
+        minutes: REFRESH_TOKEN_MINS,
+      });
+
       // In this app, we want the user to be able to leave the website and come back to a logged-in session. Consequently, the accessToken can be expired here.
       // Alternatively, to ensure the user is logged out when the user navigates away, we could use the verify method here to ensure
       // an acive access token is needed to get a new access token.
@@ -31,7 +40,7 @@ export async function GET(request: NextRequest) {
       const { payload: oldAccessTokenPayload } = await jose.jwtVerify(
         accessToken.value,
         new TextEncoder().encode("my-secret"),
-        { clockTolerance: 604_800 } // 604_800 seconds = 1 week.
+        { clockTolerance: oldAccessTokenClockTolerance } // 604_800 seconds = 1 week.
       );
 
       const { payload: refreshTokenPayload } = await joseVerifyToken(
@@ -46,10 +55,6 @@ export async function GET(request: NextRequest) {
           { status: 401 }
         );
       }
-
-      //Prepare the expiry times
-      const { jwtTime: accessTokenExpiry, seconds: accessTokenCookieExpiry } =
-        authTimeHelper({ minutes: 1 });
 
       //erase iat and exp properties from the object
       const { iat, exp, ...rest } = oldAccessTokenPayload;

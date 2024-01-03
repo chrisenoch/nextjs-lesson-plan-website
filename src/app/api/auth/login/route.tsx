@@ -4,7 +4,8 @@ import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { UserRole } from "@/models/types/UserRole";
 import { joseVerifyToken } from "@/functions/auth/check-permissions";
-import { authTimeHelper } from "@/functions/auth/to-jwt-time";
+import { authTimeHelper } from "@/functions/auth/auth-time-helper";
+import { ACCESS_TOKEN_MINS, REFRESH_TOKEN_MINS } from "@/auth-config";
 //To do: change the userId to something that is harder to guess.
 
 export async function POST(request: Request) {
@@ -27,9 +28,9 @@ export async function POST(request: Request) {
 
   //Prepare the expiry times
   const { jwtTime: accessTokenExpiry, seconds: accessTokenCookieExpiry } =
-    authTimeHelper({ minutes: 1 });
+    authTimeHelper({ minutes: ACCESS_TOKEN_MINS });
   const { jwtTime: refreshTokenExpiry, seconds: refreshTokenCookieExpiry } =
-    authTimeHelper({ minutes: 2 });
+    authTimeHelper({ minutes: REFRESH_TOKEN_MINS });
 
   //In reality would do a database lookup here.
   if (res.email.toLowerCase() === "admin" && res.password === "admin") {

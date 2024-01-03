@@ -1,9 +1,2 @@
-// import { authTimeHelper } from "./functions/auth/to-jwt-time";
-
-// export const { jwtTime: accessTokenExpiry, seconds: accessTokenCookieExpiry } =
-//   authTimeHelper({ minutes: 1 });
-
-// export const {
-//   jwtTime: refreshTokenExpiry,
-//   seconds: refreshTokenCookieExpiry,
-// } = authTimeHelper({ minutes: 2 });
+export const ACCESS_TOKEN_MINS = 1;
+export const REFRESH_TOKEN_MINS = 2;
