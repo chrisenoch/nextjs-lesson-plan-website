@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import * as jose from "jose";
 import { joseVerifyToken } from "@/functions/auth/check-permissions";
 import { authTimeHelper } from "@/functions/auth/auth-time-helper";
-import { ACCESS_TOKEN_MINS, REFRESH_TOKEN_MINS } from "@/auth-config";
 
 // To do
 // CSRF protection with double-submit cookie method.
@@ -31,10 +30,10 @@ export async function GET(request: NextRequest) {
     try {
       //Prepare the expiry times
       const { jwtTime: accessTokenExpiry, seconds: accessTokenCookieExpiry } =
-        authTimeHelper({ minutes: ACCESS_TOKEN_MINS });
+        authTimeHelper({ minutes: parseInt(process.env.ACCESS_TOKEN_MINS!) });
 
       const { seconds: oldAccessTokenClockTolerance } = authTimeHelper({
-        minutes: REFRESH_TOKEN_MINS,
+        minutes: parseInt(process.env.REFRESH_TOKEN_MINS!),
       });
 
       // In this app, we want the user to be able to leave the website and come back to a logged-in session. Consequently, the accessToken can be expired here.
