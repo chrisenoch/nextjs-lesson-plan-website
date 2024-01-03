@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as jose from "jose";
 import { joseVerifyToken } from "@/functions/auth/check-permissions";
+import { authTimeHelper } from "@/functions/auth/to-jwt-time";
 
 // To do
 // CSRF protection with double-submit cookie method.
@@ -46,11 +47,16 @@ export async function GET(request: NextRequest) {
         );
       }
 
+      //Prepare the expiry times
+      const { jwtTime: accessTokenExpiry, seconds: accessTokenCookieExpiry } =
+        authTimeHelper({ minutes: 1 });
+
       //erase iat and exp properties from the object
       const { iat, exp, ...rest } = oldAccessTokenPayload;
+
       const newAccessTokenPromise = new jose.SignJWT({ ...rest })
         .setProtectedHeader({ alg: "HS256", typ: "JWT" })
-        .setExpirationTime(Math.floor(Date.now() / 1000) + 60 * 1) // 1 minute
+        .setExpirationTime(accessTokenExpiry)
         .setIssuedAt()
         .sign(new TextEncoder().encode("my-secret"));
 
@@ -67,7 +73,7 @@ export async function GET(request: NextRequest) {
       });
       resp.cookies.delete("jwt");
       resp.cookies.set("jwt", newAccessToken, {
-        maxAge: 60 * 60 * 24, //To do: Reduce this number?
+        maxAge: accessTokenCookieExpiry,
         httpOnly: true,
         sameSite: "strict",
       });

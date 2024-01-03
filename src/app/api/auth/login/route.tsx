@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { UserRole } from "@/models/types/UserRole";
 import { joseVerifyToken } from "@/functions/auth/check-permissions";
+import { authTimeHelper } from "@/functions/auth/to-jwt-time";
 //To do: change the userId to something that is harder to guess.
 
 export async function POST(request: Request) {
@@ -24,15 +25,14 @@ export async function POST(request: Request) {
   let jwtAccessTokenPayload;
   let nextResponse;
 
-  let accessTokenExp;
-  let refreshTokenExp;
+  //Prepare the expiry times
+  const { jwtTime: accessTokenExpiry, seconds: accessTokenCookieExpiry } =
+    authTimeHelper({ minutes: 1 });
+  const { jwtTime: refreshTokenExpiry, seconds: refreshTokenCookieExpiry } =
+    authTimeHelper({ minutes: 2 });
 
   //In reality would do a database lookup here.
   if (res.email.toLowerCase() === "admin" && res.password === "admin") {
-    //Prepare the expiry times
-    accessTokenExp = iat + 60 * 1; // 1 minute
-    refreshTokenExp = iat + 60 * 2; // 2 mins
-
     //Prepare jwt access token
     userDetailsPayload = {
       id: "1",
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
 
     accessTokenPromise = new jose.SignJWT({ ...userDetailsPayload })
       .setProtectedHeader({ alg: "HS256", typ: "JWT" })
-      .setExpirationTime(accessTokenExp)
+      .setExpirationTime(accessTokenExpiry)
       .setIssuedAt()
       .sign(new TextEncoder().encode("my-secret"));
 
@@ -52,23 +52,14 @@ export async function POST(request: Request) {
 
     jwtAccessTokenPayload = payload;
 
-    // accessToken = jwt.sign(userDetailsPayload, "my-secret", {
-    //   expiresIn: "5m",
-    // }); //returns the token
-    // jwtAccessTokenPayload = jwt.verify(accessToken, "my-secret") as JwtPayload;
-
     //Prepare jwt refresh token
     refreshTokenPromise = new jose.SignJWT({ ...userDetailsPayload })
       .setProtectedHeader({ alg: "HS256", typ: "JWT" })
-      .setExpirationTime(refreshTokenExp)
+      .setExpirationTime(refreshTokenExpiry)
       .setIssuedAt()
       .sign(new TextEncoder().encode("another-secret"));
 
     refreshToken = await refreshTokenPromise;
-
-    // refreshToken = jwt.sign(userDetailsPayload, "another-secret", {
-    //   expiresIn: "10m",
-    // }); //returns the token
   }
 
   //set cookie
@@ -83,12 +74,12 @@ export async function POST(request: Request) {
       { status: 200 }
     );
     nextResponse.cookies.set("jwt", accessToken, {
-      maxAge: 60 * 60 * 24, //To do: Reduce this number?
+      maxAge: accessTokenCookieExpiry,
       httpOnly: true,
       sameSite: "strict",
     });
     nextResponse.cookies.set("jwt-refresh", refreshToken, {
-      maxAge: 60 * 60 * 24, //To do: Reduce this number?
+      maxAge: refreshTokenCookieExpiry,
       httpOnly: true,
       sameSite: "strict",
       path: "/api/auth/with-refresh", //Set the path so that the refresh token is not sent with every request. This reduces the possibility of it being stolen.
