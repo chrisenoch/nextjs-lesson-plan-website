@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
 
   //All users are granted GET access to all jobs
   try {
-    const data = await fetch("http://localhost:3001/jobs"); // This is used in place of a database.
+    const data = await fetch("http://localhost:3001/jobs"); // Used in place of a database.
     const jobs = await data.json();
     return NextResponse.json({ jobs }, { status: 200 });
   } catch {
@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
 
   //add to "database"
   try {
-    // This is used in place of a database.
+    // Used in place of a database.
     const response = await fetch("http://localhost:3001/jobs", {
       method: "POST",
       headers: {
@@ -107,11 +107,77 @@ export async function POST(request: NextRequest) {
       status: 200,
     });
   } catch {
-    console.log("in catch in jobs route");
-
     return NextResponse.json({
       message:
         "Failed to create job due to an error. Please contact our support team.",
+      isError: true,
+      status: 500,
+    });
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  console.log("in jobs delete method");
+
+  const id = await request.json();
+  let jobToBeDeleted;
+  let jobData;
+  try {
+    jobData = await fetch(`http://localhost:3001/jobs/${id}`); // Used in place of a database.
+    jobToBeDeleted = await jobData.json();
+  } catch {
+    return NextResponse.json({
+      message: "Unable to delete job.",
+      isError: true,
+      status: 500,
+    });
+  }
+
+  //get userId
+  const accessTokenInfoPromise = getAccessTokenInfo({
+    request,
+    accessTokenName: "jwt",
+    accessTokenSecret: "my-secret",
+  });
+  const accessTokenInfo = await accessTokenInfoPromise;
+
+  console.log("accessTokeninfo");
+  console.log(accessTokenInfo);
+  console.log("jobToBeDeleted");
+  console.log(jobToBeDeleted);
+
+  if (
+    !accessTokenInfo ||
+    (accessTokenInfo.role !== "ADMIN" &&
+      accessTokenInfo.id !== jobToBeDeleted.userId)
+  ) {
+    return NextResponse.json({
+      message: "Unable to delete job. You may only delete jobs that you added.",
+      isError: true,
+      status: 403,
+    });
+  }
+
+  //delete job from "database"
+  try {
+    //used in place of a database
+    const response = await fetch(`http://localhost:3001/jobs/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    return NextResponse.json({
+      message: `Job deleted`,
+      isError: false,
+      id,
+      status: 200,
+    });
+  } catch (error) {
+    return NextResponse.json({
+      message:
+        "Failed to delete job due to an error. Please contact our support team.",
       isError: true,
       status: 500,
     });

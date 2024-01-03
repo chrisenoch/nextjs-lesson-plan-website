@@ -25,24 +25,6 @@
       "id": 8
     },
     {
-      "userId": "1",
-      "jobTitle": "user 1 job e",
-      "jobDescription": "user 1 job e",
-      "id": 14
-    },
-    {
-      "userId": "1",
-      "jobTitle": "user 1 job f",
-      "jobDescription": "user 1 job f",
-      "id": 15
-    },
-    {
-      "userId": "1",
-      "jobTitle": "user 1 job a",
-      "jobDescription": "user 1 job a",
-      "id": 16
-    },
-    {
       "userId": "2",
       "jobTitle": "hh",
       "jobDescription": "hh",
@@ -53,12 +35,6 @@
       "jobTitle": "ii",
       "jobDescription": "ii",
       "id": 3
-    },
-    {
-      "userId": "1",
-      "jobTitle": "aa",
-      "jobDescription": "aa",
-      "id": 17
     }
   ]
 }

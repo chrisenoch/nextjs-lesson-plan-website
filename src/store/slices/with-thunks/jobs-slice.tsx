@@ -20,8 +20,6 @@ const jobsSlice = createSlice({
     builder.addCase(addJob.fulfilled, (state, action) => {
       state.isLoading = false;
       state.addJobResponse = action.payload;
-      console.log("addJob fulfilled, action ");
-      console.log(action);
 
       if (!action.payload.isError) {
         state.jobs.push(action.payload.job);
@@ -53,8 +51,12 @@ const jobsSlice = createSlice({
     });
     builder.addCase(deleteJob.fulfilled, (state, action) => {
       state.isLoading = false;
-      const index = state.jobs.findIndex((job) => job.id === action.payload);
-      state.jobs.splice(index, 1);
+      if (action.payload.id) {
+        const index = state.jobs.findIndex(
+          (job) => job.id === action.payload.id
+        );
+        state.jobs.splice(index, 1);
+      }
     });
     builder.addCase(deleteJob.rejected, (state, action) => {
       state.isLoading = false;
@@ -71,17 +73,18 @@ export const fetchJobs = createAsyncThunk("jobsSlice/fetchJobs", async () => {
 
 export const deleteJob = createAsyncThunk(
   "jobsSlice/delete-job",
-  async (id: string, { rejectWithValue, dispatch, getState }) => {
+  async (id: string, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:3001/jobs/${id}`, {
+      const response = await fetch(`http://localhost:3000/api/jobs`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify(id),
       });
 
-      //const result = await response.json();
-      return id;
+      const result = await response.json();
+      return result;
     } catch (error) {
       return rejectWithValue("Error: Unable to delete job.");
     }
@@ -119,9 +122,6 @@ export const selectJobsByUserId = (state, userId: string | undefined) => {
   }
 
   return state.jobsSlice.jobs.filter((job) => {
-    console.log("job in filter method");
-    console.log(job);
-
     return job.userId === userId;
   });
 };
