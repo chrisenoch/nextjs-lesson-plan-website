@@ -111,8 +111,7 @@ export const addJob = createAsyncThunk(
 );
 
 export const jobsReducer = jobsSlice.reducer;
-export const selectAddJobResponse = (state) =>
-  state.jobsSlice.addJobThunkResponse;
+export const selectAddJobResponse = (state) => state.jobsSlice.addJobResponse;
 export const selectAllJobs = (state) => state.jobsSlice.jobs;
 export const selectJobsByUserId = (state, userId: string | undefined) => {
   if (userId === null || userId === undefined) {

@@ -75,6 +75,9 @@ export function AddJob() {
   });
   const isFormValid = jobTitleIsValid && jobDescriptionIsValid;
 
+  console.log("addJobResponse");
+  console.log(addJobResponse);
+
   function handleSubmit(e) {
     e.preventDefault();
     dispatch(addJob({ jobTitle, jobDescription }));
