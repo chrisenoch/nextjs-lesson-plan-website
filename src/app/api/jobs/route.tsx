@@ -34,8 +34,12 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   console.log("in jobs post method");
 
-  const postedData: { jobTitle: string; jobDescription: string } =
-    await request.json();
+  // const postedData: { jobTitle: string; jobDescription: string } =
+  //   await request.json();
+  const {
+    jobTitle,
+    jobDescription,
+  }: { jobTitle: string; jobDescription: string } = await request.json();
 
   //check user is logged in
   const permissionStatusPromise = checkPermissions({
@@ -75,8 +79,7 @@ export async function POST(request: NextRequest) {
     jobTitle: jobTitleValidator,
     jobDescription: jobDescriptionValidator,
   });
-  const jobTitle = postedData.jobTitle;
-  const jobDescription = postedData.jobDescription;
+
   const parse = schema.safeParse({
     jobTitle,
     jobDescription,
@@ -99,8 +102,8 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify({
         userId,
-        jobTitle: postedData.jobTitle,
-        jobDescription: postedData.jobDescription,
+        jobTitle,
+        jobDescription,
       }),
     });
 
@@ -108,7 +111,7 @@ export async function POST(request: NextRequest) {
 
     revalidatePath("./");
     return NextResponse.json({
-      message: `Added job ${postedData.jobTitle}`,
+      message: `Added job ${jobTitle}`,
       isError: false,
       job,
       status: 200,
