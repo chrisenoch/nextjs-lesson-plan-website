@@ -11,12 +11,22 @@ export async function GET(request: NextRequest) {
 
   //All users are granted GET access to all jobs
   try {
-    const data = await fetch("http://localhost:3001/jobs"); // Used in place of a database.
-    const jobs = await data.json();
-    return NextResponse.json({ jobs }, { status: 200 });
+    const response = await fetch("http://localhost:3001/jobs"); // Used in place of a database.
+    const jobs = await response.json();
+    return NextResponse.json(
+      {
+        message: `Successfully fetched jobs.`,
+        isError: false,
+        jobs,
+      },
+      { status: 200 }
+    );
   } catch {
     return NextResponse.json(
-      { error: "Unable to fetch jobs." },
+      {
+        message: "Unable to fetch jobs.",
+        isError: true,
+      },
       { status: 500 }
     );
   }
@@ -40,11 +50,13 @@ export async function POST(request: NextRequest) {
   });
   const permissionStatus = await permissionStatusPromise;
   if (permissionStatus !== "SUCCESS") {
-    return NextResponse.json({
-      message: "Error adding job.",
-      isError: true,
-      status: 401,
-    });
+    return NextResponse.json(
+      {
+        message: "Error adding job.",
+        isError: true,
+      },
+      { status: 401 }
+    );
   }
 
   //get userId
@@ -55,21 +67,26 @@ export async function POST(request: NextRequest) {
   });
   const accessTokenInfo = await accessTokenInfoPromise;
   if (!accessTokenInfo) {
-    return NextResponse.json({
-      message: "Error adding job.",
-      isError: true,
-      status: 401,
-    });
+    return NextResponse.json(
+      {
+        message: "Error adding job.",
+        isError: true,
+      },
+      { status: 401 }
+    );
   }
   const userId = accessTokenInfo.id;
 
   const isFormValid = isAddJobValid(jobTitle, jobDescription);
   if (!isFormValid) {
-    return NextResponse.json({
-      message: "Error adding job. The form input is not in the correct format.",
-      isError: true,
-      status: 400,
-    });
+    return NextResponse.json(
+      {
+        message:
+          "Error adding job. The form input is not in the correct format.",
+        isError: true,
+      },
+      { status: 400 }
+    );
   }
 
   //add to "database"
@@ -89,19 +106,23 @@ export async function POST(request: NextRequest) {
 
     const job = await response.json();
 
-    return NextResponse.json({
-      message: `Added job ${jobTitle}`,
-      isError: false,
-      job,
-      status: 200,
-    });
+    return NextResponse.json(
+      {
+        message: `Added job ${jobTitle}`,
+        isError: false,
+        job,
+      },
+      { status: 200 }
+    );
   } catch {
-    return NextResponse.json({
-      message:
-        "Failed to create job due to an error. Please contact our support team.",
-      isError: true,
-      status: 500,
-    });
+    return NextResponse.json(
+      {
+        message:
+          "Failed to create job due to an error. Please contact our support team.",
+        isError: true,
+      },
+      { status: 500 }
+    );
   }
 }
 

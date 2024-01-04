@@ -17,12 +17,12 @@ import { useDispatch, useSelector } from "react-redux";
 export function JobsPreview({
   jobs,
   isLoading,
-  error,
+  isError,
   handleJobDelete,
 }: {
   jobs: { id: string; jobTitle: string; jobDescription: string }[] | undefined;
   isLoading: boolean;
-  error: null | SerializedError;
+  isError: boolean;
   handleJobDelete: (id: string) => void;
 }) {
   const isHydrated = useHydrated();
@@ -55,7 +55,7 @@ export function JobsPreview({
       });
   return isLoading ? (
     "Loading ..."
-  ) : error ? (
+  ) : isError ? (
     "Error: There was a problem fetching the jobs. Please reload the page and try again."
   ) : (
     <div>{renderedJobs}</div>

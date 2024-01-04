@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  handleFulfilled,
+  handlePending,
+  handleRejected,
+} from "./thunk-helpers";
 
 const jobsSlice = createSlice({
   name: "jobsSlice",
@@ -35,15 +40,10 @@ const jobsSlice = createSlice({
   extraReducers(builder) {
     //addJob
     builder.addCase(addJob.pending, (state) => {
-      state.addJob.isError = false;
-      state.addJob.isLoading = true;
-      state.addJob.message = "";
-      state.addJob.statusCode = null;
+      handlePending("addJob", state);
     });
     builder.addCase(addJob.fulfilled, (state, action) => {
-      state.addJob.isLoading = false;
-      state.addJob.message = action.payload.message;
-      state.addJob.statusCode = action.payload.statusCode;
+      handleFulfilled("addJob", state, action);
 
       if (!action.payload.isError) {
         state.jobs.push(action.payload.job);
@@ -53,24 +53,29 @@ const jobsSlice = createSlice({
       }
     });
     builder.addCase(addJob.rejected, (state, action) => {
-      state.addJob.isError = true;
-      state.addJob.isLoading = false;
-      state.addJob.message = action.payload;
-      state.addJob.statusCode = 500;
+      handleRejected("addJob", state, action);
     });
 
     //fetch jobs
     builder.addCase(fetchJobs.pending, (state) => {
-      state.error = null;
-      state.isLoading = true;
+      handlePending("fetchJobs", state);
     });
     builder.addCase(fetchJobs.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.jobs = action.payload;
+      handleFulfilled("fetchJobs", state, action);
+      console.log("action in fulfilled fetchJobs");
+      console.log(action);
+
+      if (!action.payload.isError) {
+        console.log("in !action.payload.isError");
+        state.jobs = action.payload.jobs;
+        state.fetchJobs.isError = false;
+      } else {
+        console.log("in else");
+        state.fetchJobs.isError = true;
+      }
     });
     builder.addCase(fetchJobs.rejected, (state, action) => {
-      state.isLoading = false;
-      state.error = action.error;
+      handleRejected("fetchJobs", state, action);
     });
 
     //delete job
@@ -94,11 +99,18 @@ const jobsSlice = createSlice({
   },
 });
 
-export const fetchJobs = createAsyncThunk("jobsSlice/fetchJobs", async () => {
-  const response = await fetch(`http://localhost:3000/api/jobs`);
-  const payload = await response.json();
-  return payload.jobs;
-});
+export const fetchJobs = createAsyncThunk(
+  "jobsSlice/fetchJobs",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/jobs`);
+      const payload = await response.json();
+      return { ...payload, status: response.status };
+    } catch (error) {
+      return rejectWithValue("Error: Unable to send request.");
+    }
+  }
+);
 
 export const deleteJob = createAsyncThunk(
   "jobsSlice/delete-job",
@@ -115,7 +127,7 @@ export const deleteJob = createAsyncThunk(
       const result = await response.json();
       return result;
     } catch (error) {
-      return rejectWithValue("Error: Unable to delete job.");
+      return rejectWithValue("Error: Unable to send request.");
     }
   }
 );
@@ -134,8 +146,8 @@ export const addJob = createAsyncThunk(
         },
         body: JSON.stringify(data),
       });
-      const result = await response.json();
-      return result;
+      const payload = await response.json();
+      return { ...payload, status: response.status };
     } catch (error) {
       return rejectWithValue("Error: Unable to send request.");
     }
@@ -149,12 +161,13 @@ export const selectJobsByUserId = (state, userId: string | undefined) => {
     return [];
   }
 
+  console.log("state.jobsSlice");
+  console.log(state.jobsSlice);
+
   return state.jobsSlice.jobs.filter((job) => {
     return job.userId === userId;
   });
 };
 
-export const selectJobsError = (state) => state.jobsSlice.error;
-export const selectJobsIsLoading = (state) => state.jobsSlice.isLoading;
-
+export const selectFetchJobs = (state) => state.jobsSlice.fetchJobs;
 export const selectAddJob = (state) => state.jobsSlice.addJob;

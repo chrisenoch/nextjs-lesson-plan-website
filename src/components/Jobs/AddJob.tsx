@@ -1,8 +1,7 @@
 "use client";
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormStatus } from "react-dom";
 import { Box, TextField, Button, Stack } from "@mui/material";
-import { createJob } from "@/actions/jobs";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import useFormClientStatus from "@/customHooks/useFormClientStatus";
 import { zodValidator } from "@/app/validation/zod-validator";
 import {
@@ -14,15 +13,12 @@ import {
   AppDispatch,
   addJob,
   deleteJob,
-  selectAllJobs,
   selectJobsByUserId,
-  selectJobsError,
-  selectJobsIsLoading,
   selectUserInfo,
   selectAddJob,
+  selectFetchJobs,
 } from "@/store";
 import { JobsPreview } from "./JobsPreview";
-import { SerializedError } from "@reduxjs/toolkit";
 import { UserInfo } from "@/models/types/UserInfo";
 import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 
@@ -62,12 +58,19 @@ export function AddJob() {
     statusCode: null | number;
   } = useSelector(selectAddJob);
 
+  const fetchJobsInfo: {
+    isError: boolean;
+    isLoading: boolean;
+    message: string;
+    statusCode: null | number;
+  } = useSelector(selectFetchJobs);
+
+  console.log("fetchjobsinfo");
+  console.log(fetchJobsInfo);
+
   const jobs:
     | { id: string; jobTitle: string; jobDescription: string; userId: string }[]
     | undefined = useSelector((state) => selectJobsByUserId(state, userInfoId));
-
-  const jobsIsLoading: boolean = useSelector(selectJobsIsLoading);
-  const jobsError: null | SerializedError = useSelector(selectJobsError);
 
   const jobTitleIsValid = zodValidator(jobTitle, {
     jobTitle: jobTitleValidator,
@@ -175,8 +178,8 @@ export function AddJob() {
       )}
       <JobsPreview
         jobs={jobs}
-        isLoading={jobsIsLoading}
-        error={jobsError}
+        isLoading={fetchJobsInfo?.isLoading}
+        isError={fetchJobsInfo.isError}
         handleJobDelete={handleJobDelete}></JobsPreview>
     </Box>
   );
