@@ -24,9 +24,11 @@ import {
 import { JobsPreview } from "./JobsPreview";
 import { SerializedError } from "@reduxjs/toolkit";
 import { UserInfo } from "@/models/types/UserInfo";
+import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 
 export function AddJob() {
   console.log("add job rendered");
+  useRedirectWhenLoggedOut("/auth/signin");
 
   const [showJobTitle, setShowJobTitle] = useState<boolean>(true);
   const [showJobDescription, setShowJobDescription] = useState<boolean>(true);

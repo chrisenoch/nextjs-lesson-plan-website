@@ -14,20 +14,11 @@ import {
   Typography,
 } from "@mui/material";
 import FloatingId from "@/components/FloatingId";
+import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 
 export default function LessonPlansPage() {
   console.log("LessonPlansPageContent rendered");
-  const { userInfo } = useSelector((state) => state.authSlice);
-  const [isFirstRender, setIsFirstRender] = useState<boolean>(true);
-
-  useEffect(() => {
-    if (isFirstRender) {
-      setIsFirstRender(false);
-    }
-    if (!userInfo && !isFirstRender) {
-      redirect("/auth/signin");
-    }
-  }, [userInfo]);
+  useRedirectWhenLoggedOut("/auth/signin");
 
   let activeIntersection = useScrollSpy([
     "summary",
@@ -39,11 +30,6 @@ export default function LessonPlansPage() {
     "feedback",
     "plenary",
   ]);
-
-  //let activeIntersection: string = "testing";
-
-  console.log("activeIntersection ");
-  console.log(activeIntersection);
 
   return (
     <Stack
