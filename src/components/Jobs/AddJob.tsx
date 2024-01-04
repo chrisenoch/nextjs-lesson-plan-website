@@ -18,8 +18,8 @@ import {
   selectJobsByUserId,
   selectJobsError,
   selectJobsIsLoading,
-  selectAddJobResponse,
   selectUserInfo,
+  selectAddJob,
 } from "@/store";
 import { JobsPreview } from "./JobsPreview";
 import { SerializedError } from "@reduxjs/toolkit";
@@ -55,10 +55,12 @@ export function AddJob() {
   const dispatch = useDispatch<AppDispatch>();
   const userInfo: null | UserInfo = useSelector(selectUserInfo);
   const userInfoId = userInfo?.id;
-  const addJobResponse: null | {
-    message: string;
+  const addJobInfo: null | {
     isError: boolean;
-  } = useSelector(selectAddJobResponse);
+    isLoading: boolean;
+    message: string;
+    statusCode: null | number;
+  } = useSelector(selectAddJob);
 
   const jobs:
     | { id: string; jobTitle: string; jobDescription: string; userId: string }[]
@@ -162,13 +164,13 @@ export function AddJob() {
       )}
 
       <SubmitButton formIsValid={isFormValid} />
-      {addJobResponse?.message && (
+      {addJobInfo?.message && (
         <Box
           component="p"
-          color={addJobResponse?.isError ? "error.main" : "success.main"}
+          color={addJobInfo?.isError ? "error.main" : "success.main"}
           aria-live="polite"
           role="status">
-          {addJobResponse.message}
+          {addJobInfo?.message}
         </Box>
       )}
       <JobsPreview

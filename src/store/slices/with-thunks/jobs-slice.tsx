@@ -5,6 +5,27 @@ const jobsSlice = createSlice({
   name: "jobsSlice",
   initialState: {
     jobs: [],
+
+    addJob: {
+      isError: false,
+      isLoading: true,
+      message: "",
+      statusCode: null,
+    },
+
+    fetchJobs: {
+      isError: false,
+      isLoading: true,
+      message: "",
+      statusCode: null,
+    },
+    deleteJob: {
+      isError: false,
+      isLoading: true,
+      message: "",
+      statusCode: null,
+    },
+
     addJobError: null,
     addJobResponse: null,
     error: null,
@@ -14,20 +35,28 @@ const jobsSlice = createSlice({
   extraReducers(builder) {
     //addJob
     builder.addCase(addJob.pending, (state) => {
-      state.error = null;
-      state.isLoading = true;
+      state.addJob.isError = false;
+      state.addJob.isLoading = true;
+      state.addJob.message = "";
+      state.addJob.statusCode = null;
     });
     builder.addCase(addJob.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.addJobResponse = action.payload;
+      state.addJob.isLoading = false;
+      state.addJob.message = action.payload.message;
+      state.addJob.statusCode = action.payload.statusCode;
 
       if (!action.payload.isError) {
         state.jobs.push(action.payload.job);
+        state.addJob.isError = false;
+      } else {
+        state.addJob.isError = true;
       }
     });
     builder.addCase(addJob.rejected, (state, action) => {
-      state.isLoading = false;
-      state.error = action.error;
+      state.addJob.isError = true;
+      state.addJob.isLoading = false;
+      state.addJob.message = action.payload;
+      state.addJob.statusCode = 500;
     });
 
     //fetch jobs
@@ -114,7 +143,6 @@ export const addJob = createAsyncThunk(
 );
 
 export const jobsReducer = jobsSlice.reducer;
-export const selectAddJobResponse = (state) => state.jobsSlice.addJobResponse;
 export const selectAllJobs = (state) => state.jobsSlice.jobs;
 export const selectJobsByUserId = (state, userId: string | undefined) => {
   if (userId === null || userId === undefined) {
@@ -128,3 +156,5 @@ export const selectJobsByUserId = (state, userId: string | undefined) => {
 
 export const selectJobsError = (state) => state.jobsSlice.error;
 export const selectJobsIsLoading = (state) => state.jobsSlice.isLoading;
+
+export const selectAddJob = (state) => state.jobsSlice.addJob;
