@@ -62,15 +62,11 @@ const jobsSlice = createSlice({
     });
     builder.addCase(fetchJobs.fulfilled, (state, action) => {
       handleFulfilled("fetchJobs", state, action);
-      console.log("action in fulfilled fetchJobs");
-      console.log(action);
 
       if (!action.payload.isError) {
-        console.log("in !action.payload.isError");
         state.jobs = action.payload.jobs;
         state.fetchJobs.isError = false;
       } else {
-        console.log("in else");
         state.fetchJobs.isError = true;
       }
     });
@@ -80,21 +76,22 @@ const jobsSlice = createSlice({
 
     //delete job
     builder.addCase(deleteJob.pending, (state) => {
-      state.error = null;
-      state.isLoading = true;
+      handlePending("deleteJob", state);
     });
     builder.addCase(deleteJob.fulfilled, (state, action) => {
-      state.isLoading = false;
-      if (action.payload.id) {
+      handleFulfilled("deleteJob", state, action);
+      if (!action.payload.isError) {
+        state.deleteJob.isError = false;
         const index = state.jobs.findIndex(
           (job) => job.id === action.payload.id
         );
         state.jobs.splice(index, 1);
+      } else {
+        state.deleteJob.isError = true;
       }
     });
     builder.addCase(deleteJob.rejected, (state, action) => {
-      state.isLoading = false;
-      state.error = action.error;
+      handleRejected("deleteJob", state, action);
     });
   },
 });
@@ -124,8 +121,10 @@ export const deleteJob = createAsyncThunk(
         body: JSON.stringify(id),
       });
 
-      const result = await response.json();
-      return result;
+      // const result = await response.json();
+      // return result;
+      const payload = await response.json();
+      return { ...payload, status: response.status };
     } catch (error) {
       return rejectWithValue("Error: Unable to send request.");
     }

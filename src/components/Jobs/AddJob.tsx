@@ -17,6 +17,7 @@ import {
   selectUserInfo,
   selectAddJob,
   selectFetchJobs,
+  selectAllJobs,
 } from "@/store";
 import { JobsPreview } from "./JobsPreview";
 import { UserInfo } from "@/models/types/UserInfo";
@@ -64,9 +65,6 @@ export function AddJob() {
     message: string;
     statusCode: null | number;
   } = useSelector(selectFetchJobs);
-
-  console.log("fetchjobsinfo");
-  console.log(fetchJobsInfo);
 
   const jobs:
     | { id: string; jobTitle: string; jobDescription: string; userId: string }[]

@@ -103,9 +103,7 @@ export async function POST(request: NextRequest) {
         jobDescription,
       }),
     });
-
     const job = await response.json();
-
     return NextResponse.json(
       {
         message: `Added job ${jobTitle}`,
@@ -136,11 +134,13 @@ export async function DELETE(request: NextRequest) {
     jobData = await fetch(`http://localhost:3001/jobs/${id}`); // Used in place of a database.
     jobToBeDeleted = await jobData.json();
   } catch {
-    return NextResponse.json({
-      message: "Unable to delete job.",
-      isError: true,
-      status: 500,
-    });
+    return NextResponse.json(
+      {
+        message: "Unable to delete job.",
+        isError: true,
+      },
+      { status: 500 }
+    );
   }
 
   //get userId
@@ -156,11 +156,14 @@ export async function DELETE(request: NextRequest) {
     (accessTokenInfo.role !== "ADMIN" &&
       accessTokenInfo.id !== jobToBeDeleted.userId)
   ) {
-    return NextResponse.json({
-      message: "Unable to delete job. You may only delete jobs that you added.",
-      isError: true,
-      status: 403,
-    });
+    return NextResponse.json(
+      {
+        message:
+          "Unable to delete job. You may only delete jobs that you added.",
+        isError: true,
+      },
+      { status: 403 }
+    );
   }
 
   //delete job from "database"
@@ -173,18 +176,22 @@ export async function DELETE(request: NextRequest) {
       },
     });
 
-    return NextResponse.json({
-      message: `Job deleted`,
-      isError: false,
-      id,
-      status: 200,
-    });
+    return NextResponse.json(
+      {
+        message: `Job deleted`,
+        isError: false,
+        id,
+      },
+      { status: 200 }
+    );
   } catch (error) {
-    return NextResponse.json({
-      message:
-        "Failed to delete job due to an error. Please contact our support team.",
-      isError: true,
-      status: 500,
-    });
+    return NextResponse.json(
+      {
+        message:
+          "Failed to delete job due to an error. Please contact our support team.",
+        isError: true,
+      },
+      { status: 500 }
+    );
   }
 }

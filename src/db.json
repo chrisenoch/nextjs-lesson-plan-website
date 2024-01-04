@@ -38,27 +38,9 @@
     },
     {
       "userId": "1",
-      "jobTitle": "ss",
-      "jobDescription": "ss",
-      "id": 12
-    },
-    {
-      "userId": "1",
-      "jobTitle": "tt",
-      "jobDescription": "tt",
-      "id": 14
-    },
-    {
-      "userId": "1",
-      "jobTitle": "yy",
-      "jobDescription": "yy",
-      "id": 16
-    },
-    {
-      "userId": "1",
-      "jobTitle": "cc",
-      "jobDescription": "cc",
-      "id": 17
+      "jobTitle": "aa",
+      "jobDescription": "aa",
+      "id": 9
     }
   ]
 }
