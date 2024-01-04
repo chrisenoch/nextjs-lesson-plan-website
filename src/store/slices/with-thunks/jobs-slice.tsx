@@ -85,7 +85,9 @@ const jobsSlice = createSlice({
         const index = state.jobs.findIndex(
           (job) => job.id === action.payload.id
         );
-        state.jobs.splice(index, 1);
+        if (index !== -1) {
+          state.jobs.splice(index, 1);
+        }
       } else {
         state.deleteJob.isError = true;
       }
