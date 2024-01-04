@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSelector, createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   handleFulfilled,
@@ -30,11 +30,6 @@ const jobsSlice = createSlice({
       message: "",
       statusCode: null,
     },
-
-    addJobError: null,
-    addJobResponse: null,
-    error: null,
-    isLoading: true,
   },
   reducers: {},
   extraReducers(builder) {
@@ -122,9 +117,6 @@ export const deleteJob = createAsyncThunk(
         },
         body: JSON.stringify(id),
       });
-
-      // const result = await response.json();
-      // return result;
       const payload = await response.json();
       return { ...payload, status: response.status };
     } catch (error) {
@@ -157,18 +149,15 @@ export const addJob = createAsyncThunk(
 
 export const jobsReducer = jobsSlice.reducer;
 export const selectAllJobs = (state) => state.jobsSlice.jobs;
-export const selectJobsByUserId = (state, userId: string | undefined) => {
-  if (userId === null || userId === undefined) {
-    return [];
+export const selectJobsByUserId = createSelector(
+  [(state) => state.jobsSlice.jobs, (state) => state.authSlice.userInfo?.id],
+  (jobs, userId) => {
+    if (userId === null || userId === undefined) {
+      return [];
+    }
+    return jobs.filter((job) => job.userId === userId);
   }
-
-  console.log("state.jobsSlice");
-  console.log(state.jobsSlice);
-
-  return state.jobsSlice.jobs.filter((job) => {
-    return job.userId === userId;
-  });
-};
+);
 
 export const selectFetchJobs = (state) => state.jobsSlice.fetchJobs;
 export const selectAddJob = (state) => state.jobsSlice.addJob;

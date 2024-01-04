@@ -17,7 +17,6 @@ import {
   selectUserInfo,
   selectAddJob,
   selectFetchJobs,
-  selectAllJobs,
 } from "@/store";
 import { JobsPreview } from "./JobsPreview";
 import { UserInfo } from "@/models/types/UserInfo";
@@ -50,8 +49,6 @@ export function AddJob() {
   } = useFormClientStatus(inputRefs);
 
   const dispatch = useDispatch<AppDispatch>();
-  const userInfo: null | UserInfo = useSelector(selectUserInfo);
-  const userInfoId = userInfo?.id;
   const addJobInfo: null | {
     isError: boolean;
     isLoading: boolean;
@@ -68,7 +65,7 @@ export function AddJob() {
 
   const jobs:
     | { id: string; jobTitle: string; jobDescription: string; userId: string }[]
-    | undefined = useSelector((state) => selectJobsByUserId(state, userInfoId));
+    | undefined = useSelector(selectJobsByUserId);
 
   const jobTitleIsValid = zodValidator(jobTitle, {
     jobTitle: jobTitleValidator,
