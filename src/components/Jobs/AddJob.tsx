@@ -17,15 +17,11 @@ import {
   selectUserInfo,
   selectAddJob,
   selectFetchJobs,
-  updatePathnameCallbacks,
 } from "@/store";
 import { JobsPreview } from "./JobsPreview";
-import { UserInfo } from "@/models/types/UserInfo";
 import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
-import { usePathname } from "next/navigation";
 import useClearFormOnSuccess from "@/customHooks/useClearFormOnSuccess";
-import { callbacks } from "@/store/slices/with-thunks/nav-slice";
-import useDeleteErrorOnNavAway from "@/customHooks/useDeleteErrorOnNavAway";
+import useHideMessageOnNavAway from "@/customHooks/useHideMessageOnNavAway";
 
 export function AddJob() {
   console.log("add job rendered");
@@ -69,8 +65,8 @@ export function AddJob() {
   } = useSelector(selectFetchJobs);
 
   useClearFormOnSuccess(addJobInfo, clearForm);
-  const errorTest = useDeleteErrorOnNavAway(addJobInfo);
-  console.log("errorTest " + errorTest);
+  const shouldHideMessage = useHideMessageOnNavAway(addJobInfo);
+  console.log("shouldHideMessage " + shouldHideMessage);
 
   // const pathname = usePathname();
   // function hey() {
@@ -185,13 +181,13 @@ export function AddJob() {
       )}
 
       <SubmitButton formIsValid={isFormValid} />
-      {addJobInfo?.message && (
+      {!shouldHideMessage && addJobInfo?.message && (
         <Box
           component="p"
           color={addJobInfo?.isError ? "error.main" : "success.main"}
           aria-live="polite"
           role="status">
-          {addJobInfo?.message}
+          {!shouldHideMessage && addJobInfo?.message}
         </Box>
       )}
       <JobsPreview

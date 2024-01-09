@@ -22,17 +22,11 @@ import {
   getAccessTokenWithRefreshTokenOnAppMount,
 } from "./slices/with-thunks/auth-thunks";
 import { dbAPISlice } from "./slices/with-rtk-query/api/db-api-slice";
-import {
-  navReducer,
-  updatePathname,
-  updatePathnameCallbacks,
-} from "./slices/with-thunks/nav-slice";
 
 const store = configureStore({
   reducer: {
     jobsSlice: jobsReducer,
     authSlice: authReducer,
-    navSlice: navReducer,
     [dbAPISlice.reducerPath]: dbAPISlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -55,7 +49,5 @@ export {
   getAccessTokenWithRefreshToken,
   getAccessTokenWithRefreshTokenOnAppMount,
   selectUserInfo,
-  updatePathname,
-  updatePathnameCallbacks,
 };
 export type AppDispatch = typeof store.dispatch;
