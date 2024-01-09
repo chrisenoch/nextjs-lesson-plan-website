@@ -26,12 +26,15 @@ import {
   AppDispatch,
   userLogout,
   getAccessTokenWithRefreshTokenOnAppMount,
+  initPathnames,
+  updatePathname,
 } from "@/store";
 
 import useAutoLogoutWhenJwtTokenExpires from "@/customHooks/useAutoLogoutWhenJwtTokenExpires";
 import { LogoutWarning } from "./auth/LogoutWarning";
 import SecureNextLink from "./SecureNextLink";
 import InsecureNextLink from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function ResponsiveAppBar({
   DRAWER_WIDTH,
@@ -47,6 +50,18 @@ export default function ResponsiveAppBar({
     hasAutoLoggedOut: boolean;
   }>(renderModal);
   const [showLogoutWarning, setShowLogoutWarning] = useState<boolean>(false);
+
+  const pathname = usePathname();
+  console.log("pathname in ResponsiveAppBar: " + pathname);
+
+  // //To do: eaxtract this to a hook
+  // useEffect(() => {
+  //   dispatch(initPathnames(pathname));
+  // }, [dispatch]);
+  //To do: eaxtract this to a hook
+  // useEffect(() => {
+  //   dispatch(updatePathname(pathname));
+  // }, [dispatch, pathname]);
 
   //Avoids using an effect and saves a render.
   if (renderModal !== previousRenderModal) {

@@ -17,12 +17,15 @@ import {
   selectUserInfo,
   selectAddJob,
   selectFetchJobs,
+  updatePathnameCallbacks,
 } from "@/store";
 import { JobsPreview } from "./JobsPreview";
 import { UserInfo } from "@/models/types/UserInfo";
 import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 import { usePathname } from "next/navigation";
 import useClearFormOnSuccess from "@/customHooks/useClearFormOnSuccess";
+import { callbacks } from "@/store/slices/with-thunks/nav-slice";
+import useDeleteErrorOnNavAway from "@/customHooks/useDeleteErrorOnNavAway";
 
 export function AddJob() {
   console.log("add job rendered");
@@ -65,12 +68,17 @@ export function AddJob() {
     statusCode: null | number;
   } = useSelector(selectFetchJobs);
 
-  function clearForm() {
-    setJobTitle("");
-    setJobDescription("");
-    resetAll();
-  }
   useClearFormOnSuccess(addJobInfo, clearForm);
+  const errorTest = useDeleteErrorOnNavAway(addJobInfo);
+  console.log("errorTest " + errorTest);
+
+  // const pathname = usePathname();
+  // function hey() {
+  //   console.log("print on pathChange");
+  // }
+  // useEffect(() => {
+  //   callbacks.set(pathname, hey);
+  // }, [pathname]);
 
   const jobs:
     | { id: string; jobTitle: string; jobDescription: string; userId: string }[]
@@ -91,6 +99,12 @@ export function AddJob() {
 
   function handleJobDelete(id: string) {
     dispatch(deleteJob(id));
+  }
+
+  function clearForm() {
+    setJobTitle("");
+    setJobDescription("");
+    resetAll();
   }
 
   return (
