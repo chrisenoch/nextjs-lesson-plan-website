@@ -13,5 +13,5 @@ export default function useRedirectWhenLoggedOut(redirectTo: string) {
     if (!userInfo && !isFirstRender) {
       redirect(redirectTo);
     }
-  }, [userInfo]);
+  }, [isFirstRender, redirectTo, userInfo]);
 }
