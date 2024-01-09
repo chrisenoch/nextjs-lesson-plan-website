@@ -37,6 +37,10 @@ export default function useFormClientStatus(
 
   //manage event listeners. Should run every render.
   useEffect(() => {
+    const refsListenersToCleanUp = refsListeners.current; //As far as I understand, if we use
+    //refsListeners.current in the return cleanup function, the return function will close over
+    //refsListeners.current and then it could become stale.
+
     //ensures only starts to run after the second render as during
     //the first render elementsStatus should be equal to null.
     if (elementsStatus !== null) {
@@ -86,8 +90,11 @@ export default function useFormClientStatus(
     }
 
     return () => {
+      // if (elementsStatus) {
+      //   removeEventListeners(refsListeners.current);
+      // } //Changed due to ESLint warning.
       if (elementsStatus) {
-        removeEventListeners(refsListeners.current);
+        removeEventListeners(refsListenersToCleanUp);
       }
     };
   });

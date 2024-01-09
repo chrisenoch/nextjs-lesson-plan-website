@@ -114,12 +114,6 @@ export function AddJob() {
           ResetAll
         </Button>
         <Button
-          onClick={() => resetAllTwo()}
-          variant="contained"
-          color="primary">
-          ResetAll
-        </Button>
-        <Button
           onClick={() => resetElement("jobTitle")}
           variant="contained"
           color="primary">
