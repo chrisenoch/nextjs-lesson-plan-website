@@ -80,7 +80,7 @@ export default function useIntersectionObserver(
         }
       });
     };
-  }, []);
+  }, [rootMargin, targetElementIds]);
 
   return intersectingStatus;
 }
