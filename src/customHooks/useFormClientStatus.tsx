@@ -33,7 +33,7 @@ export default function useFormClientStatus(
   //create the elementStatusObjects. Run useeffect once to init the objects for each ref.
   useEffect(() => {
     initAllElements(inputRefsToTrack, setElementsStatus, refsListeners);
-  }, []);
+  }, [inputRefsToTrack]);
 
   //manage event listeners. Should run every render.
   useEffect(() => {
@@ -114,7 +114,19 @@ export default function useFormClientStatus(
   }
 
   function resetAll() {
-    initAllElements(inputRefsToTrack, setElementsStatus, refsListeners);
+    const nextElementsStatus = new Map(elementsStatus);
+    elementsStatus?.forEach((status, id) => {
+      if (status) {
+        const newStatus = {
+          ...status,
+          isTouched: false,
+          hasBeenFocused: false,
+        };
+
+        nextElementsStatus.set(id, newStatus);
+        setElementsStatus(nextElementsStatus);
+      }
+    });
   }
 
   function setAllToTouched() {
@@ -163,7 +175,7 @@ function initAllElements(
       ref: MutableRefObject<HTMLInputElement | null>;
     } = {
       eventListeners: [],
-      ref, //ref is null here because at first the element is not int he dom
+      ref, //ref is null here because at first the element is not in the dom
     };
     if (refsListeners.current) {
       refsListeners.current.set(id, listeners);

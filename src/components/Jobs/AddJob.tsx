@@ -78,6 +78,9 @@ export function AddJob() {
   function handleSubmit(e) {
     e.preventDefault();
     dispatch(addJob({ jobTitle, jobDescription }));
+    setJobTitle("");
+    setJobDescription("");
+    resetAll();
   }
 
   function handleJobDelete(id: string) {
@@ -108,6 +111,12 @@ export function AddJob() {
           Show Job description
         </Button>
         <Button onClick={() => resetAll()} variant="contained" color="primary">
+          ResetAll
+        </Button>
+        <Button
+          onClick={() => resetAllTwo()}
+          variant="contained"
+          color="primary">
           ResetAll
         </Button>
         <Button
