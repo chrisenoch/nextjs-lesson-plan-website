@@ -22,6 +22,7 @@ import { JobsPreview } from "./JobsPreview";
 import { UserInfo } from "@/models/types/UserInfo";
 import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 import { usePathname } from "next/navigation";
+import useClearFormOnSuccess from "@/customHooks/useClearFormOnSuccess";
 
 export function AddJob() {
   console.log("add job rendered");
@@ -57,28 +58,19 @@ export function AddJob() {
     statusCode: null | number;
   } = useSelector(selectAddJob);
 
-  const [previousAddjobInfo, setPreviousAddJobInfo] = useState<null | {
-    isError: boolean;
-    isLoading: boolean;
-    message: string;
-    statusCode: null | number;
-  }>(addJobInfo);
-
-  if (addJobInfo !== previousAddjobInfo && !addJobInfo?.isLoading) {
-    if (!addJobInfo?.isError) {
-      setJobTitle("");
-      setJobDescription("");
-      resetAll();
-    }
-    setPreviousAddJobInfo(addJobInfo);
-  }
-
   const fetchJobsInfo: {
     isError: boolean;
     isLoading: boolean;
     message: string;
     statusCode: null | number;
   } = useSelector(selectFetchJobs);
+
+  function clearForm() {
+    setJobTitle("");
+    setJobDescription("");
+    resetAll();
+  }
+  useClearFormOnSuccess(addJobInfo, clearForm);
 
   const jobs:
     | { id: string; jobTitle: string; jobDescription: string; userId: string }[]
