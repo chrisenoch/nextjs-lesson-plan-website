@@ -8,22 +8,17 @@ import {
 import { UserRole } from "@/models/types/UserRole";
 import { UserInfo } from "@/models/types/UserInfo";
 
+//TO DO: Reorganise this file in the same format as jobs-slice
 const initialState: {
   isLoading: boolean;
   userInfo: UserInfo | null;
   wasLastRefreshSuccessful: boolean | null;
-  loginError: string | null;
-  logoutError: string | null;
-  checkAuthenticatedError: string | null;
-  refreshTokenError: string | null;
+  error: string | null;
 } = {
   isLoading: true,
   userInfo: null,
   wasLastRefreshSuccessful: null,
-  loginError: null,
-  logoutError: null,
-  checkAuthenticatedError: null,
-  refreshTokenError: null,
+  error: null,
 };
 
 const authSlice = createSlice({
@@ -38,7 +33,7 @@ const authSlice = createSlice({
     //Login user
     builder.addCase(userLogin.pending, (state) => {
       state.isLoading = true;
-      state.loginError = null;
+      state.error = null;
     });
     builder.addCase(userLogin.fulfilled, (state, action) => {
       state.isLoading = false;
@@ -48,12 +43,12 @@ const authSlice = createSlice({
       console.log("login rejected, action.payload below ");
       console.log(action.payload);
       state.isLoading = false;
-      state.loginError = action.payload;
+      state.error = action.payload;
     });
     //Logout user
     builder.addCase(userLogout.pending, (state) => {
       state.isLoading = true;
-      state.logoutError = null;
+      state.error = null;
     });
     builder.addCase(userLogout.fulfilled, (state) => {
       state.isLoading = false;
@@ -61,14 +56,14 @@ const authSlice = createSlice({
     });
     builder.addCase(userLogout.rejected, (state, action) => {
       state.isLoading = false;
-      state.logoutError = action.payload;
+      state.error = action.payload;
     });
     //Get access token with refresh token in the background.
     //Do not change isLoading for any getAccessTokenWithRefreshToken case. The access token being updated should happen
     //invisibly and should not be reflected in the UI.
     builder.addCase(getAccessTokenWithRefreshToken.pending, (state) => {
       //Do not set isLoading.
-      state.refreshTokenError = null;
+      state.error = null;
       state.wasLastRefreshSuccessful = null;
     });
     builder.addCase(
@@ -83,7 +78,7 @@ const authSlice = createSlice({
       getAccessTokenWithRefreshToken.rejected,
       (state, action) => {
         //Do not set isLoading.
-        state.refreshTokenError = action.payload;
+        state.error = action.payload;
       }
     );
     //Send refresh token on app mount. In this case, we DO want to show the loading state
@@ -91,7 +86,7 @@ const authSlice = createSlice({
       getAccessTokenWithRefreshTokenOnAppMount.pending,
       (state) => {
         state.isLoading = true;
-        state.refreshTokenError = null;
+        state.error = null;
         state.wasLastRefreshSuccessful = null;
       }
     );
@@ -106,7 +101,7 @@ const authSlice = createSlice({
       getAccessTokenWithRefreshTokenOnAppMount.rejected,
       (state, action) => {
         state.isLoading = false;
-        state.refreshTokenError = action.payload;
+        state.error = action.payload;
       }
     );
 
