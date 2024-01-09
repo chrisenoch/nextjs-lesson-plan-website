@@ -1,14 +1,12 @@
 "use client";
 import { AppDispatch, userLogin } from "@/store";
 import { Box, TextField, Button, Stack } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { redirect } from "next/navigation";
 
 export function SignIn() {
-  const { isLoading, userInfo, error } = useSelector(
-    (state) => state.authSlice
-  );
+  const { userInfo, error } = useSelector((state) => state.authSlice);
   const dispatch = useDispatch<AppDispatch>();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");

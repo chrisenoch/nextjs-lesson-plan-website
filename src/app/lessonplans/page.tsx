@@ -1,8 +1,5 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import { redirect } from "next/navigation";
 import useScrollSpy from "@/customHooks/useScrollSpy";
 import {
   Grid,

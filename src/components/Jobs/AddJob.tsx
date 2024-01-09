@@ -32,6 +32,7 @@ export function AddJob() {
   const jobDescriptionRef = useRef<null | HTMLInputElement>(null);
   const [jobTitle, setJobTitle] = useState<string>("");
   const [jobDescription, setJobDescription] = useState<string>("");
+  const clearFieldsUponAddJobSuccess = useRef<boolean>(false);
 
   const inputRefs = useMemo(
     () =>
@@ -56,6 +57,22 @@ export function AddJob() {
     statusCode: null | number;
   } = useSelector(selectAddJob);
 
+  const [previousAddjobInfo, setPreviousAddJobInfo] = useState<null | {
+    isError: boolean;
+    isLoading: boolean;
+    message: string;
+    statusCode: null | number;
+  }>(addJobInfo);
+
+  if (addJobInfo !== previousAddjobInfo && !addJobInfo?.isLoading) {
+    if (!addJobInfo?.isError) {
+      setJobTitle("");
+      setJobDescription("");
+      resetAll();
+    }
+    setPreviousAddJobInfo(addJobInfo);
+  }
+
   const fetchJobsInfo: {
     isError: boolean;
     isLoading: boolean;
@@ -78,9 +95,6 @@ export function AddJob() {
   function handleSubmit(e) {
     e.preventDefault();
     dispatch(addJob({ jobTitle, jobDescription }));
-    setJobTitle("");
-    setJobDescription("");
-    resetAll();
   }
 
   function handleJobDelete(id: string) {

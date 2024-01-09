@@ -1,23 +1,19 @@
 "use client";
-import { faker } from "@faker-js/faker";
-import { useFormState, useFormStatus } from "react-dom";
+
+import { useFormStatus } from "react-dom";
 import { Box, TextField, Button, Stack } from "@mui/material";
-import { createJob } from "@/actions/jobs";
-import { useEffect, useMemo, useRef, useState } from "react";
+
+import { useMemo, useRef, useState } from "react";
 import useFormClientStatus from "@/customHooks/useFormClientStatus";
 import { zodValidator } from "@/app/validation/zod-validator";
 import {
   jobDescriptionValidator,
   jobTitleValidator,
 } from "@/app/validation/jobs/jobs-validators";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, addJob, fetchJobs } from "@/store";
-import { JobsPreview } from "./JobsPreview";
-import { selectAllJobs } from "@/store/slices/with-thunks/jobs-slice";
 import {
   useAddNewJobMutation,
   useGetJobsQuery,
-} from "@/store/slices/with-rtk-query/api/internal-api-slice";
+} from "@/store/slices/with-rtk-query/api/db-api-slice";
 import { JobsPreviewRTKQuery } from "./JobsPreviewRTKQuery";
 
 const initialFormState: {
