@@ -38,15 +38,9 @@
     },
     {
       "userId": "1",
-      "jobTitle": "cc",
-      "jobDescription": "cc",
-      "id": 11
-    },
-    {
-      "userId": "1",
       "jobTitle": "aa",
       "jobDescription": "aa",
-      "id": 12
+      "id": 13
     }
   ]
 }
