@@ -1,17 +1,17 @@
+import { selectLogoutCount } from "@/store/slices/with-thunks/auth-slice";
 import { redirect } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
 export default function useRedirectWhenLoggedOut(redirectTo: string) {
-  const [isFirstRender, setIsFirstRender] = useState<boolean>(true);
-  const { userInfo } = useSelector((state) => state.authSlice);
+  const logoutCount = useSelector(selectLogoutCount);
+  const [previousLogoutCount, setPreviousLogoutCount] =
+    useState<number>(logoutCount);
 
   useEffect(() => {
-    if (isFirstRender) {
-      setIsFirstRender(false);
-    }
-    if (!userInfo && !isFirstRender) {
+    if (previousLogoutCount !== logoutCount) {
+      setPreviousLogoutCount(logoutCount);
       redirect(redirectTo);
     }
-  }, [isFirstRender, redirectTo, userInfo]);
+  }, [logoutCount, previousLogoutCount, redirectTo]);
 }

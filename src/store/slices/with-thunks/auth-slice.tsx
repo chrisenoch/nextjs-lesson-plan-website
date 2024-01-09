@@ -14,11 +14,13 @@ const initialState: {
   userInfo: UserInfo | null;
   wasLastRefreshSuccessful: boolean | null;
   error: string | null;
+  logoutCount: number;
 } = {
   isLoading: true,
   userInfo: null,
   wasLastRefreshSuccessful: null,
   error: null,
+  logoutCount: 0,
 };
 
 const authSlice = createSlice({
@@ -27,6 +29,9 @@ const authSlice = createSlice({
   reducers: {
     reinitWasLastRefreshSuccessful(state) {
       state.wasLastRefreshSuccessful = null;
+    },
+    increaseLogoutCount(state) {
+      state.logoutCount = state.logoutCount + 1;
     },
   },
   extraReducers(builder) {
@@ -142,6 +147,8 @@ function setUserInfoFromLoggedInStatus(action, state) {
   }
 }
 
-export const { reinitWasLastRefreshSuccessful } = authSlice.actions;
+export const { reinitWasLastRefreshSuccessful, increaseLogoutCount } =
+  authSlice.actions;
 export const authReducer = authSlice.reducer;
 export const selectUserInfo = (state) => state.authSlice.userInfo;
+export const selectLogoutCount = (state) => state.authSlice.logoutCount;

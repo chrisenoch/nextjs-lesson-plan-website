@@ -1,7 +1,7 @@
 "use client";
 import { useFormStatus } from "react-dom";
 import { Box, TextField, Button, Stack } from "@mui/material";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import useFormClientStatus from "@/customHooks/useFormClientStatus";
 import { zodValidator } from "@/app/validation/zod-validator";
 import {
@@ -21,6 +21,7 @@ import {
 import { JobsPreview } from "./JobsPreview";
 import { UserInfo } from "@/models/types/UserInfo";
 import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
+import { usePathname } from "next/navigation";
 
 export function AddJob() {
   console.log("add job rendered");
@@ -32,7 +33,6 @@ export function AddJob() {
   const jobDescriptionRef = useRef<null | HTMLInputElement>(null);
   const [jobTitle, setJobTitle] = useState<string>("");
   const [jobDescription, setJobDescription] = useState<string>("");
-  const clearFieldsUponAddJobSuccess = useRef<boolean>(false);
 
   const inputRefs = useMemo(
     () =>

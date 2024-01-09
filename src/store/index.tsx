@@ -11,6 +11,7 @@ import {
 } from "./slices/with-thunks/jobs-slice";
 import {
   authReducer,
+  increaseLogoutCount,
   reinitWasLastRefreshSuccessful,
   selectUserInfo,
 } from "./slices/with-thunks/auth-slice";
@@ -44,6 +45,7 @@ export {
   userLogin,
   userLogout,
   reinitWasLastRefreshSuccessful,
+  increaseLogoutCount,
   getAccessTokenWithRefreshToken,
   getAccessTokenWithRefreshTokenOnAppMount,
   selectUserInfo,

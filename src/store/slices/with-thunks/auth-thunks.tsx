@@ -1,4 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { increaseLogoutCount } from "./auth-slice";
 
 const API_URL = "http://localhost:3000/api";
 
@@ -24,7 +25,7 @@ export const userLogin = createAsyncThunk(
 
 export const userLogout = createAsyncThunk(
   "authSlice/logout",
-  async (_: void, { rejectWithValue }) => {
+  async (_: void, { rejectWithValue, dispatch }) => {
     try {
       const response = await fetch(`${API_URL}/auth/with-refresh/logout`, {
         method: "POST",
@@ -34,6 +35,9 @@ export const userLogout = createAsyncThunk(
         //body: JSON.stringify({shouldLogout:true}),
       });
       const result = await response.json();
+
+      dispatch(increaseLogoutCount());
+
       //If successful, http-only cookie with jwt token will have been deleted on the server
       return result;
     } catch (error) {
