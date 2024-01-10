@@ -28,7 +28,7 @@ export function SignIn() {
   }
 
   // Ensure that  previously authenticated users can’t access this page.
-  if (userInfo?.isLoggedIn) {
+  if (userInfo) {
     redirect("/");
   }
 

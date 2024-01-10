@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
       //Should stop User A's refresh token being used to get a new access token for User B.
       if (oldAccessTokenPayload.id !== refreshTokenPayload.id) {
         resp = NextResponse.json(
-          { message: "Refresh failure.", isError: true, isLoggedIn: false },
+          { message: "Refresh failure.", isError: true },
           { status: 401 }
         );
       }
@@ -80,7 +80,6 @@ export async function GET(request: NextRequest) {
           ...jwtAccessTokenPayload,
           message: "Refresh success.",
           isError: false,
-          isLoggedIn: true,
         },
         { status: 200 }
       );
@@ -94,14 +93,14 @@ export async function GET(request: NextRequest) {
       //Invalid jwt token.
       console.log("in catch refresh endpoint");
       resp = NextResponse.json(
-        { message: "Refresh failure", isError: true, isLoggedIn: false }, //To do: Change this error message
+        { message: "Refresh failure", isError: true }, //To do: Change this error message
         { status: 401 }
       );
     }
   } else {
     //Missing jwt token.
     resp = NextResponse.json(
-      { message: "Refresh failure", isError: true, isLoggedIn: false },
+      { message: "Refresh failure", isError: true },
       { status: 401 }
     );
   }

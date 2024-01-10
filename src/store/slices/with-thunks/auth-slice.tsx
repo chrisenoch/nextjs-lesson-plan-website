@@ -179,7 +179,7 @@ const authSlice = createSlice({
 });
 
 function handleRefreshState(action, state) {
-  if (action.payload.isLoggedIn) {
+  if (!action.payload.isError) {
     const { message, status, isError, ...userInfo } = action.payload;
     state.userInfo = userInfo;
     state.wasLastRefreshSuccessful = true;
@@ -191,7 +191,7 @@ function handleRefreshState(action, state) {
 
 function setUserInfoFromLoggedInStatus(action, state) {
   console.log("in setUserInfoFromLoggedInStatus");
-  if (action.payload.isLoggedIn) {
+  if (!action.payload.isError) {
     const { message, status, isError, ...userInfo } = action.payload;
     state.userInfo = userInfo;
   } else {

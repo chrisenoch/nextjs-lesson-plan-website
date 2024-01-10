@@ -72,7 +72,6 @@ export async function POST(request: Request) {
         ...userDetailsPayload,
         iat: jwtAccessTokenPayload!.iat,
         exp: jwtAccessTokenPayload!.exp,
-        isLoggedIn: true,
         message: "Login success",
         isError: false,
       },
@@ -103,7 +102,6 @@ export async function POST(request: Request) {
       {
         message: "Either the email or password is incorrect.",
         isError: true,
-        isLoggedIn: false,
       },
       { status: 401 }
     );
