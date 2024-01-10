@@ -8,7 +8,14 @@ import {
   jobTitleValidator,
 } from "@/app/validation/jobs/jobs-validators";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, addJob, selectAddJob } from "@/store";
+import {
+  AppDispatch,
+  addJob,
+  deleteJob,
+  selectAddJob,
+  selectFetchJobs,
+  selectJobsByUserId,
+} from "@/store";
 import { JobsPreview } from "./JobsPreview";
 import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 import useClearFormOnSuccess from "@/customHooks/useClearFormOnSuccess";
@@ -46,6 +53,17 @@ export function AddJob() {
     statusCode: null | number;
   } = useSelector(selectAddJob);
 
+  const fetchJobsInfo: {
+    isError: boolean;
+    isLoading: boolean;
+    message: string;
+    statusCode: null | number;
+  } = useSelector(selectFetchJobs);
+
+  const jobs:
+    | { id: string; jobTitle: string; jobDescription: string; userId: string }[]
+    | undefined = useSelector(selectJobsByUserId);
+
   useClearFormOnSuccess(addJobInfo, clearForm);
   const shouldHideMessage = useHideMessageOnNavAway(addJobInfo);
 
@@ -63,15 +81,15 @@ export function AddJob() {
     dispatch(addJob({ jobTitle, jobDescription }));
   }
 
+  function handleJobDelete(id: string) {
+    dispatch(deleteJob(id));
+  }
+
   function clearForm() {
     setJobTitle("");
     setJobDescription("");
     resetAll();
   }
-  console.log("addJobInfo");
-  console.log(addJobInfo);
-  console.log("isLoading");
-  console.log(addJobInfo?.isLoading);
 
   return (
     <Box
@@ -138,9 +156,11 @@ export function AddJob() {
           {!shouldHideMessage && addJobInfo?.message}
         </Box>
       )}
-      <ShowOnHydrate>
-        <JobsPreview />
-      </ShowOnHydrate>
+      <JobsPreview
+        jobs={jobs}
+        isLoading={fetchJobsInfo?.isLoading}
+        isError={fetchJobsInfo.isError}
+        handleJobDelete={handleJobDelete}></JobsPreview>
     </Box>
   );
 }
