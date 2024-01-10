@@ -1,34 +1,36 @@
 "use client";
 
-import { useHydrated } from "@/customHooks/useHydrated";
+import {
+  selectFetchJobs,
+  selectJobsByUserId,
+  deleteJob,
+  AppDispatch,
+} from "@/store";
 import { Delete } from "@mui/icons-material";
 import {
   Card,
   CardContent,
   Typography,
-  CardActions,
-  Button,
   CardHeader,
   IconButton,
 } from "@mui/material";
-import { SerializedError } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 
-export function JobsPreview({
-  jobs,
-  isLoading,
-  isError,
-  handleJobDelete,
-}: {
-  jobs: { id: string; jobTitle: string; jobDescription: string }[] | undefined;
-  isLoading: boolean;
-  isError: boolean;
-  handleJobDelete: (id: string) => void;
-}) {
-  const isHydrated = useHydrated();
+export function JobsPreview() {
+  const dispatch = useDispatch<AppDispatch>();
+  const fetchJobsInfo: {
+    isError: boolean;
+    isLoading: boolean;
+    message: string;
+    statusCode: null | number;
+  } = useSelector(selectFetchJobs);
 
-  if (!isHydrated) {
-    return "Loading ...";
+  const jobs:
+    | { id: string; jobTitle: string; jobDescription: string; userId: string }[]
+    | undefined = useSelector(selectJobsByUserId);
+
+  function handleJobDelete(id: string) {
+    dispatch(deleteJob(id));
   }
 
   //To do: Turn the jobs into links
@@ -53,9 +55,9 @@ export function JobsPreview({
           </Card>
         );
       });
-  return isLoading ? (
+  return fetchJobsInfo.isLoading ? (
     "Loading ..."
-  ) : isError ? (
+  ) : fetchJobsInfo.isError ? (
     "Error: There was a problem fetching the jobs. Please reload the page and try again."
   ) : (
     <div>{renderedJobs}</div>

@@ -57,19 +57,8 @@ export function AddJob() {
     statusCode: null | number;
   } = useSelector(selectAddJob);
 
-  const fetchJobsInfo: {
-    isError: boolean;
-    isLoading: boolean;
-    message: string;
-    statusCode: null | number;
-  } = useSelector(selectFetchJobs);
-
   useClearFormOnSuccess(addJobInfo, clearForm);
   const shouldHideMessage = useHideMessageOnNavAway(addJobInfo);
-
-  const jobs:
-    | { id: string; jobTitle: string; jobDescription: string; userId: string }[]
-    | undefined = useSelector(selectJobsByUserId);
 
   const jobTitleIsValid = zodValidator(jobTitle, {
     jobTitle: jobTitleValidator,
@@ -82,10 +71,6 @@ export function AddJob() {
   function handleSubmit(e) {
     e.preventDefault();
     dispatch(addJob({ jobTitle, jobDescription }));
-  }
-
-  function handleJobDelete(id: string) {
-    dispatch(deleteJob(id));
   }
 
   function clearForm() {
@@ -181,11 +166,7 @@ export function AddJob() {
           {!shouldHideMessage && addJobInfo?.message}
         </Box>
       )}
-      <JobsPreview
-        jobs={jobs}
-        isLoading={fetchJobsInfo?.isLoading}
-        isError={fetchJobsInfo.isError}
-        handleJobDelete={handleJobDelete}></JobsPreview>
+      <JobsPreview />
     </Box>
   );
 }
