@@ -14,9 +14,13 @@ export const userLogin = createAsyncThunk(
         },
         body: JSON.stringify(data),
       });
-      const result = await response.json();
+
+      const payload = await response.json();
       //If successful, http-only cookie with jwt token will have been set on the server
-      return result;
+      return { ...payload, status: response.status };
+      // const result = await response.json();
+      // //If successful, http-only cookie with jwt token will have been set on the server
+      // return result;
     } catch (error) {
       return rejectWithValue("Error: Unable to send request.");
     }

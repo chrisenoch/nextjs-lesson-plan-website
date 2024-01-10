@@ -7,6 +7,11 @@ import {
 } from "./auth-thunks";
 import { UserRole } from "@/models/types/UserRole";
 import { UserInfo } from "@/models/types/UserInfo";
+import {
+  handleFulfilled,
+  handlePending,
+  handleRejected,
+} from "./thunk-helpers";
 
 //TO DO: Reorganise this file in the same format as jobs-slice
 const initialState: {
@@ -15,12 +20,26 @@ const initialState: {
   wasLastRefreshSuccessful: boolean | null;
   error: string | null;
   logoutCount: number;
+
+  userLogin: {
+    isError: boolean;
+    isLoading: boolean;
+    message: string;
+    statusCode: null | number;
+  };
 } = {
   isLoading: true,
   userInfo: null,
   wasLastRefreshSuccessful: null,
   error: null,
   logoutCount: 0,
+
+  userLogin: {
+    isError: false,
+    isLoading: false,
+    message: "",
+    statusCode: null,
+  },
 };
 
 const authSlice = createSlice({
@@ -37,22 +56,27 @@ const authSlice = createSlice({
   extraReducers(builder) {
     //Login user
     builder.addCase(userLogin.pending, (state) => {
-      state.isLoading = true;
-      state.error = null;
+      handlePending("userLogin", state);
+      // state.isLoading = true;
+      // state.error = null;
     });
     builder.addCase(userLogin.fulfilled, (state, action) => {
-      state.isLoading = false;
+      handleFulfilled("userLogin", state, action);
       setUserInfoFromLoggedInStatus(action, state);
 
-      if (action.payload.error) {
-        state.error = action.payload.error;
+      console.log("action in userLogin fulfilled");
+      console.log(action);
+
+      if (action.payload.isError) {
+        state.error = action.payload.message;
       }
     });
     builder.addCase(userLogin.rejected, (state, action) => {
       console.log("login rejected, action.payload below ");
       console.log(action.payload);
-      state.isLoading = false;
-      state.error = action.payload;
+      handleRejected("userLogin", state, action);
+      // state.isLoading = false;
+      // state.error = action.payload;
     });
     //Logout user
     builder.addCase(userLogout.pending, (state) => {
@@ -113,20 +137,6 @@ const authSlice = createSlice({
         state.error = action.payload;
       }
     );
-
-    // //register user
-    // builder.addCase(registerUser.pending, (state, action) => {
-    //   state.isLoading = true;
-    //   state.error = null;
-    // });
-    // builder.addCase(registerUser.fulfilled, (state, action) => {
-    //   state.isLoading = false;
-    //   state.success = true; // registration successful
-    // });
-    // builder.addCase(registerUser.rejected, (state, action) => {
-    //   state.isLoading = false;
-    //   state.error = action.payload;
-    // });
   },
 });
 
@@ -143,9 +153,8 @@ function handleRefreshState(action, state) {
 function setUserInfoFromLoggedInStatus(action, state) {
   console.log("in setUserInfoFromLoggedInStatus");
   if (action.payload.isLoggedIn) {
-    state.userInfo = action.payload;
-    console.log("userInfo object in setUserInfoFromLoggedInStatus: ");
-    console.log(state.userInfo);
+    const { message, status, isError, ...userInfo } = action.payload;
+    state.userInfo = userInfo;
   } else {
     state.userInfo = null;
   }

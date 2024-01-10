@@ -9,9 +9,6 @@ export function handleFulfilled(actionName: string, state: any, action: any) {
   state[actionName].isLoading = false;
   state[actionName].message = action.payload.message;
   state[actionName].statusCode = action.payload.status;
-
-  console.log("action in handleFulfilled " + actionName);
-  console.log(action);
 }
 
 export function handleRejected(actionName: string, state: any, action: any) {
