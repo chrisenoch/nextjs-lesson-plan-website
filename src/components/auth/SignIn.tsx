@@ -17,7 +17,6 @@ export function SignIn() {
   }
 
   // Ensure that  previously authenticated users can’t access this page.
-  // redirect authenticated user to homepage
   if (userInfo?.isLoggedIn) {
     redirect("/");
   }
@@ -49,7 +48,15 @@ export function SignIn() {
           setPassword(event.target.value);
         }}
       />
-      {error && <p>There was an error: {error}</p>}
+      {error && (
+        <Box
+          component="p"
+          color={error ? "error.main" : "success.main"}
+          aria-live="polite"
+          role="status">
+          Either the username or email is incorrect.
+        </Box>
+      )}
 
       <Button type="submit" variant="contained">
         Submit
