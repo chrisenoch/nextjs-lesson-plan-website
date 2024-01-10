@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { increaseLogoutCount } from "./auth-slice";
+import { delay } from "../../../utils/delay";
 
 const API_URL = "http://localhost:3000/api";
 
@@ -16,11 +17,10 @@ export const userLogin = createAsyncThunk(
       });
 
       const payload = await response.json();
+      const delayForDev = await delay(() => console.log("delay for dev"), 500);
+
       //If successful, http-only cookie with jwt token will have been set on the server
       return { ...payload, status: response.status };
-      // const result = await response.json();
-      // //If successful, http-only cookie with jwt token will have been set on the server
-      // return result;
     } catch (error) {
       return rejectWithValue("Error: Unable to send request.");
     }

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { redirect } from "next/navigation";
 import useHideMessageOnNavAway from "@/customHooks/useHideMessageOnNavAway";
+import { LoadingButton } from "@mui/lab";
 
 export function SignIn() {
   const { userInfo, error } = useSelector((state) => state.authSlice);
@@ -68,9 +69,17 @@ export function SignIn() {
         </Box>
       )}
 
-      <Button type="submit" variant="contained">
-        Submit
-      </Button>
+      {!userLoginInfo?.isLoading && (
+        <Button type="submit" variant="contained">
+          Submit
+        </Button>
+      )}
+      {userLoginInfo?.isLoading && (
+        <LoadingButton key={"loading-placeholder"} loading variant="contained">
+          {/* could be any value here as it is not shown */}
+          Submit
+        </LoadingButton>
+      )}
     </Box>
   );
 }
