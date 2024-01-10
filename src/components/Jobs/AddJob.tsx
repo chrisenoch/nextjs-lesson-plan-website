@@ -1,5 +1,4 @@
 "use client";
-import { useFormStatus } from "react-dom";
 import { Box, TextField, Button, Stack } from "@mui/material";
 import { useMemo, useRef, useState } from "react";
 import useFormClientStatus from "@/customHooks/useFormClientStatus";
@@ -118,7 +117,13 @@ export function AddJob() {
         minRows={4}
       />
 
-      <SubmitButton formIsValid={isFormValid} />
+      <Button
+        type="submit"
+        disabled={addJobInfo?.isLoading || !isFormValid}
+        variant="contained"
+        color="primary">
+        Add Job
+      </Button>
       {!shouldHideMessage && addJobInfo?.message && (
         <Box
           component="p"
@@ -130,19 +135,5 @@ export function AddJob() {
       )}
       <JobsPreview />
     </Box>
-  );
-}
-
-function SubmitButton({ formIsValid }: { formIsValid?: boolean }) {
-  const { pending } = useFormStatus();
-
-  return (
-    <button
-      type="submit"
-      // aria-disabled={pending || !formIsValid}
-      // disabled={pending || !formIsValid}
-    >
-      Add
-    </button>
   );
 }
