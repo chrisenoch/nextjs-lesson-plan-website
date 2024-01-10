@@ -1,15 +1,25 @@
 "use client";
-import { AppDispatch, userLogin } from "@/store";
+import { AppDispatch, selectUserLogin, userLogin } from "@/store";
 import { Box, TextField, Button, Stack } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { redirect } from "next/navigation";
+import useHideMessageOnNavAway from "@/customHooks/useHideMessageOnNavAway";
 
 export function SignIn() {
   const { userInfo, error } = useSelector((state) => state.authSlice);
   const dispatch = useDispatch<AppDispatch>();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  const userLoginInfo: null | {
+    isError: boolean;
+    isLoading: boolean;
+    message: string;
+    statusCode: null | number;
+  } = useSelector(selectUserLogin);
+
+  const shouldHideMessage = useHideMessageOnNavAway(userLoginInfo);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -48,7 +58,7 @@ export function SignIn() {
           setPassword(event.target.value);
         }}
       />
-      {error && (
+      {!shouldHideMessage && error && (
         <Box
           component="p"
           color={error ? "error.main" : "success.main"}

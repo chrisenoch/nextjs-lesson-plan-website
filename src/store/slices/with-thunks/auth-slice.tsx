@@ -165,3 +165,4 @@ export const { reinitWasLastRefreshSuccessful, increaseLogoutCount } =
 export const authReducer = authSlice.reducer;
 export const selectUserInfo = (state) => state.authSlice.userInfo;
 export const selectLogoutCount = (state) => state.authSlice.logoutCount;
+export const selectUserLogin = (state) => state.authSlice.userLogin;

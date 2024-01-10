@@ -14,6 +14,7 @@ import {
   increaseLogoutCount,
   reinitWasLastRefreshSuccessful,
   selectUserInfo,
+  selectUserLogin,
 } from "./slices/with-thunks/auth-slice";
 import {
   userLogin,
@@ -49,5 +50,6 @@ export {
   getAccessTokenWithRefreshToken,
   getAccessTokenWithRefreshTokenOnAppMount,
   selectUserInfo,
+  selectUserLogin,
 };
 export type AppDispatch = typeof store.dispatch;
