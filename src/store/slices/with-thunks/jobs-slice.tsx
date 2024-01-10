@@ -13,7 +13,7 @@ const jobsSlice = createSlice({
 
     addJob: {
       isError: false,
-      isLoading: true,
+      isLoading: false,
       message: "",
       statusCode: null,
     },

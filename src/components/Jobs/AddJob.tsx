@@ -14,7 +14,6 @@ import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 import useClearFormOnSuccess from "@/customHooks/useClearFormOnSuccess";
 import useHideMessageOnNavAway from "@/customHooks/useHideMessageOnNavAway";
 import ShowOnHydrate from "../ShowOnHydrate";
-import EssentialClientConfig from "../EssentialClientConfig";
 
 export function AddJob() {
   console.log("add job rendered");
@@ -69,6 +68,10 @@ export function AddJob() {
     setJobDescription("");
     resetAll();
   }
+  console.log("addJobInfo");
+  console.log(addJobInfo);
+  console.log("isLoading");
+  console.log(addJobInfo?.isLoading);
 
   return (
     <Box
