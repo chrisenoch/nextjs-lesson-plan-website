@@ -1,7 +1,7 @@
 import { Box, Grid } from "@mui/material";
 import LessonPlanCard from "./LessonPlanCard";
-import { LessonPlanType } from "../models/types/LessonPlanCategoryShort";
-import { LessonPlan } from "../models/types/LessonPlan";
+import { LessonPlanType } from "../../models/types/LessonPlanCategoryShort";
+import { LessonPlan } from "../../models/types/LessonPlan";
 
 export default function DisplayLessonplans({
   lessonPlans,

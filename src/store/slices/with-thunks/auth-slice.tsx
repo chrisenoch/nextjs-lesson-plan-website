@@ -13,7 +13,6 @@ import {
   handleRejected,
 } from "./thunk-helpers";
 
-//TO DO: Reorganise this file in the same format as jobs-slice
 const initialState: {
   userInfo: UserInfo | null;
   wasLastRefreshSuccessful: boolean | null;

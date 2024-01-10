@@ -24,19 +24,25 @@ import {
   getAccessTokenWithRefreshTokenOnAppMount,
 } from "./slices/with-thunks/auth-thunks";
 import { dbAPISlice } from "./slices/with-rtk-query/api/db-api-slice";
+import {
+  lessonPlansReducer,
+  selectFetchLessonPlans,
+} from "./slices/with-thunks/lessonplans-slice";
 
 const store = configureStore({
   reducer: {
     jobsSlice: jobsReducer,
     authSlice: authReducer,
+    lessonPlansSlice: lessonPlansReducer,
     [dbAPISlice.reducerPath]: dbAPISlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(dbAPISlice.middleware),
 });
 
+export { store };
+
 export {
-  store,
   addJob,
   deleteJob,
   fetchJobs,
@@ -44,6 +50,9 @@ export {
   selectJobsByUserId,
   selectAddJob,
   selectFetchJobs,
+};
+
+export {
   userLogin,
   userLogout,
   reinitWasLastRefreshSuccessful,
@@ -54,4 +63,6 @@ export {
   selectUserLogin,
   selectGetAccessTokenWithRefreshTokenOnAppMount,
 };
+
+export { selectFetchLessonPlans };
 export type AppDispatch = typeof store.dispatch;

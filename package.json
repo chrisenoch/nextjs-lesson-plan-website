@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "multi": "next dev 2>&1 | tee ./mylogs",
-    "logs": "tail -f -n 300 mylogs",
+    "server": "npx json-server -p3001 --watch ./src/db.json",
     "lint": "next lint",
     "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
   },
