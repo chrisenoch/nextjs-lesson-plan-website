@@ -20,7 +20,6 @@ import { JobsPreview } from "./JobsPreview";
 import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 import useClearFormOnSuccess from "@/customHooks/useClearFormOnSuccess";
 import useHideMessageOnNavAway from "@/customHooks/useHideMessageOnNavAway";
-import ShowOnHydrate from "../ShowOnHydrate";
 
 export function AddJob() {
   console.log("add job rendered");

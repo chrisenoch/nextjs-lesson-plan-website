@@ -68,7 +68,8 @@ const authSlice = createSlice({
       console.log(action);
 
       if (action.payload.isError) {
-        state.error = action.payload.message;
+        //state.error = action.payload.message;
+        state.userLogin.isError = action.payload.message;
       }
     });
     builder.addCase(userLogin.rejected, (state, action) => {

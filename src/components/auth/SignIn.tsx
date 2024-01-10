@@ -8,7 +8,7 @@ import useHideMessageOnNavAway from "@/customHooks/useHideMessageOnNavAway";
 import { LoadingButton } from "@mui/lab";
 
 export function SignIn() {
-  const { userInfo, error } = useSelector((state) => state.authSlice);
+  const { userInfo } = useSelector((state) => state.authSlice);
   const dispatch = useDispatch<AppDispatch>();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -59,13 +59,13 @@ export function SignIn() {
           setPassword(event.target.value);
         }}
       />
-      {!shouldHideMessage && error && (
+      {!shouldHideMessage && userLoginInfo?.isError && (
         <Box
           component="p"
-          color={error ? "error.main" : "success.main"}
+          color={userLoginInfo?.isError ? "error.main" : "success.main"}
           aria-live="polite"
           role="status">
-          Either the username or email is incorrect.
+          {userLoginInfo?.message}
         </Box>
       )}
 
