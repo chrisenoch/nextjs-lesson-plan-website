@@ -6,6 +6,5 @@ export type UserInfo = {
   firstName: string;
   iat: number;
   id: string;
-  isLoggedIn: boolean;
   role: UserRole;
 };

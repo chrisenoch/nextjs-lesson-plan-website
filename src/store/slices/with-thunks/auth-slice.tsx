@@ -7,20 +7,77 @@ import {
 } from "./auth-thunks";
 import { UserRole } from "@/models/types/UserRole";
 import { UserInfo } from "@/models/types/UserInfo";
+import {
+  handleFulfilled,
+  handlePending,
+  handleRejected,
+} from "./thunk-helpers";
 
 //TO DO: Reorganise this file in the same format as jobs-slice
 const initialState: {
-  isLoading: boolean;
   userInfo: UserInfo | null;
   wasLastRefreshSuccessful: boolean | null;
-  error: string | null;
   logoutCount: number;
+
+  userLogin: {
+    isError: boolean;
+    isLoading: boolean;
+    message: string;
+    statusCode: null | number;
+  };
+
+  userLogout: {
+    isError: boolean;
+    isLoading: boolean;
+    message: string;
+    statusCode: null | number;
+  };
+
+  getAccessTokenWithRefreshToken: {
+    isError: boolean;
+    isLoading: boolean;
+    message: string;
+    statusCode: null | number;
+  };
+
+  getAccessTokenWithRefreshTokenOnAppMount: {
+    isError: boolean;
+    isLoading: boolean;
+    message: string;
+    statusCode: null | number;
+  };
 } = {
-  isLoading: true,
   userInfo: null,
   wasLastRefreshSuccessful: null,
-  error: null,
   logoutCount: 0,
+
+  userLogin: {
+    isError: false,
+    isLoading: false,
+    message: "",
+    statusCode: null,
+  },
+
+  userLogout: {
+    isError: false,
+    isLoading: false,
+    message: "",
+    statusCode: null,
+  },
+
+  getAccessTokenWithRefreshToken: {
+    isError: false,
+    isLoading: false,
+    message: "",
+    statusCode: null,
+  },
+
+  getAccessTokenWithRefreshTokenOnAppMount: {
+    isError: false,
+    isLoading: true,
+    message: "",
+    statusCode: null,
+  },
 };
 
 const authSlice = createSlice({
@@ -37,98 +94,104 @@ const authSlice = createSlice({
   extraReducers(builder) {
     //Login user
     builder.addCase(userLogin.pending, (state) => {
-      state.isLoading = true;
-      state.error = null;
+      handlePending("userLogin", state);
     });
     builder.addCase(userLogin.fulfilled, (state, action) => {
-      state.isLoading = false;
+      handleFulfilled("userLogin", state, action);
       setUserInfoFromLoggedInStatus(action, state);
+
+      if (action.payload.isError) {
+        state.userLogin.isError = action.payload.message;
+      }
     });
     builder.addCase(userLogin.rejected, (state, action) => {
-      console.log("login rejected, action.payload below ");
-      console.log(action.payload);
-      state.isLoading = false;
-      state.error = action.payload;
+      handleRejected("userLogin", state, action);
     });
     //Logout user
     builder.addCase(userLogout.pending, (state) => {
-      state.isLoading = true;
-      state.error = null;
+      handlePending("userLogout", state);
     });
-    builder.addCase(userLogout.fulfilled, (state) => {
-      state.isLoading = false;
-      state.userInfo = null;
+    builder.addCase(userLogout.fulfilled, (state, action) => {
+      handleFulfilled("userLogout", state, action);
+      if (!action.payload.isError) {
+        state.userInfo = null;
+      }
     });
     builder.addCase(userLogout.rejected, (state, action) => {
-      state.isLoading = false;
-      state.error = action.payload;
+      handleRejected("userLogout", state, action);
     });
     //Get access token with refresh token in the background.
     //Do not change isLoading for any getAccessTokenWithRefreshToken case. The access token being updated should happen
     //invisibly and should not be reflected in the UI.
     builder.addCase(getAccessTokenWithRefreshToken.pending, (state) => {
       //Do not set isLoading.
-      state.error = null;
+      state.getAccessTokenWithRefreshToken.isError = false;
+      state.getAccessTokenWithRefreshToken.message = "";
+      state.getAccessTokenWithRefreshToken.statusCode = null;
       state.wasLastRefreshSuccessful = null;
     });
     builder.addCase(
       getAccessTokenWithRefreshToken.fulfilled,
       (state, action) => {
         //Do not set isLoading.
-
+        handleFulfilled("getAccessTokenWithRefreshToken", state, action);
         handleRefreshState(action, state);
+
+        if (action.payload.isError) {
+          state.getAccessTokenWithRefreshToken.isError = true;
+        } else {
+          state.getAccessTokenWithRefreshToken.isError = false;
+        }
       }
     );
     builder.addCase(
       getAccessTokenWithRefreshToken.rejected,
       (state, action) => {
         //Do not set isLoading.
-        state.error = action.payload;
+        handleRejected("getAccessTokenWithRefreshToken", state, action);
       }
     );
     //Send refresh token on app mount. In this case, we DO want to show the loading state
     builder.addCase(
       getAccessTokenWithRefreshTokenOnAppMount.pending,
       (state) => {
-        state.isLoading = true;
-        state.error = null;
+        handlePending("getAccessTokenWithRefreshTokenOnAppMount", state);
         state.wasLastRefreshSuccessful = null;
       }
     );
     builder.addCase(
       getAccessTokenWithRefreshTokenOnAppMount.fulfilled,
       (state, action) => {
-        state.isLoading = false;
+        handleFulfilled(
+          "getAccessTokenWithRefreshTokenOnAppMount",
+          state,
+          action
+        );
         handleRefreshState(action, state);
+        if (action.payload.isError) {
+          state.getAccessTokenWithRefreshToken.isError = true;
+        } else {
+          state.getAccessTokenWithRefreshToken.isError = false;
+        }
       }
     );
     builder.addCase(
       getAccessTokenWithRefreshTokenOnAppMount.rejected,
       (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
+        handleRejected(
+          "getAccessTokenWithRefreshTokenOnAppMount",
+          state,
+          action
+        );
       }
     );
-
-    // //register user
-    // builder.addCase(registerUser.pending, (state, action) => {
-    //   state.isLoading = true;
-    //   state.error = null;
-    // });
-    // builder.addCase(registerUser.fulfilled, (state, action) => {
-    //   state.isLoading = false;
-    //   state.success = true; // registration successful
-    // });
-    // builder.addCase(registerUser.rejected, (state, action) => {
-    //   state.isLoading = false;
-    //   state.error = action.payload;
-    // });
   },
 });
 
 function handleRefreshState(action, state) {
-  if (action.payload.isLoggedIn) {
-    state.userInfo = action.payload;
+  if (!action.payload.isError) {
+    const { message, status, isError, ...userInfo } = action.payload;
+    state.userInfo = userInfo;
     state.wasLastRefreshSuccessful = true;
   } else {
     state.userInfo = null;
@@ -138,10 +201,9 @@ function handleRefreshState(action, state) {
 
 function setUserInfoFromLoggedInStatus(action, state) {
   console.log("in setUserInfoFromLoggedInStatus");
-  if (action.payload.isLoggedIn) {
-    state.userInfo = action.payload;
-    console.log("userInfo object in setUserInfoFromLoggedInStatus: ");
-    console.log(state.userInfo);
+  if (!action.payload.isError) {
+    const { message, status, isError, ...userInfo } = action.payload;
+    state.userInfo = userInfo;
   } else {
     state.userInfo = null;
   }
@@ -152,3 +214,6 @@ export const { reinitWasLastRefreshSuccessful, increaseLogoutCount } =
 export const authReducer = authSlice.reducer;
 export const selectUserInfo = (state) => state.authSlice.userInfo;
 export const selectLogoutCount = (state) => state.authSlice.logoutCount;
+export const selectUserLogin = (state) => state.authSlice.userLogin;
+export const selectGetAccessTokenWithRefreshTokenOnAppMount = (state) =>
+  state.authSlice.getAccessTokenWithRefreshTokenOnAppMount;

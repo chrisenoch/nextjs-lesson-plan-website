@@ -72,7 +72,8 @@ export async function POST(request: Request) {
         ...userDetailsPayload,
         iat: jwtAccessTokenPayload!.iat,
         exp: jwtAccessTokenPayload!.exp,
-        isLoggedIn: true,
+        message: "Login success",
+        isError: false,
       },
       { status: 200 }
     );
@@ -98,7 +99,10 @@ export async function POST(request: Request) {
     return nextResponse;
   } else {
     nextResponse = NextResponse.json(
-      { error: "Unsuccessful login", isLoggedIn: false },
+      {
+        message: "Either the email or password is incorrect.",
+        isError: true,
+      },
       { status: 401 }
     );
     return nextResponse;

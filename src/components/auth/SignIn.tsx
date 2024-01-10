@@ -1,15 +1,26 @@
 "use client";
-import { AppDispatch, userLogin } from "@/store";
+import { AppDispatch, selectUserLogin, userLogin } from "@/store";
 import { Box, TextField, Button, Stack } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { redirect } from "next/navigation";
+import useHideMessageOnNavAway from "@/customHooks/useHideMessageOnNavAway";
+import { LoadingButton } from "@mui/lab";
 
 export function SignIn() {
-  const { userInfo, error } = useSelector((state) => state.authSlice);
+  const { userInfo } = useSelector((state) => state.authSlice);
   const dispatch = useDispatch<AppDispatch>();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  const userLoginInfo: null | {
+    isError: boolean;
+    isLoading: boolean;
+    message: string;
+    statusCode: null | number;
+  } = useSelector(selectUserLogin);
+
+  const shouldHideMessage = useHideMessageOnNavAway(userLoginInfo);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -17,8 +28,7 @@ export function SignIn() {
   }
 
   // Ensure that  previously authenticated users can’t access this page.
-  // redirect authenticated user to homepage
-  if (userInfo?.isLoggedIn) {
+  if (userInfo) {
     redirect("/");
   }
 
@@ -49,11 +59,27 @@ export function SignIn() {
           setPassword(event.target.value);
         }}
       />
-      {error && <p>There was an error: {error}</p>}
+      {!shouldHideMessage && userLoginInfo?.isError && (
+        <Box
+          component="p"
+          color={userLoginInfo?.isError ? "error.main" : "success.main"}
+          aria-live="polite"
+          role="status">
+          {userLoginInfo?.message}
+        </Box>
+      )}
 
-      <Button type="submit" variant="contained">
-        Submit
-      </Button>
+      {!userLoginInfo?.isLoading && (
+        <Button type="submit" variant="contained">
+          Submit
+        </Button>
+      )}
+      {userLoginInfo?.isLoading && (
+        <LoadingButton key={"loading-placeholder"} loading variant="contained">
+          {/* could be any value here as it is not shown */}
+          Submit
+        </LoadingButton>
+      )}
     </Box>
   );
 }

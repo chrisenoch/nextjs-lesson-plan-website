@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { increaseLogoutCount } from "./auth-slice";
+import { delay } from "../../../utils/delay";
 
 const API_URL = "http://localhost:3000/api";
 
@@ -14,9 +15,12 @@ export const userLogin = createAsyncThunk(
         },
         body: JSON.stringify(data),
       });
-      const result = await response.json();
+
+      const payload = await response.json();
+      const delayForDev = await delay(() => console.log("delay for dev"), 500);
+
       //If successful, http-only cookie with jwt token will have been set on the server
-      return result;
+      return { ...payload, status: response.status };
     } catch (error) {
       return rejectWithValue("Error: Unable to send request.");
     }
@@ -34,19 +38,17 @@ export const userLogout = createAsyncThunk(
         },
         //body: JSON.stringify({shouldLogout:true}),
       });
-      const result = await response.json();
-
+      const payload = await response.json();
       dispatch(increaseLogoutCount());
-
-      //If successful, http-only cookie with jwt token will have been deleted on the server
-      return result;
+      //If successful, http-only cookie with jwt token will have been set on the server
+      return { ...payload, status: response.status };
     } catch (error) {
       return rejectWithValue("Error: Unable to send request.");
     }
   }
 );
 
-//If the refresh happens in the backgrround, we DON'T show the loading state
+//If the refresh happens in the background, we DON'T show the loading state
 //I wrote two functions (getAccessTokenWithRefreshToken and getAccessTokenWithRefreshTokenOnAppMount) to keep the redux logic pure.
 export const getAccessTokenWithRefreshToken = createAsyncThunk(
   "authSlice/refresh",
@@ -58,9 +60,9 @@ export const getAccessTokenWithRefreshToken = createAsyncThunk(
           "Content-Type": "application/json",
         },
       });
-      const result = await response.json();
+      const payload = await response.json();
       //If successful, http-only cookie with jwt token will have been set on the server
-      return result;
+      return { ...payload, status: response.status };
     } catch (error) {
       return rejectWithValue("Error: Unable to send request.");
     }
@@ -79,9 +81,9 @@ export const getAccessTokenWithRefreshTokenOnAppMount = createAsyncThunk(
           "Content-Type": "application/json",
         },
       });
-      const result = await response.json();
+      const payload = await response.json();
       //If successful, http-only cookie with jwt token will have been set on the server
-      return result;
+      return { ...payload, status: response.status };
     } catch (error) {
       return rejectWithValue("Error: Unable to send request.");
     }

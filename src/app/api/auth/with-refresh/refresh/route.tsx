@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
       //Should stop User A's refresh token being used to get a new access token for User B.
       if (oldAccessTokenPayload.id !== refreshTokenPayload.id) {
         resp = NextResponse.json(
-          { message: "Invalid jwt token.", isLoggedIn: false },
+          { message: "Refresh failure.", isError: true },
           { status: 401 }
         );
       }
@@ -75,10 +75,14 @@ export async function GET(request: NextRequest) {
         process.env.ACCESS_TOKEN_SECRET!
       );
 
-      resp = NextResponse.json({
-        ...jwtAccessTokenPayload,
-        isLoggedIn: true,
-      });
+      resp = NextResponse.json(
+        {
+          ...jwtAccessTokenPayload,
+          message: "Refresh success.",
+          isError: false,
+        },
+        { status: 200 }
+      );
       resp.cookies.delete(process.env.ACCESS_TOKEN_COOKIE_NAME!);
       resp.cookies.set(process.env.ACCESS_TOKEN_COOKIE_NAME!, newAccessToken, {
         maxAge: accessTokenCookieExpiry,
@@ -86,16 +90,18 @@ export async function GET(request: NextRequest) {
         sameSite: "strict",
       });
     } catch {
+      //Invalid jwt token.
       console.log("in catch refresh endpoint");
       resp = NextResponse.json(
-        { message: "Invalid jwt token.", isLoggedIn: false }, //To do: Change this error message
+        { message: "Refresh failure", isError: true }, //To do: Change this error message
         { status: 401 }
       );
     }
   } else {
+    //Missing jwt token.
     resp = NextResponse.json(
-      { message: "Missing jwt token.", isLoggedIn: false },
-      { status: 200 }
+      { message: "Refresh failure", isError: true },
+      { status: 401 }
     );
   }
 

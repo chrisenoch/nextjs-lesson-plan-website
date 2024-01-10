@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
   revalidatePath("/");
 
   const nextResponse = NextResponse.json(
-    { message: "JWT access cookie and refresh cookie deleted" },
+    { message: "JWT access cookie and refresh cookie deleted", isError: false },
     { status: 200 }
   );
   const isDeleted = nextResponse.cookies.delete(
@@ -23,12 +23,12 @@ export async function POST(request: NextRequest) {
     return nextResponse;
   } else if (isDeleted && !isRefreshDeleted) {
     return NextResponse.json(
-      { error: "Refresh JWT cookie was not deleted" },
+      { message: "Refresh JWT cookie was not deleted", isError: true },
       { status: 400 }
     );
   } else if (!isDeleted && isRefreshDeleted) {
     return NextResponse.json(
-      { error: "Access JWT cookie was not deleted" },
+      { message: "Access JWT cookie was not deleted", isError: true },
       { status: 400 }
     );
   }
