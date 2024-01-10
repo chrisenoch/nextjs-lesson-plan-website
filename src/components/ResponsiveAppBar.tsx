@@ -19,20 +19,12 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  AppDispatch,
-  userLogout,
-  getAccessTokenWithRefreshTokenOnAppMount,
-} from "@/store";
-
-import useAutoLogoutWhenJwtTokenExpires from "@/customHooks/useAutoLogoutWhenJwtTokenExpires";
-import { LogoutWarning } from "./auth/LogoutWarning";
+import { AppDispatch, userLogout } from "@/store";
 import SecureNextLink from "./SecureNextLink";
 import InsecureNextLink from "next/link";
-import { usePathname } from "next/navigation";
 
 export default function ResponsiveAppBar({
   DRAWER_WIDTH,
@@ -40,28 +32,8 @@ export default function ResponsiveAppBar({
   PLACEHOLDER_LINKS,
 }) {
   console.log("Responsive AppBar mounts");
-  const dispatch = useDispatch<AppDispatch>();
   const { isLoading, userInfo } = useSelector((state) => state.authSlice);
-  //useAutoLogout(1_800_000);
-  const renderModal = useAutoLogoutWhenJwtTokenExpires(30_000, 10_000); //240_000 - 4 mins // 30_000 - 30 secs //10_000 - 10 secs
-  const [previousRenderModal, setPreviousRenderModal] = useState<{
-    hasAutoLoggedOut: boolean;
-  }>(renderModal);
-  const [showLogoutWarning, setShowLogoutWarning] = useState<boolean>(false);
-
-  //Avoids using an effect and saves a render.
-  if (renderModal !== previousRenderModal) {
-    if (renderModal.hasAutoLoggedOut) {
-      setShowLogoutWarning(true);
-      renderModal.hasAutoLoggedOut = false;
-    }
-    setPreviousRenderModal(renderModal);
-  }
-
-  // automatically authenticate user if refresh token cookie and access token cookies are found on app mount
-  useEffect(() => {
-    dispatch(getAccessTokenWithRefreshTokenOnAppMount());
-  }, [dispatch]);
+  const dispatch = useDispatch<AppDispatch>();
 
   const navItems = [
     { title: "Lesson Plans", href: "/lessonplans" },
@@ -86,12 +58,6 @@ export default function ResponsiveAppBar({
 
   return (
     <>
-      <LogoutWarning
-        open={showLogoutWarning}
-        handleClose={() => {
-          setShowLogoutWarning(false);
-        }}
-      />
       <ElevationScroll>
         <AppBar
           position="fixed"

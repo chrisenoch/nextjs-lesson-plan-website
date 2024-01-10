@@ -66,15 +66,6 @@ export function AddJob() {
 
   useClearFormOnSuccess(addJobInfo, clearForm);
   const shouldHideMessage = useHideMessageOnNavAway(addJobInfo);
-  console.log("shouldHideMessage " + shouldHideMessage);
-
-  // const pathname = usePathname();
-  // function hey() {
-  //   console.log("print on pathChange");
-  // }
-  // useEffect(() => {
-  //   callbacks.set(pathname, hey);
-  // }, [pathname]);
 
   const jobs:
     | { id: string; jobTitle: string; jobDescription: string; userId: string }[]

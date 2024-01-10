@@ -23,6 +23,7 @@ import ResponsiveAppBar from "@/components/ResponsiveAppBar";
 import { Container } from "@mui/material";
 import ReduxProvider from "@/components/ReduxStore/ReduxProvider";
 import { LogoutWarning } from "@/components/auth/LogoutWarning";
+import EssentialClientConfig from "@/components/EssentialClientConfig";
 
 export const metadata = {
   title: "Next.js App Router + Material UI v5",
@@ -53,27 +54,29 @@ export default function RootLayout({
       <body>
         <ReduxProvider>
           <ThemeRegistry>
-            <ResponsiveAppBar
-              DRAWER_WIDTH={DRAWER_WIDTH}
-              PLACEHOLDER_LINKS={PLACEHOLDER_LINKS}
-              LINKS={LINKS}
-            />
-            <Box
-              component="main"
-              //originally: bgcolor: "background.default",
-              sx={{
-                //height: "100%",
-                height: "fit-content",
-                minHeight: "100vh",
+            <EssentialClientConfig>
+              <ResponsiveAppBar
+                DRAWER_WIDTH={DRAWER_WIDTH}
+                PLACEHOLDER_LINKS={PLACEHOLDER_LINKS}
+                LINKS={LINKS}
+              />
+              <Box
+                component="main"
+                //originally: bgcolor: "background.default",
+                sx={{
+                  //height: "100%",
+                  height: "fit-content",
+                  minHeight: "100vh",
 
-                flexGrow: 1,
-                bgcolor: "grey.100",
-                px: 3,
-                pb: 3,
-                pt: 11,
-              }}>
-              {children}
-            </Box>
+                  flexGrow: 1,
+                  bgcolor: "grey.100",
+                  px: 3,
+                  pb: 3,
+                  pt: 11,
+                }}>
+                {children}
+              </Box>
+            </EssentialClientConfig>
           </ThemeRegistry>
         </ReduxProvider>
       </body>
