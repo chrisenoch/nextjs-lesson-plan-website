@@ -1,21 +1,22 @@
-//To DO: remove this and pass down props to client component
 "use client";
 
-import FloatingId from "@/components/FloatingId";
 import useScrollSpy from "@/customHooks/useScrollSpy";
 import {
   Grid,
-  Container,
-  Typography,
   List,
   ListItem,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
   Stack,
+  Typography,
 } from "@mui/material";
+import FloatingId from "@/components/FloatingId";
+import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 
 export default function LessonPlansPage() {
+  console.log("LessonPlansPageContent rendered");
+  useRedirectWhenLoggedOut("/auth/signin");
+
   let activeIntersection = useScrollSpy([
     "summary",
     "warmer",
@@ -26,11 +27,6 @@ export default function LessonPlansPage() {
     "feedback",
     "plenary",
   ]);
-
-  //let activeIntersection: string = "testing";
-
-  console.log("activeIntersection ");
-  console.log(activeIntersection);
 
   return (
     <Stack
