@@ -50,7 +50,7 @@ export const userLogout = createAsyncThunk(
   }
 );
 
-//If the refresh happens in the backgrround, we DON'T show the loading state
+//If the refresh happens in the background, we DON'T show the loading state
 //I wrote two functions (getAccessTokenWithRefreshToken and getAccessTokenWithRefreshTokenOnAppMount) to keep the redux logic pure.
 export const getAccessTokenWithRefreshToken = createAsyncThunk(
   "authSlice/refresh",
@@ -62,9 +62,9 @@ export const getAccessTokenWithRefreshToken = createAsyncThunk(
           "Content-Type": "application/json",
         },
       });
-      const result = await response.json();
+      const payload = await response.json();
       //If successful, http-only cookie with jwt token will have been set on the server
-      return result;
+      return { ...payload, status: response.status };
     } catch (error) {
       return rejectWithValue("Error: Unable to send request.");
     }
@@ -83,9 +83,9 @@ export const getAccessTokenWithRefreshTokenOnAppMount = createAsyncThunk(
           "Content-Type": "application/json",
         },
       });
-      const result = await response.json();
+      const payload = await response.json();
       //If successful, http-only cookie with jwt token will have been set on the server
-      return result;
+      return { ...payload, status: response.status };
     } catch (error) {
       return rejectWithValue("Error: Unable to send request.");
     }

@@ -22,7 +22,11 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { useState } from "react";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, userLogout } from "@/store";
+import {
+  AppDispatch,
+  selectGetAccessTokenWithRefreshTokenOnAppMount,
+  userLogout,
+} from "@/store";
 import SecureNextLink from "./SecureNextLink";
 import InsecureNextLink from "next/link";
 
@@ -32,7 +36,10 @@ export default function ResponsiveAppBar({
   PLACEHOLDER_LINKS,
 }) {
   console.log("Responsive AppBar mounts");
-  const { isLoading, userInfo } = useSelector((state) => state.authSlice);
+  const { userInfo } = useSelector((state) => state.authSlice);
+  const refreshTokenStatus: null | {
+    isLoading: boolean;
+  } = useSelector(selectGetAccessTokenWithRefreshTokenOnAppMount);
   const dispatch = useDispatch<AppDispatch>();
 
   const navItems = [
@@ -101,7 +108,7 @@ export default function ResponsiveAppBar({
                 );
               })}
               {/* show login, logout or loading button depending on the status */}
-              {userInfo && !isLoading && (
+              {userInfo && !refreshTokenStatus?.isLoading && (
                 <Button
                   key="Logout"
                   onClick={() => {
@@ -110,7 +117,7 @@ export default function ResponsiveAppBar({
                   Logout
                 </Button>
               )}
-              {!userInfo && !isLoading && (
+              {!userInfo && !refreshTokenStatus?.isLoading && (
                 <Button
                   key="Login"
                   href={"/auth/signin"}
@@ -119,7 +126,7 @@ export default function ResponsiveAppBar({
                   Login
                 </Button>
               )}
-              {isLoading && (
+              {refreshTokenStatus?.isLoading && (
                 <LoadingButton
                   key={"loading-placeholder"}
                   loading

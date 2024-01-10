@@ -38,33 +38,15 @@
     },
     {
       "userId": "1",
-      "jobTitle": "oo",
-      "jobDescription": "oo",
-      "id": 14
-    },
-    {
-      "userId": "1",
-      "jobTitle": "hh",
-      "jobDescription": "hh",
-      "id": 15
-    },
-    {
-      "userId": "1",
-      "jobTitle": "aa",
-      "jobDescription": "ss",
-      "id": 19
-    },
-    {
-      "userId": "1",
       "jobTitle": "yy",
       "jobDescription": "yy",
       "id": 20
     },
     {
       "userId": "1",
-      "jobTitle": "aa",
-      "jobDescription": "aa",
-      "id": 21
+      "jobTitle": "hh",
+      "jobDescription": "hh",
+      "id": 22
     }
   ]
 }
