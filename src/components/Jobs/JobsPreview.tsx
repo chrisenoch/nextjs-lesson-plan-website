@@ -1,12 +1,6 @@
 "use client";
 
 import { useHydrated } from "@/customHooks/useHydrated";
-import {
-  selectFetchJobs,
-  selectJobsByUserId,
-  deleteJob,
-  AppDispatch,
-} from "@/store";
 import { Delete } from "@mui/icons-material";
 import {
   Card,
@@ -15,7 +9,6 @@ import {
   CardHeader,
   IconButton,
 } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
 
 export function JobsPreview({
   jobs,
@@ -26,7 +19,7 @@ export function JobsPreview({
   jobs: { id: string; jobTitle: string; jobDescription: string }[] | undefined;
   isLoading: boolean;
   isError: boolean;
-  handleJobDelete: (id: string) => void;
+  handleJobDelete?: (id: string) => void;
 }) {
   const isHydrated = useHydrated();
 
@@ -42,12 +35,21 @@ export function JobsPreview({
           <Card sx={{ mb: 1, maxWidth: 400, minWidth: 300 }} key={job.id}>
             <CardHeader
               action={
-                <IconButton
-                  onClick={() => handleJobDelete(job.id)}
-                  aria-label="delete-job">
-                  <Delete />
-                </IconButton>
+                !handleJobDelete ? null : (
+                  <IconButton
+                    onClick={() => handleJobDelete(job.id)}
+                    aria-label="delete-job">
+                    <Delete />
+                  </IconButton>
+                )
               }
+              // action={
+              //   <IconButton
+              //     onClick={() => handleJobDelete(job.id)}
+              //     aria-label="delete-job">
+              //     <Delete />
+              //   </IconButton>
+              // }
               title={job.jobTitle}
             />
             <CardContent>

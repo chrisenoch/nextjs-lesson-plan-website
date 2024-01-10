@@ -37,7 +37,8 @@ export default function ResponsiveAppBar({
 
   const navItems = [
     { title: "Lesson Plans", href: "/lessonplans" },
-    { title: "Jobs", href: "/jobs" },
+    { title: "My Jobs", href: "/my-jobs" },
+    { title: "All Jobs", href: "/all-jobs" },
   ];
   const [mobileOpen, setMobileOpen] = useState(false);
 

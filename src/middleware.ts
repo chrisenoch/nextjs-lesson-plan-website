@@ -73,7 +73,7 @@ export async function middleware(request: NextRequest) {
 //   { "shop/account": { roles: ["USER"] } },
 // ],
 const protectedRoutes: ProtectedRoutes = {
-  jobs: { roles: ["USER"] },
+  "my-jobs": { roles: ["USER"] },
   lessonplans: { roles: ["USER"] },
   //premium: { roles: ["ADMIN"] },
   user: {
