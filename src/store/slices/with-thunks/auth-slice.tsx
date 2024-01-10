@@ -15,13 +15,18 @@ import {
 
 //TO DO: Reorganise this file in the same format as jobs-slice
 const initialState: {
-  isLoading: boolean;
   userInfo: UserInfo | null;
   wasLastRefreshSuccessful: boolean | null;
-  error: string | null;
   logoutCount: number;
 
   userLogin: {
+    isError: boolean;
+    isLoading: boolean;
+    message: string;
+    statusCode: null | number;
+  };
+
+  userLogout: {
     isError: boolean;
     isLoading: boolean;
     message: string;
@@ -42,13 +47,18 @@ const initialState: {
     statusCode: null | number;
   };
 } = {
-  isLoading: true,
   userInfo: null,
   wasLastRefreshSuccessful: null,
-  error: null,
   logoutCount: 0,
 
   userLogin: {
+    isError: false,
+    isLoading: false,
+    message: "",
+    statusCode: null,
+  },
+
+  userLogout: {
     isError: false,
     isLoading: false,
     message: "",
@@ -99,16 +109,16 @@ const authSlice = createSlice({
     });
     //Logout user
     builder.addCase(userLogout.pending, (state) => {
-      state.isLoading = true;
-      state.error = null;
+      handlePending("userLogout", state);
     });
-    builder.addCase(userLogout.fulfilled, (state) => {
-      state.isLoading = false;
-      state.userInfo = null;
+    builder.addCase(userLogout.fulfilled, (state, action) => {
+      handleFulfilled("userLogout", state, action);
+      if (!action.payload.isError) {
+        state.userInfo = null;
+      }
     });
     builder.addCase(userLogout.rejected, (state, action) => {
-      state.isLoading = false;
-      state.error = action.payload;
+      handleRejected("userLogout", state, action);
     });
     //Get access token with refresh token in the background.
     //Do not change isLoading for any getAccessTokenWithRefreshToken case. The access token being updated should happen

@@ -38,12 +38,10 @@ export const userLogout = createAsyncThunk(
         },
         //body: JSON.stringify({shouldLogout:true}),
       });
-      const result = await response.json();
-
+      const payload = await response.json();
       dispatch(increaseLogoutCount());
-
-      //If successful, http-only cookie with jwt token will have been deleted on the server
-      return result;
+      //If successful, http-only cookie with jwt token will have been set on the server
+      return { ...payload, status: response.status };
     } catch (error) {
       return rejectWithValue("Error: Unable to send request.");
     }
