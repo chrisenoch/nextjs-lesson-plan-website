@@ -76,7 +76,15 @@ export async function middleware(request: NextRequest) {
 //and do not include any children routes, then 'lessonPlans/1' will not be protected. //To do: Change this
 const protectedRoutes: ProtectedRoutes = {
   "my-jobs": { roles: ["USER"] },
-  lessonplans: { roles: ["USER"] },
+  lessonplans: {
+    roles: ["USER"],
+    children: [
+      { 1: { roles: ["USER"] } },
+      { 2: { roles: ["USER"] } },
+      { 3: { roles: ["USER"] } },
+      { 4: { roles: ["USER"] } },
+    ],
+  },
   //premium: { roles: ["ADMIN"] },
   user: {
     roles: ["ADMIN"],
