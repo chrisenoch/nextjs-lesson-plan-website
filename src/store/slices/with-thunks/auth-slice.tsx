@@ -5,7 +5,6 @@ import {
   getAccessTokenWithRefreshToken,
   getAccessTokenWithRefreshTokenOnAppMount,
 } from "./auth-thunks";
-import { UserRole } from "@/models/types/UserRole";
 import { UserInfo } from "@/models/types/UserInfo";
 import {
   handleFulfilled,

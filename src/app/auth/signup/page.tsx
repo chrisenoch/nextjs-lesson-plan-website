@@ -1,4 +1,3 @@
-import { SignIn } from "@/components/auth/SignIn";
 import { SignUp } from "@/components/auth/SignUp";
 import { Stack } from "@mui/material";
 

@@ -5,16 +5,16 @@ import { Box, TextField, Button, Stack } from "@mui/material";
 
 import { useMemo, useRef, useState } from "react";
 import useFormClientStatus from "@/customHooks/useFormClientStatus";
-import { zodValidator } from "@/app/validation/zod-validator";
-import {
-  jobDescriptionValidator,
-  jobTitleValidator,
-} from "@/app/validation/jobs/jobs-validators";
 import {
   useAddNewJobMutation,
   useGetJobsQuery,
 } from "@/store/slices/with-rtk-query/api/db-api-slice";
 import { JobsPreviewRTKQuery } from "./JobsPreviewRTKQuery";
+import { zodValidator } from "@/validation/zod-validator";
+import {
+  jobDescriptionValidator,
+  jobTitleValidator,
+} from "@/validation/jobs/jobs-validators";
 
 const initialFormState: {
   message: string | null;

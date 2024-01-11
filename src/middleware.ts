@@ -1,10 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { UserRole, isUserRole } from "./models/types/UserRole";
-import * as jose from "jose";
 import {
   ProtectedRoute,
-  ProtectedRouteRoles,
   ProtectedRouteRolesByRoute,
   ProtectedRoutes,
   isProtectedRouteChildren,

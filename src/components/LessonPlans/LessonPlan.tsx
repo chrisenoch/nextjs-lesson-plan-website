@@ -34,7 +34,7 @@ export default function LessonPlan({
   feedback: string;
   plenary: string;
 }) {
-  //useRedirectWhenLoggedOut("/auth/signin");
+  useRedirectWhenLoggedOut("/auth/signin");
 
   let activeIntersection = useScrollSpy([
     "summary",

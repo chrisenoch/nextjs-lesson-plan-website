@@ -1,6 +1,6 @@
 import { selectLogoutCount } from "@/store/slices/with-thunks/auth-slice";
 import { redirect } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 export default function useRedirectWhenLoggedOut(redirectTo: string) {

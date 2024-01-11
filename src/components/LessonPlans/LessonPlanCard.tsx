@@ -6,11 +6,9 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Avatar, IconButton, Divider, Stack, Chip } from "@mui/material";
-import { red } from "@mui/material/colors";
 import Circle from "@mui/icons-material/Circle";
 import Bookmark from "@mui/icons-material/Bookmark";
 import Diamond from "@mui/icons-material/Diamond";
-import { LessonPlanType } from "../models/types/LessonPlanCategoryShort";
 import { LessonPlan } from "@/models/types/LessonPlan";
 import SecureNextLink from "../SecureNextLink";
 

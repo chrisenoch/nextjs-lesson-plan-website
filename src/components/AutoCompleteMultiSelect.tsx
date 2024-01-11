@@ -2,9 +2,8 @@
 
 import { Search } from "@mui/icons-material";
 import { Autocomplete, Chip, InputAdornment, TextField } from "@mui/material";
-import { memo, useMemo, useState } from "react";
-import { LessonPlanType } from "./models/types/LessonPlanCategoryShort";
-import { LessonPlanCategory } from "./models/types/LessonPlanCategory";
+import { memo, useMemo } from "react";
+import { LessonPlanCategory } from "@/models/types/LessonPlanCategory";
 
 const AutoCompleteMultiSelect = memo(function AutoCompleteMultiSelect({
   selectedLessonPlanCategories,

@@ -1,6 +1,5 @@
 import { session } from "@/session/session";
 import Loading from "./Loading";
-import { cookies } from "next/headers";
 
 export default function withAuth(Component) {
   return function WithAuth(props: any) {

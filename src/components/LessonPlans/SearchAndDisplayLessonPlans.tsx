@@ -1,13 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import DisplayLessonPlans from "./DisplayLessonPlans";
 import SearchLessonPlans from "./SearchLessonPlans";
 import AutoCompleteMultiSelect from "../AutoCompleteMultiSelect";
-import { LessonPlanType } from "../models/types/LessonPlanCategoryShort";
-import { LessonPlan } from "../models/types/LessonPlan";
-import { LessonPlanCategory } from "../models/types/LessonPlanCategory";
-import { LessonPlanSubCategory } from "../models/types/LessonPlanSubCategory";
+import { LessonPlan } from "@/models/types/LessonPlan";
+import { LessonPlanCategory } from "@/models/types/LessonPlanCategory";
+import { LessonPlanSubCategory } from "@/models/types/LessonPlanSubCategory";
 
 export default function SearchAndDisplayLessonPlans({
   lessonPlans,

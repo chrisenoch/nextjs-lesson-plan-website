@@ -3,7 +3,6 @@
 import { useHydrated } from "@/customHooks/useHydrated";
 import { SerializedError } from "@reduxjs/toolkit";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import { useEffect, useState } from "react";
 
 export function JobsPreviewRTKQuery({
   jobs,

@@ -1,6 +1,6 @@
 import * as React from "react";
 import Hero from "@/components/Hero";
-import SearchAndDisplayLessonPlans from "@/components/LessonPlanSearch/SearchAndDisplayLessonPlans";
+import SearchAndDisplayLessonPlans from "@/components/LessonPlans/SearchAndDisplayLessonPlans";
 import { fetchLessonPlans } from "../server-only/lessonplans";
 
 export default async function HomePage() {

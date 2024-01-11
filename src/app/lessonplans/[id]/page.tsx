@@ -1,4 +1,4 @@
-import LessonPlan from "@/components/LessonPlanSearch/LessonPlan";
+import LessonPlan from "@/components/LessonPlans/LessonPlan";
 
 export async function generateStaticParams() {
   //get ids by calling a database or a server

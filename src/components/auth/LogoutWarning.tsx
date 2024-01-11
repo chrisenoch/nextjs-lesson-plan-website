@@ -1,6 +1,5 @@
 "use client";
 
-import { useHydrated } from "@/customHooks/useHydrated";
 import {
   Button,
   Dialog,
@@ -9,8 +8,6 @@ import {
   DialogContentText,
   DialogTitle,
   Divider,
-  useMediaQuery,
-  useTheme,
 } from "@mui/material";
 import React from "react";
 
