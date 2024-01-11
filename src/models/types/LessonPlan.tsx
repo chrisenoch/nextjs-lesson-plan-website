@@ -1,6 +1,7 @@
 import { LessonPlanType } from "./LessonPlanCategoryShort";
 
 export type LessonPlan = {
+  id: string;
   title: string;
   description: string;
   isPremium: boolean;

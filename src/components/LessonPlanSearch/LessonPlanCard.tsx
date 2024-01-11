@@ -5,39 +5,27 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import {
-  CardHeader,
-  Avatar,
-  IconButton,
-  Divider,
-  Stack,
-  Box,
-  Chip,
-} from "@mui/material";
+import { Avatar, IconButton, Divider, Stack, Chip } from "@mui/material";
 import { red } from "@mui/material/colors";
 import Circle from "@mui/icons-material/Circle";
 import Bookmark from "@mui/icons-material/Bookmark";
 import Diamond from "@mui/icons-material/Diamond";
 import { LessonPlanType } from "../models/types/LessonPlanCategoryShort";
+import { LessonPlan } from "@/models/types/LessonPlan";
+import SecureNextLink from "../SecureNextLink";
 
 export default function LessonPlanCard({
+  id,
   title,
   description,
   isPremium,
   imageURL,
   imageAlt,
   chips,
-}: {
-  title: string;
-  description: string;
-  isPremium: boolean;
-  imageURL: string;
-  imageAlt: string;
-  chips: {
-    title: string;
-    category: LessonPlanType;
-  }[];
-}) {
+}: LessonPlan) {
+  console.log("id in LessonPlanCard");
+  console.log(id);
+
   const lessonChips = chips.map((lessonChip) => (
     <Chip
       key={lessonChip.title}
@@ -68,6 +56,7 @@ export default function LessonPlanCard({
           {title}
         </Typography>
         <Stack
+          marginTop={0.5}
           direction="row"
           spacing={2}
           useFlexGap
@@ -95,17 +84,15 @@ export default function LessonPlanCard({
             A1
           </Typography>
 
-          <Circle
-            sx={{
-              fontSize: "4px",
-              verticalAlign: "middle",
-            }}
-          />
           {isPremium && (
-            <IconButton aria-label="get premium">
-              <Diamond color="secondary" />
-            </IconButton>
+            <Circle
+              sx={{
+                fontSize: "4px",
+                verticalAlign: "middle",
+              }}
+            />
           )}
+          {isPremium && <Diamond color="secondary" />}
         </Stack>
         <Divider sx={{ borderBottomWidth: 1, mb: 1 }} />
         <Stack
@@ -124,9 +111,13 @@ export default function LessonPlanCard({
       </CardContent>
       <CardActions>
         <Button
-          onClick={() => console.log("hello from View")}
+          href={`/lessonplans/${id}`}
           variant={"contained"}
-          size="small">
+          size="small"
+          component={SecureNextLink}
+          sx={{
+            mr: 1,
+          }}>
           View
         </Button>
         <Button

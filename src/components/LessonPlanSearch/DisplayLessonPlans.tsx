@@ -14,6 +14,7 @@ export default function DisplayLessonplans({
   const lessonPlansToDisplay = lessonPlans.map((lessonPlan) => (
     <Grid item xs={4} key={lessonPlan.title}>
       <LessonPlanCard
+        id={lessonPlan.id}
         title={lessonPlan.title}
         description={lessonPlan.description}
         isPremium={lessonPlan.isPremium}

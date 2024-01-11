@@ -124,14 +124,7 @@ function filterLessonPlansIfFilter(
     title: string;
     category: LessonPlanCategory;
   }[],
-  lessonPlans: {
-    title: string;
-    description: string;
-    isPremium: boolean;
-    imageURL: string;
-    imageAlt: string;
-    chips: { title: string; category: LessonPlanType }[];
-  }[],
+  lessonPlans: LessonPlan[],
   lessonPlanTitlesBySubCategory: Map<LessonPlanSubCategory, { title: string }[]>
 ) {
   let lessonPlansToDisplay;
