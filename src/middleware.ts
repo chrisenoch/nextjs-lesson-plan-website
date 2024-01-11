@@ -72,6 +72,8 @@ export async function middleware(request: NextRequest) {
 //   { shop: { roles: ["USER"] } },              // "shop" matches before "shop/secret"
 //   { "shop/account": { roles: ["USER"] } },
 // ],
+//This function does not protect child routes automatically. E.g. If you assign the admin role to the route 'lessonPlans'
+//and do not include any children routes, then 'lessonPlans/1' will not be protected. //To do: Change this
 const protectedRoutes: ProtectedRoutes = {
   "my-jobs": { roles: ["USER"] },
   lessonplans: { roles: ["USER"] },
@@ -83,6 +85,10 @@ const protectedRoutes: ProtectedRoutes = {
       { "profile/secret": { roles: ["ADMIN"] } },
       { "profile/account": { roles: ["USER"] } },
     ],
+  },
+  test: {
+    roles: [],
+    children: [{ foo: { roles: ["USER"] } }],
   },
 };
 
