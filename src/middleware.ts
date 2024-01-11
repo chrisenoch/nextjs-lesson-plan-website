@@ -38,6 +38,7 @@ export async function middleware(request: NextRequest) {
   //check permissions and redirect if necessary
   const accessTokenRole = await getAccessTokenRole(request);
   const userRoles: UserRole[] = getUserRolesIfExist(accessTokenRole);
+  userRoles.push("EVERYBODY"); //Everybody has this role (both logged-in and non-logged-in users)
   const urlPath = getUrlPathBasedOnPermissions({
     enteredUrlPath: enteredUrlPathCleaned,
     protectedRoutes,
@@ -79,7 +80,7 @@ const protectedRoutes: ProtectedRoutes = {
   lessonplans: {
     roles: ["USER"],
     children: [
-      { 1: { roles: ["USER"] } },
+      { 1: { roles: ["EVERYBODY"] } },
       { 2: { roles: ["USER"] } },
       { 3: { roles: ["USER"] } },
       { 4: { roles: ["USER"] } },
@@ -95,7 +96,7 @@ const protectedRoutes: ProtectedRoutes = {
     ],
   },
   test: {
-    roles: [],
+    roles: ["NOT_LOGGED_IN"],
     children: [{ foo: { roles: ["USER"] } }],
   },
 };
