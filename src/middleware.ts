@@ -76,7 +76,7 @@ export async function middleware(request: NextRequest) {
 const protectedRoutes: ProtectedRoutes = {
   "my-jobs": { roles: ["USER"] },
   lessonplans: {
-    roles: ["USER"],
+    roles: ["EVERYBODY"],
     children: [
       { 1: { roles: ["EVERYBODY"] } },
       { 2: { roles: ["USER"] } },
