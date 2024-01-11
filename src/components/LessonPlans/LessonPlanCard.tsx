@@ -16,14 +16,14 @@ export default function LessonPlanCard({
   id,
   title,
   description,
+  duration,
+  prepTime,
+  level,
   isPremium,
   imageURL,
   imageAlt,
   chips,
 }: LessonPlan) {
-  console.log("id in LessonPlanCard");
-  console.log(id);
-
   const lessonChips = chips.map((lessonChip) => (
     <Chip
       key={lessonChip.title}
@@ -32,6 +32,9 @@ export default function LessonPlanCard({
       label={lessonChip.title}
     />
   ));
+
+  console.log("lessonPlans in LessonPlancard");
+  console.log(duration, prepTime, lessonChips);
 
   return (
     <Card
@@ -61,7 +64,7 @@ export default function LessonPlanCard({
           flexWrap="wrap"
           alignItems="center">
           <Typography variant="overline" component="div">
-            90 mins
+            {duration}
           </Typography>
           <Circle
             sx={{
@@ -70,7 +73,7 @@ export default function LessonPlanCard({
             }}
           />
           <Typography variant="overline" component="div">
-            Prep 10 mins
+            {prepTime}
           </Typography>
           <Circle
             sx={{
@@ -79,7 +82,7 @@ export default function LessonPlanCard({
             }}
           />
           <Typography variant="body2" component="div">
-            A1
+            {level}
           </Typography>
 
           {isPremium && (

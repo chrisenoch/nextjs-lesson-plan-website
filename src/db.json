@@ -47,6 +47,9 @@
     {
       "id": "1",
       "title": "Driverless Cars",
+      "duration": "90 mins",
+      "prepTime": "10 mins",
+      "level": "B1",
       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia animi laudantium debitis rerum aperiam itaque quis vero tempore nemo tempora id et voluptas deserunt reprehenderit repellat ullam, dolor neque reiciendis.",
       "isPremium": false,
       "imageURL": "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
@@ -73,6 +76,9 @@
     {
       "id": "2",
       "title": "The Founding of Hollywood",
+      "duration": "60 mins",
+      "prepTime": "10 mins",
+      "level": "C1",
       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia animi laudantium debitis rerum aperiam itaque quis vero tempore nemo tempora id et, voluptas deserunt reprehenderit repellat ullam, dolor neque reiciendis.",
       "isPremium": true,
       "imageURL": "https://raw.githubusercontent.com/chrisenoch/assets/main/hollywood2.jpg",
@@ -91,6 +97,9 @@
     {
       "id": "3",
       "title": "Your Dream Holiday",
+      "duration": "60 mins",
+      "prepTime": "5 mins",
+      "level": "B2",
       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia animi laudantium debitis rerum aperiam itaque quis vero tempore nemo tempora id et, voluptas deserunt reprehenderit repellat ullam, dolor neque reiciendis.",
       "isPremium": true,
       "imageURL": "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
@@ -109,6 +118,9 @@
     {
       "id": "4",
       "title": "Shopping For Clothes",
+      "duration": "90 mins",
+      "prepTime": "10 mins",
+      "level": "A2",
       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia animi laudantium debitis rerum aperiam itaque quis vero tempore nemo tempora id et voluptas deserunt reprehenderit repellat ullam, dolor neque reiciendis.",
       "isPremium": true,
       "imageURL": "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",

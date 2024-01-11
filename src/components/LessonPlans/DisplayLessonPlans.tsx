@@ -15,6 +15,9 @@ export default function DisplayLessonplans({
       <LessonPlanCard
         id={lessonPlan.id}
         title={lessonPlan.title}
+        duration={lessonPlan.duration}
+        prepTime={lessonPlan.prepTime}
+        level={lessonPlan.level}
         description={lessonPlan.description}
         isPremium={lessonPlan.isPremium}
         imageURL={lessonPlan.imageURL}
