@@ -95,7 +95,7 @@ const protectedRoutes: ProtectedRoutes = {
     ],
   },
   test: {
-    roles: ["ADMIN"],
+    roles: ["USER"],
     children: [{ foo: { roles: ["EVERYBODY"] } }],
   },
 };
@@ -159,18 +159,12 @@ function getUrlPathBasedOnPermissions({
         userRoles
       );
 
-      if (
-        rolesUserHasForPrimaryRoute.length === 0 &&
-        userRoles.length === 1 &&
-        userRoles.includes("EVERYBODY")
-      ) {
-        return notLoggedInRedirectUrlPath;
-      }
-
       return getUrlPathOnceRolesAreKnown({
-        rolesUserHas: rolesUserHasForPrimaryRoute,
+        requiredRolesUserHas: rolesUserHasForPrimaryRoute,
         successUrlPath: enteredUrlPath,
         incorrrectRoleRedirectUrlPath,
+        notLoggedInRedirectUrlPath,
+        userRoles,
       });
     } else {
       //If entry DOES have children
@@ -210,18 +204,12 @@ function getUrlPathBasedOnPermissions({
             userRoles
           );
 
-          if (
-            rolesUserHasForPrimaryRoute.length === 0 &&
-            userRoles.length === 1 &&
-            userRoles.includes("EVERYBODY")
-          ) {
-            return notLoggedInRedirectUrlPath;
-          }
-
           return getUrlPathOnceRolesAreKnown({
-            rolesUserHas: rolesUserHasForPrimaryRoute,
+            requiredRolesUserHas: rolesUserHasForPrimaryRoute,
             successUrlPath: enteredUrlPath,
             incorrrectRoleRedirectUrlPath,
+            notLoggedInRedirectUrlPath,
+            userRoles,
           });
         } else {
           if (userRoles.includes("EVERYBODY") && userRoles.length === 1) {
@@ -266,17 +254,28 @@ function getAllProtectedRoutes(protectedRoutes: ProtectedRoutes) {
 }
 
 function getUrlPathOnceRolesAreKnown({
-  rolesUserHas,
+  requiredRolesUserHas,
+  userRoles,
   successUrlPath,
   incorrrectRoleRedirectUrlPath,
+  notLoggedInRedirectUrlPath,
 }: {
-  rolesUserHas: UserRole[];
+  requiredRolesUserHas: UserRole[];
+  userRoles: UserRole[];
   successUrlPath: string;
   incorrrectRoleRedirectUrlPath: string;
+  notLoggedInRedirectUrlPath: string;
 }) {
-  if (rolesUserHas.length > 0) {
+  if (requiredRolesUserHas.length > 0) {
     //user is authorised
     return successUrlPath;
+  } else if (
+    //user is not logegd in
+    requiredRolesUserHas.length === 0 &&
+    userRoles.length === 1 &&
+    userRoles.includes("EVERYBODY")
+  ) {
+    return notLoggedInRedirectUrlPath;
   } else {
     return incorrrectRoleRedirectUrlPath;
   }
