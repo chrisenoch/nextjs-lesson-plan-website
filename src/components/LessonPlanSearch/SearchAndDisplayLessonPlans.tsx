@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import DisplayLessonPlans from "./DisplayLessonPlans";
 import SearchLessonPlans from "./SearchLessonPlans";
 import AutoCompleteMultiSelect from "../AutoCompleteMultiSelect";
@@ -9,7 +9,11 @@ import { LessonPlan } from "../models/types/LessonPlan";
 import { LessonPlanCategory } from "../models/types/LessonPlanCategory";
 import { LessonPlanSubCategory } from "../models/types/LessonPlanSubCategory";
 
-export default function SearchAndDisplayLessonPlans() {
+export default function SearchAndDisplayLessonPlans({
+  lessonPlans,
+}: {
+  lessonPlans: any[];
+}) {
   /***************************************** */
   // Design Decision
 
@@ -48,67 +52,6 @@ export default function SearchAndDisplayLessonPlans() {
     ["B2", [{ title: "Driverless Cars" }]],
     ["C1", [{ title: "The Founding of Hollywood" }]],
   ]);
-
-  //Get this from the server
-  //Sort chips into the correct order server-side
-  const lessonPlans: LessonPlan[] = [
-    {
-      title: "Driverless Cars",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia animi laudantium debitis rerum aperiam itaque quis vero tempore nemo tempora id et," +
-        "voluptas deserunt reprehenderit repellat ullam, dolor neque reiciendis.",
-
-      imageURL:
-        "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-      imageAlt: "A man driving a car",
-      chips: [
-        { title: "Speaking Class", category: "T" },
-        { title: "Technology", category: "V" },
-        { title: "Video", category: "A" },
-        { title: "B2", category: "L" },
-      ],
-    },
-    {
-      title: "The Founding of Hollywood",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia animi laudantium debitis rerum aperiam itaque quis vero tempore nemo tempora id et," +
-        "voluptas deserunt reprehenderit repellat ullam, dolor neque reiciendis.",
-      imageURL:
-        "https://raw.githubusercontent.com/chrisenoch/assets/main/hollywood2.jpg",
-      imageAlt: "Hollywood",
-      chips: [
-        { title: "Video", category: "A" },
-        { title: "C1", category: "L" },
-      ],
-    },
-    {
-      title: "Your Dream Holiday",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia animi laudantium debitis rerum aperiam itaque quis vero tempore nemo tempora id et," +
-        "voluptas deserunt reprehenderit repellat ullam, dolor neque reiciendis.",
-      imageURL:
-        "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-      imageAlt: "A beach with palm trees",
-      chips: [
-        { title: "Second Conditional", category: "G" },
-        { title: "B1", category: "L" },
-      ],
-    },
-    {
-      title: "Shopping For Clothes",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia animi laudantium debitis rerum aperiam itaque quis vero tempore nemo tempora id et," +
-        "voluptas deserunt reprehenderit repellat ullam, dolor neque reiciendis.",
-      imageURL:
-        "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-      imageAlt: "A woman with shopping bags full of clothes",
-      chips: [
-        { title: "Speaking Class", category: "T" },
-        { title: "Role Play", category: "A" },
-        { title: "B1", category: "L" },
-      ],
-    },
-  ];
 
   const [selectedLessonPlanCategories, setSelectedLessonPlanCategories] =
     useState<{ title: string; category: LessonPlanCategory }[]>([]);
