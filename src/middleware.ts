@@ -86,7 +86,6 @@ const protectedRoutes: ProtectedRoutes = {
       { 4: { roles: ["USER"] } },
     ],
   },
-  //premium: { roles: ["ADMIN"] },
   user: {
     roles: ["ADMIN"],
     children: [
@@ -96,8 +95,8 @@ const protectedRoutes: ProtectedRoutes = {
     ],
   },
   test: {
-    roles: ["NOT_LOGGED_IN"],
-    children: [{ foo: { roles: ["USER"] } }],
+    roles: ["ADMIN"],
+    children: [{ foo: { roles: ["EVERYBODY"] } }],
   },
 };
 
@@ -141,7 +140,8 @@ function getUrlPathBasedOnPermissions({
   }
   //If get to here, route is protected.
 
-  // If user doesn't have a role. E.g. he does not have an auth cookie or if his token is invalid.
+  // If user doesn't have a role. E.g. he does not the 'EVERYBODY' role, does not have an auth cookie or
+  // if his token is invalid.
   // To do?: Change so that developer can add different failureRedirectPaths for different urls in 'protectedRoutes.'
   if (userRoles.length < 1) {
     return notLoggedInRedirectUrlPath;
@@ -158,6 +158,14 @@ function getUrlPathBasedOnPermissions({
         protectedPrimaryRoute.roles,
         userRoles
       );
+
+      if (
+        rolesUserHasForPrimaryRoute.length === 0 &&
+        userRoles.length === 1 &&
+        userRoles.includes("EVERYBODY")
+      ) {
+        return notLoggedInRedirectUrlPath;
+      }
 
       return getUrlPathOnceRolesAreKnown({
         rolesUserHas: rolesUserHasForPrimaryRoute,
@@ -202,12 +210,24 @@ function getUrlPathBasedOnPermissions({
             userRoles
           );
 
+          if (
+            rolesUserHasForPrimaryRoute.length === 0 &&
+            userRoles.length === 1 &&
+            userRoles.includes("EVERYBODY")
+          ) {
+            return notLoggedInRedirectUrlPath;
+          }
+
           return getUrlPathOnceRolesAreKnown({
             rolesUserHas: rolesUserHasForPrimaryRoute,
             successUrlPath: enteredUrlPath,
             incorrrectRoleRedirectUrlPath,
           });
         } else {
+          if (userRoles.includes("EVERYBODY") && userRoles.length === 1) {
+            return notLoggedInRedirectUrlPath;
+          }
+
           return incorrrectRoleRedirectUrlPath;
         }
       }
