@@ -95,7 +95,7 @@ const protectedRoutes: ProtectedRoutes = {
     ],
   },
   test: {
-    roles: ["USER"],
+    roles: ["EVERYBODY"],
     children: [{ foo: { roles: ["EVERYBODY"] } }],
   },
 };

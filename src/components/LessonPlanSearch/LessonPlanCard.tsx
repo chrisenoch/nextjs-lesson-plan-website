@@ -23,12 +23,14 @@ import { LessonPlanType } from "../models/types/LessonPlanCategoryShort";
 export default function LessonPlanCard({
   title,
   description,
+  isPremium,
   imageURL,
   imageAlt,
   chips,
 }: {
   title: string;
   description: string;
+  isPremium: boolean;
   imageURL: string;
   imageAlt: string;
   chips: {
@@ -99,9 +101,11 @@ export default function LessonPlanCard({
               verticalAlign: "middle",
             }}
           />
-          <IconButton aria-label="get premium">
-            <Diamond color="secondary" />
-          </IconButton>
+          {isPremium && (
+            <IconButton aria-label="get premium">
+              <Diamond color="secondary" />
+            </IconButton>
+          )}
         </Stack>
         <Divider sx={{ borderBottomWidth: 1, mb: 1 }} />
         <Stack
@@ -134,6 +138,7 @@ export default function LessonPlanCard({
           }}>
           Share
         </Button>
+
         <IconButton aria-label="bookmark">
           <Bookmark />
         </IconButton>

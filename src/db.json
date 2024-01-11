@@ -44,12 +44,6 @@
     },
     {
       "userId": "1",
-      "jobTitle": "gg",
-      "jobDescription": "gg",
-      "id": 27
-    },
-    {
-      "userId": "1",
       "jobTitle": "aa",
       "jobDescription": "aa",
       "id": 29
@@ -60,6 +54,7 @@
       "id": "1",
       "title": "Driverless Cars",
       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia animi laudantium debitis rerum aperiam itaque quis vero tempore nemo tempora id et voluptas deserunt reprehenderit repellat ullam, dolor neque reiciendis.",
+      "isPremium": false,
       "imageURL": "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
       "imageAlt": "A man driving a car",
       "chips": [
@@ -85,6 +80,7 @@
       "id": "2",
       "title": "The Founding of Hollywood",
       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia animi laudantium debitis rerum aperiam itaque quis vero tempore nemo tempora id et, voluptas deserunt reprehenderit repellat ullam, dolor neque reiciendis.",
+      "isPremium": true,
       "imageURL": "https://raw.githubusercontent.com/chrisenoch/assets/main/hollywood2.jpg",
       "imageAlt": "Hollywood",
       "chips": [
@@ -102,6 +98,7 @@
       "id": "3",
       "title": "Your Dream Holiday",
       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia animi laudantium debitis rerum aperiam itaque quis vero tempore nemo tempora id et, voluptas deserunt reprehenderit repellat ullam, dolor neque reiciendis.",
+      "isPremium": true,
       "imageURL": "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
       "imageAlt": "A beach with palm trees",
       "chips": [
@@ -119,6 +116,7 @@
       "id": "4",
       "title": "Shopping For Clothes",
       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia animi laudantium debitis rerum aperiam itaque quis vero tempore nemo tempora id et voluptas deserunt reprehenderit repellat ullam, dolor neque reiciendis.",
+      "isPremium": true,
       "imageURL": "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
       "imageAlt": "A woman with shopping bags full of clothes",
       "chips": [

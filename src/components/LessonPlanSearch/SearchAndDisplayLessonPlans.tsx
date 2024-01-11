@@ -86,6 +86,9 @@ export default function SearchAndDisplayLessonPlans({
     []
   );
 
+  console.log("lessonPlans in SearchAndDisplayLessonPlans");
+  console.log(lessonPlans);
+
   const lessonPlansToDisplay = filterLessonPlansIfFilter(
     selectedLessonPlanCategories,
     lessonPlans,
@@ -124,6 +127,7 @@ function filterLessonPlansIfFilter(
   lessonPlans: {
     title: string;
     description: string;
+    isPremium: boolean;
     imageURL: string;
     imageAlt: string;
     chips: { title: string; category: LessonPlanType }[];
