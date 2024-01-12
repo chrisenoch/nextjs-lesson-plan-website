@@ -37,6 +37,10 @@ export async function middleware(request: NextRequest) {
   const accessTokenRole = await getAccessTokenRole(request);
   const userRoles: UserRole[] = getUserRolesIfExist(accessTokenRole);
   userRoles.push("EVERYBODY"); //Everybody has this role (both logged-in and non-logged-in users)
+
+  console.log("userRoles in middleware");
+  console.log(userRoles);
+
   const urlPath = getUrlPathBasedOnPermissions({
     enteredUrlPath: enteredUrlPathCleaned,
     protectedRoutes,
@@ -369,6 +373,9 @@ function getPrimaryUrlSegment(urlPath: string) {
 function handleSecureNextLink(request: NextRequest) {
   const originalPath = request.nextUrl.pathname.toLowerCase();
   const searchParams = request.nextUrl.searchParams;
+
+  console.log("originalPath " + originalPath);
+
   let queryString = "?";
   for (const [key, value] of searchParams.entries()) {
     queryString += key + "=" + value + "&";

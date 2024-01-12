@@ -13,6 +13,7 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   pollingInterval: number,
   timeBeforeAccessTokenExpiryToSendRefreshToken: number
 ) {
+  console.log("useAutoLogoutWhenJwtTokenExpires renders");
   const { userInfo, wasLastRefreshSuccessful } = useSelector(
     (state) => state.authSlice
   );
@@ -29,6 +30,20 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   const [renderLogoutWarning, setRenderLogoutWarning] = useState<{
     hasAutoLoggedOut: boolean;
   }>({ hasAutoLoggedOut: false });
+  console.log("renderLogoutWarning " + renderLogoutWarning.hasAutoLoggedOut);
+
+  const [previousUserInfo, setPreviousUserInfo] = useState<any>(userInfo);
+  if (userInfo !== previousUserInfo) {
+    console.log("userInfos not equal");
+    setPreviousUserInfo(userInfo);
+  }
+
+  //Just for testing. Delete this
+  console.log("wasLastRefreshSuccessfulbelow");
+  console.log(wasLastRefreshSuccessful);
+
+  console.log("userInfo below");
+  console.log(JSON.stringify(userInfo));
 
   const sendRefreshToken = useCallback(() => {
     if (userInfo) {
@@ -72,10 +87,6 @@ export default function useAutoLogoutWhenJwtTokenExpires(
     isAutoLogoutRunning.current = false;
   }, [dispatch]);
 
-  //Just for testing. Delete this
-  console.log("wasLastRefreshSuccessfulbelow");
-  console.log(wasLastRefreshSuccessful);
-
   if (userInfo) {
     // So we don't run autoLogout when the user hasn't even been logged in since page load.
     hasBeenLoggedIn.current = true;
@@ -87,10 +98,11 @@ export default function useAutoLogoutWhenJwtTokenExpires(
       //Clear any past timers to ensure multiple timers do not get triggered on re-render of useEffect. (Return useEffect clean-up fn is not called on
       //re-render of useEffect.)
       clearTimers();
+      console.log("sending first refresh token in useEffect");
       sendRefreshToken();
 
       intervalId.current = setInterval(() => {
-        console.log("polling interval ran");
+        console.log("polling interval ran and sending refresh token");
         sendRefreshToken();
       }, pollingInterval);
     }
@@ -101,17 +113,17 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   }, [userInfo, dispatch, sendRefreshToken, pollingInterval]);
 
   //Show a warning and then right after log the user out if refresh token fails.
-  useEffect(() => {
-    console.log("inside autoLogout effect");
-    if (wasLastRefreshSuccessful === false && hasBeenLoggedIn.current) {
-      clearTimers();
-      autoLogout();
-    }
+  // useEffect(() => {
+  //   console.log("inside autoLogout effect");
+  //   if (wasLastRefreshSuccessful === false && hasBeenLoggedIn.current) {
+  //     clearTimers();
+  //     autoLogout();
+  //   }
 
-    return () => {
-      clearTimers();
-    };
-  }, [wasLastRefreshSuccessful, dispatch, autoLogout]);
+  //   return () => {
+  //     clearTimers();
+  //   };
+  // }, [wasLastRefreshSuccessful, dispatch, autoLogout]);
 
   function clearTimers() {
     refreshTokenTimeoutId.current &&

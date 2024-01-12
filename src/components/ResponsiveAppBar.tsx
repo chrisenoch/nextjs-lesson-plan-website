@@ -126,6 +126,9 @@ export default function ResponsiveAppBar({
                   Login
                 </Button>
               )}
+              <Button key="Test" href={"/#search-lesson-plans"}>
+                Test
+              </Button>
               {refreshTokenStatus?.isLoading && (
                 <LoadingButton
                   key={"loading-placeholder"}
