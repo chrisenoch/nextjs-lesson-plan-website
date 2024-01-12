@@ -11,47 +11,8 @@ import { LessonPlanSubCategory } from "@/models/types/LessonPlanSubCategory";
 export default function SearchAndDisplayLessonPlans({
   lessonPlans,
 }: {
-  lessonPlans: any[];
+  lessonPlans: LessonPlan[];
 }) {
-  /***************************************** */
-  // Design Decision
-
-  // We use two arrays (lessonPlanTitlesBySubCategory and lessonPlans) for performance reasons. Using lessonPlanTitlesBySubCategory allows the user
-  // to filter lesson plans in O(1) time instead of O(N) time.
-  // This is important because if we have 2000 lesson plans, filtering them would be expensive with O(N) time.
-
-  // We can prepare and sort lessonPlanTitlesBySubCategory and lessonPlans on the server and then use NextJS ISR and stale-while-revalidate to ensure
-  // that the search filtering is as fast as possible for the user.
-
-  /***************************************** */
-
-  //We get these from the server
-  //Depending on the value of the chip in the search field, we render the corresponding lesson plans
-  const lessonPlanTitlesBySubCategory: Map<
-    LessonPlanSubCategory,
-    {
-      title: string;
-    }[]
-  > = new Map([
-    [
-      "Speaking Class",
-      [{ title: "Driverless Cars" }, { title: "Shopping For Clothes" }],
-    ],
-    ["Technology", [{ title: "Driverless Cars" }]],
-    ["Second Conditional", [{ title: "Your Dream Holiday" }]],
-    [
-      "Video",
-      [{ title: "The Founding of Hollywood" }, { title: "Driverless Cars" }],
-    ],
-    ["Role Play", [{ title: "Shopping For Clothes" }]],
-    [
-      "B1",
-      [{ title: "Your Dream Holiday" }, { title: "Shopping For Clothes" }],
-    ],
-    ["B2", [{ title: "Driverless Cars" }]],
-    ["C1", [{ title: "The Founding of Hollywood" }]],
-  ]);
-
   const [selectedLessonPlanCategories, setSelectedLessonPlanCategories] =
     useState<{ title: string; category: LessonPlanCategory }[]>([]);
 
@@ -85,16 +46,10 @@ export default function SearchAndDisplayLessonPlans({
     []
   );
 
-  console.log("lessonPlans in SearchAndDisplayLessonPlans");
-  console.log(lessonPlans);
-
-  const lessonPlansToDisplay = filterLessonPlansIfFilter(
-    selectedLessonPlanCategories,
+  const lessonPlansToDisplay = filterLessonPlans(
     lessonPlans,
-    lessonPlanTitlesBySubCategory
+    selectedLessonPlanCategories
   );
-
-  //value: { title: string; category: LessonPlanCategory }[]
 
   const updateSelectedLessonPlans = useCallback(
     (value: { title: string; category: LessonPlanCategory }[]) => {
@@ -118,39 +73,34 @@ export default function SearchAndDisplayLessonPlans({
   );
 }
 
-function filterLessonPlansIfFilter(
+function filterLessonPlans(
+  lessonPlans: LessonPlan[],
   selectedLessonPlanCategories: {
     title: string;
     category: LessonPlanCategory;
-  }[],
-  lessonPlans: LessonPlan[],
-  lessonPlanTitlesBySubCategory: Map<LessonPlanSubCategory, { title: string }[]>
+  }[]
 ) {
-  let lessonPlansToDisplay;
-  if (selectedLessonPlanCategories.length < 1) {
-    lessonPlansToDisplay = lessonPlans;
-  } else {
-    const filteredLessonPlans = filterLessonPlans(
-      selectedLessonPlanCategories,
-      lessonPlanTitlesBySubCategory
-    );
-    lessonPlansToDisplay = lessonPlans.filter((lessonPlan) =>
-      filteredLessonPlans.has(lessonPlan.title)
-    );
-  }
-  return lessonPlansToDisplay;
-}
-
-function filterLessonPlans(
-  selectedLessonPlanCategories: { title: string; category: string }[],
-  lessonPlansByCategory: Map<string, { title: string }[]>
-) {
-  const lessonPlansToRender = new Set();
-  selectedLessonPlanCategories.forEach((lessonPlanCategory) => {
-    const lessonPlanItems = lessonPlansByCategory.get(lessonPlanCategory.title);
-    lessonPlanItems?.forEach((lessonPlanItem) => {
-      lessonPlansToRender.add(lessonPlanItem.title);
-    });
+  const selectedLessonPlanTitles = new Set<string>();
+  selectedLessonPlanCategories.forEach((selectedCategory) => {
+    selectedLessonPlanTitles.add(selectedCategory.title);
   });
-  return lessonPlansToRender;
+
+  const selectedLessonPlanTitlesArr = Array.from(selectedLessonPlanTitles);
+  const filteredLessonPlans: LessonPlan[] = [];
+  lessonPlans.forEach((lessonPlan) => {
+    const chipTitles = new Set<string>();
+    lessonPlan.chips.forEach((chip) => {
+      chipTitles.add(chip.title);
+    });
+    const chipTitlesArr = Array.from(chipTitles);
+    const commonTitles = selectedLessonPlanTitlesArr.filter((title) => {
+      return chipTitlesArr.includes(title);
+    });
+
+    if (selectedLessonPlanTitlesArr.length === commonTitles.length) {
+      filteredLessonPlans.push(lessonPlan);
+    }
+  });
+
+  return filteredLessonPlans;
 }

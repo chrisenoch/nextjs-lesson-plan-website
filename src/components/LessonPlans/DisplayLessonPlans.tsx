@@ -7,9 +7,6 @@ export default function DisplayLessonplans({
 }: {
   lessonPlans: LessonPlan[];
 }) {
-  console.log("lessonPlans in DisplayLessonPlans");
-  console.log(lessonPlans);
-
   const lessonPlansToDisplay = lessonPlans.map((lessonPlan) => (
     <Grid item xs={4} key={lessonPlan.title}>
       <LessonPlanCard

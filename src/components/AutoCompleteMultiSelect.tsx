@@ -42,7 +42,6 @@ const AutoCompleteMultiSelect = memo(function AutoCompleteMultiSelect({
       groupBy={(option) => option.category.toString()}
       value={selectedValues}
       onChange={(event, newValue) => {
-        console.log(event);
         updateSelectedLessonPlans([...newValue]);
       }}
       filterSelectedOptions

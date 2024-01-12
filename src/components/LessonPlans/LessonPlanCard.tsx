@@ -33,9 +33,6 @@ export default function LessonPlanCard({
     />
   ));
 
-  console.log("lessonPlans in LessonPlancard");
-  console.log(duration, prepTime, lessonChips);
-
   return (
     <Card
       sx={{
