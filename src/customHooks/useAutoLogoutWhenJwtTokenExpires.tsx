@@ -34,11 +34,6 @@ export default function useAutoLogoutWhenJwtTokenExpires(
     hasAutoLoggedOut: boolean;
   }>({ hasAutoLoggedOut: false });
 
-  // if (userInfo) {
-  //   // So we don't run autoLogout when the user hasn't even been logged in since page load.
-  //   hasBeenLoggedIn.current = true;
-  // }
-
   const sendRefreshToken = useCallback(() => {
     if (userInfo && loginStatus === "LOGGED_IN") {
       const tokenExpiry = new Date(userInfo.exp * 1000); //userInfo.exp is in seconds, new Date(value) is in milliseconds.
@@ -49,11 +44,7 @@ export default function useAutoLogoutWhenJwtTokenExpires(
       if (timeInFuture > tokenExpiry.valueOf()) {
         const timeUntilAutoLogout = tokenExpiry.valueOf() - Date.now();
         console.log(
-          "getAccessTokenWithRefreshToken will run in (" +
-            timeUntilAutoLogout +
-            " - " +
-            timeBeforeAccessTokenExpiryToSendRefreshToken +
-            "): " +
+          "getAccessTokenWithRefreshToken will run in: " +
             (timeUntilAutoLogout -
               timeBeforeAccessTokenExpiryToSendRefreshToken)
         );
@@ -118,7 +109,7 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   useEffect(() => {
     if (wasLastRefreshSuccessful === false && loginStatus === "LOGGED_IN") {
       console.log(
-        "inside if (wasLastRefreshSuccessful === false && hasBeenLoggedIn.current) and about to run autoLogout"
+        "inside if ( wasLastRefreshSuccessful === false && loginStatus === 'LOGGED_IN') and about to run autoLogout"
       );
       clearTimers();
       autoLogout();

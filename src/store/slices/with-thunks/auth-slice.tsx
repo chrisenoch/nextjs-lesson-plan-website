@@ -227,6 +227,7 @@ function setUserInfoFromLoggedInStatus(action, state) {
     const { message, status, isError, ...userInfo } = action.payload;
     state.userInfo = userInfo;
     state.loginStatus = "LOGGED_IN";
+    state.wasLastRefreshSuccessful = null;
   } else {
     state.loginStatus = "LOGGED_OUT";
   }
