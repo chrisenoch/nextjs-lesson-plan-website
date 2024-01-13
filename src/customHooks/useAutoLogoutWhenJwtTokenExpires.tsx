@@ -30,25 +30,14 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   const [renderLogoutWarning, setRenderLogoutWarning] = useState<{
     hasAutoLoggedOut: boolean;
   }>({ hasAutoLoggedOut: false });
-  console.log("renderLogoutWarning " + renderLogoutWarning.hasAutoLoggedOut);
 
-  const [previousUserInfo, setPreviousUserInfo] = useState<any>(userInfo);
-  if (userInfo !== previousUserInfo) {
-    console.log("userInfos not equal");
-    setPreviousUserInfo(userInfo);
+  if (userInfo) {
+    // So we don't run autoLogout when the user hasn't even been logged in since page load.
+    hasBeenLoggedIn.current = true;
   }
 
-  //Just for testing. Delete this
-  console.log("wasLastRefreshSuccessfulbelow");
-  console.log(wasLastRefreshSuccessful);
-
-  console.log("wasLastRefresh: " + wasLastRefresh);
-
-  console.log("userInfo below");
-  console.log(JSON.stringify(userInfo));
-
   const sendRefreshToken = useCallback(() => {
-    if (userInfo && !wasLastRefresh) {
+    if (userInfo) {
       const tokenExpiry = new Date(userInfo.exp * 1000); //userInfo.exp is in seconds, new Date(value) is in milliseconds.
       //get the date X time from now
       const timeInFuture = Date.now() + pollingInterval;
@@ -77,7 +66,6 @@ export default function useAutoLogoutWhenJwtTokenExpires(
     pollingInterval,
     timeBeforeAccessTokenExpiryToSendRefreshToken,
     userInfo,
-    wasLastRefresh,
   ]);
 
   const autoLogout = useCallback(() => {
@@ -90,14 +78,9 @@ export default function useAutoLogoutWhenJwtTokenExpires(
     isAutoLogoutRunning.current = false;
   }, [dispatch]);
 
-  if (userInfo) {
-    // So we don't run autoLogout when the user hasn't even been logged in since page load.
-    hasBeenLoggedIn.current = true;
-  }
-
   //Check the access token expiry date periodically and send refresh token just before the token expires.
   useEffect(() => {
-    if (!isAutoLogoutRunning.current && userInfo) {
+    if (!isAutoLogoutRunning.current && userInfo && !wasLastRefresh) {
       //Clear any past timers to ensure multiple timers do not get triggered on re-render of useEffect. (Return useEffect clean-up fn is not called on
       //re-render of useEffect.)
       clearTimers();
@@ -113,12 +96,16 @@ export default function useAutoLogoutWhenJwtTokenExpires(
     return () => {
       clearTimers();
     };
-  }, [userInfo, dispatch, sendRefreshToken, pollingInterval]);
+  }, [userInfo, dispatch, sendRefreshToken, pollingInterval, wasLastRefresh]);
 
   //Show a warning and then right after log the user out if refresh token fails.
+  //This is for when the refresh token has been revoked, changed or is no longer present when it
+  //is expected to be.
   useEffect(() => {
     if (wasLastRefreshSuccessful === false && hasBeenLoggedIn.current) {
-      console.log("inside autoLogout effect if condition");
+      console.log(
+        "inside if (wasLastRefreshSuccessful === false && hasBeenLoggedIn.current) and about to run autoLogout"
+      );
       clearTimers();
       autoLogout();
     }
@@ -127,6 +114,30 @@ export default function useAutoLogoutWhenJwtTokenExpires(
       clearTimers();
     };
   }, [wasLastRefreshSuccessful, dispatch, autoLogout]);
+
+  //Show a warning and then right after log the user out.
+  //This is for when the refresh token has expired.
+  //We cannot just rely on wasLastRefreshSuccessful because if we do this, then for a short time before logout,
+  //requests will be sent non-stop to the refresh endpoint.
+  useEffect(() => {
+    if (wasLastRefresh && userInfo) {
+      clearTimers();
+      console.log(
+        "inside if (wasLastRefresh && userInfo) and about to set timer for autoLogout"
+      );
+
+      const tokenExpiry = new Date(userInfo.exp * 1000);
+      const millisecondsUntilTokenExpiry = tokenExpiry.valueOf() - Date.now();
+
+      autoLogoutTimeoutId.current = setTimeout(() => {
+        autoLogout();
+      }, millisecondsUntilTokenExpiry);
+    }
+
+    return () => {
+      clearTimers();
+    };
+  }, [wasLastRefresh, dispatch, autoLogout, userInfo]);
 
   function clearTimers() {
     refreshTokenTimeoutId.current &&
