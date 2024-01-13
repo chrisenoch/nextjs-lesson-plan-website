@@ -11,6 +11,7 @@ import {
   handlePending,
   handleRejected,
 } from "./thunk-helpers";
+import { LoginStatus } from "@/models/types/LoginStatus";
 
 const initialState: {
   userInfo: UserInfo | null; //null is used when app mounts and the login attempt hasn't been processed yet.
@@ -19,7 +20,7 @@ const initialState: {
   // the login hasn't processed yet, it presents problems in hooks/components because it is possible that
   // first Userinfo is null (login not processed) and then userInfo is true (successful login).
   // isLoggedIn allows us to be certain that the login attempt was processed.
-  loginStatus: "LOGIN_NOT_PROCESSED" | "LOGGED_IN" | "LOGGED_OUT";
+  loginStatus: LoginStatus;
   wasLastRefreshSuccessful: boolean | null;
   wasLastRefresh: boolean;
   logoutCount: number;

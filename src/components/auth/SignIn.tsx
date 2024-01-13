@@ -1,14 +1,20 @@
 "use client";
-import { AppDispatch, selectUserLogin, userLogin } from "@/store";
+import {
+  AppDispatch,
+  selectLoginStatus,
+  selectUserLogin,
+  userLogin,
+} from "@/store";
 import { Box, TextField, Button, Stack } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { redirect } from "next/navigation";
 import useHideMessageOnNavAway from "@/customHooks/useHideMessageOnNavAway";
 import { LoadingButton } from "@mui/lab";
+import { LoginStatus } from "@/models/types/LoginStatus";
 
 export function SignIn() {
-  const { userInfo } = useSelector((state) => state.authSlice);
+  const loginStatus: LoginStatus = useSelector(selectLoginStatus);
   const dispatch = useDispatch<AppDispatch>();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -27,8 +33,7 @@ export function SignIn() {
     dispatch(userLogin({ email, password }));
   }
 
-  // Ensure that  previously authenticated users can’t access this page.
-  if (userInfo) {
+  if (loginStatus === "LOGGED_IN") {
     redirect("/");
   }
 

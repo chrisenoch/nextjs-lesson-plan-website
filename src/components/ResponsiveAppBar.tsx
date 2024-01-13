@@ -31,6 +31,7 @@ import {
 import SecureNextLink from "./SecureNextLink";
 import InsecureNextLink from "next/link";
 import { selectLogoutCount } from "@/store/slices/with-thunks/auth-slice";
+import { LoginStatus } from "@/models/types/LoginStatus";
 
 export default function ResponsiveAppBar({
   DRAWER_WIDTH,
@@ -38,8 +39,7 @@ export default function ResponsiveAppBar({
   PLACEHOLDER_LINKS,
 }) {
   console.log("Responsive AppBar mounts");
-  const loginStatus: "LOGIN_NOT_PROCESSED" | "LOGGED_IN" | "LOGGED_OUT" =
-    useSelector(selectLoginStatus);
+  const loginStatus: LoginStatus = useSelector(selectLoginStatus);
 
   const dispatch = useDispatch<AppDispatch>();
 
