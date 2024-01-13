@@ -124,11 +124,12 @@ const authSlice = createSlice({
       handleFulfilled("userLogout", state, action);
       if (!action.payload.isError) {
         state.loginStatus = "LOGGED_OUT";
+        state.userInfo = null;
       }
     });
     builder.addCase(userLogout.rejected, (state, action) => {
       handleRejected("userLogout", state, action);
-      state.loginStatus = "LOGGED_OUT";
+      //state.loginStatus = "LOGGED_OUT";
     });
     //Get access token with refresh token in the background.
     //Do not change isLoading for any getAccessTokenWithRefreshToken case. The access token being updated should happen
@@ -215,6 +216,7 @@ function handleRefreshState(action, state) {
       state.wasLastRefresh = false;
     }
   } else {
+    state.userInfo = null;
     state.loginStatus = "LOGGED_OUT";
     state.wasLastRefreshSuccessful = false;
     state.wasLastRefresh = false;
