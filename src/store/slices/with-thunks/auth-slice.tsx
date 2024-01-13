@@ -15,6 +15,7 @@ import {
 const initialState: {
   userInfo: UserInfo | null;
   wasLastRefreshSuccessful: boolean | null;
+  wasLastRefresh: boolean;
   logoutCount: number;
 
   userLogin: {
@@ -47,6 +48,7 @@ const initialState: {
 } = {
   userInfo: null,
   wasLastRefreshSuccessful: null,
+  wasLastRefresh: false,
   logoutCount: 0,
 
   userLogin: {
@@ -127,6 +129,7 @@ const authSlice = createSlice({
       state.getAccessTokenWithRefreshToken.message = "";
       state.getAccessTokenWithRefreshToken.statusCode = null;
       state.wasLastRefreshSuccessful = null;
+      state.wasLastRefresh = false;
     });
     builder.addCase(
       getAccessTokenWithRefreshToken.fulfilled,
@@ -147,6 +150,7 @@ const authSlice = createSlice({
       (state, action) => {
         //Do not set isLoading.
         handleRejected("getAccessTokenWithRefreshToken", state, action);
+        state.wasLastRefresh = false;
       }
     );
     //Send refresh token on app mount. In this case, we DO want to show the loading state
@@ -155,6 +159,7 @@ const authSlice = createSlice({
       (state) => {
         handlePending("getAccessTokenWithRefreshTokenOnAppMount", state);
         state.wasLastRefreshSuccessful = null;
+        state.wasLastRefresh = false;
       }
     );
     builder.addCase(
@@ -181,6 +186,7 @@ const authSlice = createSlice({
           state,
           action
         );
+        state.wasLastRefresh = false;
       }
     );
   },
@@ -191,9 +197,15 @@ function handleRefreshState(action, state) {
     const { message, status, isError, ...userInfo } = action.payload;
     state.userInfo = userInfo;
     state.wasLastRefreshSuccessful = true;
+    if (action.payload.wasLastRefresh) {
+      state.wasLastRefresh = true;
+    } else {
+      state.wasLastRefresh = false;
+    }
   } else {
     state.userInfo = null;
     state.wasLastRefreshSuccessful = false;
+    state.wasLastRefresh = false;
   }
 }
 

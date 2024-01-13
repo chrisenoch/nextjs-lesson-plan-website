@@ -62,15 +62,17 @@ export async function GET(request: NextRequest) {
       //erase iat and exp properties from the object
       const { iat, exp, ...rest } = oldAccessTokenPayload;
 
+      let wasLastRefresh = false;
       //To do: will also need to change the cookie time
       if (
         refreshTokenPayload?.exp &&
-        refreshTokenPayload.exp < accessTokenExpiry
+        refreshTokenPayload.exp <= accessTokenExpiry
       ) {
         console.log(
           "in if (refreshTokenPayload?.exp && refreshTokenPayload.exp < accessTokenExpiry"
         );
-        accessTokenExpiry = refreshTokenPayload.exp - 10;
+        accessTokenExpiry = refreshTokenPayload.exp;
+        wasLastRefresh = true;
       }
 
       const newAccessTokenPromise = new jose.SignJWT({ ...rest })
@@ -92,6 +94,7 @@ export async function GET(request: NextRequest) {
       resp = NextResponse.json(
         {
           ...jwtAccessTokenPayload,
+          wasLastRefresh,
           message: "Refresh success.",
           isError: false,
         },

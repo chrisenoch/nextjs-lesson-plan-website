@@ -14,7 +14,7 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   timeBeforeAccessTokenExpiryToSendRefreshToken: number
 ) {
   console.log("useAutoLogoutWhenJwtTokenExpires renders");
-  const { userInfo, wasLastRefreshSuccessful } = useSelector(
+  const { userInfo, wasLastRefreshSuccessful, wasLastRefresh } = useSelector(
     (state) => state.authSlice
   );
   const dispatch = useDispatch<AppDispatch>();
@@ -42,11 +42,13 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   console.log("wasLastRefreshSuccessfulbelow");
   console.log(wasLastRefreshSuccessful);
 
+  console.log("wasLastRefresh: " + wasLastRefresh);
+
   console.log("userInfo below");
   console.log(JSON.stringify(userInfo));
 
   const sendRefreshToken = useCallback(() => {
-    if (userInfo) {
+    if (userInfo && !wasLastRefresh) {
       const tokenExpiry = new Date(userInfo.exp * 1000); //userInfo.exp is in seconds, new Date(value) is in milliseconds.
       //get the date X time from now
       const timeInFuture = Date.now() + pollingInterval;
@@ -75,6 +77,7 @@ export default function useAutoLogoutWhenJwtTokenExpires(
     pollingInterval,
     timeBeforeAccessTokenExpiryToSendRefreshToken,
     userInfo,
+    wasLastRefresh,
   ]);
 
   const autoLogout = useCallback(() => {
@@ -113,17 +116,17 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   }, [userInfo, dispatch, sendRefreshToken, pollingInterval]);
 
   //Show a warning and then right after log the user out if refresh token fails.
-  // useEffect(() => {
-  //   console.log("inside autoLogout effect");
-  //   if (wasLastRefreshSuccessful === false && hasBeenLoggedIn.current) {
-  //     clearTimers();
-  //     autoLogout();
-  //   }
+  useEffect(() => {
+    if (wasLastRefreshSuccessful === false && hasBeenLoggedIn.current) {
+      console.log("inside autoLogout effect if condition");
+      clearTimers();
+      autoLogout();
+    }
 
-  //   return () => {
-  //     clearTimers();
-  //   };
-  // }, [wasLastRefreshSuccessful, dispatch, autoLogout]);
+    return () => {
+      clearTimers();
+    };
+  }, [wasLastRefreshSuccessful, dispatch, autoLogout]);
 
   function clearTimers() {
     refreshTokenTimeoutId.current &&
