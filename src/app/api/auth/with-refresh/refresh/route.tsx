@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
   if (accessToken && refreshToken) {
     try {
       //Prepare the expiry times
-      const { jwtTime: accessTokenExpiry, seconds: accessTokenCookieExpiry } =
+      let { jwtTime: accessTokenExpiry, seconds: accessTokenCookieExpiry } =
         authTimeHelper({ minutes: parseInt(process.env.ACCESS_TOKEN_MINS!) });
 
       const { seconds: oldAccessTokenClockTolerance } = authTimeHelper({
@@ -62,6 +62,19 @@ export async function GET(request: NextRequest) {
       //erase iat and exp properties from the object
       const { iat, exp, ...rest } = oldAccessTokenPayload;
 
+      let wasLastRefresh = false;
+      //To do: will also need to change the cookie time
+      if (
+        refreshTokenPayload?.exp &&
+        refreshTokenPayload.exp <= accessTokenExpiry
+      ) {
+        console.log(
+          "in if (refreshTokenPayload?.exp && refreshTokenPayload.exp < accessTokenExpiry"
+        );
+        accessTokenExpiry = refreshTokenPayload.exp;
+        wasLastRefresh = true;
+      }
+
       const newAccessTokenPromise = new jose.SignJWT({ ...rest })
         .setProtectedHeader({ alg: "HS256", typ: "JWT" })
         .setExpirationTime(accessTokenExpiry)
@@ -75,9 +88,13 @@ export async function GET(request: NextRequest) {
         process.env.ACCESS_TOKEN_SECRET!
       );
 
+      console.log("jwtAccessTokenPayload");
+      console.log(jwtAccessTokenPayload);
+
       resp = NextResponse.json(
         {
           ...jwtAccessTokenPayload,
+          wasLastRefresh,
           message: "Refresh success.",
           isError: false,
         },
@@ -99,6 +116,7 @@ export async function GET(request: NextRequest) {
     }
   } else {
     //Missing jwt token.
+    console.log("missing JWT token");
     resp = NextResponse.json(
       { message: "Refresh failure", isError: true },
       { status: 401 }

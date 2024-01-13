@@ -25,10 +25,13 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   AppDispatch,
   selectGetAccessTokenWithRefreshTokenOnAppMount,
+  selectLoginStatus,
   userLogout,
 } from "@/store";
 import SecureNextLink from "./SecureNextLink";
 import InsecureNextLink from "next/link";
+import { selectLogoutCount } from "@/store/slices/with-thunks/auth-slice";
+import { LoginStatus } from "@/models/types/LoginStatus";
 
 export default function ResponsiveAppBar({
   DRAWER_WIDTH,
@@ -36,10 +39,8 @@ export default function ResponsiveAppBar({
   PLACEHOLDER_LINKS,
 }) {
   console.log("Responsive AppBar mounts");
-  const { userInfo } = useSelector((state) => state.authSlice);
-  const refreshTokenStatus: null | {
-    isLoading: boolean;
-  } = useSelector(selectGetAccessTokenWithRefreshTokenOnAppMount);
+  const loginStatus: LoginStatus = useSelector(selectLoginStatus);
+
   const dispatch = useDispatch<AppDispatch>();
 
   const navItems = [
@@ -108,7 +109,7 @@ export default function ResponsiveAppBar({
                 );
               })}
               {/* show login, logout or loading button depending on the status */}
-              {userInfo && !refreshTokenStatus?.isLoading && (
+              {loginStatus === "LOGGED_IN" && (
                 <Button
                   key="Logout"
                   onClick={() => {
@@ -117,7 +118,7 @@ export default function ResponsiveAppBar({
                   Logout
                 </Button>
               )}
-              {!userInfo && !refreshTokenStatus?.isLoading && (
+              {loginStatus === "LOGGED_OUT" && (
                 <Button
                   key="Login"
                   href={"/auth/signin"}
@@ -126,7 +127,7 @@ export default function ResponsiveAppBar({
                   Login
                 </Button>
               )}
-              {refreshTokenStatus?.isLoading && (
+              {loginStatus === "LOGIN_NOT_PROCESSED" && (
                 <LoadingButton
                   key={"loading-placeholder"}
                   loading
@@ -136,6 +137,9 @@ export default function ResponsiveAppBar({
                   Login
                 </LoadingButton>
               )}
+              <Button key="Test" href={"/#search-lesson-plans"}>
+                Test
+              </Button>
             </Box>
           </Toolbar>
         </AppBar>

@@ -16,6 +16,7 @@ export default function SearchLessonPlans({
         mx: "auto",
       }}>
       <Typography
+        id="search-lesson-plans"
         variant="h4"
         component="h3"
         borderBottom={4}

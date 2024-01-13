@@ -70,7 +70,7 @@ export default function LessonPlanCard({
             }}
           />
           <Typography variant="overline" component="div">
-            {prepTime}
+            Prep: {prepTime}
           </Typography>
           <Circle
             sx={{
@@ -107,18 +107,18 @@ export default function LessonPlanCard({
           {description}
         </Typography>
       </CardContent>
-      <CardActions>
+      <CardActions sx={{ padding: 2 }}>
         <Button
           href={`/lessonplans/${id}`}
           variant={"contained"}
           size="small"
           component={SecureNextLink}
           sx={{
-            mr: 1,
+            mr: "auto",
           }}>
           View
         </Button>
-        <Button
+        {/* <Button
           onClick={() => console.log("hello from Share")}
           variant={"outlined"}
           size="small"
@@ -126,7 +126,7 @@ export default function LessonPlanCard({
             mr: "auto",
           }}>
           Share
-        </Button>
+        </Button> */}
 
         <IconButton aria-label="bookmark">
           <Bookmark />

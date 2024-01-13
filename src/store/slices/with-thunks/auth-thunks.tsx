@@ -53,6 +53,7 @@ export const userLogout = createAsyncThunk(
 export const getAccessTokenWithRefreshToken = createAsyncThunk(
   "authSlice/refresh",
   async (_: void, { rejectWithValue }) => {
+    console.log("sending getAccessTokenWithRefreshToken");
     try {
       const response = await fetch(`${API_URL}/auth/with-refresh/refresh`, {
         method: "GET",

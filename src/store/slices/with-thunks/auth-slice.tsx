@@ -11,10 +11,13 @@ import {
   handlePending,
   handleRejected,
 } from "./thunk-helpers";
+import { LoginStatus } from "@/models/types/LoginStatus";
 
 const initialState: {
   userInfo: UserInfo | null;
+  loginStatus: LoginStatus;
   wasLastRefreshSuccessful: boolean | null;
+  wasLastRefresh: boolean;
   logoutCount: number;
 
   userLogin: {
@@ -46,7 +49,9 @@ const initialState: {
   };
 } = {
   userInfo: null,
+  loginStatus: "LOGIN_NOT_PROCESSED",
   wasLastRefreshSuccessful: null,
+  wasLastRefresh: false,
   logoutCount: 0,
 
   userLogin: {
@@ -104,6 +109,7 @@ const authSlice = createSlice({
     });
     builder.addCase(userLogin.rejected, (state, action) => {
       handleRejected("userLogin", state, action);
+      state.loginStatus = "LOGGED_OUT";
     });
     //Logout user
     builder.addCase(userLogout.pending, (state) => {
@@ -112,11 +118,13 @@ const authSlice = createSlice({
     builder.addCase(userLogout.fulfilled, (state, action) => {
       handleFulfilled("userLogout", state, action);
       if (!action.payload.isError) {
+        state.loginStatus = "LOGGED_OUT";
         state.userInfo = null;
       }
     });
     builder.addCase(userLogout.rejected, (state, action) => {
       handleRejected("userLogout", state, action);
+      //state.loginStatus = "LOGGED_OUT";
     });
     //Get access token with refresh token in the background.
     //Do not change isLoading for any getAccessTokenWithRefreshToken case. The access token being updated should happen
@@ -127,6 +135,7 @@ const authSlice = createSlice({
       state.getAccessTokenWithRefreshToken.message = "";
       state.getAccessTokenWithRefreshToken.statusCode = null;
       state.wasLastRefreshSuccessful = null;
+      state.wasLastRefresh = false;
     });
     builder.addCase(
       getAccessTokenWithRefreshToken.fulfilled,
@@ -147,6 +156,7 @@ const authSlice = createSlice({
       (state, action) => {
         //Do not set isLoading.
         handleRejected("getAccessTokenWithRefreshToken", state, action);
+        state.wasLastRefresh = false;
       }
     );
     //Send refresh token on app mount. In this case, we DO want to show the loading state
@@ -155,6 +165,7 @@ const authSlice = createSlice({
       (state) => {
         handlePending("getAccessTokenWithRefreshTokenOnAppMount", state);
         state.wasLastRefreshSuccessful = null;
+        state.wasLastRefresh = false;
       }
     );
     builder.addCase(
@@ -181,6 +192,7 @@ const authSlice = createSlice({
           state,
           action
         );
+        state.wasLastRefresh = false;
       }
     );
   },
@@ -190,10 +202,19 @@ function handleRefreshState(action, state) {
   if (!action.payload.isError) {
     const { message, status, isError, ...userInfo } = action.payload;
     state.userInfo = userInfo;
+    state.loginStatus = "LOGGED_IN";
     state.wasLastRefreshSuccessful = true;
+
+    if (action.payload.wasLastRefresh) {
+      state.wasLastRefresh = true;
+    } else {
+      state.wasLastRefresh = false;
+    }
   } else {
     state.userInfo = null;
+    state.loginStatus = "LOGGED_OUT";
     state.wasLastRefreshSuccessful = false;
+    state.wasLastRefresh = false;
   }
 }
 
@@ -202,8 +223,10 @@ function setUserInfoFromLoggedInStatus(action, state) {
   if (!action.payload.isError) {
     const { message, status, isError, ...userInfo } = action.payload;
     state.userInfo = userInfo;
+    state.loginStatus = "LOGGED_IN";
+    state.wasLastRefreshSuccessful = null;
   } else {
-    state.userInfo = null;
+    state.loginStatus = "LOGGED_OUT";
   }
 }
 
@@ -211,6 +234,7 @@ export const { reinitWasLastRefreshSuccessful, increaseLogoutCount } =
   authSlice.actions;
 export const authReducer = authSlice.reducer;
 export const selectUserInfo = (state) => state.authSlice.userInfo;
+export const selectLoginStatus = (state) => state.authSlice.loginStatus;
 export const selectLogoutCount = (state) => state.authSlice.logoutCount;
 export const selectUserLogin = (state) => state.authSlice.userLogin;
 export const selectGetAccessTokenWithRefreshTokenOnAppMount = (state) =>
