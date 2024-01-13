@@ -14,12 +14,7 @@ import {
 import { LoginStatus } from "@/models/types/LoginStatus";
 
 const initialState: {
-  userInfo: UserInfo | null; //null is used when app mounts and the login attempt hasn't been processed yet.
-  // We set isLoggedIn to true or false when a login attempt has been processed. This allows us to check for
-  // isLoggedIn in hooks and components. If we set userInfo to null for when both user is logged-out and when
-  // the login hasn't processed yet, it presents problems in hooks/components because it is possible that
-  // first Userinfo is null (login not processed) and then userInfo is true (successful login).
-  // isLoggedIn allows us to be certain that the login attempt was processed.
+  userInfo: UserInfo | null;
   loginStatus: LoginStatus;
   wasLastRefreshSuccessful: boolean | null;
   wasLastRefresh: boolean;
