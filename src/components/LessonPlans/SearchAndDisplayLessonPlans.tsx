@@ -85,9 +85,6 @@ export default function SearchAndDisplayLessonPlans({
     []
   );
 
-  console.log("lessonPlans in SearchAndDisplayLessonPlans");
-  console.log(lessonPlans);
-
   const lessonPlansToDisplay = filterLessonPlansIfFilter(
     selectedLessonPlanCategories,
     lessonPlans,

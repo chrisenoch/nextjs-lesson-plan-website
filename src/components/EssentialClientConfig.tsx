@@ -20,12 +20,8 @@ export default function EssentialClientConfig({
   }>(renderModal);
   const [showLogoutWarning, setShowLogoutWarning] = useState<boolean>(false);
 
-  console.log("renderModal in EssentialClientConfig ");
-  console.log(renderModal);
-
   //Avoids using an effect and saves a render.
   if (renderModal !== previousRenderModal) {
-    console.log("renderModals not equal");
     if (renderModal.hasAutoLoggedOut) {
       setShowLogoutWarning(true);
       renderModal.hasAutoLoggedOut = false;
@@ -35,7 +31,6 @@ export default function EssentialClientConfig({
 
   // automatically authenticate user if refresh token cookie and access token cookies are found on app mount
   useEffect(() => {
-    console.log("in getAccessTokenWithRefreshTokenOnAppMount effect");
     dispatch(getAccessTokenWithRefreshTokenOnAppMount());
   }, [dispatch]);
 

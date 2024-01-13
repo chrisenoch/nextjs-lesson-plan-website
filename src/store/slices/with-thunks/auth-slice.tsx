@@ -13,7 +13,13 @@ import {
 } from "./thunk-helpers";
 
 const initialState: {
-  userInfo: UserInfo | null;
+  userInfo: UserInfo | null; //null is used when app mounts and the login attempt hasn't been processed yet.
+  // We set isLoggedIn to true or false when a login attempt has been processed. This allows us to check for
+  // isLoggedIn in hooks and components. If we set userInfo to null for when both user is logged-out and when
+  // the login hasn't processed yet, it presents problems in hooks/components because it is possible that
+  // first Userinfo is null (login not processed) and then userInfo is true (successful login).
+  // isLoggedIn allows us to be certain that the login attempt was processed.
+  loginStatus: "LOGIN_NOT_PROCESSED" | "LOGGED_IN" | "LOGGED_OUT";
   wasLastRefreshSuccessful: boolean | null;
   wasLastRefresh: boolean;
   logoutCount: number;
@@ -47,6 +53,7 @@ const initialState: {
   };
 } = {
   userInfo: null,
+  loginStatus: "LOGIN_NOT_PROCESSED",
   wasLastRefreshSuccessful: null,
   wasLastRefresh: false,
   logoutCount: 0,
@@ -106,6 +113,7 @@ const authSlice = createSlice({
     });
     builder.addCase(userLogin.rejected, (state, action) => {
       handleRejected("userLogin", state, action);
+      state.loginStatus = "LOGGED_OUT";
     });
     //Logout user
     builder.addCase(userLogout.pending, (state) => {
@@ -114,11 +122,12 @@ const authSlice = createSlice({
     builder.addCase(userLogout.fulfilled, (state, action) => {
       handleFulfilled("userLogout", state, action);
       if (!action.payload.isError) {
-        state.userInfo = null;
+        state.loginStatus = "LOGGED_OUT";
       }
     });
     builder.addCase(userLogout.rejected, (state, action) => {
       handleRejected("userLogout", state, action);
+      state.loginStatus = "LOGGED_OUT";
     });
     //Get access token with refresh token in the background.
     //Do not change isLoading for any getAccessTokenWithRefreshToken case. The access token being updated should happen
@@ -196,14 +205,16 @@ function handleRefreshState(action, state) {
   if (!action.payload.isError) {
     const { message, status, isError, ...userInfo } = action.payload;
     state.userInfo = userInfo;
+    state.loginStatus = "LOGGED_IN";
     state.wasLastRefreshSuccessful = true;
+
     if (action.payload.wasLastRefresh) {
       state.wasLastRefresh = true;
     } else {
       state.wasLastRefresh = false;
     }
   } else {
-    state.userInfo = null;
+    state.loginStatus = "LOGGED_OUT";
     state.wasLastRefreshSuccessful = false;
     state.wasLastRefresh = false;
   }
@@ -214,8 +225,9 @@ function setUserInfoFromLoggedInStatus(action, state) {
   if (!action.payload.isError) {
     const { message, status, isError, ...userInfo } = action.payload;
     state.userInfo = userInfo;
+    state.loginStatus = "LOGGED_IN";
   } else {
-    state.userInfo = null;
+    state.loginStatus = "LOGGED_OUT";
   }
 }
 
@@ -223,6 +235,7 @@ export const { reinitWasLastRefreshSuccessful, increaseLogoutCount } =
   authSlice.actions;
 export const authReducer = authSlice.reducer;
 export const selectUserInfo = (state) => state.authSlice.userInfo;
+export const selectLoginStatus = (state) => state.authSlice.loginStatus;
 export const selectLogoutCount = (state) => state.authSlice.logoutCount;
 export const selectUserLogin = (state) => state.authSlice.userLogin;
 export const selectGetAccessTokenWithRefreshTokenOnAppMount = (state) =>
