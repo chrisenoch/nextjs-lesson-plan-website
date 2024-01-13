@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "multi": "next dev 2>&1 | tee ./mylogs",
-    "logs": "tail -f -n 300 mylogs",
+    "server": "npx json-server -p3001 --watch ./src/db.json",
     "lint": "next lint",
     "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
   },
@@ -25,6 +24,7 @@
     "react": "latest",
     "react-dom": "latest",
     "react-redux": "^9.0.2",
+    "server-only": "^0.0.1",
     "uuid": "^9.0.1",
     "zod": "^3.22.4"
   },

@@ -1,4 +1,3 @@
-import jwt, { JwtPayload } from "jsonwebtoken";
 import * as jose from "jose";
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";

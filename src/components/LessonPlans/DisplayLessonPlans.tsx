@@ -1,7 +1,6 @@
 import { Box, Grid } from "@mui/material";
 import LessonPlanCard from "./LessonPlanCard";
-import { LessonPlanType } from "../models/types/LessonPlanCategoryShort";
-import { LessonPlan } from "../models/types/LessonPlan";
+import { LessonPlan } from "../../models/types/LessonPlan";
 
 export default function DisplayLessonplans({
   lessonPlans,
@@ -11,10 +10,15 @@ export default function DisplayLessonplans({
   const lessonPlansToDisplay = lessonPlans.map((lessonPlan) => (
     <Grid item xs={4} key={lessonPlan.title}>
       <LessonPlanCard
+        id={lessonPlan.id}
         title={lessonPlan.title}
+        duration={lessonPlan.duration}
+        prepTime={lessonPlan.prepTime}
+        level={lessonPlan.level}
+        description={lessonPlan.description}
+        isPremium={lessonPlan.isPremium}
         imageURL={lessonPlan.imageURL}
         imageAlt={lessonPlan.imageAlt}
-        description={lessonPlan.description}
         chips={lessonPlan.chips}
       />
     </Grid>

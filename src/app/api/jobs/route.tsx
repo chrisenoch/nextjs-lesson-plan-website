@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkPermissions } from "@/functions/auth/check-permissions";
 import { getAccessTokenInfo } from "@/functions/auth/get-access-token-info";
-import { isAddJobValid } from "@/app/validation/jobs/jobs-validators";
+import { isAddJobValid } from "@/validation/jobs/jobs-validators";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;

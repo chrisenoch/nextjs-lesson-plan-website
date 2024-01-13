@@ -5,7 +5,6 @@ import {
   getAccessTokenWithRefreshToken,
   getAccessTokenWithRefreshTokenOnAppMount,
 } from "./auth-thunks";
-import { UserRole } from "@/models/types/UserRole";
 import { UserInfo } from "@/models/types/UserInfo";
 import {
   handleFulfilled,
@@ -13,7 +12,6 @@ import {
   handleRejected,
 } from "./thunk-helpers";
 
-//TO DO: Reorganise this file in the same format as jobs-slice
 const initialState: {
   userInfo: UserInfo | null;
   wasLastRefreshSuccessful: boolean | null;

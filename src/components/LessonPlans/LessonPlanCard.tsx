@@ -5,37 +5,25 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import {
-  CardHeader,
-  Avatar,
-  IconButton,
-  Divider,
-  Stack,
-  Box,
-  Chip,
-} from "@mui/material";
-import { red } from "@mui/material/colors";
+import { Avatar, IconButton, Divider, Stack, Chip } from "@mui/material";
 import Circle from "@mui/icons-material/Circle";
 import Bookmark from "@mui/icons-material/Bookmark";
 import Diamond from "@mui/icons-material/Diamond";
-import { LessonPlanType } from "../models/types/LessonPlanCategoryShort";
+import { LessonPlan } from "@/models/types/LessonPlan";
+import SecureNextLink from "../SecureNextLink";
 
 export default function LessonPlanCard({
+  id,
   title,
   description,
+  duration,
+  prepTime,
+  level,
+  isPremium,
   imageURL,
   imageAlt,
   chips,
-}: {
-  title: string;
-  description: string;
-  imageURL: string;
-  imageAlt: string;
-  chips: {
-    title: string;
-    category: LessonPlanType;
-  }[];
-}) {
+}: LessonPlan) {
   const lessonChips = chips.map((lessonChip) => (
     <Chip
       key={lessonChip.title}
@@ -66,13 +54,14 @@ export default function LessonPlanCard({
           {title}
         </Typography>
         <Stack
+          marginTop={0.5}
           direction="row"
           spacing={2}
           useFlexGap
           flexWrap="wrap"
           alignItems="center">
           <Typography variant="overline" component="div">
-            90 mins
+            {duration}
           </Typography>
           <Circle
             sx={{
@@ -81,7 +70,7 @@ export default function LessonPlanCard({
             }}
           />
           <Typography variant="overline" component="div">
-            Prep 10 mins
+            {prepTime}
           </Typography>
           <Circle
             sx={{
@@ -90,18 +79,18 @@ export default function LessonPlanCard({
             }}
           />
           <Typography variant="body2" component="div">
-            A1
+            {level}
           </Typography>
 
-          <Circle
-            sx={{
-              fontSize: "4px",
-              verticalAlign: "middle",
-            }}
-          />
-          <IconButton aria-label="get premium">
-            <Diamond color="secondary" />
-          </IconButton>
+          {isPremium && (
+            <Circle
+              sx={{
+                fontSize: "4px",
+                verticalAlign: "middle",
+              }}
+            />
+          )}
+          {isPremium && <Diamond color="secondary" />}
         </Stack>
         <Divider sx={{ borderBottomWidth: 1, mb: 1 }} />
         <Stack
@@ -120,9 +109,13 @@ export default function LessonPlanCard({
       </CardContent>
       <CardActions>
         <Button
-          onClick={() => console.log("hello from View")}
+          href={`/lessonplans/${id}`}
           variant={"contained"}
-          size="small">
+          size="small"
+          component={SecureNextLink}
+          sx={{
+            mr: 1,
+          }}>
           View
         </Button>
         <Button
@@ -134,6 +127,7 @@ export default function LessonPlanCard({
           }}>
           Share
         </Button>
+
         <IconButton aria-label="bookmark">
           <Bookmark />
         </IconButton>

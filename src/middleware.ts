@@ -1,10 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { UserRole, isUserRole } from "./models/types/UserRole";
-import * as jose from "jose";
 import {
   ProtectedRoute,
-  ProtectedRouteRoles,
   ProtectedRouteRolesByRoute,
   ProtectedRoutes,
   isProtectedRouteChildren,
@@ -38,6 +36,7 @@ export async function middleware(request: NextRequest) {
   //check permissions and redirect if necessary
   const accessTokenRole = await getAccessTokenRole(request);
   const userRoles: UserRole[] = getUserRolesIfExist(accessTokenRole);
+  userRoles.push("EVERYBODY"); //Everybody has this role (both logged-in and non-logged-in users)
   const urlPath = getUrlPathBasedOnPermissions({
     enteredUrlPath: enteredUrlPathCleaned,
     protectedRoutes,
@@ -72,10 +71,19 @@ export async function middleware(request: NextRequest) {
 //   { shop: { roles: ["USER"] } },              // "shop" matches before "shop/secret"
 //   { "shop/account": { roles: ["USER"] } },
 // ],
+//This function does not protect child routes automatically. E.g. If you assign the admin role to the route 'lessonPlans'
+//and do not include any children routes, then 'lessonPlans/1' will not be protected. //To do: Change this
 const protectedRoutes: ProtectedRoutes = {
   "my-jobs": { roles: ["USER"] },
-  lessonplans: { roles: ["USER"] },
-  //premium: { roles: ["ADMIN"] },
+  lessonplans: {
+    roles: ["EVERYBODY"],
+    children: [
+      { 1: { roles: ["EVERYBODY"] } },
+      { 2: { roles: ["USER"] } },
+      { 3: { roles: ["USER"] } },
+      { 4: { roles: ["USER"] } },
+    ],
+  },
   user: {
     roles: ["ADMIN"],
     children: [
@@ -83,6 +91,10 @@ const protectedRoutes: ProtectedRoutes = {
       { "profile/secret": { roles: ["ADMIN"] } },
       { "profile/account": { roles: ["USER"] } },
     ],
+  },
+  test: {
+    roles: ["EVERYBODY"],
+    children: [{ foo: { roles: ["EVERYBODY"] } }],
   },
 };
 
@@ -126,7 +138,8 @@ function getUrlPathBasedOnPermissions({
   }
   //If get to here, route is protected.
 
-  // If user doesn't have a role. E.g. he does not have an auth cookie or if his token is invalid.
+  // If user doesn't have a role. E.g. he does not the 'EVERYBODY' role, does not have an auth cookie or
+  // if his token is invalid.
   // To do?: Change so that developer can add different failureRedirectPaths for different urls in 'protectedRoutes.'
   if (userRoles.length < 1) {
     return notLoggedInRedirectUrlPath;
@@ -145,9 +158,11 @@ function getUrlPathBasedOnPermissions({
       );
 
       return getUrlPathOnceRolesAreKnown({
-        rolesUserHas: rolesUserHasForPrimaryRoute,
+        requiredRolesUserHas: rolesUserHasForPrimaryRoute,
         successUrlPath: enteredUrlPath,
         incorrrectRoleRedirectUrlPath,
+        notLoggedInRedirectUrlPath,
+        userRoles,
       });
     } else {
       //If entry DOES have children
@@ -188,11 +203,17 @@ function getUrlPathBasedOnPermissions({
           );
 
           return getUrlPathOnceRolesAreKnown({
-            rolesUserHas: rolesUserHasForPrimaryRoute,
+            requiredRolesUserHas: rolesUserHasForPrimaryRoute,
             successUrlPath: enteredUrlPath,
             incorrrectRoleRedirectUrlPath,
+            notLoggedInRedirectUrlPath,
+            userRoles,
           });
         } else {
+          if (userRoles.includes("EVERYBODY") && userRoles.length === 1) {
+            return notLoggedInRedirectUrlPath;
+          }
+
           return incorrrectRoleRedirectUrlPath;
         }
       }
@@ -231,17 +252,28 @@ function getAllProtectedRoutes(protectedRoutes: ProtectedRoutes) {
 }
 
 function getUrlPathOnceRolesAreKnown({
-  rolesUserHas,
+  requiredRolesUserHas,
+  userRoles,
   successUrlPath,
   incorrrectRoleRedirectUrlPath,
+  notLoggedInRedirectUrlPath,
 }: {
-  rolesUserHas: UserRole[];
+  requiredRolesUserHas: UserRole[];
+  userRoles: UserRole[];
   successUrlPath: string;
   incorrrectRoleRedirectUrlPath: string;
+  notLoggedInRedirectUrlPath: string;
 }) {
-  if (rolesUserHas.length > 0) {
+  if (requiredRolesUserHas.length > 0) {
     //user is authorised
     return successUrlPath;
+  } else if (
+    //user is not logegd in
+    requiredRolesUserHas.length === 0 &&
+    userRoles.length === 1 &&
+    userRoles.includes("EVERYBODY")
+  ) {
+    return notLoggedInRedirectUrlPath;
   } else {
     return incorrrectRoleRedirectUrlPath;
   }

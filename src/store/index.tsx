@@ -35,8 +35,9 @@ const store = configureStore({
     getDefaultMiddleware().concat(dbAPISlice.middleware),
 });
 
+export { store };
+
 export {
-  store,
   addJob,
   deleteJob,
   fetchJobs,
@@ -44,6 +45,9 @@ export {
   selectJobsByUserId,
   selectAddJob,
   selectFetchJobs,
+};
+
+export {
   userLogin,
   userLogout,
   reinitWasLastRefreshSuccessful,
@@ -54,4 +58,5 @@ export {
   selectUserLogin,
   selectGetAccessTokenWithRefreshTokenOnAppMount,
 };
+
 export type AppDispatch = typeof store.dispatch;

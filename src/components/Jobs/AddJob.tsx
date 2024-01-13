@@ -2,11 +2,6 @@
 import { Box, TextField, Button, Stack } from "@mui/material";
 import { useMemo, useRef, useState } from "react";
 import useFormClientStatus from "@/customHooks/useFormClientStatus";
-import { zodValidator } from "@/app/validation/zod-validator";
-import {
-  jobDescriptionValidator,
-  jobTitleValidator,
-} from "@/app/validation/jobs/jobs-validators";
 import { useDispatch, useSelector } from "react-redux";
 import {
   AppDispatch,
@@ -20,6 +15,11 @@ import { JobsPreview } from "./JobsPreview";
 import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 import useClearFormOnSuccess from "@/customHooks/useClearFormOnSuccess";
 import useHideMessageOnNavAway from "@/customHooks/useHideMessageOnNavAway";
+import { zodValidator } from "@/validation/zod-validator";
+import {
+  jobDescriptionValidator,
+  jobTitleValidator,
+} from "@/validation/jobs/jobs-validators";
 
 export function AddJob() {
   console.log("add job rendered");

@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import Link from "next/link";
-import { MutableRefObject, ReactElement, forwardRef, useRef } from "react";
+import { ReactElement, forwardRef } from "react";
 import { useHydrated } from "@/customHooks/useHydrated";
 
 // Summary: SecureNextLink always invokes middleware (according to tests so far). NextLink sometimes skips middleware.
