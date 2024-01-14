@@ -133,7 +133,7 @@ export default function ResponsiveAppBar({
                   loading
                   disabled
                   variant="outlined">
-                  {/* could be any value here as it is not shown */}
+                  {/* value here affects the button size */}
                   Login
                 </LoadingButton>
               )}
