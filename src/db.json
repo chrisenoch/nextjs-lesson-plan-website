@@ -47,6 +47,12 @@
       "jobTitle": "zz",
       "jobDescription": "zz",
       "id": 34
+    },
+    {
+      "userId": "1",
+      "jobTitle": "aa",
+      "jobDescription": "aa",
+      "id": 35
     }
   ],
   "lesson-plans": [
@@ -195,6 +201,16 @@
       "role-play": "Shopping For Clothes Role Play. Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae veritatis asperiores provident corrupti optio odit quo quos! Quam vel accusantium, earum, maiores molestiae quasi sed nesciunt nisi, ipsa recusandae neque. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolore commodi, consequatur eius adipisci mollitia cumque placeat amet voluptatum molestias iste! Optio nihil, ratione aspernatur reiciendis neque doloremque accusamus repellat quidem?",
       "feedback": "Shopping For Clothes Feedback. Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae veritatis asperiores provident corrupti optio odit quo quos! Quam vel accusantium, earum, maiores molestiae quasi sed nesciunt nisi, ipsa recusandae neque. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolore commodi, consequatur eius adipisci mollitia cumque placeat amet voluptatum molestias iste! Optio nihil, ratione aspernatur reiciendis neque doloremque accusamus repellat quidem?",
       "plenary": "Shopping For Clothes Plenary Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae veritatis asperiores provident corrupti optio odit quo quos! Quam vel accusantium, earum, maiores molestiae quasi sed nesciunt nisi, ipsa recusandae neque. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolore commodi, consequatur eius adipisci mollitia cumque placeat amet voluptatum molestias iste! Optio nihil, ratione aspernatur reiciendis neque doloremque accusamus repellat quidem?"
+    }
+  ],
+  "lesson-plan-bookmarks": [
+    {
+      "userId": "1",
+      "lessonPlanId": "1"
+    },
+    {
+      "userId": "1",
+      "lessonPlanId": "3"
     }
   ]
 }

@@ -25,11 +25,18 @@ import {
   getAccessTokenWithRefreshTokenOnAppMount,
 } from "./slices/with-thunks/auth-thunks";
 import { dbAPISlice } from "./slices/with-rtk-query/api/db-api-slice";
+import {
+  lessonPlansReducer,
+  selectAllBookmarks,
+  selectFetchBookmarks,
+  selectToggleBookmark,
+} from "./slices/with-thunks/lessonplans-slice";
 
 const store = configureStore({
   reducer: {
     jobsSlice: jobsReducer,
     authSlice: authReducer,
+    lessonPlansSlice: lessonPlansReducer,
     [dbAPISlice.reducerPath]: dbAPISlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -60,5 +67,7 @@ export {
   selectUserLogin,
   selectGetAccessTokenWithRefreshTokenOnAppMount,
 };
+
+export { selectAllBookmarks, selectFetchBookmarks, selectToggleBookmark };
 
 export type AppDispatch = typeof store.dispatch;
