@@ -14,6 +14,7 @@ export default function useRedirectWhenLoggedOut(
   const loginStatus: LoginStatus = useSelector(selectLoginStatus);
 
   if (loginStatus === "LOGGED_OUT" && shouldRedirectUponLogout) {
+    console.log("redirecting in my-jobs");
     redirect(redirectTo);
   }
 }

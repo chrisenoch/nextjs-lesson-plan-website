@@ -137,9 +137,6 @@ export default function ResponsiveAppBar({
                   Login
                 </LoadingButton>
               )}
-              <Button key="Test" href={"/#search-lesson-plans"}>
-                Test
-              </Button>
             </Box>
           </Toolbar>
         </AppBar>
