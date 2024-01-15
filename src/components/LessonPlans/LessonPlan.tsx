@@ -14,6 +14,7 @@ import FloatingId from "@/components/FloatingId";
 import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 
 export default function LessonPlan({
+  isPremium,
   title,
   summary,
   warmer,
@@ -24,6 +25,7 @@ export default function LessonPlan({
   feedback,
   plenary,
 }: {
+  isPremium: boolean;
   title: string;
   summary: string;
   warmer: string;
@@ -34,7 +36,7 @@ export default function LessonPlan({
   feedback: string;
   plenary: string;
 }) {
-  useRedirectWhenLoggedOut("/auth/signin");
+  useRedirectWhenLoggedOut("/auth/signin", isPremium);
 
   let activeIntersection = useScrollSpy([
     "summary",

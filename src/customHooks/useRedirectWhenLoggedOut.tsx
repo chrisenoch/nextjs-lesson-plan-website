@@ -7,10 +7,13 @@ import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-export default function useRedirectWhenLoggedOut(redirectTo: string) {
+export default function useRedirectWhenLoggedOut(
+  redirectTo: string,
+  shouldRedirectUponLogout: boolean = true
+) {
   const loginStatus: LoginStatus = useSelector(selectLoginStatus);
 
-  if (loginStatus === "LOGGED_OUT") {
+  if (loginStatus === "LOGGED_OUT" && shouldRedirectUponLogout) {
     redirect(redirectTo);
   }
 }
