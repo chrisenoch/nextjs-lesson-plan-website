@@ -23,7 +23,6 @@ export async function POST(request: NextRequest) {
   console.log("in lesson-plan-bookmarks post method");
 
   const lessonPlanId = await request.json();
-  console.log("after got lessonPlanId from request " + lessonPlanId);
 
   //check user is logged in
   const permissionStatus = await checkPermissions({
@@ -43,7 +42,6 @@ export async function POST(request: NextRequest) {
       { status: 401 }
     );
   }
-  console.log("after loggedIn check");
 
   //get userId
   const accessTokenInfo = await getAccessTokenInfo({
@@ -61,7 +59,6 @@ export async function POST(request: NextRequest) {
     );
   }
   const userId = accessTokenInfo.id;
-  console.log("loggedIn with userId: " + userId);
 
   //Get bookmarks: If bookmark is present, delete bookmark. If bookmark is not present, add it.
   let fetchBookmarksResponse;
@@ -99,7 +96,7 @@ export async function POST(request: NextRequest) {
     (bookmark) => bookmark.lessonPlanId === lessonPlanId
   );
 
-  //If the bookmark was not deleted, then it was not bookmarked in the first place. So we need to add the new bookmark.
+  //If the bookmark was not found, then it was not bookmarked in the first place. So we need to add the new bookmark.
   if (existingBookmark === undefined) {
     try {
       const addBookmarkResponse = await fetch(
@@ -115,11 +112,14 @@ export async function POST(request: NextRequest) {
           }),
         }
       );
+      const newBookmark = await addBookmarkResponse.json();
+      const newBookmarks = [...bookmarks, newBookmark];
 
       return NextResponse.json(
         {
           message: "Lesson plan saved",
           isError: false,
+          bookmarks: newBookmarks,
         },
         { status: 200 }
       );
@@ -146,11 +146,15 @@ export async function POST(request: NextRequest) {
         },
       }
     );
+    const newBookmarks = bookmarks.filter(
+      (bookmark) => bookmark.lessonPlanId !== lessonPlanId
+    );
 
     return NextResponse.json(
       {
         message: "Lesson plan deleted",
         isError: false,
+        bookmarks: newBookmarks,
       },
       { status: 200 }
     );

@@ -35,6 +35,7 @@ const lessonPlansSlice = createSlice({
       handleFulfilled("toggleBookmark", state, action);
 
       if (!action.payload.isError) {
+        state.bookmarks = action.payload.bookmarks;
         state.toggleBookmark.isError = false;
       } else {
         state.toggleBookmark.isError = true;

@@ -44,12 +44,6 @@
     },
     {
       "userId": "1",
-      "jobTitle": "zz",
-      "jobDescription": "zz",
-      "id": 34
-    },
-    {
-      "userId": "1",
       "jobTitle": "aa",
       "jobDescription": "aa",
       "id": 35
@@ -59,6 +53,12 @@
       "jobTitle": "test",
       "jobDescription": "test",
       "id": 36
+    },
+    {
+      "userId": "1",
+      "jobTitle": "aa",
+      "jobDescription": "aa",
+      "id": 37
     }
   ],
   "lesson-plans": [
@@ -212,8 +212,23 @@
   "lesson-plan-bookmarks": [
     {
       "userId": "1",
+      "lessonPlanId": "id",
+      "id": 9
+    },
+    {
+      "userId": "1",
+      "lessonPlanId": "3",
+      "id": 11
+    },
+    {
+      "userId": "1",
       "lessonPlanId": "2",
-      "id": 2
+      "id": 12
+    },
+    {
+      "userId": "1",
+      "lessonPlanId": "1",
+      "id": 13
     }
   ]
 }

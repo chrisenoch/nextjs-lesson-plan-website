@@ -30,6 +30,8 @@ export default function LessonPlanCard({
   isBookmarked,
   handleToggleBookmark,
 }: lessonPlanCard) {
+  console.log("lesson plan card rendered");
+
   const lessonChips = chips!.map((lessonChip) => (
     <Chip
       key={lessonChip.title}
