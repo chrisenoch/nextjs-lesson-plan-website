@@ -1,4 +1,4 @@
-"use server";
+import "server-only";
 
 import { UserRole, isUserRole } from "@/models/types/UserRole";
 import { NextRequest } from "next/server";

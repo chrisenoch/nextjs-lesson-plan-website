@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { checkPermissions } from "@/functions/auth/check-permissions";
-import { getAccessTokenInfo } from "@/functions/auth/get-access-token-info";
+import { checkPermissions } from "@/server-only/auth/check-permissions";
+import { getAccessTokenInfo } from "@/server-only/auth/get-access-token-info";
 import { isAddJobValid } from "@/validation/jobs/jobs-validators";
+import { getUserIdOrErrorResponse } from "@/server-only/auth/get-userId-or-error-response";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -41,41 +42,18 @@ export async function POST(request: NextRequest) {
   }: { jobTitle: string; jobDescription: string } = await request.json();
 
   //check user is logged in
-  const permissionStatusPromise = checkPermissions({
+  const userIdOrErrorResponse = await getUserIdOrErrorResponse({
     request,
-    accessTokenName: process.env.ACCESS_TOKEN_COOKIE_NAME!,
-    accessTokenSecret: process.env.ACCESS_TOKEN_SECRET!,
+    failureMessage: "Error adding job.",
     validUserRoles: ["USER"],
     superAdmins: ["ADMIN"],
   });
-  const permissionStatus = await permissionStatusPromise;
-  if (permissionStatus !== "SUCCESS") {
-    return NextResponse.json(
-      {
-        message: "Error adding job.",
-        isError: true,
-      },
-      { status: 401 }
-    );
+  let userId: string | undefined;
+  if (typeof userIdOrErrorResponse !== "string") {
+    return userIdOrErrorResponse;
+  } else {
+    userId = userIdOrErrorResponse;
   }
-
-  //get userId
-  const accessTokenInfoPromise = getAccessTokenInfo({
-    request,
-    accessTokenName: process.env.ACCESS_TOKEN_COOKIE_NAME!,
-    accessTokenSecret: process.env.ACCESS_TOKEN_SECRET!,
-  });
-  const accessTokenInfo = await accessTokenInfoPromise;
-  if (!accessTokenInfo) {
-    return NextResponse.json(
-      {
-        message: "Error adding job.",
-        isError: true,
-      },
-      { status: 401 }
-    );
-  }
-  const userId = accessTokenInfo.id;
 
   const isFormValid = isAddJobValid(jobTitle, jobDescription);
   if (!isFormValid) {
@@ -104,6 +82,7 @@ export async function POST(request: NextRequest) {
       }),
     });
     const job = await response.json();
+
     return NextResponse.json(
       {
         message: `Added job ${jobTitle}`,

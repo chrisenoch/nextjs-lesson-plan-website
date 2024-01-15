@@ -8,7 +8,7 @@ import {
   isProtectedRouteChildren,
 } from "./models/types/ProtectedRoutes";
 import { getArrayIntersection } from "./utils/array-functions";
-import { joseVerifyToken } from "./functions/auth/check-permissions";
+import { joseVerifyToken } from "./server-only/auth/check-permissions";
 
 let count = 0;
 export async function middleware(request: NextRequest) {

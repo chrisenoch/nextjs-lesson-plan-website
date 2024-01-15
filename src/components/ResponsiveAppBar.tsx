@@ -30,7 +30,6 @@ import {
 } from "@/store";
 import SecureNextLink from "./SecureNextLink";
 import InsecureNextLink from "next/link";
-import { selectLogoutCount } from "@/store/slices/with-thunks/auth-slice";
 import { LoginStatus } from "@/models/types/LoginStatus";
 
 export default function ResponsiveAppBar({
@@ -45,6 +44,7 @@ export default function ResponsiveAppBar({
 
   const navItems = [
     { title: "Lesson Plans", href: "/lessonplans" },
+    { title: "Bookmarks", href: "/lessonplans/saved" },
     { title: "My Jobs", href: "/my-jobs" },
     { title: "All Jobs", href: "/all-jobs" },
   ];
@@ -133,7 +133,7 @@ export default function ResponsiveAppBar({
                   loading
                   disabled
                   variant="outlined">
-                  {/* could be any value here as it is not shown */}
+                  {/* value here affects the button size */}
                   Login
                 </LoadingButton>
               )}

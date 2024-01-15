@@ -55,15 +55,5 @@ export default async function LessonPlanContentPage({
       feedback={lessonPlanContent.feedback}
       plenary={lessonPlanContent.plenary}
     />
-    // <>
-    //   <p>{lessonPlanContent.title}</p>
-    //   <p>{lessonPlanContent.summary}</p>
-    //   <p>{lessonPlanContent.warmer}</p>
-    //   <p>{lessonPlanContent["teach-vocabulary"]}</p>
-    //   <p>{lessonPlanContent["teach-speaking-phrases"]}</p>
-    //   <p>{lessonPlanContent["role-play"]}</p>
-    //   <p>{lessonPlanContent.feedback}</p>
-    //   <p>{lessonPlanContent.plenary}</p>
-    // </>
   );
 }

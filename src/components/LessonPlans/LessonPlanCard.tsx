@@ -11,6 +11,10 @@ import Bookmark from "@mui/icons-material/Bookmark";
 import Diamond from "@mui/icons-material/Diamond";
 import { LessonPlan } from "@/models/types/LessonPlan";
 import SecureNextLink from "../SecureNextLink";
+import { LoadingButton } from "@mui/lab";
+import { LessonPlanBookmarkStatus } from "@/models/types/LessonPlanBookmarkStatus";
+import { LessonPlanCard } from "@/models/types/LessonPlanCard";
+import { ArrowForward, Done, RocketLaunch } from "@mui/icons-material";
 
 export default function LessonPlanCard({
   id,
@@ -23,8 +27,13 @@ export default function LessonPlanCard({
   imageURL,
   imageAlt,
   chips,
-}: LessonPlan) {
-  const lessonChips = chips.map((lessonChip) => (
+  isBookmarked,
+  handleToggleBookmark,
+  loginStatus,
+}: LessonPlanCard) {
+  console.log("lesson plan card rendered");
+
+  const lessonChips = chips!.map((lessonChip) => (
     <Chip
       key={lessonChip.title}
       size="small"
@@ -112,25 +121,36 @@ export default function LessonPlanCard({
           href={`/lessonplans/${id}`}
           variant={"contained"}
           size="small"
-          component={SecureNextLink}
-          sx={{
-            mr: "auto",
-          }}>
+          startIcon={<ArrowForward />}
+          component={SecureNextLink}>
           View
         </Button>
-        {/* <Button
-          onClick={() => console.log("hello from Share")}
-          variant={"outlined"}
-          size="small"
-          sx={{
-            mr: "auto",
-          }}>
-          Share
-        </Button> */}
 
-        <IconButton aria-label="bookmark">
-          <Bookmark />
-        </IconButton>
+        {loginStatus === "LOGGED_IN" && isBookmarked === "IS_BOOKMARKED" && (
+          <Button
+            onClick={() => handleToggleBookmark(id)}
+            variant="outlined"
+            size="small"
+            startIcon={<Done />}>
+            Saved
+          </Button>
+        )}
+        {loginStatus === "LOGGED_IN" &&
+          isBookmarked === "IS_NOT_BOOKMARKED" && (
+            <Button
+              onClick={() => handleToggleBookmark(id)}
+              variant="outlined"
+              size="small"
+              startIcon={<RocketLaunch />}>
+              Save
+            </Button>
+          )}
+        {loginStatus === "LOGGED_IN" &&
+          isBookmarked === "BOOKMARKS_NOT_READY" && (
+            <LoadingButton sx={{ px: 0 }} loading disabled variant="outlined">
+              {/* value here affects the button size */}Save
+            </LoadingButton>
+          )}
       </CardActions>
     </Card>
   );

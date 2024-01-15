@@ -81,7 +81,7 @@ export function SignIn() {
       )}
       {userLoginInfo?.isLoading && (
         <LoadingButton key={"loading-placeholder"} loading variant="contained">
-          {/* could be any value here as it is not shown */}
+          {/* value here affects the button size */}
           Submit
         </LoadingButton>
       )}

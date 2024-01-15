@@ -9,21 +9,22 @@ import {
   selectFetchBookmarks,
   selectLoginStatus,
 } from "@/store";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   fetchBookmarks,
   toggleBookmark,
 } from "@/store/slices/with-thunks/lessonplans-slice";
 import { LoginStatus } from "@/models/types/LoginStatus";
+import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 
-export default function DisplayLessonplans({
+export default function LessonPlanBookmarks({
   lessonPlans,
 }: {
   lessonPlans: LessonPlan[];
 }) {
-  //To do: Move this to route component?
+  console.log("LessonPlanBookmarks rendered");
   const dispatch = useDispatch<AppDispatch>();
-  console.log("display lesson plans rendered");
+  useRedirectWhenLoggedOut("/auth/signin");
 
   const bookmarks: {
     userId: string;
@@ -57,31 +58,29 @@ export default function DisplayLessonplans({
     dispatch(toggleBookmark(lessonPlanId));
   }
 
-  const lessonPlansToDisplay = lessonPlans.map((lessonPlan) => (
-    <Grid item xs={4} key={lessonPlan.title}>
-      <LessonPlanCard
-        id={lessonPlan.id}
-        title={lessonPlan.title}
-        duration={lessonPlan.duration}
-        prepTime={lessonPlan.prepTime}
-        level={lessonPlan.level}
-        description={lessonPlan.description}
-        isPremium={lessonPlan.isPremium}
-        imageURL={lessonPlan.imageURL}
-        imageAlt={lessonPlan.imageAlt}
-        chips={lessonPlan.chips}
-        isBookmarked={
-          !areBookmarksReady
-            ? "BOOKMARKS_NOT_READY"
-            : bookmarkedLessonPlanIds.has(lessonPlan.id)
-            ? "IS_BOOKMARKED"
-            : "IS_NOT_BOOKMARKED"
-        }
-        handleToggleBookmark={handleToggleBookmark}
-        loginStatus={loginStatus}
-      />
-    </Grid>
-  ));
+  const lessonPlansToDisplay = lessonPlans
+    .filter((lessonPlan) => bookmarkedLessonPlanIds.has(lessonPlan.id))
+    .map((lessonPlan) => (
+      <Grid item xs={4} key={lessonPlan.title}>
+        <LessonPlanCard
+          id={lessonPlan.id}
+          title={lessonPlan.title}
+          duration={lessonPlan.duration}
+          prepTime={lessonPlan.prepTime}
+          level={lessonPlan.level}
+          description={lessonPlan.description}
+          isPremium={lessonPlan.isPremium}
+          imageURL={lessonPlan.imageURL}
+          imageAlt={lessonPlan.imageAlt}
+          chips={lessonPlan.chips}
+          isBookmarked={
+            !areBookmarksReady ? "BOOKMARKS_NOT_READY" : "IS_BOOKMARKED"
+          }
+          handleToggleBookmark={handleToggleBookmark}
+          loginStatus={loginStatus}
+        />
+      </Grid>
+    ));
 
   return (
     <Box
