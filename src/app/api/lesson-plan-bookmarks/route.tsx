@@ -1,6 +1,6 @@
-import { checkPermissions } from "@/functions/auth/check-permissions";
-import { getAccessTokenInfo } from "@/functions/auth/get-access-token-info";
-import { getUserIdOrErrorResponse } from "@/functions/auth/get-userId-or-error-response";
+import { checkPermissions } from "@/server-only/auth/check-permissions";
+import { getAccessTokenInfo } from "@/server-only/auth/get-access-token-info";
+import { getUserIdOrErrorResponse } from "@/server-only/auth/get-userId-or-error-response";
 import { UserRole } from "@/models/types/UserRole";
 import { fetchCollection } from "@/server-only/route-functions";
 import { isAddJobValid } from "@/validation/jobs/jobs-validators";

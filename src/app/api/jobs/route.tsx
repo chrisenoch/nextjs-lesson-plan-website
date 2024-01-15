@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { checkPermissions } from "@/functions/auth/check-permissions";
-import { getAccessTokenInfo } from "@/functions/auth/get-access-token-info";
+import { checkPermissions } from "@/server-only/auth/check-permissions";
+import { getAccessTokenInfo } from "@/server-only/auth/get-access-token-info";
 import { isAddJobValid } from "@/validation/jobs/jobs-validators";
 
 export const dynamic = "force-dynamic";

@@ -2,8 +2,8 @@ import * as jose from "jose";
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { UserRole } from "@/models/types/UserRole";
-import { joseVerifyToken } from "@/functions/auth/check-permissions";
-import { authTimeHelper } from "@/functions/auth/auth-time-helper";
+import { joseVerifyToken } from "@/server-only/auth/check-permissions";
+import { authTimeHelper } from "@/server-only/auth/auth-time-helper";
 //To do: change the userId to something that is harder to guess.
 
 export async function POST(request: Request) {
