@@ -29,6 +29,7 @@ export default function LessonPlanCard({
   chips,
   isBookmarked,
   handleToggleBookmark,
+  loginStatus,
 }: lessonPlanCard) {
   console.log("lesson plan card rendered");
 
@@ -125,7 +126,7 @@ export default function LessonPlanCard({
           View
         </Button>
 
-        {isBookmarked === "IS_BOOKMARKED" && (
+        {loginStatus === "LOGGED_IN" && isBookmarked === "IS_BOOKMARKED" && (
           <Button
             onClick={() => handleToggleBookmark(id)}
             variant="outlined"
@@ -134,20 +135,22 @@ export default function LessonPlanCard({
             Saved
           </Button>
         )}
-        {isBookmarked === "IS_NOT_BOOKMARKED" && (
-          <Button
-            onClick={() => handleToggleBookmark(id)}
-            variant="outlined"
-            size="small"
-            startIcon={<RocketLaunch />}>
-            Save
-          </Button>
-        )}
-        {isBookmarked === "BOOKMARKS_NOT_READY" && (
-          <LoadingButton sx={{ px: 0 }} loading disabled variant="outlined">
-            {/* value here affects the button size */}Save
-          </LoadingButton>
-        )}
+        {loginStatus === "LOGGED_IN" &&
+          isBookmarked === "IS_NOT_BOOKMARKED" && (
+            <Button
+              onClick={() => handleToggleBookmark(id)}
+              variant="outlined"
+              size="small"
+              startIcon={<RocketLaunch />}>
+              Save
+            </Button>
+          )}
+        {loginStatus === "LOGGED_IN" &&
+          isBookmarked === "BOOKMARKS_NOT_READY" && (
+            <LoadingButton sx={{ px: 0 }} loading disabled variant="outlined">
+              {/* value here affects the button size */}Save
+            </LoadingButton>
+          )}
       </CardActions>
     </Card>
   );

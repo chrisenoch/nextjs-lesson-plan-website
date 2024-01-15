@@ -3,12 +3,18 @@ import { Box, Grid } from "@mui/material";
 import LessonPlanCard from "./LessonPlanCard";
 import { LessonPlan } from "../../models/types/LessonPlan";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, selectAllBookmarks, selectFetchBookmarks } from "@/store";
+import {
+  AppDispatch,
+  selectAllBookmarks,
+  selectFetchBookmarks,
+  selectLoginStatus,
+} from "@/store";
 import { useEffect, useState } from "react";
 import {
   fetchBookmarks,
   toggleBookmark,
 } from "@/store/slices/with-thunks/lessonplans-slice";
+import { LoginStatus } from "@/models/types/LoginStatus";
 
 export default function DisplayLessonplans({
   lessonPlans,
@@ -30,8 +36,7 @@ export default function DisplayLessonplans({
     statusCode: null | number;
   } = useSelector(selectFetchBookmarks);
 
-  console.log("bookmarks in DisplayLessonPlans");
-  console.log(bookmarks);
+  const loginStatus: LoginStatus = useSelector(selectLoginStatus);
 
   useEffect(() => {
     dispatch(fetchBookmarks());
@@ -73,6 +78,7 @@ export default function DisplayLessonplans({
             : "IS_NOT_BOOKMARKED"
         }
         handleToggleBookmark={handleToggleBookmark}
+        loginStatus={loginStatus}
       />
     </Grid>
   ));

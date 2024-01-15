@@ -30,7 +30,6 @@ import {
 } from "@/store";
 import SecureNextLink from "./SecureNextLink";
 import InsecureNextLink from "next/link";
-import { selectLogoutCount } from "@/store/slices/with-thunks/auth-slice";
 import { LoginStatus } from "@/models/types/LoginStatus";
 
 export default function ResponsiveAppBar({
