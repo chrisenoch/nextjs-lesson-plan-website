@@ -47,6 +47,12 @@
       "jobTitle": "yy",
       "jobDescription": "yy",
       "id": 42
+    },
+    {
+      "userId": "1",
+      "jobTitle": "tt",
+      "jobDescription": "tt",
+      "id": 43
     }
   ],
   "lesson-plans": [
@@ -199,19 +205,14 @@
   ],
   "lesson-plan-bookmarks": [
     {
+      "userId": "1",
+      "lessonPlanId": "1",
+      "id": 1
+    },
+    {
       "userId": "2",
       "lessonPlanId": "3",
       "id": 3
-    },
-    {
-      "userId": "1",
-      "lessonPlanId": "1",
-      "id": 4
-    },
-    {
-      "userId": "1",
-      "lessonPlanId": "2",
-      "id": 5
     }
   ]
 }

@@ -1,13 +1,10 @@
-import { checkPermissions } from "@/server-only/auth/check-permissions";
-import { getAccessTokenInfo } from "@/server-only/auth/get-access-token-info";
 import { getUserIdOrErrorResponse } from "@/server-only/auth/get-userId-or-error-response";
-import { UserRole } from "@/models/types/UserRole";
 import { fetchCollection } from "@/server-only/route-functions";
-import { isAddJobValid } from "@/validation/jobs/jobs-validators";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+
 export async function GET(request: NextRequest) {
   console.log("in lessonPlanBookmarks get method");
 
@@ -20,7 +17,7 @@ export async function GET(request: NextRequest) {
 
   const fetchBookmarksPayload = await fetchBookmarksResponse.json();
 
-  //only returrn the bookmarks for the current logged-in user
+  //only return the bookmarks for the current logged-in user
   const userIdOrErrorResponse = await getUserIdOrErrorResponse({
     request,
     failureMessage: "Error saving lesson plan.",
@@ -34,7 +31,7 @@ export async function GET(request: NextRequest) {
     userId = userIdOrErrorResponse;
   }
 
-  const { bookmarks } = fetchBookmarksPayload as {
+  const { bookmarks: allBookmarks } = fetchBookmarksPayload as {
     message: string;
     isError: boolean;
     bookmarks: {
@@ -44,7 +41,7 @@ export async function GET(request: NextRequest) {
     }[];
   };
 
-  const userBookmarks = bookmarks.filter(
+  const userBookmarks = allBookmarks.filter(
     (bookmark) => bookmark.userId === userId
   );
 
@@ -69,7 +66,7 @@ export async function POST(request: NextRequest) {
     validUserRoles: ["USER"],
     superAdmins: ["ADMIN"],
   });
-  let userId;
+  let userId: string | undefined;
   if (typeof userIdOrErrorResponse !== "string") {
     return userIdOrErrorResponse;
   } else {
@@ -98,7 +95,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { bookmarks } = fetchBookmarksPayload as {
+  const { bookmarks: allBookmarks } = fetchBookmarksPayload as {
     message: string;
     isError: boolean;
     bookmarks: {
@@ -108,7 +105,11 @@ export async function POST(request: NextRequest) {
     }[];
   };
 
-  const existingBookmark = bookmarks.find(
+  const userBookmarks = allBookmarks.filter(
+    (bookmark) => bookmark.userId === userId
+  );
+
+  const existingBookmark = userBookmarks.find(
     (bookmark) => bookmark.lessonPlanId === lessonPlanId
   );
 
@@ -129,7 +130,7 @@ export async function POST(request: NextRequest) {
         }
       );
       const newBookmark = await addBookmarkResponse.json();
-      const newBookmarks = [...bookmarks, newBookmark];
+      const newBookmarks = [...userBookmarks, newBookmark];
 
       return NextResponse.json(
         {
@@ -162,7 +163,7 @@ export async function POST(request: NextRequest) {
         },
       }
     );
-    const newBookmarks = bookmarks.filter(
+    const newBookmarks = userBookmarks.filter(
       (bookmark) => bookmark.lessonPlanId !== lessonPlanId
     );
 
