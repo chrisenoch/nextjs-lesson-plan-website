@@ -82,6 +82,7 @@ const protectedRoutes: ProtectedRoutes = {
   lessonplans: {
     roles: ["EVERYBODY"],
     children: [
+      { saved: { roles: ["USER"] } },
       { 1: { roles: ["EVERYBODY"] } },
       { 2: { roles: ["USER"] } },
       { 3: { roles: ["USER"] } },
