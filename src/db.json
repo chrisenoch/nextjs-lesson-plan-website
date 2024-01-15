@@ -53,6 +53,12 @@
       "jobTitle": "aa",
       "jobDescription": "aa",
       "id": 35
+    },
+    {
+      "userId": "1",
+      "jobTitle": "test",
+      "jobDescription": "test",
+      "id": 36
     }
   ],
   "lesson-plans": [
@@ -206,11 +212,8 @@
   "lesson-plan-bookmarks": [
     {
       "userId": "1",
-      "lessonPlanId": "1"
-    },
-    {
-      "userId": "1",
-      "lessonPlanId": "3"
+      "lessonPlanId": "2",
+      "id": 2
     }
   ]
 }

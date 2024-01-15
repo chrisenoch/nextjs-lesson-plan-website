@@ -14,12 +14,7 @@ import SecureNextLink from "../SecureNextLink";
 import { LoadingButton } from "@mui/lab";
 import { LessonPlanBookmarkStatus } from "@/models/types/LessonPlanBookmarkStatus";
 import { lessonPlanCard } from "@/models/types/LessonPlanCard";
-import {
-  ArrowForward,
-  BookmarkBorder,
-  Done,
-  RocketLaunch,
-} from "@mui/icons-material";
+import { ArrowForward, Done, RocketLaunch } from "@mui/icons-material";
 
 export default function LessonPlanCard({
   id,
@@ -33,6 +28,7 @@ export default function LessonPlanCard({
   imageAlt,
   chips,
   isBookmarked,
+  handleToggleBookmark,
 }: lessonPlanCard) {
   const lessonChips = chips!.map((lessonChip) => (
     <Chip
@@ -128,12 +124,20 @@ export default function LessonPlanCard({
         </Button>
 
         {isBookmarked === "IS_BOOKMARKED" && (
-          <Button variant="outlined" size="small" startIcon={<Done />}>
+          <Button
+            onClick={() => handleToggleBookmark(id)}
+            variant="outlined"
+            size="small"
+            startIcon={<Done />}>
             Saved
           </Button>
         )}
         {isBookmarked === "IS_NOT_BOOKMARKED" && (
-          <Button variant="outlined" size="small" startIcon={<RocketLaunch />}>
+          <Button
+            onClick={() => handleToggleBookmark(id)}
+            variant="outlined"
+            size="small"
+            startIcon={<RocketLaunch />}>
             Save
           </Button>
         )}

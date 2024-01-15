@@ -5,7 +5,10 @@ import { LessonPlan } from "../../models/types/LessonPlan";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, selectAllBookmarks, selectFetchBookmarks } from "@/store";
 import { useEffect } from "react";
-import { fetchBookmarks } from "@/store/slices/with-thunks/lessonplans-slice";
+import {
+  fetchBookmarks,
+  toggleBookmark,
+} from "@/store/slices/with-thunks/lessonplans-slice";
 import { getArrayIntersection } from "@/utils/array-functions";
 
 export default function DisplayLessonplans({
@@ -15,6 +18,7 @@ export default function DisplayLessonplans({
 }) {
   //To do: Move this to route component?
   const dispatch = useDispatch<AppDispatch>();
+  console.log("display lesson plans rendered");
 
   const bookmarks: {
     userId: string;
@@ -42,6 +46,10 @@ export default function DisplayLessonplans({
     areBookmarksReady = true;
   }
 
+  function handleToggleBookmark(lessonPlanId: string) {
+    dispatch(toggleBookmark(lessonPlanId));
+  }
+
   const lessonPlansToDisplay = lessonPlans.map((lessonPlan) => (
     <Grid item xs={4} key={lessonPlan.title}>
       <LessonPlanCard
@@ -62,6 +70,7 @@ export default function DisplayLessonplans({
             ? "IS_BOOKMARKED"
             : "IS_NOT_BOOKMARKED"
         }
+        handleToggleBookmark={handleToggleBookmark}
       />
     </Grid>
   ));

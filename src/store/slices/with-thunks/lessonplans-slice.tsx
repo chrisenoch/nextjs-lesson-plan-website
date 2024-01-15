@@ -35,12 +35,6 @@ const lessonPlansSlice = createSlice({
       handleFulfilled("toggleBookmark", state, action);
 
       if (!action.payload.isError) {
-        //Steps
-        // user clicks bookmark
-        // depending on new value, this is sent in http request
-        //if success, do nothing. FetchBookmarks will automatically re-run and update the bookmark.
-        //if error
-
         state.toggleBookmark.isError = false;
       } else {
         state.toggleBookmark.isError = true;
@@ -88,19 +82,16 @@ export const fetchBookmarks = createAsyncThunk(
 
 export const toggleBookmark = createAsyncThunk(
   "lessonPlansSlice/toggle-bookmark",
-  async (
-    data: { jobTitle: string; jobDescription: string },
-    { rejectWithValue }
-  ) => {
+  async (lessonPlanId: string, { rejectWithValue }) => {
     try {
       const response = await fetch(
-        "http://localhost:3000/api/lessonPlanBookmarks",
+        "http://localhost:3000/api/lesson-plan-bookmarks",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(data),
+          body: JSON.stringify(lessonPlanId),
         }
       );
       const payload = await response.json();
