@@ -13,7 +13,7 @@ import { LessonPlan } from "@/models/types/LessonPlan";
 import SecureNextLink from "../SecureNextLink";
 import { LoadingButton } from "@mui/lab";
 import { LessonPlanBookmarkStatus } from "@/models/types/LessonPlanBookmarkStatus";
-import { lessonPlanCard } from "@/models/types/LessonPlanCard";
+import { LessonPlanCard } from "@/models/types/LessonPlanCard";
 import { ArrowForward, Done, RocketLaunch } from "@mui/icons-material";
 
 export default function LessonPlanCard({
@@ -30,7 +30,7 @@ export default function LessonPlanCard({
   isBookmarked,
   handleToggleBookmark,
   loginStatus,
-}: lessonPlanCard) {
+}: LessonPlanCard) {
   console.log("lesson plan card rendered");
 
   const lessonChips = chips!.map((lessonChip) => (

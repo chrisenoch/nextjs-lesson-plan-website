@@ -1,3 +1,4 @@
+import "server-only";
 import * as React from "react";
 import Hero from "@/components/Hero";
 import SearchAndDisplayLessonPlans from "@/components/LessonPlans/SearchAndDisplayLessonPlans";

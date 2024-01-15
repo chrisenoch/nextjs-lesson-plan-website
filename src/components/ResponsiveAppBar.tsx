@@ -44,6 +44,7 @@ export default function ResponsiveAppBar({
 
   const navItems = [
     { title: "Lesson Plans", href: "/lessonplans" },
+    { title: "Bookmarks", href: "/lessonplans/saved" },
     { title: "My Jobs", href: "/my-jobs" },
     { title: "All Jobs", href: "/all-jobs" },
   ];
