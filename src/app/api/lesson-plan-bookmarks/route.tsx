@@ -1,64 +1,80 @@
 import { checkPermissions } from "@/functions/auth/check-permissions";
 import { getAccessTokenInfo } from "@/functions/auth/get-access-token-info";
+import { getUserIdOrErrorResponse } from "@/functions/auth/get-userId-or-error-response";
+import { UserRole } from "@/models/types/UserRole";
 import { fetchCollection } from "@/server-only/route-functions";
 import { isAddJobValid } from "@/validation/jobs/jobs-validators";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
-export async function GET() {
+export async function GET(request: NextRequest) {
   console.log("in lessonPlanBookmarks get method");
 
-  const response = await fetchCollection(
+  const fetchBookmarksResponse = await fetchCollection(
     "http://localhost:3001/lesson-plan-bookmarks",
     "Successfully fetched lesson plan bookmarks",
     "Unable to fetch lesson plan bookmarks.",
     "bookmarks"
   );
 
-  return response;
+  const fetchBookmarksPayload = await fetchBookmarksResponse.json();
+
+  //only returrn the bookmarks for the current logged-in user
+  const userIdOrErrorResponse = await getUserIdOrErrorResponse({
+    request,
+    failureMessage: "Error saving lesson plan.",
+    validUserRoles: ["USER"],
+    superAdmins: ["ADMIN"],
+  });
+  let userId: string | undefined;
+  if (typeof userIdOrErrorResponse !== "string") {
+    return userIdOrErrorResponse;
+  } else {
+    userId = userIdOrErrorResponse;
+  }
+
+  const { bookmarks } = fetchBookmarksPayload as {
+    message: string;
+    isError: boolean;
+    bookmarks: {
+      id: string;
+      userId: string;
+      lessonPlanId: string;
+    }[];
+  };
+
+  const userBookmarks = bookmarks.filter(
+    (bookmark) => bookmark.userId === userId
+  );
+
+  return NextResponse.json(
+    {
+      message: "Successfully fetched lesson plan bookmarks.",
+      isError: false,
+      bookmarks: userBookmarks,
+    },
+    { status: 200 }
+  );
 }
 
 export async function POST(request: NextRequest) {
   console.log("in lesson-plan-bookmarks post method");
 
   const lessonPlanId = await request.json();
-
   //check user is logged in
-  const permissionStatus = await checkPermissions({
+  const userIdOrErrorResponse = await getUserIdOrErrorResponse({
     request,
-    accessTokenName: process.env.ACCESS_TOKEN_COOKIE_NAME!,
-    accessTokenSecret: process.env.ACCESS_TOKEN_SECRET!,
+    failureMessage: "Error saving lesson plan.",
     validUserRoles: ["USER"],
     superAdmins: ["ADMIN"],
   });
-
-  if (permissionStatus !== "SUCCESS") {
-    return NextResponse.json(
-      {
-        message: "Error saving lesson plan.",
-        isError: true,
-      },
-      { status: 401 }
-    );
+  let userId;
+  if (typeof userIdOrErrorResponse !== "string") {
+    return userIdOrErrorResponse;
+  } else {
+    userId = userIdOrErrorResponse;
   }
-
-  //get userId
-  const accessTokenInfo = await getAccessTokenInfo({
-    request,
-    accessTokenName: process.env.ACCESS_TOKEN_COOKIE_NAME!,
-    accessTokenSecret: process.env.ACCESS_TOKEN_SECRET!,
-  });
-  if (!accessTokenInfo) {
-    return NextResponse.json(
-      {
-        message: "Error saving lesson plan.",
-        isError: true,
-      },
-      { status: 401 }
-    );
-  }
-  const userId = accessTokenInfo.id;
 
   //Get bookmarks: If bookmark is present, delete bookmark. If bookmark is not present, add it.
   let fetchBookmarksResponse;

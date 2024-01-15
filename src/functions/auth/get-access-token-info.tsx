@@ -1,4 +1,4 @@
-"use server";
+import "server-only";
 
 import { NextRequest } from "next/server";
 import { joseVerifyToken } from "./check-permissions";

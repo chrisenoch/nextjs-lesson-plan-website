@@ -1,3 +1,5 @@
+import "server-only";
+
 //conversts the time into seconds
 export function authTimeHelper({
   days,
