@@ -7,11 +7,18 @@ import AutoCompleteMultiSelect from "../AutoCompleteMultiSelect";
 import { LessonPlan } from "@/models/types/LessonPlan";
 import { LessonPlanCategory } from "@/models/types/LessonPlanCategory";
 import { LessonPlanSubCategory } from "@/models/types/LessonPlanSubCategory";
+import DisplayLessonPlansFactory from "./DisplayLessonPlansFactory";
 
 export default function SearchAndDisplayLessonPlans({
   lessonPlans,
+  searchTitle,
+  displayLessonPlansComponent,
 }: {
   lessonPlans: LessonPlan[];
+  searchTitle: string;
+  displayLessonPlansComponent:
+    | "DisplayLessonPlans"
+    | "DisplayBookmarkedLessonPlans";
 }) {
   const [selectedLessonPlanCategories, setSelectedLessonPlanCategories] =
     useState<{ title: string; category: LessonPlanCategory }[]>([]);
@@ -60,7 +67,7 @@ export default function SearchAndDisplayLessonPlans({
 
   return (
     <>
-      <SearchLessonPlans>
+      <SearchLessonPlans searchTitle={searchTitle}>
         {/* Avoiding prop drilling via SearchLessonPlans by using children */}
         <AutoCompleteMultiSelect
           optionValues={multiSelectOptionValues}
@@ -68,7 +75,10 @@ export default function SearchAndDisplayLessonPlans({
           updateSelectedLessonPlans={updateSelectedLessonPlans}
         />
       </SearchLessonPlans>
-      <DisplayLessonPlans lessonPlans={lessonPlansToDisplay} />
+      <DisplayLessonPlansFactory
+        displayLessonPlansComponent={displayLessonPlansComponent}
+        lessonPlans={lessonPlansToDisplay}
+      />
     </>
   );
 }

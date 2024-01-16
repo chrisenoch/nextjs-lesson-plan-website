@@ -10,7 +10,11 @@ export default async function HomePage() {
   return (
     <>
       <Hero />
-      <SearchAndDisplayLessonPlans lessonPlans={lessonPlans} />
+      <SearchAndDisplayLessonPlans
+        searchTitle="Search lesson plans"
+        displayLessonPlansComponent="DisplayLessonPlans"
+        lessonPlans={lessonPlans}
+      />
     </>
   );
 }

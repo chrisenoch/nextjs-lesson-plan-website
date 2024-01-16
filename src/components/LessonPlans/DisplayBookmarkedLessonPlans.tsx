@@ -17,7 +17,7 @@ import {
 import { LoginStatus } from "@/models/types/LoginStatus";
 import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 
-export default function LessonPlanBookmarks({
+export default function DisplayLessonPlanBookmarks({
   lessonPlans,
 }: {
   lessonPlans: LessonPlan[];
