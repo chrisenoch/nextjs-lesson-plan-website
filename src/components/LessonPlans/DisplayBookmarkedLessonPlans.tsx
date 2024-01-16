@@ -16,6 +16,7 @@ import {
 } from "@/store/slices/with-thunks/lessonplans-slice";
 import { LoginStatus } from "@/models/types/LoginStatus";
 import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
+import { getBookmakedLessonPlanIds } from "@/component-functions/get-bookmarked-lessonplan-ids";
 
 export default function DisplayLessonPlanBookmarks({
   lessonPlans,
@@ -94,19 +95,4 @@ export default function DisplayLessonPlanBookmarks({
       </Grid>
     </Box>
   );
-}
-function getBookmakedLessonPlanIds(
-  lessonPlans: LessonPlan[],
-  bookmarks: { userId: string; lessonPlanId: string }[]
-) {
-  const bookmarkedLessonPlanIds = new Set<string>();
-  for (const lessonPlan of lessonPlans) {
-    for (const bookmark of bookmarks) {
-      if (bookmark.lessonPlanId === lessonPlan.id) {
-        bookmarkedLessonPlanIds.add(lessonPlan.id);
-        break;
-      }
-    }
-  }
-  return bookmarkedLessonPlanIds;
 }
