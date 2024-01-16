@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function useIntersectionObserver(
   targetElementIds: string[],
   rootMargins: { mt: string; mr: string; mb: string; ml: string } = {
     mt: "0px",
     mr: "0px",
-    mb: "-80%",
+    mb: "-76%",
     ml: "0px",
   }
 ) {
@@ -23,6 +23,7 @@ export default function useIntersectionObserver(
       threshold: 0,
     };
 
+    console.log("map getting init");
     const targetItemsByTarget = new Map();
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
       console.log("Intersection callback invoked");
@@ -33,10 +34,8 @@ export default function useIntersectionObserver(
       }[] = [];
 
       entries.forEach((entry) => {
-        console.log("debug here");
         const targetItem = targetItemsByTarget.get(entry.target);
         if (entry.isIntersecting) {
-          console.log("intersecting");
           targetItem.isIntersecting = true;
           activeIntersectors.push(targetItem);
         } else {
