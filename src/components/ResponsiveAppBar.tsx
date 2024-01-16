@@ -31,6 +31,7 @@ import {
 import SecureNextLink from "./SecureNextLink";
 import InsecureNextLink from "next/link";
 import { LoginStatus } from "@/models/types/LoginStatus";
+import MenuButton from "./MenuButton";
 
 export default function ResponsiveAppBar({
   DRAWER_WIDTH,
@@ -64,6 +65,8 @@ export default function ResponsiveAppBar({
       elevation: trigger ? 4 : 0,
     });
   }
+
+  const test = <Button>Dashboard</Button>;
 
   return (
     <>
@@ -137,6 +140,10 @@ export default function ResponsiveAppBar({
                   Login
                 </LoadingButton>
               )}
+              <MenuButton
+                id="test"
+                buttonComponent={<Button>Dashboard</Button>}
+              />
             </Box>
           </Toolbar>
         </AppBar>
