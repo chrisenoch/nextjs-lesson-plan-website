@@ -23,6 +23,7 @@ export default function FloatingId({
       position="absolute"
       component="span"
       sx={{
+        zIndex: -1500,
         top: positionValues.top,
         right: positionValues.right,
         bottom: positionValues.bottom,
