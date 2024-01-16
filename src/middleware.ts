@@ -373,24 +373,20 @@ function getPrimaryUrlSegment(urlPath: string) {
 
 function handleSecureNextLink(request: NextRequest) {
   const originalPath = request.nextUrl.pathname.toLowerCase();
-  const searchParams = request.nextUrl.searchParams;
-
-  console.log("originalPath " + originalPath);
-
-  let queryString = "?";
-  for (const [key, value] of searchParams.entries()) {
-    queryString += key + "=" + value + "&";
+  const {
+    nextUrl: { search },
+  } = request;
+  const params = new URLSearchParams(search);
+  let isNextLink;
+  if (params.get("next-link")) {
+    isNextLink = true;
+    params.delete("next-link");
   }
-  if (queryString.length <= 1) {
-    queryString = "";
-  } else {
-    queryString = queryString.substring(0, queryString.length - 1); // remove last amperstand
-  }
-  if (originalPath.includes("/next-link-wrapper-id")) {
-    const index = originalPath.indexOf("/next-link-wrapper-id");
 
-    const newRelativeUrl = originalPath.substring(0, index);
-    return newRelativeUrl + queryString;
+  if (isNextLink && params.size === 0) {
+    return originalPath;
+  } else if (isNextLink && params.size > 0) {
+    return originalPath + "?" + params.toString();
   } else {
     return null;
   }
