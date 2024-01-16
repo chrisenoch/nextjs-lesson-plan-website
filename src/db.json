@@ -44,15 +44,15 @@
     },
     {
       "userId": "1",
-      "jobTitle": "yy",
-      "jobDescription": "yy",
-      "id": 42
+      "jobTitle": "rr",
+      "jobDescription": "rr",
+      "id": 44
     },
     {
       "userId": "1",
-      "jobTitle": "tt",
-      "jobDescription": "tt",
-      "id": 43
+      "jobTitle": "gg",
+      "jobDescription": "gg\n",
+      "id": 45
     }
   ],
   "lesson-plans": [
@@ -156,6 +156,7 @@
   "lesson-plan-content": [
     {
       "id": "1",
+      "isPremium": false,
       "title": "Driverless Cars",
       "summary": "Driverless Cars Summary. Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae veritatis asperiores provident corrupti optio odit quo quos! Quam vel accusantium, earum, maiores molestiae quasi sed nesciunt nisi, ipsa recusandae neque",
       "warmer": "Driverless Cars Warmer. Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae veritatis asperiores provident corrupti optio odit quo quos! Quam vel accusantium, earum, maiores molestiae quasi sed nesciunt nisi, ipsa recusandae neque. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolore commodi, consequatur eius adipisci mollitia cumque placeat amet voluptatum molestias iste! Optio nihil, ratione aspernatur reiciendis neque doloremque accusamus repellat quidem?",
@@ -168,6 +169,7 @@
     },
     {
       "id": "2",
+      "isPremium": true,
       "title": "The Founding of Hollywood",
       "summary": "The Founding of Hollywood Summary. Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae veritatis asperiores provident corrupti optio odit quo quos! Quam vel accusantium, earum, maiores molestiae quasi sed nesciunt nisi, ipsa recusandae neque",
       "warmer": "The Founding of Hollywood Warmer. Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae veritatis asperiores provident corrupti optio odit quo quos! Quam vel accusantium, earum, maiores molestiae quasi sed nesciunt nisi, ipsa recusandae neque. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolore commodi, consequatur eius adipisci mollitia cumque placeat amet voluptatum molestias iste! Optio nihil, ratione aspernatur reiciendis neque doloremque accusamus repellat quidem?",
@@ -180,6 +182,7 @@
     },
     {
       "id": "3",
+      "isPremium": true,
       "title": "Your Dream Holiday",
       "summary": "Your Dream Holiday Summary. Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae veritatis asperiores provident corrupti optio odit quo quos! Quam vel accusantium, earum, maiores molestiae quasi sed nesciunt nisi, ipsa recusandae neque",
       "warmer": "Your Dream Holiday Warmer. Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae veritatis asperiores provident corrupti optio odit quo quos! Quam vel accusantium, earum, maiores molestiae quasi sed nesciunt nisi, ipsa recusandae neque. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolore commodi, consequatur eius adipisci mollitia cumque placeat amet voluptatum molestias iste! Optio nihil, ratione aspernatur reiciendis neque doloremque accusamus repellat quidem?",
@@ -192,6 +195,7 @@
     },
     {
       "id": "4",
+      "isPremium": true,
       "title": "Shopping For Clothes",
       "summary": "Shopping For Clothes Summary. Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae veritatis asperiores provident corrupti optio odit quo quos! Quam vel accusantium, earum, maiores molestiae quasi sed nesciunt nisi, ipsa recusandae neque",
       "warmer": "Shopping For Clothes Warmer. Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae veritatis asperiores provident corrupti optio odit quo quos! Quam vel accusantium, earum, maiores molestiae quasi sed nesciunt nisi, ipsa recusandae neque. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolore commodi, consequatur eius adipisci mollitia cumque placeat amet voluptatum molestias iste! Optio nihil, ratione aspernatur reiciendis neque doloremque accusamus repellat quidem?",
@@ -205,14 +209,24 @@
   ],
   "lesson-plan-bookmarks": [
     {
-      "userId": "1",
-      "lessonPlanId": "1",
-      "id": 1
-    },
-    {
       "userId": "2",
       "lessonPlanId": "3",
       "id": 3
+    },
+    {
+      "userId": "1",
+      "lessonPlanId": "3",
+      "id": 6
+    },
+    {
+      "userId": "1",
+      "lessonPlanId": "1",
+      "id": 7
+    },
+    {
+      "userId": "1",
+      "lessonPlanId": "2",
+      "id": 8
     }
   ]
 }

@@ -2,8 +2,10 @@ import { Stack, Typography } from "@mui/material";
 import { ReactNode } from "react";
 
 export default function SearchLessonPlans({
+  searchTitle,
   children,
 }: {
+  searchTitle: string;
   children: ReactNode;
 }) {
   return (
@@ -22,7 +24,7 @@ export default function SearchLessonPlans({
         borderBottom={4}
         borderColor={"primary.light"}
         alignSelf={"center"}>
-        Search lesson plans
+        {searchTitle}
       </Typography>
 
       {children}

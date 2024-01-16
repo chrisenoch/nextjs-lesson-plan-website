@@ -15,6 +15,7 @@ import {
   toggleBookmark,
 } from "@/store/slices/with-thunks/lessonplans-slice";
 import { LoginStatus } from "@/models/types/LoginStatus";
+import { getBookmakedLessonPlanIds } from "@/component-functions/get-bookmarked-lessonplan-ids";
 
 export default function DisplayLessonplans({
   lessonPlans,
@@ -95,19 +96,4 @@ export default function DisplayLessonplans({
       </Grid>
     </Box>
   );
-}
-function getBookmakedLessonPlanIds(
-  lessonPlans: LessonPlan[],
-  bookmarks: { userId: string; lessonPlanId: string }[]
-) {
-  const bookmarkedLessonPlanIds = new Set<string>();
-  for (const lessonPlan of lessonPlans) {
-    for (const bookmark of bookmarks) {
-      if (bookmark.lessonPlanId === lessonPlan.id) {
-        bookmarkedLessonPlanIds.add(lessonPlan.id);
-        break;
-      }
-    }
-  }
-  return bookmarkedLessonPlanIds;
 }

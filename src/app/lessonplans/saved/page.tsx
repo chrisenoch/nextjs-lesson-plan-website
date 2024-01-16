@@ -1,8 +1,16 @@
 import "server-only";
 import { fetchLessonPlans } from "@/server-only/lessonplans";
-import LessonPlanBookmarks from "@/components/LessonPlans/LessonPlanBookmarks";
+import DisplayLessonPlansFactory from "@/components/LessonPlans/DisplayLessonPlansFactory";
+import SearchAndDisplayLessonPlans from "@/components/LessonPlans/SearchAndDisplayLessonPlans";
 
 export default async function SavedLessonPlans() {
   const lessonPlans = await fetchLessonPlans();
-  return <LessonPlanBookmarks lessonPlans={lessonPlans} />;
+
+  return (
+    <SearchAndDisplayLessonPlans
+      searchTitle="Search saved plans"
+      displayLessonPlansComponent="DisplayBookmarkedLessonPlans"
+      lessonPlans={lessonPlans}
+    />
+  );
 }

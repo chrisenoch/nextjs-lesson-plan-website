@@ -1,6 +1,7 @@
 import LessonPlan from "@/components/LessonPlans/LessonPlan";
 
 export async function generateStaticParams() {
+  console.log("generating static params");
   //get ids by calling a database or a server
   const ids = [{ id: "1" }, { id: "2" }, { id: "3" }, { id: "4" }];
   return ids;
@@ -32,6 +33,7 @@ export default async function LessonPlanContentPage({
 }) {
   console.log("LessonPlanContentPagerendered");
   const lessonPlanContent: {
+    isPremium: boolean;
     title: string;
     summary: string;
     warmer: string;
@@ -45,6 +47,7 @@ export default async function LessonPlanContentPage({
 
   return (
     <LessonPlan
+      isPremium={lessonPlanContent.isPremium}
       title={lessonPlanContent.title}
       summary={lessonPlanContent.summary}
       warmer={lessonPlanContent.warmer}

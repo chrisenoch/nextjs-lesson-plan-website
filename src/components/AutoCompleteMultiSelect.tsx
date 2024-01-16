@@ -35,7 +35,7 @@ const AutoCompleteMultiSelect = memo(function AutoCompleteMultiSelect({
       clearOnBlur={false}
       autoHighlight={true}
       clearText="Clear all filters"
-      disableCloseOnSelect={true}
+      //disableCloseOnSelect={true}
       multiple
       id="tags-outlined"
       options={optionValues.sort(sortOptionValues)}
