@@ -16,6 +16,7 @@ import {
   Button,
   Container,
   useScrollTrigger,
+  Link,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -44,8 +45,6 @@ export default function ResponsiveAppBar({
   const dispatch = useDispatch<AppDispatch>();
 
   const navItems = [
-    { title: "Lesson Plans", href: "/lessonplans" },
-    { title: "Bookmarks", href: "/lessonplans/saved" },
     { title: "My Jobs", href: "/my-jobs" },
     { title: "All Jobs", href: "/all-jobs" },
   ];
@@ -65,8 +64,6 @@ export default function ResponsiveAppBar({
       elevation: trigger ? 4 : 0,
     });
   }
-
-  const test = <Button>Dashboard</Button>;
 
   return (
     <>
@@ -101,6 +98,14 @@ export default function ResponsiveAppBar({
               sx={{
                 display: { xs: "none", sm: "block" },
               }}>
+              <MenuButton
+                id="lesson-plans-nav-button"
+                buttonComponent={<Button>Lesson Plans</Button>}
+                menuItems={[
+                  { name: "All Lesson Plans", href: "/lessonplans" },
+                  { name: "Saved", href: "/lessonplans/saved" },
+                ]}
+              />
               {navItems.map((item) => {
                 return (
                   <Button
@@ -140,10 +145,6 @@ export default function ResponsiveAppBar({
                   Login
                 </LoadingButton>
               )}
-              <MenuButton
-                id="test"
-                buttonComponent={<Button>Dashboard</Button>}
-              />
             </Box>
           </Toolbar>
         </AppBar>

@@ -1,14 +1,16 @@
 "use client";
-import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { cloneElement, useState } from "react";
+import SecureNextLink from "./SecureNextLink";
 
 export default function MenuButton({
   buttonComponent,
+  menuItems,
   id,
 }: {
   buttonComponent: any;
+  menuItems: { name: string; href: string }[];
   id: string;
 }) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -24,11 +26,21 @@ export default function MenuButton({
     onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       handleClick(e);
     },
-    id: id,
+    id,
   });
 
+  const renderedMenuItems = menuItems.map((menuItem) => (
+    <MenuItem
+      component={SecureNextLink}
+      href={menuItem.href}
+      key={menuItem.name}
+      onClick={handleClose}>
+      {menuItem.name}
+    </MenuItem>
+  ));
+
   return (
-    <div>
+    <>
       {ClonedButton}
       <Menu
         id={id}
@@ -38,9 +50,8 @@ export default function MenuButton({
         MenuListProps={{
           "aria-labelledby": "basic-button",
         }}>
-        <MenuItem onClick={handleClose}>All lesson plans</MenuItem>
-        <MenuItem onClick={handleClose}>Saved</MenuItem>
+        {renderedMenuItems}
       </Menu>
-    </div>
+    </>
   );
 }
