@@ -3,7 +3,7 @@ import { cloneElement } from "react";
 import DisplayBookmarkedLessonPlans from "./DisplayBookmarkedLessonPlans";
 import DisplayLessonPlans from "./DisplayLessonPlans";
 
-export default function DisplayLessonplansFactoy({
+export default function DisplayLessonPlansFactory({
   lessonPlans,
   displayLessonPlansComponent,
 }: {
@@ -12,10 +12,10 @@ export default function DisplayLessonplansFactoy({
     | "DisplayLessonPlans"
     | "DisplayBookmarkedLessonPlans";
 }) {
-  if (displayLessonPlansComponent === "DisplayLessonPlans") {
-    return <DisplayLessonPlans lessonPlans={lessonPlans} />;
-  }
-  if (displayLessonPlansComponent === "DisplayBookmarkedLessonPlans") {
-    return <DisplayBookmarkedLessonPlans lessonPlans={lessonPlans} />;
+  switch (displayLessonPlansComponent) {
+    case "DisplayLessonPlans":
+      return <DisplayLessonPlans lessonPlans={lessonPlans} />;
+    case "DisplayBookmarkedLessonPlans":
+      return <DisplayBookmarkedLessonPlans lessonPlans={lessonPlans} />;
   }
 }
