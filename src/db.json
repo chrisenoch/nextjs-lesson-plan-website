@@ -44,15 +44,9 @@
     },
     {
       "userId": "1",
-      "jobTitle": "rr",
-      "jobDescription": "rr",
-      "id": 44
-    },
-    {
-      "userId": "1",
-      "jobTitle": "gg",
-      "jobDescription": "gg\n",
-      "id": 45
+      "jobTitle": "ff",
+      "jobDescription": "ff",
+      "id": 42
     }
   ],
   "lesson-plans": [
@@ -220,13 +214,13 @@
     },
     {
       "userId": "1",
-      "lessonPlanId": "1",
-      "id": 7
+      "lessonPlanId": "2",
+      "id": 8
     },
     {
       "userId": "1",
-      "lessonPlanId": "2",
-      "id": 8
+      "lessonPlanId": "1",
+      "id": 9
     }
   ]
 }

@@ -13,7 +13,8 @@ import {
 } from "@mui/material";
 import FloatingId from "@/components/FloatingId";
 import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import InsecureNextLink from "next/link";
 
 export default function LessonPlan({
   isPremium,
@@ -40,6 +41,7 @@ export default function LessonPlan({
 }) {
   console.log("LessonPlan rendered");
   useRedirectWhenLoggedOut("/auth/signin", isPremium);
+
   const memoizedTargetElementIds = useMemo(
     () => [
       "summary",
@@ -76,11 +78,7 @@ export default function LessonPlan({
               aria-label="summary">
               <ListItem disablePadding>
                 <ListItemButton
-                  onClick={() => {
-                    console.log("summary clicked");
-                    activeIntersection = null;
-                  }}
-                  component="a"
+                  component={InsecureNextLink}
                   href="#summary-floating">
                   {/* <ListItemIcon>
                   <StarIcon />
@@ -98,7 +96,9 @@ export default function LessonPlan({
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="#warmer-floating">
+                <ListItemButton
+                  component={InsecureNextLink}
+                  href="#warmer-floating">
                   <ListItemText
                     primary="Warmer"
                     sx={{
@@ -112,7 +112,9 @@ export default function LessonPlan({
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="#teach-vocabulary-floating">
+                <ListItemButton
+                  component={InsecureNextLink}
+                  href="#teach-vocabulary-floating">
                   <ListItemText
                     primary="Teach Vocabulary"
                     sx={{
@@ -129,7 +131,7 @@ export default function LessonPlan({
               </ListItem>
               <ListItem disablePadding>
                 <ListItemButton
-                  component="a"
+                  component={InsecureNextLink}
                   href="#vocabulary-exercise-floating">
                   <ListItemText
                     primary="Vocabulary Exercise"
@@ -148,7 +150,7 @@ export default function LessonPlan({
               </ListItem>
               <ListItem disablePadding>
                 <ListItemButton
-                  component="a"
+                  component={InsecureNextLink}
                   href="#teach-speaking-phrases-floating">
                   <ListItemText
                     primary="Teach Speaking Phrases"
@@ -165,7 +167,9 @@ export default function LessonPlan({
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="#role-play-floating">
+                <ListItemButton
+                  component={InsecureNextLink}
+                  href="#role-play-floating">
                   <ListItemText
                     primary="Role Play"
                     sx={{
@@ -181,7 +185,9 @@ export default function LessonPlan({
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="#feedback-floating">
+                <ListItemButton
+                  component={InsecureNextLink}
+                  href="#feedback-floating">
                   <ListItemText
                     primary="Feedback"
                     sx={{
@@ -195,10 +201,7 @@ export default function LessonPlan({
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton
-                  component="a"
-                  href="#plenary"
-                  onClick={() => (activeIntersection = null)}>
+                <ListItemButton component={InsecureNextLink} href="#plenary">
                   <ListItemText
                     primary="Plenary"
                     sx={{
@@ -320,7 +323,6 @@ export default function LessonPlan({
           </Grid>
         </Grid>
       </Stack>
-      <Box height="500px"></Box>
     </>
   );
 }
