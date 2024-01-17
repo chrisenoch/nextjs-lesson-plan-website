@@ -3,13 +3,13 @@ import { UserRole } from "./UserRole";
 export type ProtectedRoutes = {
   [key: string]: {
     roles: UserRole[];
-    children?: ProtectedRouteInfoBySecondaryRoute[];
+    children?: ProtectedRouteInfoNoChildrenBySecondaryRoute[];
     notLoggedInRedirectUrlPath?: string;
     incorrectRoleRedirectUrlPath?: string;
   };
 };
 
-export type ProtectedRouteInfoBySecondaryRoute = {
+export type ProtectedRouteInfoNoChildrenBySecondaryRoute = {
   [key: string]: {
     roles: UserRole[];
     notLoggedInRedirectUrlPath?: string;
@@ -24,7 +24,7 @@ export type ProtectedRouteInfoNoChildren = {
 };
 
 export type ProtectedSecondaryRouteInfo = {
-  children: ProtectedRouteInfoBySecondaryRoute[];
+  children: ProtectedRouteInfoNoChildrenBySecondaryRoute[];
   notLoggedInRedirectUrlPath?: string;
   incorrectRoleRedirectUrlPath?: string;
 };

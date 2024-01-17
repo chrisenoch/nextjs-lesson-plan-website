@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { UserRole, isUserRole } from "./models/types/UserRole";
 import {
   ProtectedRouteInfo,
-  ProtectedRouteInfoBySecondaryRoute,
+  ProtectedRouteInfoNoChildrenBySecondaryRoute,
   ProtectedRoutes,
   isProtectedRouteChildren,
   ProtectedRouteInfoNoChildren,
@@ -206,11 +206,11 @@ function getUrlPathBasedOnPermissions({
       let protectedRouteInfoNoChildrenIfExists: null | ProtectedRouteInfoNoChildren =
         null;
       //Search from most specific to least specific and then return the first match.
-      childrenBlock: for (const protectedRouteInfoBySecondaryRoute of childrenReversed) {
+      childrenBlock: for (const protectedRouteInfoNoChildrenBySecondaryRoute of childrenReversed) {
         for (const [
           secondaryUrlSegments,
           protectedRouteInfoNoChildren,
-        ] of Object.entries(protectedRouteInfoBySecondaryRoute)) {
+        ] of Object.entries(protectedRouteInfoNoChildrenBySecondaryRoute)) {
           console.log("roles for secondary route");
           console.log(protectedRouteInfoNoChildren.roles);
 
@@ -293,9 +293,9 @@ function getAllProtectedRoutes(protectedRoutes: ProtectedRoutes) {
       if (isProtectedRouteChildren(protectedRouteInfo)) {
         Object.values(protectedRouteInfo.children).forEach(
           (
-            protectedRouteInfoBySecondaryRoute: ProtectedRouteInfoBySecondaryRoute
+            protectedRouteInfoNoChildrenBySecondaryRoute: ProtectedRouteInfoNoChildrenBySecondaryRoute
           ) => {
-            Object.keys(protectedRouteInfoBySecondaryRoute).forEach(
+            Object.keys(protectedRouteInfoNoChildrenBySecondaryRoute).forEach(
               (secondaryRoute: string) => {
                 allProtectedRoutes.add(
                   primaryRoute.toLowerCase() +
