@@ -6,7 +6,6 @@ import {
   ProtectedRouteInfoBySecondaryRoute,
   ProtectedRoutes,
   isProtectedRouteChildren,
-  ProtectedSecondaryRouteInfo,
   ProtectedRouteInfoNoChildren,
 } from "./models/types/ProtectedRoutes";
 import { getArrayIntersection } from "./utils/array-functions";
@@ -83,6 +82,7 @@ const protectedRoutes: ProtectedRoutes = {
   "my-jobs": {
     roles: ["USER"],
     notLoggedInRedirectUrlPath: "/premium",
+    incorrectRoleRedirectUrlPath: "/all-jobs",
   },
   lessonplans: {
     roles: ["EVERYBODY"],
@@ -98,11 +98,18 @@ const protectedRoutes: ProtectedRoutes = {
     roles: ["ADMIN"],
     children: [
       { profile: { roles: ["USER"] } },
-      { "profile/secret": { roles: ["ADMIN"] } },
+      {
+        "profile/secret": {
+          roles: ["ADMIN"],
+          notLoggedInRedirectUrlPath: "/premium?foo=bar",
+          //incorrectRoleRedirectUrlPath: "/all-jobs",
+        },
+      },
       {
         "profile/account": {
           roles: ["USER"],
           notLoggedInRedirectUrlPath: "/premium?foo=bar",
+          incorrectRoleRedirectUrlPath: "/all-jobs",
         },
       },
     ],
@@ -176,6 +183,10 @@ function getUrlPathBasedOnPermissions({
         notLoggedInRedirectUrlPath =
           protectedRouteInfo.notLoggedInRedirectUrlPath;
       }
+      if (protectedRouteInfo.incorrectRoleRedirectUrlPath) {
+        incorrectRoleRedirectUrlPath =
+          protectedRouteInfo.incorrectRoleRedirectUrlPath;
+      }
 
       return getUrlPathOnceRolesAreKnown({
         requiredRolesUserHas: rolesUserHasForPrimaryRoute,
@@ -232,6 +243,10 @@ function getUrlPathBasedOnPermissions({
             notLoggedInRedirectUrlPath =
               protectedRouteInfo.notLoggedInRedirectUrlPath;
           }
+          if (protectedRouteInfo.incorrectRoleRedirectUrlPath) {
+            incorrectRoleRedirectUrlPath =
+              protectedRouteInfo.incorrectRoleRedirectUrlPath;
+          }
 
           return getUrlPathOnceRolesAreKnown({
             requiredRolesUserHas: rolesUserHasForPrimaryRoute,
@@ -249,6 +264,13 @@ function getUrlPathBasedOnPermissions({
           ) {
             notLoggedInRedirectUrlPath =
               protectedRouteInfoNoChildrenIfExists.notLoggedInRedirectUrlPath;
+          }
+          if (
+            protectedRouteInfoNoChildrenIfExists &&
+            protectedRouteInfoNoChildrenIfExists.incorrectRoleRedirectUrlPath
+          ) {
+            incorrectRoleRedirectUrlPath =
+              protectedRouteInfoNoChildrenIfExists.incorrectRoleRedirectUrlPath;
           }
 
           if (userRoles.includes("EVERYBODY") && userRoles.length === 1) {
