@@ -78,10 +78,11 @@ export async function middleware(request: NextRequest) {
 // ],
 //This function does not protect child routes automatically. E.g. If you assign the admin role to the route 'lessonPlans'
 //and do not include any children routes, then 'lessonPlans/1' will not be protected. //To do: Change this
+const SIGNIN_REDIRECT_START = "/auth/signin?redirect=/";
 const protectedRoutes: ProtectedRoutes = {
   "my-jobs": {
     roles: ["USER"],
-    notLoggedInRedirectUrlPath: "/auth/signin?redirect=/my-jobs",
+    notLoggedInRedirectUrlPath: SIGNIN_REDIRECT_START + "my-jobs",
   },
   lessonplans: {
     roles: ["EVERYBODY"],
@@ -90,57 +91,56 @@ const protectedRoutes: ProtectedRoutes = {
         saved: {
           roles: ["USER"],
           notLoggedInRedirectUrlPath:
-            "/auth/signin?redirect=/lessonplans/saved",
+            SIGNIN_REDIRECT_START + "lessonplans/saved",
         },
       },
       {
         1: {
           roles: ["EVERYBODY"],
-          notLoggedInRedirectUrlPath: "/auth/signin?redirect=/lessonplans/1",
         },
       },
       {
         2: {
           roles: ["USER"],
-          notLoggedInRedirectUrlPath: "/auth/signin?redirect=/lessonplans/2",
+          notLoggedInRedirectUrlPath: SIGNIN_REDIRECT_START + "lessonplans/2",
         },
       },
       {
         3: {
           roles: ["USER"],
-          notLoggedInRedirectUrlPath: "/auth/signin?redirect=/lessonplans/3",
+          notLoggedInRedirectUrlPath: SIGNIN_REDIRECT_START + "lessonplans/3",
         },
       },
       {
         4: {
           roles: ["USER"],
-          notLoggedInRedirectUrlPath: "/auth/signin?redirect=/lessonplans/4",
+          notLoggedInRedirectUrlPath: SIGNIN_REDIRECT_START + "lessonplans/4",
         },
       },
     ],
   },
   user: {
     roles: ["ADMIN"],
-    notLoggedInRedirectUrlPath: "/auth/signin?redirect=/user",
+    notLoggedInRedirectUrlPath: SIGNIN_REDIRECT_START + "user",
     children: [
       {
         profile: {
           roles: ["USER"],
-          notLoggedInRedirectUrlPath: "/auth/signin?redirect=/user/profile",
+          notLoggedInRedirectUrlPath: SIGNIN_REDIRECT_START + "user/profile",
         },
       },
       {
         "profile/secret": {
           roles: ["ADMIN"],
           notLoggedInRedirectUrlPath:
-            "/auth/signin?redirect=/user/profile/secret",
+            SIGNIN_REDIRECT_START + "user/profile/secret",
         },
       },
       {
         "profile/account": {
           roles: ["USER"],
           notLoggedInRedirectUrlPath:
-            "/auth/signin?redirect=/user/profile/account",
+            SIGNIN_REDIRECT_START + "user/profile/account",
         },
       },
     ],
