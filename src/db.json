@@ -97,6 +97,10 @@
       "imageAlt": "Hollywood",
       "chips": [
         {
+          "title": "Films / Movies",
+          "category": "V"
+        },
+        {
           "title": "Video",
           "category": "A"
         },
@@ -117,6 +121,10 @@
       "imageURL": "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
       "imageAlt": "A beach with palm trees",
       "chips": [
+        {
+          "title": "Travel / Holidays",
+          "category": "V"
+        },
         {
           "title": "Second Conditional",
           "category": "G"
@@ -142,6 +150,11 @@
           "title": "Speaking Class",
           "category": "T"
         },
+        {
+          "title": "Clothes / Fashion",
+          "category": "V"
+        },
+
         {
           "title": "Role Play",
           "category": "A"
@@ -222,11 +235,6 @@
       "userId": "1",
       "lessonPlanId": "1",
       "id": 9
-    },
-    {
-      "userId": "1",
-      "lessonPlanId": "3",
-      "id": 10
     }
   ]
 }
