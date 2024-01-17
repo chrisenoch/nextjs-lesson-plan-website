@@ -81,29 +81,66 @@ export async function middleware(request: NextRequest) {
 const protectedRoutes: ProtectedRoutes = {
   "my-jobs": {
     roles: ["USER"],
+    notLoggedInRedirectUrlPath: "/auth/signin?redirect=/my-jobs",
   },
   lessonplans: {
     roles: ["EVERYBODY"],
     children: [
-      { saved: { roles: ["USER"] } },
-      { 1: { roles: ["EVERYBODY"] } },
-      { 2: { roles: ["USER"] } },
-      { 3: { roles: ["USER"] } },
-      { 4: { roles: ["USER"] } },
+      {
+        saved: {
+          roles: ["USER"],
+          notLoggedInRedirectUrlPath:
+            "/auth/signin?redirect=/lessonplans/saved",
+        },
+      },
+      {
+        1: {
+          roles: ["EVERYBODY"],
+          notLoggedInRedirectUrlPath: "/auth/signin?redirect=/lessonplans/1",
+        },
+      },
+      {
+        2: {
+          roles: ["USER"],
+          notLoggedInRedirectUrlPath: "/auth/signin?redirect=/lessonplans/2",
+        },
+      },
+      {
+        3: {
+          roles: ["USER"],
+          notLoggedInRedirectUrlPath: "/auth/signin?redirect=/lessonplans/3",
+        },
+      },
+      {
+        4: {
+          roles: ["USER"],
+          notLoggedInRedirectUrlPath: "/auth/signin?redirect=/lessonplans/4",
+        },
+      },
     ],
   },
   user: {
     roles: ["ADMIN"],
+    notLoggedInRedirectUrlPath: "/auth/signin?redirect=/user",
     children: [
-      { profile: { roles: ["USER"] } },
+      {
+        profile: {
+          roles: ["USER"],
+          notLoggedInRedirectUrlPath: "/auth/signin?redirect=/user/profile",
+        },
+      },
       {
         "profile/secret": {
           roles: ["ADMIN"],
+          notLoggedInRedirectUrlPath:
+            "/auth/signin?redirect=/user/profile/secret",
         },
       },
       {
         "profile/account": {
           roles: ["USER"],
+          notLoggedInRedirectUrlPath:
+            "/auth/signin?redirect=/user/profile/account",
         },
       },
     ],
