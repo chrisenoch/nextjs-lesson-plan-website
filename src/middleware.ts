@@ -237,7 +237,7 @@ function getUrlPathBasedOnPermissions({
             userRoles,
           });
         } else {
-          //user not authorised or not logged-in
+          //If get here, user not authorised or not logged-in
           //check if custom url paths were set
           if (
             protectedSecondaryRouteInfoIfExists &&
