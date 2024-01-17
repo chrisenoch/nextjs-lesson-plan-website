@@ -80,7 +80,7 @@ export async function middleware(request: NextRequest) {
 //and do not include any children routes, then 'lessonPlans/1' will not be protected. //To do: Change this
 const protectedRoutes: ProtectedRoutes = {
   "my-jobs": {
-    roles: ["USER"],
+    roles: ["ADMIN"],
     notLoggedInRedirectUrlPath: "/premium",
     incorrectRoleRedirectUrlPath: "/all-jobs",
   },
@@ -96,6 +96,8 @@ const protectedRoutes: ProtectedRoutes = {
   },
   user: {
     roles: ["ADMIN"],
+    notLoggedInRedirectUrlPath: "/premium",
+    incorrectRoleRedirectUrlPath: "/all-jobs",
     children: [
       { profile: { roles: ["USER"] } },
       {
@@ -107,7 +109,7 @@ const protectedRoutes: ProtectedRoutes = {
       },
       {
         "profile/account": {
-          roles: ["USER"],
+          roles: ["ADMIN"],
           notLoggedInRedirectUrlPath: "/premium?foo=bar",
           incorrectRoleRedirectUrlPath: "/all-jobs",
         },
@@ -179,14 +181,13 @@ function getUrlPathBasedOnPermissions({
         userRoles
       );
 
-      if (protectedRouteInfo.notLoggedInRedirectUrlPath) {
-        notLoggedInRedirectUrlPath =
-          protectedRouteInfo.notLoggedInRedirectUrlPath;
-      }
-      if (protectedRouteInfo.incorrectRoleRedirectUrlPath) {
-        incorrectRoleRedirectUrlPath =
-          protectedRouteInfo.incorrectRoleRedirectUrlPath;
-      }
+      const newUrlPaths = setCustomUrlsIfExist({
+        protectedRouteInfo,
+        notLoggedInRedirectUrlPath,
+        incorrectRoleRedirectUrlPath,
+      });
+      notLoggedInRedirectUrlPath = newUrlPaths.notLoggedInRedirectUrlPath;
+      incorrectRoleRedirectUrlPath = newUrlPaths.incorrectRoleRedirectUrlPath;
 
       return getUrlPathOnceRolesAreKnown({
         requiredRolesUserHas: rolesUserHasForPrimaryRoute,
@@ -239,14 +240,14 @@ function getUrlPathBasedOnPermissions({
             userRoles
           );
 
-          if (protectedRouteInfo.notLoggedInRedirectUrlPath) {
-            notLoggedInRedirectUrlPath =
-              protectedRouteInfo.notLoggedInRedirectUrlPath;
-          }
-          if (protectedRouteInfo.incorrectRoleRedirectUrlPath) {
-            incorrectRoleRedirectUrlPath =
-              protectedRouteInfo.incorrectRoleRedirectUrlPath;
-          }
+          const newUrlPaths = setCustomUrlsIfExist({
+            protectedRouteInfo,
+            notLoggedInRedirectUrlPath,
+            incorrectRoleRedirectUrlPath,
+          });
+          notLoggedInRedirectUrlPath = newUrlPaths.notLoggedInRedirectUrlPath;
+          incorrectRoleRedirectUrlPath =
+            newUrlPaths.incorrectRoleRedirectUrlPath;
 
           return getUrlPathOnceRolesAreKnown({
             requiredRolesUserHas: rolesUserHasForPrimaryRoute,
@@ -257,20 +258,15 @@ function getUrlPathBasedOnPermissions({
           });
         } else {
           //If get here, user not authorised or not logged-in
-          //check if custom url paths were set
-          if (
-            protectedRouteInfoNoChildrenIfExists &&
-            protectedRouteInfoNoChildrenIfExists.notLoggedInRedirectUrlPath
-          ) {
-            notLoggedInRedirectUrlPath =
-              protectedRouteInfoNoChildrenIfExists.notLoggedInRedirectUrlPath;
-          }
-          if (
-            protectedRouteInfoNoChildrenIfExists &&
-            protectedRouteInfoNoChildrenIfExists.incorrectRoleRedirectUrlPath
-          ) {
+          if (protectedRouteInfoNoChildrenIfExists) {
+            const newUrlPaths = setCustomUrlsIfExist({
+              protectedRouteInfo: protectedRouteInfoNoChildrenIfExists,
+              notLoggedInRedirectUrlPath,
+              incorrectRoleRedirectUrlPath,
+            });
+            notLoggedInRedirectUrlPath = newUrlPaths.notLoggedInRedirectUrlPath;
             incorrectRoleRedirectUrlPath =
-              protectedRouteInfoNoChildrenIfExists.incorrectRoleRedirectUrlPath;
+              newUrlPaths.incorrectRoleRedirectUrlPath;
           }
 
           if (userRoles.includes("EVERYBODY") && userRoles.length === 1) {
@@ -450,4 +446,27 @@ function handleSecureNextLink(request: NextRequest) {
   } else {
     return null;
   }
+}
+
+function setCustomUrlsIfExist({
+  protectedRouteInfo,
+  notLoggedInRedirectUrlPath,
+  incorrectRoleRedirectUrlPath,
+}: {
+  protectedRouteInfo: ProtectedRouteInfo;
+  notLoggedInRedirectUrlPath: string;
+  incorrectRoleRedirectUrlPath: string;
+}) {
+  if (protectedRouteInfo.notLoggedInRedirectUrlPath) {
+    notLoggedInRedirectUrlPath = protectedRouteInfo.notLoggedInRedirectUrlPath;
+  }
+  if (protectedRouteInfo.incorrectRoleRedirectUrlPath) {
+    incorrectRoleRedirectUrlPath =
+      protectedRouteInfo.incorrectRoleRedirectUrlPath;
+  }
+
+  return {
+    notLoggedInRedirectUrlPath,
+    incorrectRoleRedirectUrlPath,
+  };
 }
