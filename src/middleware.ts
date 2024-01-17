@@ -2,11 +2,12 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { UserRole, isUserRole } from "./models/types/UserRole";
 import {
-  ProtectedRoute,
-  ProtectedRouteRoles,
-  ProtectedRouteRolesByRoute,
+  ProtectedRouteInfo,
+  ProtectedRouteInfoBySecondaryRoute,
   ProtectedRoutes,
   isProtectedRouteChildren,
+  ProtectedSecondaryRouteInfo,
+  ProtectedRouteInfoNoChildren,
 } from "./models/types/ProtectedRoutes";
 import { getArrayIntersection } from "./utils/array-functions";
 import { joseVerifyToken } from "./server-only/auth/check-permissions";
@@ -79,7 +80,10 @@ export async function middleware(request: NextRequest) {
 //This function does not protect child routes automatically. E.g. If you assign the admin role to the route 'lessonPlans'
 //and do not include any children routes, then 'lessonPlans/1' will not be protected. //To do: Change this
 const protectedRoutes: ProtectedRoutes = {
-  "my-jobs": { roles: ["USER"], notLoggedInRedirectUrlPath: "/premium" },
+  "my-jobs": {
+    roles: ["USER"],
+    notLoggedInRedirectUrlPath: "/premium",
+  },
   lessonplans: {
     roles: ["EVERYBODY"],
     children: [
@@ -98,7 +102,7 @@ const protectedRoutes: ProtectedRoutes = {
       {
         "profile/account": {
           roles: ["USER"],
-          notLoggedInRedirectUrlPath: "/premium",
+          notLoggedInRedirectUrlPath: "/premium?foo=bar",
         },
       },
     ],
@@ -159,18 +163,18 @@ function getUrlPathBasedOnPermissions({
   const primaryUrlSegment = getPrimaryUrlSegment(enteredUrlPath);
 
   //roles should always exist here
-  const protectedPrimaryRouteInfo: ProtectedRoute =
+  const protectedRouteInfo: ProtectedRouteInfo =
     protectedRoutes[primaryUrlSegment];
-  if (protectedPrimaryRouteInfo) {
-    if (!isProtectedRouteChildren(protectedPrimaryRouteInfo)) {
+  if (protectedRouteInfo) {
+    if (!isProtectedRouteChildren(protectedRouteInfo)) {
       const rolesUserHasForPrimaryRoute = getArrayIntersection(
-        protectedPrimaryRouteInfo.roles,
+        protectedRouteInfo.roles,
         userRoles
       );
 
-      if (protectedPrimaryRouteInfo.notLoggedInRedirectUrlPath) {
+      if (protectedRouteInfo.notLoggedInRedirectUrlPath) {
         notLoggedInRedirectUrlPath =
-          protectedPrimaryRouteInfo.notLoggedInRedirectUrlPath;
+          protectedRouteInfo.notLoggedInRedirectUrlPath;
       }
 
       return getUrlPathOnceRolesAreKnown({
@@ -183,30 +187,30 @@ function getUrlPathBasedOnPermissions({
     } else {
       //If entry DOES have children
       let rolesUserHasForChildrenRoute = [];
-      const children = protectedPrimaryRouteInfo.children;
+      const children = protectedRouteInfo.children;
       //Array method toReversed() does not work. Maybe because NextJS middleware uses the Edge environment
       const childrenReversed = [...children].reverse();
 
-      let protectedSecondaryRouteInfoIfExists: null | ProtectedRouteRoles =
+      let protectedRouteInfoNoChildrenIfExists: null | ProtectedRouteInfoNoChildren =
         null;
       //Search from most specific to least specific and then return the first match.
-      childrenBlock: for (const protectedRouteRolesByRoute of childrenReversed) {
+      childrenBlock: for (const protectedRouteInfoBySecondaryRoute of childrenReversed) {
         for (const [
           secondaryUrlSegments,
-          protectedSecondaryRouteInfo,
-        ] of Object.entries(protectedRouteRolesByRoute)) {
+          protectedRouteInfoNoChildren,
+        ] of Object.entries(protectedRouteInfoBySecondaryRoute)) {
           console.log("roles for secondary route");
-          console.log(protectedSecondaryRouteInfo);
+          console.log(protectedRouteInfoNoChildren.roles);
 
           const protectedUrlPath =
             primaryUrlSegment + "/" + secondaryUrlSegments;
 
           if (enteredUrlPath.includes(protectedUrlPath)) {
             rolesUserHasForChildrenRoute = getArrayIntersection(
-              protectedSecondaryRouteInfo.roles,
+              protectedRouteInfoNoChildren.roles,
               userRoles
             );
-            protectedSecondaryRouteInfoIfExists = protectedSecondaryRouteInfo;
+            protectedRouteInfoNoChildrenIfExists = protectedRouteInfoNoChildren;
             break childrenBlock;
           }
         }
@@ -220,13 +224,13 @@ function getUrlPathBasedOnPermissions({
         //Check to see if the user navigated to the primary route segment
         if (primaryUrlSegment.includes(enteredUrlPath)) {
           const rolesUserHasForPrimaryRoute = getArrayIntersection(
-            protectedPrimaryRouteInfo.roles,
+            protectedRouteInfo.roles,
             userRoles
           );
 
-          if (protectedPrimaryRouteInfo.notLoggedInRedirectUrlPath) {
+          if (protectedRouteInfo.notLoggedInRedirectUrlPath) {
             notLoggedInRedirectUrlPath =
-              protectedPrimaryRouteInfo.notLoggedInRedirectUrlPath;
+              protectedRouteInfo.notLoggedInRedirectUrlPath;
           }
 
           return getUrlPathOnceRolesAreKnown({
@@ -240,11 +244,11 @@ function getUrlPathBasedOnPermissions({
           //If get here, user not authorised or not logged-in
           //check if custom url paths were set
           if (
-            protectedSecondaryRouteInfoIfExists &&
-            protectedSecondaryRouteInfoIfExists.notLoggedInRedirectUrlPath
+            protectedRouteInfoNoChildrenIfExists &&
+            protectedRouteInfoNoChildrenIfExists.notLoggedInRedirectUrlPath
           ) {
             notLoggedInRedirectUrlPath =
-              protectedSecondaryRouteInfoIfExists.notLoggedInRedirectUrlPath;
+              protectedRouteInfoNoChildrenIfExists.notLoggedInRedirectUrlPath;
           }
 
           if (userRoles.includes("EVERYBODY") && userRoles.length === 1) {
@@ -265,13 +269,15 @@ function getUrlPathBasedOnPermissions({
 function getAllProtectedRoutes(protectedRoutes: ProtectedRoutes) {
   const allProtectedRoutes = new Set<string>();
   Object.entries(protectedRoutes).forEach(
-    ([primaryRoute, protectedRoute]: [string, ProtectedRoute]) => {
+    ([primaryRoute, protectedRouteInfo]: [string, ProtectedRouteInfo]) => {
       allProtectedRoutes.add(primaryRoute.toLowerCase());
 
-      if (isProtectedRouteChildren(protectedRoute)) {
-        Object.values(protectedRoute.children).forEach(
-          (protectedRouteRolesByRoute: ProtectedRouteRolesByRoute) => {
-            Object.keys(protectedRouteRolesByRoute).forEach(
+      if (isProtectedRouteChildren(protectedRouteInfo)) {
+        Object.values(protectedRouteInfo.children).forEach(
+          (
+            protectedRouteInfoBySecondaryRoute: ProtectedRouteInfoBySecondaryRoute
+          ) => {
+            Object.keys(protectedRouteInfoBySecondaryRoute).forEach(
               (secondaryRoute: string) => {
                 allProtectedRoutes.add(
                   primaryRoute.toLowerCase() +
