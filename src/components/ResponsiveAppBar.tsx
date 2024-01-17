@@ -30,7 +30,7 @@ import {
   userLogout,
 } from "@/store";
 import SecureNextLink from "./SecureNextLink";
-import InsecureNextLink from "next/link";
+import InSecureNextLink from "next/link";
 import { LoginStatus } from "@/models/types/LoginStatus";
 import MenuButton from "./MenuButton";
 
@@ -130,7 +130,7 @@ export default function ResponsiveAppBar({
                 <Button
                   key="Login"
                   href={"/auth/signin"}
-                  component={InsecureNextLink}>
+                  component={InSecureNextLink}>
                   {/* We don't need to check the login route in middleware */}
                   Login
                 </Button>

@@ -34,21 +34,23 @@ const SecureNextLink = forwardRef(function Wrapper(props: any, ref: any) {
     );
   }
 
-  //deal with query params if they exist
-  let urlBeforeSearchParams;
-  let searchParams;
+  // Remove fragment if exists. Fragments can't be processed server-side and this
+  // function uses NextJs middleware. If we don't remove the fragment, the
+  // next-link query parameter will not be read in the middleware.
+  let hrefNoFragment = "";
+  const index = href.indexOf("#");
+  if (index !== -1) {
+    hrefNoFragment = href.substring(0, index);
+  } else {
+    hrefNoFragment = href;
+  }
+
   let finalHref;
   const indexOfQuestionMark = href.indexOf("?");
   if (indexOfQuestionMark !== -1) {
-    urlBeforeSearchParams = href.substring(0, indexOfQuestionMark);
-    searchParams = href.substring(indexOfQuestionMark);
-    finalHref =
-      urlBeforeSearchParams +
-      "/next-link-wrapper-id/" +
-      uuidv4() +
-      searchParams;
+    finalHref = hrefNoFragment + "&next-link=" + uuidv4();
   } else {
-    finalHref = href + "/next-link-wrapper-id/" + uuidv4();
+    finalHref = hrefNoFragment + "?next-link=" + uuidv4();
   }
 
   return (
