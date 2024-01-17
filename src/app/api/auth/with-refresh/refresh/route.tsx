@@ -68,9 +68,6 @@ export async function GET(request: NextRequest) {
         refreshTokenPayload?.exp &&
         refreshTokenPayload.exp <= accessTokenExpiry
       ) {
-        console.log(
-          "in if (refreshTokenPayload?.exp && refreshTokenPayload.exp < accessTokenExpiry"
-        );
         accessTokenExpiry = refreshTokenPayload.exp;
         wasLastRefresh = true;
       }

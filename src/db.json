@@ -38,15 +38,21 @@
     },
     {
       "userId": "1",
-      "jobTitle": "aa",
-      "jobDescription": "aa",
-      "id": 41
-    },
-    {
-      "userId": "1",
       "jobTitle": "ff",
       "jobDescription": "ff",
       "id": 42
+    },
+    {
+      "userId": "1",
+      "jobTitle": "uu",
+      "jobDescription": "uu",
+      "id": 43
+    },
+    {
+      "userId": "1",
+      "jobTitle": "ss",
+      "jobDescription": "ss",
+      "id": 44
     }
   ],
   "lesson-plans": [
@@ -209,11 +215,6 @@
     },
     {
       "userId": "1",
-      "lessonPlanId": "3",
-      "id": 6
-    },
-    {
-      "userId": "1",
       "lessonPlanId": "2",
       "id": 8
     },
@@ -221,6 +222,11 @@
       "userId": "1",
       "lessonPlanId": "1",
       "id": 9
+    },
+    {
+      "userId": "1",
+      "lessonPlanId": "3",
+      "id": 10
     }
   ]
 }

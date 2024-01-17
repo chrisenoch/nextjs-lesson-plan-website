@@ -120,6 +120,7 @@ const authSlice = createSlice({
       if (!action.payload.isError) {
         state.loginStatus = "LOGGED_OUT";
         state.userInfo = null;
+        state.wasLastRefresh = false;
       }
     });
     builder.addCase(userLogout.rejected, (state, action) => {
@@ -225,6 +226,7 @@ function setUserInfoFromLoggedInStatus(action, state) {
     state.userInfo = userInfo;
     state.loginStatus = "LOGGED_IN";
     state.wasLastRefreshSuccessful = null;
+    state.wasLastRefresh = false;
   } else {
     state.loginStatus = "LOGGED_OUT";
   }
