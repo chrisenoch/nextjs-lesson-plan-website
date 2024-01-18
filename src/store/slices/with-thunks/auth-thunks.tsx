@@ -17,7 +17,7 @@ export const userLogin = createAsyncThunk(
       });
 
       const payload = await response.json();
-      const delayForDev = await delay(() => console.log("delay for dev"), 500);
+      //const delayForDev = await delay(() => console.log("delay for dev"), 500);
 
       //If successful, http-only cookie with jwt token will have been set on the server
       return { ...payload, status: response.status };

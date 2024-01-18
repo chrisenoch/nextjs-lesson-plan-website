@@ -36,6 +36,10 @@ export function SignIn() {
     dispatch(userLogin({ email, password }));
   }
 
+  if (loginStatus === "LOGIN_NOT_PROCESSED") {
+    return <h1>Loading ...</h1>;
+  }
+
   if (loginStatus === "LOGGED_IN") {
     if (redirectPath) {
       redirect(redirectPath);

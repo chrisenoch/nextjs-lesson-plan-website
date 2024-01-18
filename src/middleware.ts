@@ -76,6 +76,7 @@ export async function middleware(request: NextRequest) {
 //   { shop: { roles: ["USER"] } },              // "shop" matches before "shop/secret"
 //   { "shop/account": { roles: ["USER"] } },
 // ],
+//If the role is EVERYBODY, custom notLoggedInRedirectUrlPath and custom incorrectRoleRedirectUrlPath have no effect.
 //This function does not protect child routes automatically. E.g. If you assign the admin role to the route 'lessonPlans'
 //and do not include any children routes, then 'lessonPlans/1' will not be protected. //To do: Change this
 const SIGNIN_REDIRECT_START = "/auth/signin?redirect=/";
