@@ -8,7 +8,7 @@ import {
 import { Box, TextField, Button, Stack } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { redirect } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 import useHideMessageOnNavAway from "@/customHooks/useHideMessageOnNavAway";
 import { LoadingButton } from "@mui/lab";
 import { LoginStatus } from "@/models/types/LoginStatus";
@@ -16,6 +16,9 @@ import { LoginStatus } from "@/models/types/LoginStatus";
 export function SignIn() {
   const loginStatus: LoginStatus = useSelector(selectLoginStatus);
   const dispatch = useDispatch<AppDispatch>();
+  const searchParams = useSearchParams();
+  const redirectPath = searchParams.get("redirect");
+
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -33,8 +36,16 @@ export function SignIn() {
     dispatch(userLogin({ email, password }));
   }
 
+  if (loginStatus === "LOGIN_NOT_PROCESSED") {
+    return <h1>Loading ...</h1>;
+  }
+
   if (loginStatus === "LOGGED_IN") {
-    redirect("/");
+    if (redirectPath) {
+      redirect(redirectPath);
+    } else {
+      redirect("/");
+    }
   }
 
   return (

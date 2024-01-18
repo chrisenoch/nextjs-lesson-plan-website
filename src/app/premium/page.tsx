@@ -1,15 +1,8 @@
 "use client";
-import useTestHook from "@/customHooks/testHook";
-import useTestHookThree from "@/customHooks/testHookThree";
-import useTestHookTwo from "@/customHooks/testHookTwo";
 import { Stack } from "@mui/material";
 import { useState } from "react";
 
 export default function PremiumPage() {
-  // useTestHook();
-  // useTestHookTwo();
-  useTestHookThree();
-
   const [num, setNum] = useState<number>(0);
 
   console.log("premium renders");

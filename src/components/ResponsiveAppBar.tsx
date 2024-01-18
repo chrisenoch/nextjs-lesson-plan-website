@@ -45,8 +45,8 @@ export default function ResponsiveAppBar({
   const dispatch = useDispatch<AppDispatch>();
 
   const navItems = [
-    { title: "My Jobs", href: "/my-jobs" },
     { title: "All Jobs", href: "/all-jobs" },
+    { title: "My Jobs", href: "/my-jobs" },
   ];
   const [mobileOpen, setMobileOpen] = useState(false);
 

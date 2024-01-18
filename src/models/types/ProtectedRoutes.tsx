@@ -3,30 +3,40 @@ import { UserRole } from "./UserRole";
 export type ProtectedRoutes = {
   [key: string]: {
     roles: UserRole[];
-    children?: ProtectedRouteRolesByRoute[];
+    children?: ProtectedRouteInfoNoChildrenBySecondaryRoute[];
+    notLoggedInRedirectUrlPath?: string;
+    incorrectRoleRedirectUrlPath?: string;
   };
 };
 
-export type ProtectedRouteRolesByRoute = {
+export type ProtectedRouteInfoNoChildrenBySecondaryRoute = {
   [key: string]: {
     roles: UserRole[];
+    notLoggedInRedirectUrlPath?: string;
+    incorrectRoleRedirectUrlPath?: string;
   };
 };
 
-export type ProtectedRouteRoles = {
+export type ProtectedRouteInfoNoChildren = {
   roles: UserRole[];
+  notLoggedInRedirectUrlPath?: string;
+  incorrectRoleRedirectUrlPath?: string;
 };
 
-export type ProtectedRouteChildren = {
-  children: ProtectedRouteRolesByRoute[];
+export type ProtectedSecondaryRouteInfo = {
+  children: ProtectedRouteInfoNoChildrenBySecondaryRoute[];
+  notLoggedInRedirectUrlPath?: string;
+  incorrectRoleRedirectUrlPath?: string;
 };
 
-export type ProtectedRoute = ProtectedRouteChildren | ProtectedRouteRoles;
-
-export type ProtectedRouteInfo = ProtectedRouteChildren | ProtectedRouteRoles;
+export type ProtectedRouteInfo =
+  | ProtectedSecondaryRouteInfo
+  | ProtectedRouteInfoNoChildren;
 
 export function isProtectedRouteChildren(
   protectedRouteInfo: ProtectedRouteInfo
-): protectedRouteInfo is ProtectedRouteChildren {
-  return (protectedRouteInfo as ProtectedRouteChildren).children !== undefined;
+): protectedRouteInfo is ProtectedSecondaryRouteInfo {
+  return (
+    (protectedRouteInfo as ProtectedSecondaryRouteInfo).children !== undefined
+  );
 }

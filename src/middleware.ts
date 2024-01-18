@@ -2,10 +2,11 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { UserRole, isUserRole } from "./models/types/UserRole";
 import {
-  ProtectedRoute,
-  ProtectedRouteRolesByRoute,
+  ProtectedRouteInfo,
+  ProtectedRouteInfoNoChildrenBySecondaryRoute,
   ProtectedRoutes,
   isProtectedRouteChildren,
+  ProtectedRouteInfoNoChildren,
 } from "./models/types/ProtectedRoutes";
 import { getArrayIntersection } from "./utils/array-functions";
 import { joseVerifyToken } from "./server-only/auth/check-permissions";
@@ -46,7 +47,7 @@ export async function middleware(request: NextRequest) {
     protectedRoutes,
     userRoles,
     notLoggedInRedirectUrlPath: "/auth/signin",
-    incorrrectRoleRedirectUrlPath: "/",
+    incorrectRoleRedirectUrlPath: "/",
     superAdmin: "ADMIN",
   });
 
@@ -75,26 +76,74 @@ export async function middleware(request: NextRequest) {
 //   { shop: { roles: ["USER"] } },              // "shop" matches before "shop/secret"
 //   { "shop/account": { roles: ["USER"] } },
 // ],
+//If the role is EVERYBODY, custom notLoggedInRedirectUrlPath and custom incorrectRoleRedirectUrlPath have no effect.
 //This function does not protect child routes automatically. E.g. If you assign the admin role to the route 'lessonPlans'
 //and do not include any children routes, then 'lessonPlans/1' will not be protected. //To do: Change this
+const SIGNIN_REDIRECT_START = "/auth/signin?redirect=/";
 const protectedRoutes: ProtectedRoutes = {
-  "my-jobs": { roles: ["USER"] },
+  "my-jobs": {
+    roles: ["USER"],
+    notLoggedInRedirectUrlPath: SIGNIN_REDIRECT_START + "my-jobs",
+  },
   lessonplans: {
     roles: ["EVERYBODY"],
     children: [
-      { saved: { roles: ["USER"] } },
-      { 1: { roles: ["EVERYBODY"] } },
-      { 2: { roles: ["USER"] } },
-      { 3: { roles: ["USER"] } },
-      { 4: { roles: ["USER"] } },
+      {
+        saved: {
+          roles: ["USER"],
+          notLoggedInRedirectUrlPath:
+            SIGNIN_REDIRECT_START + "lessonplans/saved",
+        },
+      },
+      {
+        1: {
+          roles: ["EVERYBODY"],
+        },
+      },
+      {
+        2: {
+          roles: ["USER"],
+          notLoggedInRedirectUrlPath: SIGNIN_REDIRECT_START + "lessonplans/2",
+        },
+      },
+      {
+        3: {
+          roles: ["USER"],
+          notLoggedInRedirectUrlPath: SIGNIN_REDIRECT_START + "lessonplans/3",
+        },
+      },
+      {
+        4: {
+          roles: ["USER"],
+          notLoggedInRedirectUrlPath: SIGNIN_REDIRECT_START + "lessonplans/4",
+        },
+      },
     ],
   },
   user: {
     roles: ["ADMIN"],
+    notLoggedInRedirectUrlPath: SIGNIN_REDIRECT_START + "user",
     children: [
-      { profile: { roles: ["USER"] } },
-      { "profile/secret": { roles: ["ADMIN"] } },
-      { "profile/account": { roles: ["USER"] } },
+      {
+        profile: {
+          roles: ["USER"],
+          notLoggedInRedirectUrlPath: SIGNIN_REDIRECT_START + "user/profile",
+        },
+      },
+      {
+        "profile/secret": {
+          roles: ["ADMIN"],
+          notLoggedInRedirectUrlPath:
+            SIGNIN_REDIRECT_START + "user/profile/secret",
+        },
+      },
+      {
+        "profile/account": {
+          roles: ["USER"],
+          notLoggedInRedirectUrlPath:
+            SIGNIN_REDIRECT_START + "user/profile/account",
+        },
+      },
     ],
   },
   test: {
@@ -118,14 +167,14 @@ function getUrlPathBasedOnPermissions({
   protectedRoutes,
   userRoles,
   notLoggedInRedirectUrlPath,
-  incorrrectRoleRedirectUrlPath,
+  incorrectRoleRedirectUrlPath,
   superAdmin,
 }: {
   enteredUrlPath: string;
   protectedRoutes: ProtectedRoutes;
   userRoles: UserRole[];
   notLoggedInRedirectUrlPath: string;
-  incorrrectRoleRedirectUrlPath: string;
+  incorrectRoleRedirectUrlPath: string;
   superAdmin?: UserRole;
 }) {
   const allProtectedRoutes: Set<string> =
@@ -153,43 +202,57 @@ function getUrlPathBasedOnPermissions({
   const primaryUrlSegment = getPrimaryUrlSegment(enteredUrlPath);
 
   //roles should always exist here
-  const protectedPrimaryRoute: ProtectedRoute =
+  const protectedRouteInfo: ProtectedRouteInfo =
     protectedRoutes[primaryUrlSegment];
-  if (protectedPrimaryRoute) {
-    if (!isProtectedRouteChildren(protectedPrimaryRoute)) {
+  if (protectedRouteInfo) {
+    if (!isProtectedRouteChildren(protectedRouteInfo)) {
       const rolesUserHasForPrimaryRoute = getArrayIntersection(
-        protectedPrimaryRoute.roles,
+        protectedRouteInfo.roles,
         userRoles
       );
+
+      const newUrlPaths = setCustomUrlsIfExist({
+        protectedRouteInfo,
+        notLoggedInRedirectUrlPath,
+        incorrectRoleRedirectUrlPath,
+      });
+      notLoggedInRedirectUrlPath = newUrlPaths.notLoggedInRedirectUrlPath;
+      incorrectRoleRedirectUrlPath = newUrlPaths.incorrectRoleRedirectUrlPath;
 
       return getUrlPathOnceRolesAreKnown({
         requiredRolesUserHas: rolesUserHasForPrimaryRoute,
         successUrlPath: enteredUrlPath,
-        incorrrectRoleRedirectUrlPath,
+        incorrectRoleRedirectUrlPath,
         notLoggedInRedirectUrlPath,
         userRoles,
       });
     } else {
       //If entry DOES have children
       let rolesUserHasForChildrenRoute = [];
-      const children = protectedPrimaryRoute.children;
+      const children = protectedRouteInfo.children;
       //Array method toReversed() does not work. Maybe because NextJS middleware uses the Edge environment
       const childrenReversed = [...children].reverse();
 
+      let protectedRouteInfoNoChildrenIfExists: null | ProtectedRouteInfoNoChildren =
+        null;
       //Search from most specific to least specific and then return the first match.
-      childrenBlock: for (const protectedRouteRolesByRoute of childrenReversed) {
+      childrenBlock: for (const protectedRouteInfoNoChildrenBySecondaryRoute of childrenReversed) {
         for (const [
           secondaryUrlSegments,
-          rolesForSecondaryRoute,
-        ] of Object.entries(protectedRouteRolesByRoute)) {
+          protectedRouteInfoNoChildren,
+        ] of Object.entries(protectedRouteInfoNoChildrenBySecondaryRoute)) {
+          console.log("roles for secondary route");
+          console.log(protectedRouteInfoNoChildren.roles);
+
           const protectedUrlPath =
             primaryUrlSegment + "/" + secondaryUrlSegments;
 
           if (enteredUrlPath.includes(protectedUrlPath)) {
             rolesUserHasForChildrenRoute = getArrayIntersection(
-              rolesForSecondaryRoute.roles,
+              protectedRouteInfoNoChildren.roles,
               userRoles
             );
+            protectedRouteInfoNoChildrenIfExists = protectedRouteInfoNoChildren;
             break childrenBlock;
           }
         }
@@ -203,23 +266,44 @@ function getUrlPathBasedOnPermissions({
         //Check to see if the user navigated to the primary route segment
         if (primaryUrlSegment.includes(enteredUrlPath)) {
           const rolesUserHasForPrimaryRoute = getArrayIntersection(
-            protectedPrimaryRoute.roles,
+            protectedRouteInfo.roles,
             userRoles
           );
+
+          const newUrlPaths = setCustomUrlsIfExist({
+            protectedRouteInfo,
+            notLoggedInRedirectUrlPath,
+            incorrectRoleRedirectUrlPath,
+          });
+          notLoggedInRedirectUrlPath = newUrlPaths.notLoggedInRedirectUrlPath;
+          incorrectRoleRedirectUrlPath =
+            newUrlPaths.incorrectRoleRedirectUrlPath;
 
           return getUrlPathOnceRolesAreKnown({
             requiredRolesUserHas: rolesUserHasForPrimaryRoute,
             successUrlPath: enteredUrlPath,
-            incorrrectRoleRedirectUrlPath,
+            incorrectRoleRedirectUrlPath,
             notLoggedInRedirectUrlPath,
             userRoles,
           });
         } else {
+          //If get here, user not authorised or not logged-in
+          if (protectedRouteInfoNoChildrenIfExists) {
+            const newUrlPaths = setCustomUrlsIfExist({
+              protectedRouteInfo: protectedRouteInfoNoChildrenIfExists,
+              notLoggedInRedirectUrlPath,
+              incorrectRoleRedirectUrlPath,
+            });
+            notLoggedInRedirectUrlPath = newUrlPaths.notLoggedInRedirectUrlPath;
+            incorrectRoleRedirectUrlPath =
+              newUrlPaths.incorrectRoleRedirectUrlPath;
+          }
+
           if (userRoles.includes("EVERYBODY") && userRoles.length === 1) {
             return notLoggedInRedirectUrlPath;
           }
 
-          return incorrrectRoleRedirectUrlPath;
+          return incorrectRoleRedirectUrlPath;
         }
       }
     }
@@ -233,13 +317,15 @@ function getUrlPathBasedOnPermissions({
 function getAllProtectedRoutes(protectedRoutes: ProtectedRoutes) {
   const allProtectedRoutes = new Set<string>();
   Object.entries(protectedRoutes).forEach(
-    ([primaryRoute, protectedRoute]: [string, ProtectedRoute]) => {
+    ([primaryRoute, protectedRouteInfo]: [string, ProtectedRouteInfo]) => {
       allProtectedRoutes.add(primaryRoute.toLowerCase());
 
-      if (isProtectedRouteChildren(protectedRoute)) {
-        Object.values(protectedRoute.children).forEach(
-          (protectedRouteRolesByRoute: ProtectedRouteRolesByRoute) => {
-            Object.keys(protectedRouteRolesByRoute).forEach(
+      if (isProtectedRouteChildren(protectedRouteInfo)) {
+        Object.values(protectedRouteInfo.children).forEach(
+          (
+            protectedRouteInfoNoChildrenBySecondaryRoute: ProtectedRouteInfoNoChildrenBySecondaryRoute
+          ) => {
+            Object.keys(protectedRouteInfoNoChildrenBySecondaryRoute).forEach(
               (secondaryRoute: string) => {
                 allProtectedRoutes.add(
                   primaryRoute.toLowerCase() +
@@ -260,13 +346,13 @@ function getUrlPathOnceRolesAreKnown({
   requiredRolesUserHas,
   userRoles,
   successUrlPath,
-  incorrrectRoleRedirectUrlPath,
+  incorrectRoleRedirectUrlPath,
   notLoggedInRedirectUrlPath,
 }: {
   requiredRolesUserHas: UserRole[];
   userRoles: UserRole[];
   successUrlPath: string;
-  incorrrectRoleRedirectUrlPath: string;
+  incorrectRoleRedirectUrlPath: string;
   notLoggedInRedirectUrlPath: string;
 }) {
   if (requiredRolesUserHas.length > 0) {
@@ -280,7 +366,7 @@ function getUrlPathOnceRolesAreKnown({
   ) {
     return notLoggedInRedirectUrlPath;
   } else {
-    return incorrrectRoleRedirectUrlPath;
+    return incorrectRoleRedirectUrlPath;
   }
 }
 
@@ -390,4 +476,27 @@ function handleSecureNextLink(request: NextRequest) {
   } else {
     return null;
   }
+}
+
+function setCustomUrlsIfExist({
+  protectedRouteInfo,
+  notLoggedInRedirectUrlPath,
+  incorrectRoleRedirectUrlPath,
+}: {
+  protectedRouteInfo: ProtectedRouteInfo;
+  notLoggedInRedirectUrlPath: string;
+  incorrectRoleRedirectUrlPath: string;
+}) {
+  if (protectedRouteInfo.notLoggedInRedirectUrlPath) {
+    notLoggedInRedirectUrlPath = protectedRouteInfo.notLoggedInRedirectUrlPath;
+  }
+  if (protectedRouteInfo.incorrectRoleRedirectUrlPath) {
+    incorrectRoleRedirectUrlPath =
+      protectedRouteInfo.incorrectRoleRedirectUrlPath;
+  }
+
+  return {
+    notLoggedInRedirectUrlPath,
+    incorrectRoleRedirectUrlPath,
+  };
 }

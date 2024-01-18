@@ -75,6 +75,7 @@ export default function useAutoLogoutWhenJwtTokenExpires(
 
   //Check the access token expiry date periodically and send refresh token just before the token expires.
   useEffect(() => {
+    console.log("inside polling useEffect");
     if (
       !isAutoLogoutRunning.current &&
       loginStatus === "LOGGED_IN" &&
@@ -87,7 +88,9 @@ export default function useAutoLogoutWhenJwtTokenExpires(
       sendRefreshToken();
 
       intervalId.current = setInterval(() => {
-        console.log("polling interval ran and sending refresh token");
+        console.log(
+          "polling interval ran and about to call sendRefreshToken()"
+        );
         sendRefreshToken();
       }, pollingInterval);
     }
