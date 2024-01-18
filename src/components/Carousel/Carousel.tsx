@@ -60,6 +60,7 @@ export function Carousel() {
   //   ));
 
   const [imageRowRight, setImageRowRight] = useState<number>(800);
+  const [firstImageWidth, setFirstImageWidth] = useState<number>(0);
 
   return (
     <>
@@ -78,11 +79,25 @@ export function Carousel() {
               width: "200px",
               height: "200px",
               backgroundColor: "gray",
-              transition: "all 1s ease-out",
+              transition: "right 1s ease-out",
               position: "absolute",
               //right: "800px", //decreasing the value 'right' moves the Images from left to right
               right: `${imageRowRight}px`,
             }}>
+            <Image
+              alt={"beach"}
+              src={
+                "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg"
+              }
+              width={`${firstImageWidth}`}
+              height={200}
+              style={{
+                maxWidth: "100%",
+                transition: "width 1s ease-out",
+              }}
+              priority
+            />
+
             <Image
               alt={"beach"}
               src={
@@ -163,7 +178,7 @@ export function Carousel() {
           Move slide right
         </Button>
         <Button
-          onClick={() => setImageRowRight((px) => px - 200)}
+          onClick={() => setFirstImageWidth((px) => px + 200)}
           variant="outlined">
           Change width of first image
         </Button>
