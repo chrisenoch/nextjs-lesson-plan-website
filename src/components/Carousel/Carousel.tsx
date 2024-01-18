@@ -26,6 +26,8 @@ export function Carousel() {
 
   const [imageRowRight, setImageRowRight] = useState<number>(400);
   const [firstImageWidth, setFirstImageWidth] = useState<number>(0);
+  const [leftBoxWidth, setLeftBoxWidth] = useState<number>(0);
+  const [rightBoxWidth, setRightBoxWidth] = useState<number>(0);
 
   function moveRight() {
     //To do: Check possible bug:May not render in the order I hope.
@@ -56,7 +58,7 @@ export function Carousel() {
 
   //To improve: Don't do transition on image width. must be costly. Insert a div before and after last images and increase and decrease this
 
-  const renderedimages = images.map((image, index) => {
+  const renderedimages = images.map((image, index, arr) => {
     //const imgWidth = index === 0 ? 0 : 200;
     console.log("map runs");
     return (
@@ -64,8 +66,8 @@ export function Carousel() {
         key={image.alt}
         alt={image.alt}
         src={image.imgPath}
-        width={index === 0 ? firstImageWidth : 200}
-        //width={200}
+        //width={index === 0 ? firstImageWidth : 200}
+        width={200}
         height={200}
         style={{
           maxWidth: "100%",
@@ -75,6 +77,30 @@ export function Carousel() {
       />
     );
   });
+
+  renderedimages.unshift(
+    <Box
+      key="push-images-to-right"
+      height="200px"
+      width={leftBoxWidth}
+      //width={200}
+      //width="200px"
+      sx={{
+        transition: "width .8s ease-out",
+        flexShrink: 0,
+      }}></Box>
+  );
+
+  renderedimages.push(
+    <Box
+      key="push-images-to-left"
+      height="200px"
+      width={rightBoxWidth}
+      sx={{
+        transition: "width .8s ease-out",
+        flexShrink: 0,
+      }}></Box>
+  );
 
   return (
     <>
@@ -95,7 +121,7 @@ export function Carousel() {
               backgroundColor: "gray",
               transition: "right 1s ease-out",
               position: "absolute",
-              //right: "800px", //decreasing the value 'right' moves the Images from left to right
+              right: "200px", //decreasing the value 'right' moves the Images from left to right
               //right: `${imageRowRight}px`,
             }}>
             {renderedimages}
@@ -109,18 +135,20 @@ export function Carousel() {
         <Button onClick={moveRight} variant="outlined">
           Right
         </Button>
-        <Button
-          onClick={() => setImageRowRight((px) => px + 200)}
-          color="secondary"
-          variant="outlined">
-          Move slide left
+        <Button onClick={() => setLeftBoxWidth(200)} variant="outlined">
+          Increase width of left box
         </Button>
-        <Button
-          onClick={() => setImageRowRight((px) => px - 200)}
-          variant="outlined">
-          Move slide right
+        <Button onClick={() => setLeftBoxWidth(0)} variant="outlined">
+          Decrease width of left box
         </Button>
-        <Button
+        <Button onClick={() => setRightBoxWidth(200)} variant="outlined">
+          Increase width of right box
+        </Button>
+        <Button onClick={() => setRightBoxWidth(0)} variant="outlined">
+          Decrease width of right box
+        </Button>
+
+        {/* <Button
           onClick={() => setFirstImageWidth((px) => px + 200)}
           variant="outlined">
           Increase width of first image
@@ -129,7 +157,7 @@ export function Carousel() {
           onClick={() => setFirstImageWidth((px) => px - 200)}
           variant="outlined">
           Decrease width of first image
-        </Button>
+        </Button> */}
       </Stack>
     </>
   );
