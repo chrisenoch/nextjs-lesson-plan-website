@@ -3,64 +3,78 @@ import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import Image from "next/image";
 
-const images = [
-  {
-    label: "San Francisco – Oakland Bay Bridge, United States",
-    imgPath:
-      "https://images.unsplash.com/photo-1537944434965-cf4679d1a598?auto=format&fit=crop&w=400&h=250&q=60",
-  },
-  {
-    label: "Bird",
-    imgPath:
-      "https://images.unsplash.com/photo-1538032746644-0212e812a9e7?auto=format&fit=crop&w=400&h=250&q=60",
-  },
-  {
-    label: "Bali, Indonesia",
-    imgPath:
-      "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=400&h=250",
-  },
-  {
-    label: "Goč, Serbia",
-    imgPath:
-      "https://images.unsplash.com/photo-1512341689857-198e7e2f3ca8?auto=format&fit=crop&w=400&h=250&q=60",
-  },
-];
-
 export function Carousel() {
-  const [activeStep, setActiveStep] = useState(0);
-  const maxSteps = images.length;
+  const imagesArr = [
+    {
+      alt: "Beach",
+      imgPath:
+        "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
+    },
+    {
+      alt: "Driverless cars",
+      imgPath:
+        "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
+    },
+    {
+      alt: "Shopping",
+      imgPath:
+        "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
+    },
+  ];
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
+  const [images, setImages] = useState<any[]>(imagesArr);
 
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleStepChange = (step: number) => {
-    setActiveStep(step);
-  };
-
-  //   const renderedimages = images.map((step, index) => (
-  //     <div key={step.label}>
-  //       <Box
-  //         component="img"
-  //         sx={{
-  //           height: 255,
-  //           display: "block",
-  //           maxWidth: 400,
-  //           overflow: "hidden",
-  //           width: "100%",
-  //         }}
-  //         src={step.imgPath}
-  //         alt={step.label}
-  //       />
-  //     </div>
-  //   ));
-
-  const [imageRowRight, setImageRowRight] = useState<number>(800);
+  const [imageRowRight, setImageRowRight] = useState<number>(400);
   const [firstImageWidth, setFirstImageWidth] = useState<number>(0);
+
+  function moveRight() {
+    //To do: Check possible bug:May not render in the order I hope.
+    setFirstImageWidth((px) => px + 200);
+    const newImages = images.slice();
+    const lastImg = newImages.pop();
+    newImages.unshift(lastImg);
+    setImages(newImages);
+  }
+
+  function moveLeft() {
+    setFirstImageWidth((px) => px - 200);
+    const newImages = images.slice();
+    const firstImg = newImages.shift();
+    newImages.push(firstImg);
+    setImages(newImages);
+  }
+
+  //Need to increase width and then when finished run map
+  //flush sync
+  //have map in Effect and depend on transitionEnd variable?
+
+  // Move right: 1. increase width to 200 of first element, decreasewidth to 0 of last element, so it is already zero when gets put in the map.
+  // need lastImageWidth state for this.
+  // when finished add to map. First image needs to have 0 before renders
+
+  //I'm setting it as position in array, but probably should be set by id.
+
+  //To improve: Don't do transition on image width. must be costly. Insert a div before and after last images and increase and decrease this
+
+  const renderedimages = images.map((image, index) => {
+    //const imgWidth = index === 0 ? 0 : 200;
+    console.log("map runs");
+    return (
+      <Image
+        key={image.alt}
+        alt={image.alt}
+        src={image.imgPath}
+        width={index === 0 ? firstImageWidth : 200}
+        //width={200}
+        height={200}
+        style={{
+          maxWidth: "100%",
+          transition: "width 1s ease-out",
+        }}
+        priority
+      />
+    );
+  });
 
   return (
     <>
@@ -82,95 +96,24 @@ export function Carousel() {
               transition: "right 1s ease-out",
               position: "absolute",
               //right: "800px", //decreasing the value 'right' moves the Images from left to right
-              right: `${imageRowRight}px`,
+              //right: `${imageRowRight}px`,
             }}>
-            <Image
-              alt={"beach"}
-              src={
-                "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg"
-              }
-              width={`${firstImageWidth}`}
-              height={200}
-              style={{
-                maxWidth: "100%",
-                transition: "width 1s ease-out",
-              }}
-              priority
-            />
-
-            <Image
-              alt={"beach"}
-              src={
-                "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg"
-              }
-              width={200}
-              height={200}
-              priority
-            />
-            <Image
-              alt={"driverless-cars"}
-              src={
-                "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg"
-              }
-              width={200}
-              height={200}
-              style={{
-                //marginLeft: "200px",
-                //marginRight: "200px",
-                maxWidth: "100%",
-                height: "auto",
-                objectFit: "cover",
-                //borderRadius: 32,
-              }}
-            />
-            <Image
-              alt={"shopping"}
-              src={
-                "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg"
-              }
-              width={200}
-              height={200}
-              style={{
-                maxWidth: "100%",
-                height: "auto",
-                objectFit: "cover",
-                //borderRadius: 32,
-              }}
-            />
-            <Image
-              alt={"beach"}
-              src={
-                "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg"
-              }
-              width={200}
-              height={200}
-              priority
-            />
-            <Image
-              alt={"driverless-cars"}
-              src={
-                "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg"
-              }
-              width={200}
-              height={200}
-              style={{
-                //marginLeft: "200px",
-                marginRight: "200px",
-                maxWidth: "100%",
-                height: "auto",
-                objectFit: "cover",
-                //borderRadius: 32,
-              }}
-            />
+            {renderedimages}
           </Stack>
         </Box>
       </Stack>
       <Stack direction={"row"}>
+        <Button onClick={moveLeft} color="secondary" variant="outlined">
+          Left
+        </Button>
+        <Button onClick={moveRight} variant="outlined">
+          Right
+        </Button>
         <Button
           onClick={() => setImageRowRight((px) => px + 200)}
           color="secondary"
           variant="outlined">
-          Move slide right
+          Move slide left
         </Button>
         <Button
           onClick={() => setImageRowRight((px) => px - 200)}
@@ -180,7 +123,12 @@ export function Carousel() {
         <Button
           onClick={() => setFirstImageWidth((px) => px + 200)}
           variant="outlined">
-          Change width of first image
+          Increase width of first image
+        </Button>
+        <Button
+          onClick={() => setFirstImageWidth((px) => px - 200)}
+          variant="outlined">
+          Decrease width of first image
         </Button>
       </Stack>
     </>
