@@ -1,6 +1,6 @@
 "use client";
 import { Box, Button, Paper, Stack, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 export function Carousel() {
@@ -25,26 +25,39 @@ export function Carousel() {
   const [images, setImages] = useState<any[]>(imagesArr);
 
   const [imageRowRight, setImageRowRight] = useState<number>(400);
-  const [firstImageWidth, setFirstImageWidth] = useState<number>(0);
-  const [leftBoxWidth, setLeftBoxWidth] = useState<number>(0);
-  const [rightBoxWidth, setRightBoxWidth] = useState<number>(0);
 
   function moveRight() {
-    //To do: Check possible bug:May not render in the order I hope.
-    setFirstImageWidth((px) => px + 200);
-    const newImages = images.slice();
-    const lastImg = newImages.pop();
-    newImages.unshift(lastImg);
-    setImages(newImages);
+    setImageRowRight((px) => px - 200);
+  }
+  function moveLeft() {
+    setImageRowRight((px) => px + 200);
   }
 
-  function moveLeft() {
-    setFirstImageWidth((px) => px - 200);
-    const newImages = images.slice();
-    const firstImg = newImages.shift();
-    newImages.push(firstImg);
-    setImages(newImages);
-  }
+  useEffect(() => {
+    function updateImages() {
+      console.log("Transition ended");
+
+      //re-order the map
+      // if (imageRowRight === 0) {
+      //   console.log("in if");
+      //   //move all elements except the first one to the start of the array
+      //   const newImages = images.slice();
+      //   const firstImg = newImages.pop();
+      //   newImages.push(firstImg);
+      //   setImages(newImages);
+      //   setImageRowRight(0);
+      // }
+    }
+
+    const transition = document.querySelector("#image-row");
+    transition && transition.addEventListener("transitionend", updateImages);
+
+    return () => transition?.removeEventListener("transitionend", updateImages);
+  }, [imageRowRight, images]);
+
+  //Just increase and decrease value of right. Always moves the images.
+  //When value is 0, we need to:
+  //Re-render the map and put the
 
   //Need to increase width and then when finished run map
   //flush sync
@@ -53,14 +66,13 @@ export function Carousel() {
   // Move right: 1. increase width to 200 of first element, decreasewidth to 0 of last element, so it is already zero when gets put in the map.
   // need lastImageWidth state for this.
   // when finished add to map. First image needs to have 0 before renders
-
+  //Move left:
   //I'm setting it as position in array, but probably should be set by id.
-
   //To improve: Don't do transition on image width. must be costly. Insert a div before and after last images and increase and decrease this
 
   const renderedimages = images.map((image, index, arr) => {
     //const imgWidth = index === 0 ? 0 : 200;
-    console.log("map runs");
+
     return (
       <Image
         key={image.alt}
@@ -77,30 +89,6 @@ export function Carousel() {
       />
     );
   });
-
-  renderedimages.unshift(
-    <Box
-      key="push-images-to-right"
-      height="200px"
-      width={leftBoxWidth}
-      //width={200}
-      //width="200px"
-      sx={{
-        transition: "width .8s ease-out",
-        flexShrink: 0,
-      }}></Box>
-  );
-
-  renderedimages.push(
-    <Box
-      key="push-images-to-left"
-      height="200px"
-      width={rightBoxWidth}
-      sx={{
-        transition: "width .8s ease-out",
-        flexShrink: 0,
-      }}></Box>
-  );
 
   return (
     <>
@@ -121,8 +109,8 @@ export function Carousel() {
               backgroundColor: "gray",
               transition: "right 1s ease-out",
               position: "absolute",
-              right: "200px", //decreasing the value 'right' moves the Images from left to right
-              //right: `${imageRowRight}px`,
+              //right: "400px", //decreasing the value 'right' moves the Images from left to right
+              right: `${imageRowRight}px`,
             }}>
             {renderedimages}
           </Stack>
@@ -134,18 +122,6 @@ export function Carousel() {
         </Button>
         <Button onClick={moveRight} variant="outlined">
           Right
-        </Button>
-        <Button onClick={() => setLeftBoxWidth(200)} variant="outlined">
-          Increase width of left box
-        </Button>
-        <Button onClick={() => setLeftBoxWidth(0)} variant="outlined">
-          Decrease width of left box
-        </Button>
-        <Button onClick={() => setRightBoxWidth(200)} variant="outlined">
-          Increase width of right box
-        </Button>
-        <Button onClick={() => setRightBoxWidth(0)} variant="outlined">
-          Decrease width of right box
         </Button>
 
         {/* <Button
