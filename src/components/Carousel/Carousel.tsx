@@ -6,47 +6,99 @@ import Image from "next/image";
 export function Carousel() {
   const imagesArr = [
     {
-      alt: "Beach",
+      alt: "Beach-1",
       imgPath:
         "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
     },
     {
-      alt: "Driverless cars",
+      alt: "Driverless cars-1",
       imgPath:
         "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
     },
     {
-      alt: "Shopping",
+      alt: "Shopping-1",
+      imgPath:
+        "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
+    },
+    {
+      alt: "Beach-2",
+      imgPath:
+        "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
+    },
+    {
+      alt: "Driverless cars-2",
+      imgPath:
+        "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
+    },
+    {
+      alt: "Shopping-2",
+      imgPath:
+        "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
+    },
+    {
+      alt: "Beach-3",
+      imgPath:
+        "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
+    },
+    {
+      alt: "Driverless cars-3",
+      imgPath:
+        "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
+    },
+    {
+      alt: "Shopping-3",
       imgPath:
         "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
     },
   ];
 
+  const maxImageRowRight = imagesArr.length * 200 - 200;
   const [imagesOne, setImagesOne] = useState<any[]>(imagesArr);
   const [imagesTwo, setImagesTwo] = useState<any[]>(imagesArr);
-  const [imageOneRowRight, setImageOneRowRight] = useState<number>(400);
-  const [imageTwoRowRight, setImageTwoRowRight] = useState<number>(400);
+  const [imageOneRowRight, setImageOneRowRight] = useState<number>(
+    Math.floor(maxImageRowRight / 2)
+  );
+  // const [imageOneRowRight, setImageOneRowRight] =
+  //   useState<number>(maxImageRowRight);
+  const [imageTwoRowRight, setImageTwoRowRight] =
+    useState<number>(maxImageRowRight);
   const [activeImageRow, setActiveImageRow] = useState<1 | 2>(1);
 
   useEffect(() => {
     console.log("In imageOne effect");
     function updateImagesOne() {
       console.log("Transition ended imageOneRow");
-      //re-order the map
-      if (imageOneRowRight === 0) {
-        console.log("in if imageOneRowRight");
+      // if (imageOneRowRight === 0) {
+      //   console.log("in if imageOneRowRight 0");
+      //   const newImagesRowTwo = imagesTwo.slice();
+      //   const firstImgRowTwo = newImagesRowTwo.shift();
+      //   newImagesRowTwo.push(firstImgRowTwo);
+      //   setImagesTwo(newImagesRowTwo);
+      //   setImageTwoRowRight(totalImagesLength);
+      //   setActiveImageRow(2);
+
+      //   //Above needs to be completed before the below runs
+      //   setImageOneRowRight(totalImagesLength);
+      //   const newImagesRowOne = imagesOne.slice();
+      //   const firstImgRowOne = newImagesRowOne.shift();
+      //   newImagesRowOne.push(firstImgRowOne);
+      //   setImagesOne(newImagesRowOne);
+      // }
+
+      if (imageOneRowRight === maxImageRowRight) {
+        console.log("in if imageOneRowRight totalImagesLength");
         const newImagesRowTwo = imagesTwo.slice();
-        const firstImgRowTwo = newImagesRowTwo.shift();
-        newImagesRowTwo.push(firstImgRowTwo);
+        const lastImgRowTwo = newImagesRowTwo.pop();
+        newImagesRowTwo.unshift(lastImgRowTwo);
         setImagesTwo(newImagesRowTwo);
-        setImageTwoRowRight(400);
+        setImageTwoRowRight(0);
         setActiveImageRow(2);
 
         //Above needs to be completed before the below runs
-        setImageOneRowRight(400);
+        setImageOneRowRight(0);
         const newImagesRowOne = imagesOne.slice();
-        const firstImgRowOne = newImagesRowOne.shift();
-        newImagesRowOne.push(firstImgRowOne);
+        const lastImgRowOne = newImagesRowOne.pop();
+        newImagesRowOne.unshift(lastImgRowOne);
         setImagesOne(newImagesRowOne);
       }
     }
@@ -55,30 +107,47 @@ export function Carousel() {
 
     return () =>
       transition?.removeEventListener("transitionend", updateImagesOne);
-  }, [imageOneRowRight, imagesOne, imagesTwo]);
+  }, [imageOneRowRight, imagesOne, imagesTwo, maxImageRowRight]);
 
   //To do: Extract duplicate code
   useEffect(() => {
     console.log("In imageTwo effect");
     function updateImagesTwo() {
       console.log("Transition ended imageTwoRow");
-      //re-order the map
-      if (imageTwoRowRight === 0) {
-        console.log("in if imageTwoRowRight");
 
-        const newImagesRowOne = imagesOne.slice(); //think this is the bit that needs -200
-        const firstImgRowOne = newImagesRowOne.shift();
-        newImagesRowOne.push(firstImgRowOne);
+      // if (imageTwoRowRight === 0) {
+      //   console.log("in if imageTwoRowRight");
+
+      //   const newImagesRowOne = imagesOne.slice(); //think this is the bit that needs -200
+      //   const firstImgRowOne = newImagesRowOne.shift();
+      //   newImagesRowOne.push(firstImgRowOne);
+      //   setImagesOne(newImagesRowOne);
+      //   setImageOneRowRight(totalImagesLength);
+      //   setActiveImageRow(1);
+
+      //   //Above needs to be completed before the below runs
+      //   setImageTwoRowRight(totalImagesLength);
+      //   const newImagesRowTwo = imagesTwo.slice();
+
+      //   const firstImgRowTwo = newImagesRowTwo.shift();
+      //   newImagesRowTwo.push(firstImgRowTwo);
+      //   setImagesTwo(newImagesRowTwo);
+      // }
+
+      if (imageTwoRowRight === maxImageRowRight) {
+        console.log("in if imageTwoRowRight totalImagesLength");
+        const newImagesRowOne = imagesOne.slice();
+        const lastImgRowOne = newImagesRowOne.pop();
+        newImagesRowOne.unshift(lastImgRowOne);
         setImagesOne(newImagesRowOne);
-        setImageOneRowRight(400);
+        setImageOneRowRight(0);
         setActiveImageRow(1);
 
         //Above needs to be completed before the below runs
-        setImageTwoRowRight(400);
+        setImageTwoRowRight(0);
         const newImagesRowTwo = imagesTwo.slice();
-
-        const firstImgRowTwo = newImagesRowTwo.shift();
-        newImagesRowTwo.push(firstImgRowTwo);
+        const lastImgRowTwo = newImagesRowTwo.pop();
+        newImagesRowTwo.unshift(lastImgRowTwo);
         setImagesTwo(newImagesRowTwo);
       }
     }
@@ -86,7 +155,7 @@ export function Carousel() {
     transition && transition.addEventListener("transitionend", updateImagesTwo);
     return () =>
       transition?.removeEventListener("transitionend", updateImagesTwo);
-  }, [imageTwoRowRight, imagesOne, imagesTwo]);
+  }, [imageTwoRowRight, imagesOne, imagesTwo, maxImageRowRight]);
 
   const renderedImagesOne = useMemo(
     () =>
@@ -104,7 +173,7 @@ export function Carousel() {
             height={200}
             style={{
               maxWidth: "100%",
-              transition: "width 1s ease-out",
+              transition: "width .5s ease-out",
             }}
             priority={index === 0 ? true : false}
           />
@@ -129,7 +198,7 @@ export function Carousel() {
             height={200}
             style={{
               maxWidth: "100%",
-              transition: "width 1s ease-out",
+              transition: "width .5s ease-out",
             }}
             priority={index === 0 ? true : false}
           />
@@ -173,9 +242,9 @@ export function Carousel() {
               display: `${imageRowOneDisplay}`,
               height: "200px",
               backgroundColor: "gray",
-              transition: "right 1s ease-out",
+              transition: "right .5s ease-out",
               position: "absolute",
-              //right: "400px", //decreasing the value 'right' moves the Images from left to right
+              //right: "totalImagesLengthpx", //decreasing the value 'right' moves the Images from left to right
               right: `${imageOneRowRight}px`,
             }}>
             {renderedImagesOne}
@@ -188,9 +257,9 @@ export function Carousel() {
               display: `${imageRowTwoDisplay}`,
               height: "200px",
               backgroundColor: "gray",
-              transition: "right 1s ease-out",
+              transition: "right .5s ease-out",
               position: "absolute",
-              //right: "400px", //decreasing the value 'right' moves the Images from left to right
+              //right: "totalImagesLengthpx", //decreasing the value 'right' moves the Images from left to right
               right: `${imageTwoRowRight}px`,
             }}>
             {renderedImagesTwo}
