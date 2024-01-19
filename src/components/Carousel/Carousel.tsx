@@ -28,22 +28,9 @@ export function Carousel() {
   const [imageTwoRowRight, setImageTwoRowRight] = useState<number>(400);
   const [activeImageRow, setActiveImageRow] = useState<1 | 2>(1);
 
-  function moveImageOneRight() {
-    setImageOneRowRight((px) => px - 200);
-  }
-  function moveImageOneLeft() {
-    setImageOneRowRight((px) => px + 200);
-  }
-
-  function moveImageTwoRight() {
-    setImageTwoRowRight((px) => px - 200);
-  }
-  function moveImageTwoLeft() {
-    setImageTwoRowRight((px) => px + 200);
-  }
-
   useEffect(() => {
-    function updateImages() {
+    console.log("In imageOne effect");
+    function updateImagesOne() {
       console.log("Transition ended imageOneRow");
       //re-order the map
       if (imageOneRowRight === 0) {
@@ -60,39 +47,51 @@ export function Carousel() {
         const newImagesRowOne = imagesOne.slice();
         const firstImgRowOne = newImagesRowOne.shift();
         newImagesRowOne.push(firstImgRowOne);
+        setImagesOne(newImagesRowOne);
       }
     }
     const transition = document.querySelector("#image-row-1");
-    transition && transition.addEventListener("transitionend", updateImages);
+    transition && transition.addEventListener("transitionend", updateImagesOne);
 
-    return () => transition?.removeEventListener("transitionend", updateImages);
+    return () =>
+      transition?.removeEventListener("transitionend", updateImagesOne);
   }, [imageOneRowRight, imagesOne, imagesTwo]);
 
   //To do: Extract duplicate code
   useEffect(() => {
-    function updateImages() {
+    console.log("In imageTwo effect");
+    function updateImagesTwo() {
       console.log("Transition ended imageTwoRow");
       //re-order the map
       if (imageTwoRowRight === 0) {
         console.log("in if imageTwoRowRight");
-        const newImages = imagesOne.slice();
-        const firstImg = newImages.shift();
-        newImages.push(firstImg);
 
-        setImagesOne(newImages);
+        const newImagesRowOne = imagesOne.slice(); //think this is the bit that needs -200
+        const firstImgRowOne = newImagesRowOne.shift();
+        newImagesRowOne.push(firstImgRowOne);
+        setImagesOne(newImagesRowOne);
         setImageOneRowRight(400);
+        setActiveImageRow(1);
+
+        //Above needs to be completed before the below runs
+        setImageTwoRowRight(400);
+        const newImagesRowTwo = imagesTwo.slice();
+
+        const firstImgRowTwo = newImagesRowTwo.shift();
+        newImagesRowTwo.push(firstImgRowTwo);
+        setImagesTwo(newImagesRowTwo);
       }
     }
     const transition = document.querySelector("#image-row-2");
-    transition && transition.addEventListener("transitionend", updateImages);
-
-    return () => transition?.removeEventListener("transitionend", updateImages);
-  }, [imageTwoRowRight, imagesOne]);
+    transition && transition.addEventListener("transitionend", updateImagesTwo);
+    return () =>
+      transition?.removeEventListener("transitionend", updateImagesTwo);
+  }, [imageTwoRowRight, imagesOne, imagesTwo]);
 
   const renderedImagesOne = useMemo(
     () =>
       imagesOne.map((image, index, arr) => {
-        console.log("map runs");
+        console.log("map renderedImagesOne runs");
         //const imgWidth = index === 0 ? 0 : 200;
 
         return (
@@ -117,7 +116,7 @@ export function Carousel() {
   const renderedImagesTwo = useMemo(
     () =>
       imagesTwo.map((image, index, arr) => {
-        console.log("map runs");
+        console.log("map runs renderedImagesTwo");
         //const imgWidth = index === 0 ? 0 : 200;
 
         return (
@@ -138,6 +137,11 @@ export function Carousel() {
       }),
     [imagesTwo]
   );
+
+  console.log("renderedImagesOne ");
+  console.log(renderedImagesOne);
+  console.log("renderedImagesTwo ");
+  console.log(renderedImagesTwo);
 
   function moveRight() {
     setImageOneRowRight((px) => px - 200);
