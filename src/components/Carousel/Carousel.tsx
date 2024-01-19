@@ -1,6 +1,6 @@
 "use client";
 import { Box, Button, Paper, Stack, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 
 export function Carousel() {
@@ -22,74 +22,135 @@ export function Carousel() {
     },
   ];
 
-  const [images, setImages] = useState<any[]>(imagesArr);
+  const [imagesOne, setImagesOne] = useState<any[]>(imagesArr);
+  const [imagesTwo, setImagesTwo] = useState<any[]>(imagesArr);
+  const [imageOneRowRight, setImageOneRowRight] = useState<number>(400);
+  const [imageTwoRowRight, setImageTwoRowRight] = useState<number>(400);
+  const [activeImageRow, setActiveImageRow] = useState<1 | 2>(1);
 
-  const [imageRowRight, setImageRowRight] = useState<number>(400);
-
-  function moveRight() {
-    setImageRowRight((px) => px - 200);
+  function moveImageOneRight() {
+    setImageOneRowRight((px) => px - 200);
   }
-  function moveLeft() {
-    setImageRowRight((px) => px + 200);
+  function moveImageOneLeft() {
+    setImageOneRowRight((px) => px + 200);
+  }
+
+  function moveImageTwoRight() {
+    setImageTwoRowRight((px) => px - 200);
+  }
+  function moveImageTwoLeft() {
+    setImageTwoRowRight((px) => px + 200);
   }
 
   useEffect(() => {
     function updateImages() {
-      console.log("Transition ended");
-
+      console.log("Transition ended imageOneRow");
       //re-order the map
-      // if (imageRowRight === 0) {
-      //   console.log("in if");
-      //   //move all elements except the first one to the start of the array
-      //   const newImages = images.slice();
-      //   const firstImg = newImages.pop();
-      //   newImages.push(firstImg);
-      //   setImages(newImages);
-      //   setImageRowRight(0);
-      // }
-    }
+      if (imageOneRowRight === 0) {
+        console.log("in if imageOneRowRight");
+        const newImagesRowTwo = imagesTwo.slice();
+        const firstImgRowTwo = newImagesRowTwo.shift();
+        newImagesRowTwo.push(firstImgRowTwo);
+        setImagesTwo(newImagesRowTwo);
+        setImageTwoRowRight(400);
+        setActiveImageRow(2);
 
-    const transition = document.querySelector("#image-row");
+        //Above needs to be completed before the below runs
+        setImageOneRowRight(400);
+        const newImagesRowOne = imagesOne.slice();
+        const firstImgRowOne = newImagesRowOne.shift();
+        newImagesRowOne.push(firstImgRowOne);
+      }
+    }
+    const transition = document.querySelector("#image-row-1");
     transition && transition.addEventListener("transitionend", updateImages);
 
     return () => transition?.removeEventListener("transitionend", updateImages);
-  }, [imageRowRight, images]);
+  }, [imageOneRowRight, imagesOne, imagesTwo]);
 
-  //Just increase and decrease value of right. Always moves the images.
-  //When value is 0, we need to:
-  //Re-render the map and put the
+  //To do: Extract duplicate code
+  useEffect(() => {
+    function updateImages() {
+      console.log("Transition ended imageTwoRow");
+      //re-order the map
+      if (imageTwoRowRight === 0) {
+        console.log("in if imageTwoRowRight");
+        const newImages = imagesOne.slice();
+        const firstImg = newImages.shift();
+        newImages.push(firstImg);
 
-  //Need to increase width and then when finished run map
-  //flush sync
-  //have map in Effect and depend on transitionEnd variable?
+        setImagesOne(newImages);
+        setImageOneRowRight(400);
+      }
+    }
+    const transition = document.querySelector("#image-row-2");
+    transition && transition.addEventListener("transitionend", updateImages);
 
-  // Move right: 1. increase width to 200 of first element, decreasewidth to 0 of last element, so it is already zero when gets put in the map.
-  // need lastImageWidth state for this.
-  // when finished add to map. First image needs to have 0 before renders
-  //Move left:
-  //I'm setting it as position in array, but probably should be set by id.
-  //To improve: Don't do transition on image width. must be costly. Insert a div before and after last images and increase and decrease this
+    return () => transition?.removeEventListener("transitionend", updateImages);
+  }, [imageTwoRowRight, imagesOne]);
 
-  const renderedimages = images.map((image, index, arr) => {
-    //const imgWidth = index === 0 ? 0 : 200;
+  const renderedImagesOne = useMemo(
+    () =>
+      imagesOne.map((image, index, arr) => {
+        console.log("map runs");
+        //const imgWidth = index === 0 ? 0 : 200;
 
-    return (
-      <Image
-        key={image.alt}
-        alt={image.alt}
-        src={image.imgPath}
-        //width={index === 0 ? firstImageWidth : 200}
-        width={200}
-        height={200}
-        style={{
-          maxWidth: "100%",
-          transition: "width 1s ease-out",
-        }}
-        priority
-      />
-    );
-  });
+        return (
+          <Image
+            key={image.alt + "-1"}
+            alt={image.alt}
+            src={image.imgPath}
+            //width={index === 0 ? firstImageWidth : 200}
+            width={200}
+            height={200}
+            style={{
+              maxWidth: "100%",
+              transition: "width 1s ease-out",
+            }}
+            priority={index === 0 ? true : false}
+          />
+        );
+      }),
+    [imagesOne]
+  );
 
+  const renderedImagesTwo = useMemo(
+    () =>
+      imagesTwo.map((image, index, arr) => {
+        console.log("map runs");
+        //const imgWidth = index === 0 ? 0 : 200;
+
+        return (
+          <Image
+            key={image.alt + "-2"}
+            alt={image.alt}
+            src={image.imgPath}
+            //width={index === 0 ? firstImageWidth : 200}
+            width={200}
+            height={200}
+            style={{
+              maxWidth: "100%",
+              transition: "width 1s ease-out",
+            }}
+            priority={index === 0 ? true : false}
+          />
+        );
+      }),
+    [imagesTwo]
+  );
+
+  function moveRight() {
+    setImageOneRowRight((px) => px - 200);
+    setImageTwoRowRight((px) => px - 200);
+  }
+
+  function moveLeft() {
+    setImageOneRowRight((px) => px + 200);
+    setImageTwoRowRight((px) => px + 200);
+  }
+
+  const imageRowOneDisplay = activeImageRow === 1 ? "flex" : "none";
+  const imageRowTwoDisplay = activeImageRow === 2 ? "flex" : "none";
   return (
     <>
       <Stack direction={"row"}>
@@ -102,17 +163,33 @@ export function Carousel() {
           position="relative">
           <Stack
             direction="row"
-            id="image-row"
+            id="image-row-1"
             sx={{
               width: "200px",
+              display: `${imageRowOneDisplay}`,
               height: "200px",
               backgroundColor: "gray",
               transition: "right 1s ease-out",
               position: "absolute",
               //right: "400px", //decreasing the value 'right' moves the Images from left to right
-              right: `${imageRowRight}px`,
+              right: `${imageOneRowRight}px`,
             }}>
-            {renderedimages}
+            {renderedImagesOne}
+          </Stack>
+          <Stack
+            direction="row"
+            id="image-row-2"
+            sx={{
+              width: "200px",
+              display: `${imageRowTwoDisplay}`,
+              height: "200px",
+              backgroundColor: "gray",
+              transition: "right 1s ease-out",
+              position: "absolute",
+              //right: "400px", //decreasing the value 'right' moves the Images from left to right
+              right: `${imageTwoRowRight}px`,
+            }}>
+            {renderedImagesTwo}
           </Stack>
         </Box>
       </Stack>
@@ -122,6 +199,14 @@ export function Carousel() {
         </Button>
         <Button onClick={moveRight} variant="outlined">
           Right
+        </Button>
+        <Button
+          onClick={() =>
+            activeImageRow === 1 ? setActiveImageRow(2) : setActiveImageRow(1)
+          }
+          color="secondary"
+          variant="outlined">
+          Change active image index.
         </Button>
 
         {/* <Button
