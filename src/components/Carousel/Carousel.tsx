@@ -6,20 +6,35 @@ import Image from "next/image";
 export function Carousel() {
   const imagesArr = [
     // {
-    //   alt: "Beach-1",
+    //   alt: "Fortress",
     //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/Narilka%20fortress%20Tbilisi.jpg",
     // },
     // {
-    //   alt: "Driverless cars-1",
+    //   alt: "Antalya",
     //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/antalya-shutterstock.jpg",
     // },
     // {
-    //   alt: "Shopping-1",
+    //   alt: "Fuerteventura",
     //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/fuerteventura-shutterstock.jpg",
     // },
+    {
+      alt: "Beach-1",
+      imgPath:
+        "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
+    },
+    {
+      alt: "Driverless cars-1",
+      imgPath:
+        "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
+    },
+    {
+      alt: "Shopping-1",
+      imgPath:
+        "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
+    },
     {
       alt: "Beach-2",
       imgPath:
@@ -35,26 +50,36 @@ export function Carousel() {
       imgPath:
         "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
     },
-    // {
-    //   alt: "Beach-3",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-    // },
-    // {
-    //   alt: "Driverless cars-3",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-    // },
-    // {
-    //   alt: "Shopping-3",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-    // },
+    {
+      alt: "Beach-3",
+      imgPath:
+        "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
+    },
+    {
+      alt: "Driverless cars-3",
+      imgPath:
+        "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
+    },
+    {
+      alt: "Shopping-3",
+      imgPath:
+        "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
+    },
   ];
 
+  const IMG_WIDTH = 200;
+  const TOTAL_IMGS = imagesArr.length;
+  const MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG = TOTAL_IMGS * IMG_WIDTH - IMG_WIDTH;
   //const maxImageRowRight = imagesArr.length * 200 + 200 + 200;
-  const maxImageRowRight = 200;
+  //let maxImageRowRight = 800;
+  let maxImageRowRight: number;
+  if (TOTAL_IMGS % 2 === 0) {
+    maxImageRowRight = Math.ceil(TOTAL_IMGS / 2) * IMG_WIDTH;
+  } else {
+    maxImageRowRight = Math.floor(TOTAL_IMGS / 2) * IMG_WIDTH;
+  }
   console.log("maxImageRowRight " + maxImageRowRight);
+
   const [isOverFlowHidden, setOverflowHidden] = useState<boolean>(true);
   const [imagesOne, setImagesOne] = useState<any[]>(imagesArr);
   const [imagesTwo, setImagesTwo] = useState<any[]>(imagesArr);
@@ -71,7 +96,7 @@ export function Carousel() {
     console.log("In imageOne effect");
     function updateImagesOne() {
       console.log("Transition ended imageOneRow");
-      if (imageOneRowRight === 400) {
+      if (imageOneRowRight === MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG) {
         let newImagesRowTwo = imagesTwo.slice();
         //move first entry to end
         const firstImgsRowTwo = newImagesRowTwo.slice(0, 1);
@@ -104,11 +129,11 @@ export function Carousel() {
         newImagesRowTwo = newImagesRowTwo.slice(0, -1);
 
         setImagesTwo(newImagesRowTwo);
-        setImageTwoRowRight(200);
+        setImageTwoRowRight(maxImageRowRight);
         setActiveImageRow(2);
 
         //Above needs to be completed before the below runs
-        setImageOneRowRight(200);
+        setImageOneRowRight(maxImageRowRight);
         let newImagesRowOne = imagesOne.slice();
         //get the last entry and add it to the start
         const lastImgsRowOne = newImagesRowOne.slice(-1);
@@ -124,7 +149,13 @@ export function Carousel() {
 
     return () =>
       imageRowEle?.removeEventListener("transitionend", updateImagesOne);
-  }, [imageOneRowRight, imagesOne, imagesTwo, maxImageRowRight]);
+  }, [
+    MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG,
+    imageOneRowRight,
+    imagesOne,
+    imagesTwo,
+    maxImageRowRight,
+  ]);
 
   //To do: Extract duplicate code
   useEffect(() => {
@@ -132,7 +163,7 @@ export function Carousel() {
     function updateImagesTwo() {
       console.log("Transition ended imageTwoRow");
 
-      if (imageTwoRowRight === 400) {
+      if (imageTwoRowRight === MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG) {
         let newImagesRowOne = imagesOne.slice();
         //move first entry to end
         const firstImgsRowOne = newImagesRowOne.slice(0, 1);
@@ -163,11 +194,11 @@ export function Carousel() {
         newImagesRowOne = newImagesRowOne.slice(0, -1);
 
         setImagesOne(newImagesRowOne);
-        setImageOneRowRight(200);
+        setImageOneRowRight(maxImageRowRight);
         setActiveImageRow(1);
 
         //Above needs to be completed before the below runs
-        setImageTwoRowRight(200);
+        setImageTwoRowRight(maxImageRowRight);
         let newImagesRowTwo = imagesTwo.slice();
         //get the last entry and add it to the first
         const lastImgsRowTwo = newImagesRowTwo.slice(-1);
@@ -182,7 +213,13 @@ export function Carousel() {
       imageRowEle.addEventListener("transitionend", updateImagesTwo);
     return () =>
       imageRowEle?.removeEventListener("transitionend", updateImagesTwo);
-  }, [imageTwoRowRight, imagesOne, imagesTwo, maxImageRowRight]);
+  }, [
+    MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG,
+    imageTwoRowRight,
+    imagesOne,
+    imagesTwo,
+    maxImageRowRight,
+  ]);
 
   const renderedImagesOne = useMemo(
     () =>
