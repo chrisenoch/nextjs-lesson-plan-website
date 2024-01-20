@@ -3,7 +3,15 @@ import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 
-export function Carousel() {
+export function Carousel({
+  autoPlayDirection,
+  autoPlayDelay,
+  enableAutoPlay,
+}: {
+  autoPlayDirection: "LEFT" | "RIGHT";
+  autoPlayDelay: number;
+  enableAutoPlay: boolean;
+}) {
   let imagesArr = [
     // {
     //   alt: "Giraffes",
@@ -168,11 +176,6 @@ export function Carousel() {
     //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
     // },
   ];
-
-  // if (imagesArr.length < 2) {
-  //   throw new Error("You must include at least 2 images in the carousel.");
-  // }
-
   imagesArr = increaseArrayIfTooSmall(imagesArr);
   const IMG_WIDTH = 200;
   const TOTAL_IMGS = imagesArr.length;
@@ -196,6 +199,8 @@ export function Carousel() {
   const autoPlayIntervalId = useRef<ReturnType<typeof setInterval> | null>(
     null
   );
+  const autoPlayIntervalIds = useRef<ReturnType<typeof setInterval>[]>([]);
+  //const isAutoPlayDesired = useRef<boolean>(false);
 
   const deactivateControls = useCallback(() => {
     setDisableControls(true);
@@ -204,6 +209,56 @@ export function Carousel() {
   const activateControls = useCallback(() => {
     setDisableControls(false);
   }, []);
+
+  const moveRight = useCallback(() => {
+    if (!disableControls && imagesArr.length > 1) {
+      setImageOneRowRight((px) => px - 200);
+      setImageTwoRowRight((px) => px - 200);
+    }
+  }, [disableControls, imagesArr.length]);
+
+  const moveLeft = useCallback(() => {
+    if (!disableControls && imagesArr.length > 1) {
+      setImageOneRowRight((px) => px + 200);
+      setImageTwoRowRight((px) => px + 200);
+    }
+  }, [disableControls, imagesArr.length]);
+
+  const startAutoPlay = useCallback(
+    (delay: number, direction: "LEFT" | "RIGHT") => {
+      direction === "RIGHT" ? moveRight() : moveLeft();
+
+      const intervalId = setInterval(() => {
+        if (direction === "RIGHT") {
+          moveRight();
+        }
+        if (direction === "LEFT") {
+          moveLeft();
+        }
+      }, delay);
+
+      autoPlayIntervalIds.current.push(intervalId);
+      console.log(
+        "number of interval ids " + autoPlayIntervalIds.current.length
+      );
+      // autoPlayIntervalId.current = setInterval(() => {
+      //   if (direction === "RIGHT") {
+      //     moveRight();
+      //   }
+      //   if (direction === "LEFT") {
+      //     moveLeft();
+      //   }
+      // }, delay);
+    },
+    [moveLeft, moveRight]
+  );
+
+  function stopAutoPlay() {
+    autoPlayIntervalIds.current.forEach((intervalId) =>
+      clearInterval(intervalId)
+    );
+    //autoPlayIntervalId.current && clearInterval(autoPlayIntervalId.current);
+  }
 
   useEffect(() => {
     console.log("In imageOne effect");
@@ -393,6 +448,37 @@ export function Carousel() {
     maxImageRowRight,
   ]);
 
+  useEffect(() => {
+    function stopAutoPlayIfActive() {
+      console.log("in stopAutoPlayIfActive");
+      if (enableAutoPlay) {
+        stopAutoPlay();
+      }
+    }
+
+    function resumeAutoPlayIfActive() {
+      console.log("in resumeAutoPlayIfActive");
+      if (enableAutoPlay) {
+        //startAutoPlay(autoPlayDelay, autoPlayDirection);
+        startAutoPlay(2000, "LEFT");
+      }
+    }
+
+    const imageDisplayBoxEle = document.querySelector("#image-display-box");
+    imageDisplayBoxEle?.addEventListener("mouseenter", stopAutoPlayIfActive);
+    imageDisplayBoxEle?.addEventListener("mouseleave", resumeAutoPlayIfActive);
+    return () => {
+      imageDisplayBoxEle?.removeEventListener(
+        "mouseenter",
+        stopAutoPlayIfActive
+      );
+      imageDisplayBoxEle?.removeEventListener(
+        "mouseleave",
+        resumeAutoPlayIfActive
+      );
+    };
+  }, [autoPlayDelay, autoPlayDirection, enableAutoPlay, startAutoPlay]);
+
   const renderedImagesOne = useMemo(
     () =>
       imagesOne.map((image, index, arr) => {
@@ -436,20 +522,6 @@ export function Carousel() {
       }),
     [imagesTwo]
   );
-
-  function moveRight() {
-    if (!disableControls && imagesArr.length > 1) {
-      setImageOneRowRight((px) => px - 200);
-      setImageTwoRowRight((px) => px - 200);
-    }
-  }
-
-  function moveLeft() {
-    if (!disableControls && imagesArr.length > 1) {
-      setImageOneRowRight((px) => px + 200);
-      setImageTwoRowRight((px) => px + 200);
-    }
-  }
 
   const imageRowOneDisplay = activeImageRow === 1 ? "flex" : "none";
   const imageRowTwoDisplay = activeImageRow === 2 ? "flex" : "none";
@@ -552,22 +624,6 @@ export function Carousel() {
       </Stack>
     </>
   );
-
-  function stopAutoPlay() {
-    autoPlayIntervalId.current && clearInterval(autoPlayIntervalId.current);
-  }
-
-  function startAutoPlay(delay: number, direction: "LEFT" | "RIGHT") {
-    direction === "RIGHT" ? moveRight() : moveLeft();
-    autoPlayIntervalId.current = setInterval(() => {
-      if (direction === "RIGHT") {
-        moveRight();
-      }
-      if (direction === "LEFT") {
-        moveLeft();
-      }
-    }, delay);
-  }
 }
 
 function increaseArrayIfTooSmall(

@@ -54,7 +54,11 @@ export default function Hero() {
           </Grid>
         </Grid>
       </Stack>
-      <Carousel />
+      <Carousel
+        enableAutoPlay={true}
+        autoPlayDirection="LEFT"
+        autoPlayDelay={2000}
+      />
     </>
   );
 }
