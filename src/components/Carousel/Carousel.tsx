@@ -5,21 +5,21 @@ import Image from "next/image";
 
 export function Carousel() {
   const imagesArr = [
-    {
-      alt: "Beach-1",
-      imgPath:
-        "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-    },
-    {
-      alt: "Driverless cars-1",
-      imgPath:
-        "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-    },
-    {
-      alt: "Shopping-1",
-      imgPath:
-        "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-    },
+    // {
+    //   alt: "Beach-1",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
+    // },
+    // {
+    //   alt: "Driverless cars-1",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
+    // },
+    // {
+    //   alt: "Shopping-1",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
+    // },
     {
       alt: "Beach-2",
       imgPath:
@@ -35,31 +35,34 @@ export function Carousel() {
       imgPath:
         "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
     },
-    {
-      alt: "Beach-3",
-      imgPath:
-        "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-    },
-    {
-      alt: "Driverless cars-3",
-      imgPath:
-        "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-    },
-    {
-      alt: "Shopping-3",
-      imgPath:
-        "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-    },
+    // {
+    //   alt: "Beach-3",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
+    // },
+    // {
+    //   alt: "Driverless cars-3",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
+    // },
+    // {
+    //   alt: "Shopping-3",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
+    // },
   ];
 
-  const maxImageRowRight = imagesArr.length * 200 - 200;
+  //const maxImageRowRight = imagesArr.length * 200 + 200 + 200;
+  const maxImageRowRight = 200;
+  console.log("maxImageRowRight " + maxImageRowRight);
+  const [isOverFlowHidden, setOverflowHidden] = useState<boolean>(true);
   const [imagesOne, setImagesOne] = useState<any[]>(imagesArr);
   const [imagesTwo, setImagesTwo] = useState<any[]>(imagesArr);
-  const [imageOneRowRight, setImageOneRowRight] = useState<number>(
-    Math.floor(maxImageRowRight / 2)
-  );
-  // const [imageOneRowRight, setImageOneRowRight] =
-  //   useState<number>(maxImageRowRight);
+  // const [imageOneRowRight, setImageOneRowRight] = useState<number>(
+  //   Math.floor(maxImageRowRight / 2)
+  // );
+  const [imageOneRowRight, setImageOneRowRight] =
+    useState<number>(maxImageRowRight);
   const [imageTwoRowRight, setImageTwoRowRight] =
     useState<number>(maxImageRowRight);
   const [activeImageRow, setActiveImageRow] = useState<1 | 2>(1);
@@ -68,45 +71,59 @@ export function Carousel() {
     console.log("In imageOne effect");
     function updateImagesOne() {
       console.log("Transition ended imageOneRow");
-      // if (imageOneRowRight === 0) {
-      //   console.log("in if imageOneRowRight 0");
-      //   const newImagesRowTwo = imagesTwo.slice();
-      //   const firstImgRowTwo = newImagesRowTwo.shift();
-      //   newImagesRowTwo.push(firstImgRowTwo);
-      //   setImagesTwo(newImagesRowTwo);
-      //   setImageTwoRowRight(totalImagesLength);
-      //   setActiveImageRow(2);
+      if (imageOneRowRight === 400) {
+        let newImagesRowTwo = imagesTwo.slice();
+        //move first entry to end
+        const firstImgsRowTwo = newImagesRowTwo.slice(0, 1);
+        newImagesRowTwo.push(...firstImgsRowTwo);
+        //delete first entry
+        newImagesRowTwo = newImagesRowTwo.slice(1);
 
-      //   //Above needs to be completed before the below runs
-      //   setImageOneRowRight(totalImagesLength);
-      //   const newImagesRowOne = imagesOne.slice();
-      //   const firstImgRowOne = newImagesRowOne.shift();
-      //   newImagesRowOne.push(firstImgRowOne);
-      //   setImagesOne(newImagesRowOne);
-      // }
-
-      if (imageOneRowRight === maxImageRowRight) {
-        console.log("in if imageOneRowRight totalImagesLength");
-        const newImagesRowTwo = imagesTwo.slice();
-        const lastImgRowTwo = newImagesRowTwo.pop();
-        newImagesRowTwo.unshift(lastImgRowTwo);
         setImagesTwo(newImagesRowTwo);
-        setImageTwoRowRight(0);
+        setImageTwoRowRight(maxImageRowRight);
         setActiveImageRow(2);
 
         //Above needs to be completed before the below runs
-        setImageOneRowRight(0);
-        const newImagesRowOne = imagesOne.slice();
-        const lastImgRowOne = newImagesRowOne.pop();
-        newImagesRowOne.unshift(lastImgRowOne);
+        setImageOneRowRight(maxImageRowRight);
+        let newImagesRowOne = imagesOne.slice();
+        //move first entry to end
+        const firstImgsRowOne = newImagesRowOne.slice(0, 1);
+        newImagesRowOne.push(...firstImgsRowOne);
+        //delete first entry
+        newImagesRowOne = newImagesRowOne.slice(1);
+        setImagesOne(newImagesRowOne);
+      }
+
+      if (imageOneRowRight === 0) {
+        let newImagesRowTwo = imagesTwo.slice();
+
+        //get the last entry and add it to the start
+        const lastImgsRowTwo = newImagesRowTwo.slice(-1);
+        newImagesRowTwo.unshift(...lastImgsRowTwo);
+        //remove the last entry
+        newImagesRowTwo = newImagesRowTwo.slice(0, -1);
+
+        setImagesTwo(newImagesRowTwo);
+        setImageTwoRowRight(200);
+        setActiveImageRow(2);
+
+        //Above needs to be completed before the below runs
+        setImageOneRowRight(200);
+        let newImagesRowOne = imagesOne.slice();
+        //get the last entry and add it to the start
+        const lastImgsRowOne = newImagesRowOne.slice(-1);
+        newImagesRowOne.unshift(...lastImgsRowOne);
+        //remove the last entry
+        newImagesRowOne = newImagesRowOne.slice(0, -1);
         setImagesOne(newImagesRowOne);
       }
     }
-    const transition = document.querySelector("#image-row-1");
-    transition && transition.addEventListener("transitionend", updateImagesOne);
+    const imageRowEle = document.querySelector("#image-row-1");
+    imageRowEle &&
+      imageRowEle.addEventListener("transitionend", updateImagesOne);
 
     return () =>
-      transition?.removeEventListener("transitionend", updateImagesOne);
+      imageRowEle?.removeEventListener("transitionend", updateImagesOne);
   }, [imageOneRowRight, imagesOne, imagesTwo, maxImageRowRight]);
 
   //To do: Extract duplicate code
@@ -115,53 +132,62 @@ export function Carousel() {
     function updateImagesTwo() {
       console.log("Transition ended imageTwoRow");
 
-      // if (imageTwoRowRight === 0) {
-      //   console.log("in if imageTwoRowRight");
-
-      //   const newImagesRowOne = imagesOne.slice(); //think this is the bit that needs -200
-      //   const firstImgRowOne = newImagesRowOne.shift();
-      //   newImagesRowOne.push(firstImgRowOne);
-      //   setImagesOne(newImagesRowOne);
-      //   setImageOneRowRight(totalImagesLength);
-      //   setActiveImageRow(1);
-
-      //   //Above needs to be completed before the below runs
-      //   setImageTwoRowRight(totalImagesLength);
-      //   const newImagesRowTwo = imagesTwo.slice();
-
-      //   const firstImgRowTwo = newImagesRowTwo.shift();
-      //   newImagesRowTwo.push(firstImgRowTwo);
-      //   setImagesTwo(newImagesRowTwo);
-      // }
-
-      if (imageTwoRowRight === maxImageRowRight) {
-        console.log("in if imageTwoRowRight totalImagesLength");
-        const newImagesRowOne = imagesOne.slice();
-        const lastImgRowOne = newImagesRowOne.pop();
-        newImagesRowOne.unshift(lastImgRowOne);
+      if (imageTwoRowRight === 400) {
+        let newImagesRowOne = imagesOne.slice();
+        //move first entry to end
+        const firstImgsRowOne = newImagesRowOne.slice(0, 1);
+        newImagesRowOne.push(...firstImgsRowOne);
+        //delete first entry
+        newImagesRowOne = newImagesRowOne.slice(1);
         setImagesOne(newImagesRowOne);
-        setImageOneRowRight(0);
+        setImageOneRowRight(maxImageRowRight);
         setActiveImageRow(1);
 
         //Above needs to be completed before the below runs
-        setImageTwoRowRight(0);
-        const newImagesRowTwo = imagesTwo.slice();
-        const lastImgRowTwo = newImagesRowTwo.pop();
-        newImagesRowTwo.unshift(lastImgRowTwo);
+        setImageTwoRowRight(maxImageRowRight);
+        let newImagesRowTwo = imagesTwo.slice();
+        //move first entry to end
+        const firstImgsRowTwo = newImagesRowTwo.slice(0, 1);
+        newImagesRowTwo.push(...firstImgsRowTwo);
+        //delete first entry
+        newImagesRowTwo = newImagesRowTwo.slice(1);
+        setImagesTwo(newImagesRowTwo);
+      }
+
+      if (imageTwoRowRight === 0) {
+        let newImagesRowOne = imagesOne.slice();
+        //get the last entry and add it to the first
+        const lastImgsRowOne = newImagesRowOne.slice(-1);
+        newImagesRowOne.unshift(...lastImgsRowOne);
+        //remove the last entry
+        newImagesRowOne = newImagesRowOne.slice(0, -1);
+
+        setImagesOne(newImagesRowOne);
+        setImageOneRowRight(200);
+        setActiveImageRow(1);
+
+        //Above needs to be completed before the below runs
+        setImageTwoRowRight(200);
+        let newImagesRowTwo = imagesTwo.slice();
+        //get the last entry and add it to the first
+        const lastImgsRowTwo = newImagesRowTwo.slice(-1);
+        newImagesRowTwo.unshift(...lastImgsRowTwo);
+        //remove the last entry
+        newImagesRowTwo = newImagesRowTwo.slice(0, -1);
         setImagesTwo(newImagesRowTwo);
       }
     }
-    const transition = document.querySelector("#image-row-2");
-    transition && transition.addEventListener("transitionend", updateImagesTwo);
+    const imageRowEle = document.querySelector("#image-row-2");
+    imageRowEle &&
+      imageRowEle.addEventListener("transitionend", updateImagesTwo);
     return () =>
-      transition?.removeEventListener("transitionend", updateImagesTwo);
+      imageRowEle?.removeEventListener("transitionend", updateImagesTwo);
   }, [imageTwoRowRight, imagesOne, imagesTwo, maxImageRowRight]);
 
   const renderedImagesOne = useMemo(
     () =>
       imagesOne.map((image, index, arr) => {
         console.log("map renderedImagesOne runs");
-        //const imgWidth = index === 0 ? 0 : 200;
 
         return (
           <Image
@@ -207,11 +233,6 @@ export function Carousel() {
     [imagesTwo]
   );
 
-  console.log("renderedImagesOne ");
-  console.log(renderedImagesOne);
-  console.log("renderedImagesTwo ");
-  console.log(renderedImagesTwo);
-
   function moveRight() {
     setImageOneRowRight((px) => px - 200);
     setImageTwoRowRight((px) => px - 200);
@@ -232,7 +253,8 @@ export function Carousel() {
           id="image-display-box"
           width="200px"
           height="200px"
-          overflow="hidden"
+          overflow={isOverFlowHidden ? "visible" : "hidden"}
+          marginLeft="500px"
           position="relative">
           <Stack
             direction="row"
@@ -268,9 +290,9 @@ export function Carousel() {
       </Stack>
       <Stack direction={"row"}>
         <Button onClick={moveLeft} color="secondary" variant="outlined">
-          Left
+          **LEFT**
         </Button>
-        <Button onClick={moveRight} variant="outlined">
+        <Button onClick={moveRight} variant="contained">
           Right
         </Button>
         <Button
@@ -281,17 +303,14 @@ export function Carousel() {
           variant="outlined">
           Change active image index.
         </Button>
-
-        {/* <Button
-          onClick={() => setFirstImageWidth((px) => px + 200)}
-          variant="outlined">
-          Increase width of first image
-        </Button>
         <Button
-          onClick={() => setFirstImageWidth((px) => px - 200)}
+          onClick={() =>
+            setOverflowHidden((isOverFlowHidden) => !isOverFlowHidden)
+          }
+          color="secondary"
           variant="outlined">
-          Decrease width of first image
-        </Button> */}
+          Toggle overflow
+        </Button>
       </Stack>
     </>
   );
