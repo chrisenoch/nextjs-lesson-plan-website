@@ -205,10 +205,7 @@ export function Carousel({
     typeof setTimeout
   > | null>(null);
 
-  const shouldAutoPlay = useRef<boolean>(true);
-
   const deactivateControls = useCallback(() => {
-    console.log("in deactivateControls");
     setDisableControls(true);
   }, []);
 
@@ -217,18 +214,14 @@ export function Carousel({
   }, []);
 
   const moveRightWithAutoPlay = useCallback(() => {
-    console.log("in moveRight moveRightWithAutoPlay ");
     if (imagesArr.length > 1) {
-      console.log("in moveRight if moveRightWithAutoPlay ");
       setImageOneRowRight((px) => px - 200);
       setImageTwoRowRight((px) => px - 200);
     }
   }, [imagesArr.length]);
 
   const moveLeftWithAutoPlay = useCallback(() => {
-    console.log("in moveLeftWithAutoPlayand  ");
     if (imagesArr.length > 1) {
-      console.log("in moveLeftWithAutoPlay if");
       setImageOneRowRight((px) => px + 200);
       setImageTwoRowRight((px) => px + 200);
     }
@@ -236,7 +229,6 @@ export function Carousel({
 
   function moveRightManualControls() {
     if (!disableControls && imagesArr.length > 1) {
-      console.log("in moveRight if");
       setImageOneRowRight((px) => px - 200);
       setImageTwoRowRight((px) => px - 200);
     }
@@ -244,7 +236,6 @@ export function Carousel({
 
   function moveLeftManualControls() {
     if (!disableControls && imagesArr.length > 1) {
-      console.log("in moveLeft if");
       setImageOneRowRight((px) => px + 200);
       setImageTwoRowRight((px) => px + 200);
     }
@@ -252,9 +243,7 @@ export function Carousel({
 
   const startAutoPlay = useCallback(
     (delay: number, direction: "LEFT" | "RIGHT") => {
-      console.log("before move should be fired");
       direction === "RIGHT" ? moveRightWithAutoPlay() : moveLeftWithAutoPlay();
-      console.log("after move shud be fired");
 
       const intervalId = setInterval(() => {
         if (direction === "RIGHT") {
@@ -269,20 +258,11 @@ export function Carousel({
       console.log(
         "number of interval ids " + autoPlayIntervalIds.current.length
       );
-      // autoPlayIntervalId.current = setInterval(() => {
-      //   if (direction === "RIGHT") {
-      //     moveRight();
-      //   }
-      //   if (direction === "LEFT") {
-      //     moveLeft();
-      //   }
-      // }, delay);
     },
     [moveLeftWithAutoPlay, moveRightWithAutoPlay]
   );
 
   function stopAutoPlay() {
-    console.log("in stop autoplay");
     autoPlayIntervalIds.current.forEach((intervalId) =>
       clearInterval(intervalId)
     );
@@ -290,9 +270,7 @@ export function Carousel({
   }
 
   useEffect(() => {
-    console.log("In imageOne effect");
     function updateImagesOne() {
-      console.log("Transition ended imageOneRow");
       //Move images left
       if (imageOneRowRight === MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG) {
         let newImagesRowTwo = imagesTwo.slice();
@@ -385,10 +363,8 @@ export function Carousel({
 
   //To do: Extract duplicate code
   useEffect(() => {
-    console.log("In imageTwo effect");
     function updateImagesTwo() {
       console.log("Transition ended imageTwoRow");
-
       //Move images left
       if (imageTwoRowRight === MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG) {
         let newImagesRowOne = imagesOne.slice();
@@ -480,48 +456,25 @@ export function Carousel({
   useEffect(() => {
     function stopAutoPlayIfActive() {
       console.log("in stopAutoPlayIfActive");
-      console.log(
-        "value of shouldAutoPlay.current before set to false " +
-          shouldAutoPlay.current
-      );
-      shouldAutoPlay.current = false;
-
-      if (enableAutoPlay) {
-        stopAutoPlay();
-      }
+      stopAutoPlayIfActiveTimeoutId.current &&
+        clearTimeout(stopAutoPlayIfActiveTimeoutId.current);
+      stopAutoPlayIfActiveTimeoutId.current = setTimeout(() => {
+        if (enableAutoPlay) {
+          stopAutoPlay();
+        }
+      }, 300);
     }
-    // function stopAutoPlayIfActive() {
-    //   console.log("in stopAutoPlayIfActive");
-    //   stopAutoPlayIfActiveTimeoutId.current &&
-    //     clearTimeout(stopAutoPlayIfActiveTimeoutId.current);
-    //   stopAutoPlayIfActiveTimeoutId.current = setTimeout(() => {
-    //     if (enableAutoPlay) {
-    //       stopAutoPlay();
-    //     }
-    //   }, 300);
-    // }
 
     function resumeAutoPlayIfActive() {
       console.log("in resumeAutoPlayIfActive");
 
-      console.log(
-        "value of shouldAutoPlay.current before set to true " +
-          shouldAutoPlay.current
-      );
-
-      shouldAutoPlay.current = true;
-
-      if (enableAutoPlay) {
-        startAutoPlay(autoPlayDelay, autoPlayDirection);
-      }
-
-      // stopAutoPlayIfActiveTimeoutId.current &&
-      //   clearTimeout(stopAutoPlayIfActiveTimeoutId.current);
-      // stopAutoPlayIfActiveTimeoutId.current = setTimeout(() => {
-      //   if (enableAutoPlay) {
-      //     startAutoPlay(autoPlayDelay, autoPlayDirection);
-      //   }
-      // }, 300);
+      resumeAutoPlayIfActiveTimeoutId.current &&
+        clearTimeout(resumeAutoPlayIfActiveTimeoutId.current);
+      resumeAutoPlayIfActiveTimeoutId.current = setTimeout(() => {
+        if (enableAutoPlay) {
+          startAutoPlay(autoPlayDelay, autoPlayDirection);
+        }
+      }, 300);
     }
 
     const imageDisplayBoxEle = document.querySelector("#image-display-box");
@@ -591,7 +544,7 @@ export function Carousel({
         <Box
           marginLeft="-200px"
           height="200px"
-          width={maxImageRowRight + 200}
+          width={maxImageRowRight}
           sx={{
             backgroundColor: "gray",
           }}></Box>
