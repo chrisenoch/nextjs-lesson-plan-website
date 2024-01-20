@@ -184,7 +184,7 @@ export function Carousel() {
   } else {
     maxImageRowRight = Math.ceil(TOTAL_IMGS / 2) * IMG_WIDTH;
   }
-  const [isOverFlowHidden, setOverflowHidden] = useState<boolean>(true);
+  const [isOverFlowHidden, setOverflowHidden] = useState<boolean>(false);
   const [imagesOne, setImagesOne] = useState<any[]>(imagesArr);
   const [imagesTwo, setImagesTwo] = useState<any[]>(imagesArr);
   const [imageOneRowRight, setImageOneRowRight] =
@@ -408,7 +408,6 @@ export function Carousel() {
             height={200}
             style={{
               maxWidth: "100%",
-              transition: "width .5s ease-out",
             }}
             priority={index === 0 ? true : false}
           />
@@ -421,19 +420,15 @@ export function Carousel() {
     () =>
       imagesTwo.map((image, index, arr) => {
         console.log("map runs renderedImagesTwo");
-        //const imgWidth = index === 0 ? 0 : 200;
-
         return (
           <Image
             key={image.alt + "-2-" + index + 1}
             alt={image.alt}
             src={image.imgPath}
-            //width={index === 0 ? firstImageWidth : 200}
             width={200}
             height={200}
             style={{
               maxWidth: "100%",
-              transition: "width .5s ease-out",
             }}
             priority={index === 0 ? true : false}
           />
@@ -443,13 +438,17 @@ export function Carousel() {
   );
 
   function moveRight() {
-    setImageOneRowRight((px) => px - 200);
-    setImageTwoRowRight((px) => px - 200);
+    if (!disableControls && imagesArr.length > 1) {
+      setImageOneRowRight((px) => px - 200);
+      setImageTwoRowRight((px) => px - 200);
+    }
   }
 
   function moveLeft() {
-    setImageOneRowRight((px) => px + 200);
-    setImageTwoRowRight((px) => px + 200);
+    if (!disableControls && imagesArr.length > 1) {
+      setImageOneRowRight((px) => px + 200);
+      setImageTwoRowRight((px) => px + 200);
+    }
   }
 
   const imageRowOneDisplay = activeImageRow === 1 ? "flex" : "none";
@@ -501,24 +500,38 @@ export function Carousel() {
             }}>
             {renderedImagesTwo}
           </Stack>
+          <Stack
+            marginTop={1}
+            direction={"row"}
+            sx={{
+              position: "absolute",
+              transform: "translatex(-50%)",
+              left: "50%",
+              bottom: "0px",
+            }}>
+            <Button
+              id="left-button"
+              size="small"
+              onClick={moveLeft}
+              color="secondary"
+              variant="outlined"
+              sx={{
+                color: "white",
+              }}>
+              LEFT
+            </Button>
+            <Button
+              id="right-button"
+              size="small"
+              onClick={moveRight}
+              variant="outlined">
+              Right
+            </Button>
+          </Stack>
         </Box>
       </Stack>
-      <Stack direction={"row"}>
-        <Button
-          id="left-button"
-          onClick={moveLeft}
-          color="secondary"
-          variant="outlined"
-          disabled={disableControls || imagesArr.length < 2}>
-          LEFT
-        </Button>
-        <Button
-          id="right-button"
-          onClick={moveRight}
-          variant="outlined"
-          disabled={disableControls || imagesArr.length < 2}>
-          Right
-        </Button>
+
+      <Stack marginTop={8} direction={"row"}>
         <Button onClick={() => startAutoPlay(2000, "LEFT")} variant="outlined">
           Autoplay Left
         </Button>
