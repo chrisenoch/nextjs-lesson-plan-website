@@ -193,6 +193,9 @@ export function Carousel() {
     useState<number>(maxImageRowRight);
   const [activeImageRow, setActiveImageRow] = useState<1 | 2>(1);
   const [disableControls, setDisableControls] = useState<boolean>(false);
+  const autoPlayIntervalId = useRef<ReturnType<typeof setInterval> | null>(
+    null
+  );
 
   const deactivateControls = useCallback(() => {
     setDisableControls(true);
@@ -507,23 +510,24 @@ export function Carousel() {
           color="secondary"
           variant="outlined"
           disabled={disableControls || imagesArr.length < 2}>
-          **LEFT**
+          LEFT
         </Button>
         <Button
           id="right-button"
           onClick={moveRight}
-          variant="contained"
+          variant="outlined"
           disabled={disableControls || imagesArr.length < 2}>
           Right
         </Button>
-        {/* <Button
-          onClick={() =>
-            activeImageRow === 1 ? setActiveImageRow(2) : setActiveImageRow(1)
-          }
-          color="secondary"
-          variant="outlined">
-          Change active image index.
-        </Button> */}
+        <Button onClick={() => startAutoPlay(2000, "LEFT")} variant="outlined">
+          Autoplay Left
+        </Button>
+        <Button onClick={() => startAutoPlay(2000, "RIGHT")} variant="outlined">
+          AutoPlay Right
+        </Button>
+        <Button onClick={stopAutoPlay} variant="outlined">
+          Stop Autoplay
+        </Button>
         <Button
           onClick={() =>
             setOverflowHidden((isOverFlowHidden) => !isOverFlowHidden)
@@ -535,7 +539,24 @@ export function Carousel() {
       </Stack>
     </>
   );
+
+  function stopAutoPlay() {
+    autoPlayIntervalId.current && clearInterval(autoPlayIntervalId.current);
+  }
+
+  function startAutoPlay(delay: number, direction: "LEFT" | "RIGHT") {
+    direction === "RIGHT" ? moveRight() : moveLeft();
+    autoPlayIntervalId.current = setInterval(() => {
+      if (direction === "RIGHT") {
+        moveRight();
+      }
+      if (direction === "LEFT") {
+        moveLeft();
+      }
+    }, delay);
+  }
 }
+
 function increaseArrayIfTooSmall(
   imagesArr: { alt: string; imgPath: string }[]
 ) {
