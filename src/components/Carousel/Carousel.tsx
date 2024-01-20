@@ -6,10 +6,22 @@ import Image from "next/image";
 export function Carousel() {
   const imagesArr = [
     // {
+    //   alt: "Giraffes",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/giraffes_south_africa.jpg",
+    // },
+
+    // {
     //   alt: "Fortress",
     //   imgPath:
     //     "https://raw.githubusercontent.com/chrisenoch/assets/main/Narilka%20fortress%20Tbilisi.jpg",
     // },
+    // {
+    //   alt: "Virgin",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/virgin_cruises.jpg",
+    // },
+
     // {
     //   alt: "Antalya",
     //   imgPath:
@@ -73,19 +85,18 @@ export function Carousel() {
   //const maxImageRowRight = imagesArr.length * 200 + 200 + 200;
   //let maxImageRowRight = 800;
   let maxImageRowRight: number;
-  if (TOTAL_IMGS % 2 === 0) {
+  const isOdd = TOTAL_IMGS % 2 === 0 ? false : true;
+  if (!isOdd) {
     maxImageRowRight = Math.ceil(TOTAL_IMGS / 2) * IMG_WIDTH;
   } else {
     maxImageRowRight = Math.floor(TOTAL_IMGS / 2) * IMG_WIDTH;
   }
+
   console.log("maxImageRowRight " + maxImageRowRight);
 
   const [isOverFlowHidden, setOverflowHidden] = useState<boolean>(true);
   const [imagesOne, setImagesOne] = useState<any[]>(imagesArr);
   const [imagesTwo, setImagesTwo] = useState<any[]>(imagesArr);
-  // const [imageOneRowRight, setImageOneRowRight] = useState<number>(
-  //   Math.floor(maxImageRowRight / 2)
-  // );
   const [imageOneRowRight, setImageOneRowRight] =
     useState<number>(maxImageRowRight);
   const [imageTwoRowRight, setImageTwoRowRight] =
@@ -96,13 +107,17 @@ export function Carousel() {
     console.log("In imageOne effect");
     function updateImagesOne() {
       console.log("Transition ended imageOneRow");
+      //Move images left
       if (imageOneRowRight === MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG) {
         let newImagesRowTwo = imagesTwo.slice();
         //move first entry to end
-        const firstImgsRowTwo = newImagesRowTwo.slice(0, 1);
+        const firstImgsRowTwo = isOdd
+          ? newImagesRowTwo.slice(0, 1)
+          : newImagesRowTwo.slice(0, 2);
         newImagesRowTwo.push(...firstImgsRowTwo);
-        //delete first entry
-        newImagesRowTwo = newImagesRowTwo.slice(1);
+        newImagesRowTwo = isOdd
+          ? newImagesRowTwo.slice(1)
+          : newImagesRowTwo.slice(2);
 
         setImagesTwo(newImagesRowTwo);
         setImageTwoRowRight(maxImageRowRight);
@@ -112,21 +127,28 @@ export function Carousel() {
         setImageOneRowRight(maxImageRowRight);
         let newImagesRowOne = imagesOne.slice();
         //move first entry to end
-        const firstImgsRowOne = newImagesRowOne.slice(0, 1);
+        const firstImgsRowOne = isOdd
+          ? newImagesRowOne.slice(0, 1)
+          : newImagesRowOne.slice(0, 2);
         newImagesRowOne.push(...firstImgsRowOne);
-        //delete first entry
-        newImagesRowOne = newImagesRowOne.slice(1);
+        newImagesRowOne = isOdd
+          ? newImagesRowOne.slice(1)
+          : newImagesRowOne.slice(2);
         setImagesOne(newImagesRowOne);
       }
 
+      //Move images right
       if (imageOneRowRight === 0) {
         let newImagesRowTwo = imagesTwo.slice();
 
-        //get the last entry and add it to the start
-        const lastImgsRowTwo = newImagesRowTwo.slice(-1);
+        //remove the last entry and add it to the start
+        const lastImgsRowTwo = isOdd
+          ? newImagesRowTwo.slice(-1)
+          : newImagesRowTwo.slice(-3);
         newImagesRowTwo.unshift(...lastImgsRowTwo);
-        //remove the last entry
-        newImagesRowTwo = newImagesRowTwo.slice(0, -1);
+        newImagesRowTwo = isOdd
+          ? newImagesRowTwo.slice(0, -1)
+          : newImagesRowTwo.slice(0, -3);
 
         setImagesTwo(newImagesRowTwo);
         setImageTwoRowRight(maxImageRowRight);
@@ -135,11 +157,14 @@ export function Carousel() {
         //Above needs to be completed before the below runs
         setImageOneRowRight(maxImageRowRight);
         let newImagesRowOne = imagesOne.slice();
-        //get the last entry and add it to the start
-        const lastImgsRowOne = newImagesRowOne.slice(-1);
+        //remove the last entry and add it to the start
+        const lastImgsRowOne = isOdd
+          ? newImagesRowOne.slice(-1)
+          : newImagesRowOne.slice(-3);
         newImagesRowOne.unshift(...lastImgsRowOne);
-        //remove the last entry
-        newImagesRowOne = newImagesRowOne.slice(0, -1);
+        newImagesRowOne = isOdd
+          ? newImagesRowOne.slice(0, -1)
+          : newImagesRowOne.slice(0, -3);
         setImagesOne(newImagesRowOne);
       }
     }
@@ -154,6 +179,7 @@ export function Carousel() {
     imageOneRowRight,
     imagesOne,
     imagesTwo,
+    isOdd,
     maxImageRowRight,
   ]);
 
@@ -163,13 +189,17 @@ export function Carousel() {
     function updateImagesTwo() {
       console.log("Transition ended imageTwoRow");
 
+      //Move images left
       if (imageTwoRowRight === MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG) {
         let newImagesRowOne = imagesOne.slice();
         //move first entry to end
-        const firstImgsRowOne = newImagesRowOne.slice(0, 1);
+        const firstImgsRowOne = isOdd
+          ? newImagesRowOne.slice(0, 1)
+          : newImagesRowOne.slice(0, 2);
         newImagesRowOne.push(...firstImgsRowOne);
-        //delete first entry
-        newImagesRowOne = newImagesRowOne.slice(1);
+        newImagesRowOne = isOdd
+          ? newImagesRowOne.slice(1)
+          : newImagesRowOne.slice(2);
         setImagesOne(newImagesRowOne);
         setImageOneRowRight(maxImageRowRight);
         setActiveImageRow(1);
@@ -178,20 +208,27 @@ export function Carousel() {
         setImageTwoRowRight(maxImageRowRight);
         let newImagesRowTwo = imagesTwo.slice();
         //move first entry to end
-        const firstImgsRowTwo = newImagesRowTwo.slice(0, 1);
+        const firstImgsRowTwo = isOdd
+          ? newImagesRowTwo.slice(0, 1)
+          : newImagesRowTwo.slice(0, 2);
         newImagesRowTwo.push(...firstImgsRowTwo);
-        //delete first entry
-        newImagesRowTwo = newImagesRowTwo.slice(1);
+        newImagesRowTwo = isOdd
+          ? newImagesRowTwo.slice(1)
+          : newImagesRowTwo.slice(2);
         setImagesTwo(newImagesRowTwo);
       }
 
+      //Move images right
       if (imageTwoRowRight === 0) {
         let newImagesRowOne = imagesOne.slice();
-        //get the last entry and add it to the first
-        const lastImgsRowOne = newImagesRowOne.slice(-1);
+        //remove the last entry and add it to the start
+        const lastImgsRowOne = isOdd
+          ? newImagesRowOne.slice(-1)
+          : newImagesRowOne.slice(-3);
         newImagesRowOne.unshift(...lastImgsRowOne);
-        //remove the last entry
-        newImagesRowOne = newImagesRowOne.slice(0, -1);
+        newImagesRowOne = isOdd
+          ? newImagesRowOne.slice(0, -1)
+          : newImagesRowOne.slice(0, -3);
 
         setImagesOne(newImagesRowOne);
         setImageOneRowRight(maxImageRowRight);
@@ -200,11 +237,14 @@ export function Carousel() {
         //Above needs to be completed before the below runs
         setImageTwoRowRight(maxImageRowRight);
         let newImagesRowTwo = imagesTwo.slice();
-        //get the last entry and add it to the first
-        const lastImgsRowTwo = newImagesRowTwo.slice(-1);
+        //remove the last entry and add it to the start
+        const lastImgsRowTwo = isOdd
+          ? newImagesRowTwo.slice(-1)
+          : newImagesRowTwo.slice(-3);
         newImagesRowTwo.unshift(...lastImgsRowTwo);
-        //remove the last entry
-        newImagesRowTwo = newImagesRowTwo.slice(0, -1);
+        newImagesRowTwo = isOdd
+          ? newImagesRowTwo.slice(0, -1)
+          : newImagesRowTwo.slice(0, -3);
         setImagesTwo(newImagesRowTwo);
       }
     }
@@ -218,6 +258,7 @@ export function Carousel() {
     imageTwoRowRight,
     imagesOne,
     imagesTwo,
+    isOdd,
     maxImageRowRight,
   ]);
 
@@ -284,8 +325,14 @@ export function Carousel() {
   const imageRowTwoDisplay = activeImageRow === 2 ? "flex" : "none";
   return (
     <>
-      <Stack direction={"row"}>
-        <Box>Hello</Box>
+      <Stack>
+        <Box
+          marginLeft="-200px"
+          height="200px"
+          width={maxImageRowRight}
+          sx={{
+            backgroundColor: "gray",
+          }}></Box>
         <Box
           id="image-display-box"
           width="200px"
