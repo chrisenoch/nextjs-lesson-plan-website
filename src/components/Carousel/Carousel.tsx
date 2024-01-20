@@ -4,23 +4,23 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 
 export function Carousel() {
-  const imagesArr = [
-    {
-      alt: "Giraffes",
-      imgPath:
-        "https://raw.githubusercontent.com/chrisenoch/assets/main/giraffes_south_africa.jpg",
-    },
+  let imagesArr = [
+    // {
+    //   alt: "Giraffes",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/giraffes_south_africa.jpg",
+    // },
 
-    {
-      alt: "Fortress",
-      imgPath:
-        "https://raw.githubusercontent.com/chrisenoch/assets/main/Narilka%20fortress%20Tbilisi.jpg",
-    },
-    {
-      alt: "Virgin",
-      imgPath:
-        "https://raw.githubusercontent.com/chrisenoch/assets/main/virgin_cruises.jpg",
-    },
+    // {
+    //   alt: "Fortress",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/Narilka%20fortress%20Tbilisi.jpg",
+    // },
+    // {
+    //   alt: "Virgin",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/virgin_cruises.jpg",
+    // },
 
     // {
     //   alt: "Antalya",
@@ -38,7 +38,7 @@ export function Carousel() {
         "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
     },
     {
-      alt: "Driverless cars-1",
+      alt: "Driverless-1",
       imgPath:
         "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
     },
@@ -77,8 +77,103 @@ export function Carousel() {
     //   imgPath:
     //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
     // },
+    // {
+    //   alt: "Beach-4",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
+    // },
+    // {
+    //   alt: "Driverless cars-4",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
+    // },
+    // {
+    //   alt: "Shopping-4",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
+    // },
+    // {
+    //   alt: "Beach-5",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
+    // },
+    // {
+    //   alt: "Driverless cars-5",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
+    // },
+    // {
+    //   alt: "Shopping-5",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
+    // },
+    // {
+    //   alt: "Beach-6",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
+    // },
+    // {
+    //   alt: "Driverless cars-6",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
+    // },
+    // {
+    //   alt: "Shopping-6",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
+    // },
+    // {
+    //   alt: "Beach-7",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
+    // },
+    // {
+    //   alt: "Driverless cars-7",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
+    // },
+    // {
+    //   alt: "Shopping-7",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
+    // },
+    // {
+    //   alt: "Beach-8",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
+    // },
+    // {
+    //   alt: "Driverless cars-8",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
+    // },
+    // {
+    //   alt: "Shopping-8",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
+    // },
+    // {
+    //   alt: "Beach-9",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
+    // },
+    // {
+    //   alt: "Driverless cars-9",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
+    // },
+    // {
+    //   alt: "Shopping-9",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
+    // },
   ];
 
+  // if (imagesArr.length < 2) {
+  //   throw new Error("You must include at least 2 images in the carousel.");
+  // }
+
+  imagesArr = increaseArrayIfTooSmall(imagesArr);
   const IMG_WIDTH = 200;
   const TOTAL_IMGS = imagesArr.length;
   const MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG = TOTAL_IMGS * IMG_WIDTH - IMG_WIDTH;
@@ -89,7 +184,6 @@ export function Carousel() {
   } else {
     maxImageRowRight = Math.ceil(TOTAL_IMGS / 2) * IMG_WIDTH;
   }
-
   const [isOverFlowHidden, setOverflowHidden] = useState<boolean>(true);
   const [imagesOne, setImagesOne] = useState<any[]>(imagesArr);
   const [imagesTwo, setImagesTwo] = useState<any[]>(imagesArr);
@@ -173,25 +267,29 @@ export function Carousel() {
         setImagesOne(newImagesRowOne);
       }
     }
-    const imageRowEle = document.querySelector("#image-row-1");
-    imageRowEle &&
-      imageRowEle.addEventListener("transitionend", updateImagesOne);
-    imageRowEle &&
-      imageRowEle.addEventListener("transitionend", activateControls);
 
-    imageRowEle &&
-      imageRowEle.addEventListener("transitionstart", deactivateControls);
+    if (imagesArr.length > 1) {
+      const imageRowEle = document.querySelector("#image-row-1");
+      imageRowEle &&
+        imageRowEle.addEventListener("transitionend", updateImagesOne);
+      imageRowEle &&
+        imageRowEle.addEventListener("transitionend", activateControls);
 
-    return () => {
-      imageRowEle?.removeEventListener("transitionend", updateImagesOne);
-      imageRowEle?.removeEventListener("transitionend", activateControls);
-      imageRowEle?.removeEventListener("transitionstart", deactivateControls);
-    };
+      imageRowEle &&
+        imageRowEle.addEventListener("transitionstart", deactivateControls);
+
+      return () => {
+        imageRowEle?.removeEventListener("transitionend", updateImagesOne);
+        imageRowEle?.removeEventListener("transitionend", activateControls);
+        imageRowEle?.removeEventListener("transitionstart", deactivateControls);
+      };
+    }
   }, [
     MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG,
     activateControls,
     deactivateControls,
     imageOneRowRight,
+    imagesArr.length,
     imagesOne,
     imagesTwo,
     isOdd,
@@ -263,25 +361,29 @@ export function Carousel() {
         setImagesTwo(newImagesRowTwo);
       }
     }
-    const imageRowEle = document.querySelector("#image-row-2");
-    imageRowEle &&
-      imageRowEle.addEventListener("transitionend", updateImagesTwo);
-    imageRowEle &&
-      imageRowEle.addEventListener("transitionend", activateControls);
 
-    imageRowEle &&
-      imageRowEle.addEventListener("transitionstart", deactivateControls);
+    if (imagesArr.length > 1) {
+      const imageRowEle = document.querySelector("#image-row-2");
+      imageRowEle &&
+        imageRowEle.addEventListener("transitionend", updateImagesTwo);
+      imageRowEle &&
+        imageRowEle.addEventListener("transitionend", activateControls);
 
-    return () => {
-      imageRowEle?.removeEventListener("transitionend", updateImagesTwo);
-      imageRowEle?.removeEventListener("transitionend", activateControls);
-      imageRowEle?.removeEventListener("transitionstart", deactivateControls);
-    };
+      imageRowEle &&
+        imageRowEle.addEventListener("transitionstart", deactivateControls);
+
+      return () => {
+        imageRowEle?.removeEventListener("transitionend", updateImagesTwo);
+        imageRowEle?.removeEventListener("transitionend", activateControls);
+        imageRowEle?.removeEventListener("transitionstart", deactivateControls);
+      };
+    }
   }, [
     MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG,
     activateControls,
     deactivateControls,
     imageTwoRowRight,
+    imagesArr.length,
     imagesOne,
     imagesTwo,
     isOdd,
@@ -295,7 +397,7 @@ export function Carousel() {
 
         return (
           <Image
-            key={image.alt + "-1"}
+            key={image.alt + "-1-" + index + 1}
             alt={image.alt}
             src={image.imgPath}
             //width={index === 0 ? firstImageWidth : 200}
@@ -320,7 +422,7 @@ export function Carousel() {
 
         return (
           <Image
-            key={image.alt + "-2"}
+            key={image.alt + "-2-" + index + 1}
             alt={image.alt}
             src={image.imgPath}
             //width={index === 0 ? firstImageWidth : 200}
@@ -355,7 +457,7 @@ export function Carousel() {
         <Box
           marginLeft="-200px"
           height="200px"
-          width={maxImageRowRight}
+          width={maxImageRowRight + 200}
           sx={{
             backgroundColor: "gray",
           }}></Box>
@@ -404,14 +506,14 @@ export function Carousel() {
           onClick={moveLeft}
           color="secondary"
           variant="outlined"
-          disabled={disableControls}>
+          disabled={disableControls || imagesArr.length < 2}>
           **LEFT**
         </Button>
         <Button
           id="right-button"
           onClick={moveRight}
           variant="contained"
-          disabled={disableControls}>
+          disabled={disableControls || imagesArr.length < 2}>
           Right
         </Button>
         {/* <Button
@@ -433,4 +535,22 @@ export function Carousel() {
       </Stack>
     </>
   );
+}
+function increaseArrayIfTooSmall(
+  imagesArr: { alt: string; imgPath: string }[]
+) {
+  let multiplier = 0;
+  if (imagesArr.length === 2 || imagesArr.length === 3) {
+    multiplier = 3;
+  } else if (imagesArr.length === 4) {
+    multiplier = 2;
+  }
+  if (multiplier !== 0) {
+    const newImagesArr = [];
+    for (let i = 0; i < multiplier; i++) {
+      newImagesArr.push(...imagesArr);
+    }
+    imagesArr = newImagesArr;
+  }
+  return imagesArr;
 }
