@@ -1,26 +1,26 @@
 "use client";
 import { Box, Button, Paper, Stack, Typography } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 
 export function Carousel() {
   const imagesArr = [
-    // {
-    //   alt: "Giraffes",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/giraffes_south_africa.jpg",
-    // },
+    {
+      alt: "Giraffes",
+      imgPath:
+        "https://raw.githubusercontent.com/chrisenoch/assets/main/giraffes_south_africa.jpg",
+    },
 
-    // {
-    //   alt: "Fortress",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/Narilka%20fortress%20Tbilisi.jpg",
-    // },
-    // {
-    //   alt: "Virgin",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/virgin_cruises.jpg",
-    // },
+    {
+      alt: "Fortress",
+      imgPath:
+        "https://raw.githubusercontent.com/chrisenoch/assets/main/Narilka%20fortress%20Tbilisi.jpg",
+    },
+    {
+      alt: "Virgin",
+      imgPath:
+        "https://raw.githubusercontent.com/chrisenoch/assets/main/virgin_cruises.jpg",
+    },
 
     // {
     //   alt: "Antalya",
@@ -47,52 +47,48 @@ export function Carousel() {
       imgPath:
         "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
     },
-    {
-      alt: "Beach-2",
-      imgPath:
-        "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-    },
-    {
-      alt: "Driverless cars-2",
-      imgPath:
-        "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-    },
-    {
-      alt: "Shopping-2",
-      imgPath:
-        "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-    },
-    {
-      alt: "Beach-3",
-      imgPath:
-        "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-    },
-    {
-      alt: "Driverless cars-3",
-      imgPath:
-        "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-    },
-    {
-      alt: "Shopping-3",
-      imgPath:
-        "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-    },
+    // {
+    //   alt: "Beach-2",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
+    // },
+    // {
+    //   alt: "Driverless cars-2",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
+    // },
+    // {
+    //   alt: "Shopping-2",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
+    // },
+    // {
+    //   alt: "Beach-3",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
+    // },
+    // {
+    //   alt: "Driverless cars-3",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
+    // },
+    // {
+    //   alt: "Shopping-3",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
+    // },
   ];
 
   const IMG_WIDTH = 200;
   const TOTAL_IMGS = imagesArr.length;
   const MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG = TOTAL_IMGS * IMG_WIDTH - IMG_WIDTH;
-  //const maxImageRowRight = imagesArr.length * 200 + 200 + 200;
-  //let maxImageRowRight = 800;
   let maxImageRowRight: number;
   const isOdd = TOTAL_IMGS % 2 === 0 ? false : true;
-  if (!isOdd) {
-    maxImageRowRight = Math.ceil(TOTAL_IMGS / 2) * IMG_WIDTH;
-  } else {
+  if (isOdd) {
     maxImageRowRight = Math.floor(TOTAL_IMGS / 2) * IMG_WIDTH;
+  } else {
+    maxImageRowRight = Math.ceil(TOTAL_IMGS / 2) * IMG_WIDTH;
   }
-
-  console.log("maxImageRowRight " + maxImageRowRight);
 
   const [isOverFlowHidden, setOverflowHidden] = useState<boolean>(true);
   const [imagesOne, setImagesOne] = useState<any[]>(imagesArr);
@@ -102,6 +98,15 @@ export function Carousel() {
   const [imageTwoRowRight, setImageTwoRowRight] =
     useState<number>(maxImageRowRight);
   const [activeImageRow, setActiveImageRow] = useState<1 | 2>(1);
+  const [disableControls, setDisableControls] = useState<boolean>(false);
+
+  const deactivateControls = useCallback(() => {
+    setDisableControls(true);
+  }, []);
+
+  const activateControls = useCallback(() => {
+    setDisableControls(false);
+  }, []);
 
   useEffect(() => {
     console.log("In imageOne effect");
@@ -171,11 +176,21 @@ export function Carousel() {
     const imageRowEle = document.querySelector("#image-row-1");
     imageRowEle &&
       imageRowEle.addEventListener("transitionend", updateImagesOne);
+    imageRowEle &&
+      imageRowEle.addEventListener("transitionend", activateControls);
 
-    return () =>
+    imageRowEle &&
+      imageRowEle.addEventListener("transitionstart", deactivateControls);
+
+    return () => {
       imageRowEle?.removeEventListener("transitionend", updateImagesOne);
+      imageRowEle?.removeEventListener("transitionend", activateControls);
+      imageRowEle?.removeEventListener("transitionstart", deactivateControls);
+    };
   }, [
     MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG,
+    activateControls,
+    deactivateControls,
     imageOneRowRight,
     imagesOne,
     imagesTwo,
@@ -251,10 +266,21 @@ export function Carousel() {
     const imageRowEle = document.querySelector("#image-row-2");
     imageRowEle &&
       imageRowEle.addEventListener("transitionend", updateImagesTwo);
-    return () =>
+    imageRowEle &&
+      imageRowEle.addEventListener("transitionend", activateControls);
+
+    imageRowEle &&
+      imageRowEle.addEventListener("transitionstart", deactivateControls);
+
+    return () => {
       imageRowEle?.removeEventListener("transitionend", updateImagesTwo);
+      imageRowEle?.removeEventListener("transitionend", activateControls);
+      imageRowEle?.removeEventListener("transitionstart", deactivateControls);
+    };
   }, [
     MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG,
+    activateControls,
+    deactivateControls,
     imageTwoRowRight,
     imagesOne,
     imagesTwo,
@@ -373,20 +399,29 @@ export function Carousel() {
         </Box>
       </Stack>
       <Stack direction={"row"}>
-        <Button onClick={moveLeft} color="secondary" variant="outlined">
+        <Button
+          id="left-button"
+          onClick={moveLeft}
+          color="secondary"
+          variant="outlined"
+          disabled={disableControls}>
           **LEFT**
         </Button>
-        <Button onClick={moveRight} variant="contained">
+        <Button
+          id="right-button"
+          onClick={moveRight}
+          variant="contained"
+          disabled={disableControls}>
           Right
         </Button>
-        <Button
+        {/* <Button
           onClick={() =>
             activeImageRow === 1 ? setActiveImageRow(2) : setActiveImageRow(1)
           }
           color="secondary"
           variant="outlined">
           Change active image index.
-        </Button>
+        </Button> */}
         <Button
           onClick={() =>
             setOverflowHidden((isOverFlowHidden) => !isOverFlowHidden)
