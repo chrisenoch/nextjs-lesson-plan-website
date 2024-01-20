@@ -216,36 +216,52 @@ export function Carousel({
     setDisableControls(false);
   }, []);
 
-  const moveRight = useCallback(() => {
-    console.log("in moveRight");
+  const moveRightWithAutoPlay = useCallback(() => {
+    console.log("in moveRight moveRightWithAutoPlay ");
+    if (imagesArr.length > 1) {
+      console.log("in moveRight if moveRightWithAutoPlay ");
+      setImageOneRowRight((px) => px - 200);
+      setImageTwoRowRight((px) => px - 200);
+    }
+  }, [imagesArr.length]);
+
+  const moveLeftWithAutoPlay = useCallback(() => {
+    console.log("in moveLeftWithAutoPlayand  ");
+    if (imagesArr.length > 1) {
+      console.log("in moveLeftWithAutoPlay if");
+      setImageOneRowRight((px) => px + 200);
+      setImageTwoRowRight((px) => px + 200);
+    }
+  }, [imagesArr.length]);
+
+  function moveRightManualControls() {
     if (!disableControls && imagesArr.length > 1) {
       console.log("in moveRight if");
       setImageOneRowRight((px) => px - 200);
       setImageTwoRowRight((px) => px - 200);
     }
-  }, [disableControls, imagesArr.length]);
+  }
 
-  const moveLeft = useCallback(() => {
-    console.log("in moveLeft and value of disableControls: " + disableControls);
+  function moveLeftManualControls() {
     if (!disableControls && imagesArr.length > 1) {
       console.log("in moveLeft if");
       setImageOneRowRight((px) => px + 200);
       setImageTwoRowRight((px) => px + 200);
     }
-  }, [disableControls, imagesArr.length]);
+  }
 
   const startAutoPlay = useCallback(
     (delay: number, direction: "LEFT" | "RIGHT") => {
       console.log("before move should be fired");
-      direction === "RIGHT" ? moveRight() : moveLeft();
+      direction === "RIGHT" ? moveRightWithAutoPlay() : moveLeftWithAutoPlay();
       console.log("after move shud be fired");
 
       const intervalId = setInterval(() => {
         if (direction === "RIGHT") {
-          moveRight();
+          moveRightWithAutoPlay();
         }
         if (direction === "LEFT") {
-          moveLeft();
+          moveLeftWithAutoPlay();
         }
       }, delay);
 
@@ -262,7 +278,7 @@ export function Carousel({
       //   }
       // }, delay);
     },
-    [moveLeft, moveRight]
+    [moveLeftWithAutoPlay, moveRightWithAutoPlay]
   );
 
   function stopAutoPlay() {
@@ -628,7 +644,7 @@ export function Carousel({
             <Button
               id="left-button"
               size="small"
-              onClick={moveLeft}
+              onClick={moveLeftManualControls}
               color="secondary"
               variant="outlined"
               sx={{
@@ -639,7 +655,7 @@ export function Carousel({
             <Button
               id="right-button"
               size="small"
-              onClick={moveRight}
+              onClick={moveRightManualControls}
               variant="outlined">
               Right
             </Button>
