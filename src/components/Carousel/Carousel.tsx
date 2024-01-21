@@ -395,8 +395,8 @@ export function Carousel({
   }, []);
 
   function moveRightManualControls() {
+    stopAutoPlay();
     if (!disableControls.current && imagesArr.length > 1) {
-      stopAutoPlay();
       restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
       setImageOneRowRight((px) => px - 200);
       setImageTwoRowRight((px) => px - 200);
@@ -404,8 +404,8 @@ export function Carousel({
   }
 
   function moveLeftManualControls() {
+    stopAutoPlay();
     if (!disableControls.current && imagesArr.length > 1) {
-      stopAutoPlay();
       restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
       setImageOneRowRight((px) => px + 200);
       setImageTwoRowRight((px) => px + 200);

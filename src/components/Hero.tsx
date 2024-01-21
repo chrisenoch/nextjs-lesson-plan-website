@@ -3,7 +3,11 @@ import { Box, Button, Grid, Stack, Typography, duration } from "@mui/material";
 import Image from "next/image";
 import { Carousel } from "./Carousel/Carousel";
 import { useMemo, useState } from "react";
-import { AutoPlay, AutoPlayDirection } from "@/models/types/AutoPlay";
+import {
+  AutoPlay,
+  AutoPlayDirection,
+  Transitions,
+} from "@/models/types/AutoPlay";
 
 export default function Hero() {
   const [autoPlay, setAutoPlay] = useState<AutoPlay>({
@@ -12,7 +16,10 @@ export default function Hero() {
     delay: 500,
   });
 
-  const transitions = { durationMs: 300, easingFunction: "ease-out" };
+  const transitions: Transitions = {
+    durationMs: 300,
+    easingFunction: "ease-out",
+  };
 
   function handleToggleAutoPlayDirection() {
     const newAutoPlay: AutoPlay = {
