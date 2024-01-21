@@ -5,3 +5,15 @@ export type AutoPlay = {
   delay: number;
   enableAutoPlay: boolean;
 };
+
+type transitionEasingFunction =
+  | "ease"
+  | "ease-in"
+  | "ease-out"
+  | "ease-in-out"
+  | "linear";
+
+export type Transitions = {
+  durationMs: number;
+  easingFunction: transitionEasingFunction;
+};

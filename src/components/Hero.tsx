@@ -1,5 +1,5 @@
 "use client";
-import { Box, Button, Grid, Stack, Typography } from "@mui/material";
+import { Box, Button, Grid, Stack, Typography, duration } from "@mui/material";
 import Image from "next/image";
 import { Carousel } from "./Carousel/Carousel";
 import { useMemo, useState } from "react";
@@ -9,8 +9,10 @@ export default function Hero() {
   const [autoPlay, setAutoPlay] = useState<AutoPlay>({
     enableAutoPlay: true,
     direction: "LEFT",
-    delay: 3000,
+    delay: 500,
   });
+
+  const transitions = { durationMs: 300, easingFunction: "ease-out" };
 
   function handleToggleAutoPlayDirection() {
     const newAutoPlay: AutoPlay = {
@@ -120,7 +122,7 @@ export default function Hero() {
         }}>
         Increase delay
       </Button>
-      <Carousel autoPlay={autoPlay} />
+      <Carousel autoPlay={autoPlay} transitions={transitions} />
     </>
   );
 }

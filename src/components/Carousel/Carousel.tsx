@@ -3,12 +3,20 @@ import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import useTriggerRerender from "@/customHooks/useTriggerRerender";
-import { AutoPlay, AutoPlayDirection } from "@/models/types/AutoPlay";
+import {
+  AutoPlay,
+  AutoPlayDirection,
+  Transitions,
+} from "@/models/types/AutoPlay";
 
 //Transition duration must be less than autoplayDelay
-export function Carousel({ autoPlay }: { autoPlay?: AutoPlay }) {
-  const isAutoPlay = !!autoPlay;
-
+export function Carousel({
+  autoPlay,
+  transitions,
+}: {
+  autoPlay?: AutoPlay;
+  transitions?: Transitions;
+}) {
   let imagesArr = [
     // {
     //   alt: "Giraffes",
@@ -47,11 +55,11 @@ export function Carousel({ autoPlay }: { autoPlay?: AutoPlay }) {
       imgPath:
         "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
     },
-    // {
-    //   alt: "Shopping-1",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-    // },
+    {
+      alt: "Shopping-1",
+      imgPath:
+        "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
+    },
     // {
     //   alt: "Beach-2",
     //   imgPath:
@@ -173,7 +181,8 @@ export function Carousel({ autoPlay }: { autoPlay?: AutoPlay }) {
     //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
     // },
   ];
-  imagesArr = increaseArrayIfTooSmall(imagesArr);
+  //imagesArr = increaseArrayIfTooSmall(imagesArr);
+  const DEFAULT_TRANSITION_DURATION = 1000;
   const IMG_WIDTH = 200;
   const TOTAL_IMGS = imagesArr.length;
   const MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG = TOTAL_IMGS * IMG_WIDTH - IMG_WIDTH;
@@ -201,10 +210,15 @@ export function Carousel({ autoPlay }: { autoPlay?: AutoPlay }) {
   const isFirstRender = useRef(true);
   const hasAutoPlayInit = useRef(false);
   const { triggerRerender } = useTriggerRerender();
-
   const [previousAutoPlay, setPreviousAutoPlay] = useState<
     AutoPlay | undefined
   >(autoPlay);
+
+  if (transitions && autoPlay && autoPlay.delay < transitions.durationMs) {
+    console.warn(
+      "Error: AutoPlay delay must be greater than transition duration."
+    );
+  }
 
   const updateImagesOne = useCallback(() => {
     console.log("Transition ended imageOneRow");
@@ -353,7 +367,7 @@ export function Carousel({ autoPlay }: { autoPlay?: AutoPlay }) {
   if (
     !isFirstRender.current &&
     !hasAutoPlayInit.current &&
-    isAutoPlay &&
+    autoPlay &&
     autoPlay.enableAutoPlay
   ) {
     startAutoPlay(autoPlay.delay, autoPlay.direction);
@@ -362,7 +376,7 @@ export function Carousel({ autoPlay }: { autoPlay?: AutoPlay }) {
 
   if (previousAutoPlay !== autoPlay) {
     stopAutoPlay();
-    if (isAutoPlay) {
+    if (autoPlay) {
       if (autoPlay.enableAutoPlay) {
         startAutoPlay(autoPlay.delay, autoPlay.direction);
       } else {
@@ -413,7 +427,7 @@ export function Carousel({ autoPlay }: { autoPlay?: AutoPlay }) {
   }
 
   function restartAutoPlayUponIdle(delay: number) {
-    if (isAutoPlay) {
+    if (autoPlay) {
       restartAutoPlayUponIdleTimeoutId.current &&
         clearTimeout(restartAutoPlayUponIdleTimeoutId.current);
       restartAutoPlayUponIdleTimeoutId.current = setTimeout(() => {
@@ -580,9 +594,13 @@ export function Carousel({ autoPlay }: { autoPlay?: AutoPlay }) {
               display: `${imageRowOneDisplay}`,
               height: "200px",
               backgroundColor: "gray",
-              transition: "right 2s ease-out",
+              //transition: `right 2s ease-out`,
+              transition: `right ${
+                transitions
+                  ? transitions.durationMs + "ms"
+                  : DEFAULT_TRANSITION_DURATION + "ms"
+              } ${transitions ? transitions.easingFunction : "ease-out"} `,
               position: "absolute",
-              //right: "totalImagesLengthpx", //decreasing the value 'right' moves the Images from left to right
               right: `${imageOneRowRight}px`,
             }}>
             {renderedImagesOne}
@@ -595,7 +613,11 @@ export function Carousel({ autoPlay }: { autoPlay?: AutoPlay }) {
               display: `${imageRowTwoDisplay}`,
               height: "200px",
               backgroundColor: "gray",
-              transition: "right 2s ease-out",
+              transition: `right ${
+                transitions
+                  ? transitions.durationMs + "ms"
+                  : DEFAULT_TRANSITION_DURATION + "ms"
+              } ${transitions ? transitions.easingFunction : "ease-out"} `,
               position: "absolute",
               //right: "totalImagesLengthpx", //decreasing the value 'right' moves the Images from left to right
               right: `${imageTwoRowRight}px`,
@@ -634,15 +656,9 @@ export function Carousel({ autoPlay }: { autoPlay?: AutoPlay }) {
       </Stack>
 
       <Stack marginTop={8} direction={"row"}>
-        <Button onClick={() => startAutoPlay(2000, "LEFT")} variant="outlined">
-          Autoplay Left
-        </Button>
-        <Button onClick={() => startAutoPlay(2000, "RIGHT")} variant="outlined">
-          AutoPlay Right
-        </Button>
         <Button
           onClick={() => {
-            if (isAutoPlay) {
+            if (autoPlay) {
               startAutoPlay(autoPlay.delay, autoPlay.direction);
             }
           }}
