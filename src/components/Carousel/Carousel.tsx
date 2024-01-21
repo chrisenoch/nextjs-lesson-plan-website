@@ -597,7 +597,6 @@ export function Carousel({
             style={{
               maxWidth: "100%",
             }}
-            priority={index === 0 ? true : false}
           />
         );
       }),

@@ -37,6 +37,16 @@ export default function Hero() {
     setAutoPlay(newAutoPlay);
   }
 
+  function handleIncreaseAutoPlayDelay() {
+    console.log("in handleToggleAutoplay");
+    const newAutoPlay = {
+      ...autoPlay,
+      delay: autoPlay.delay + 1000,
+    };
+    console.log("delay from aprent: " + newAutoPlay.delay);
+    setAutoPlay(newAutoPlay);
+  }
+
   return (
     <>
       <Stack
@@ -105,6 +115,15 @@ export default function Hero() {
           color: "white",
         }}>
         Toggle Direction
+      </Button>
+      <Button
+        size="small"
+        onClick={handleIncreaseAutoPlayDelay}
+        variant="contained"
+        sx={{
+          color: "white",
+        }}>
+        Increase delay
       </Button>
       <Carousel autoPlay={autoPlay} />
     </>
