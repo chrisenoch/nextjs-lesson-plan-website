@@ -4,16 +4,28 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import useTriggerRerender from "@/customHooks/useTriggerRerender";
 
+// {
+//   autoPlayDirection,
+//   autoPlayDelay,
+//   enableAutoPlay,
+// }: {
+//   autoPlayDirection: "LEFT" | "RIGHT";
+//   autoPlayDelay: number;
+//   enableAutoPlay: boolean;
+// }
+
 //Transition duration must be less than autoplayDelay
 export function Carousel({
-  autoPlayDirection,
-  autoPlayDelay,
-  enableAutoPlay,
+  autoPlay,
 }: {
-  autoPlayDirection: "LEFT" | "RIGHT";
-  autoPlayDelay: number;
-  enableAutoPlay: boolean;
+  autoPlay?: {
+    autoPlayDirection: "LEFT" | "RIGHT";
+    autoPlayDelay: number;
+    enableAutoPlay: boolean;
+  };
 }) {
+  const isAutoPlay = !!autoPlay;
+
   let imagesArr = [
     // {
     //   alt: "Giraffes",
@@ -207,39 +219,224 @@ export function Carousel({
   const isFirstRender = useRef(true);
   const hasAutoPlayInit = useRef(false);
   const { triggerRerender } = useTriggerRerender();
-  const [previousEnableAutoPlay, setPreviousEnableAutoPlay] =
-    useState<boolean>(enableAutoPlay);
-  const [previousAutoPlayDir, setPreviousAutoPlayDir] = useState<
-    "LEFT" | "RIGHT"
-  >(autoPlayDirection);
+  // const [previousEnableAutoPlay, setPreviousEnableAutoPlay] =
+  //   useState<boolean>(enableAutoPlay);
+  // const [previousAutoPlayDir, setPreviousAutoPlayDir] = useState<
+  //   "LEFT" | "RIGHT"
+  // >(autoPlayDirection);
+
+  const [previousAutoPlay, setPreviousAutoPlay] = useState<
+    | {
+        autoPlayDirection: "LEFT" | "RIGHT";
+        autoPlayDelay: number;
+        enableAutoPlay: boolean;
+      }
+    | undefined
+  >(autoPlay);
 
   console.log("disableControls " + disableControls.current);
+  console.log("dir in child: " + autoPlay?.autoPlayDirection);
+
+  const updateImagesOne = useCallback(() => {
+    console.log("Transition ended imageOneRow");
+    console.log("starting updateImagesOne");
+    //Move images left
+    if (imageOneRowRight === MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG) {
+      let newImagesRowTwo = imagesTwo.slice();
+      //move first entry to end
+      const firstImgsRowTwo = isOdd
+        ? newImagesRowTwo.slice(0, 1)
+        : newImagesRowTwo.slice(0, 2);
+      newImagesRowTwo.push(...firstImgsRowTwo);
+      newImagesRowTwo = isOdd
+        ? newImagesRowTwo.slice(1)
+        : newImagesRowTwo.slice(2);
+
+      setImagesTwo(newImagesRowTwo);
+      setImageTwoRowRight(maxImageRowRight);
+      setActiveImageRow(2);
+
+      //Above needs to be completed before the below runs
+      setImageOneRowRight(maxImageRowRight);
+      let newImagesRowOne = imagesOne.slice();
+      //move first entry to end
+      const firstImgsRowOne = isOdd
+        ? newImagesRowOne.slice(0, 1)
+        : newImagesRowOne.slice(0, 2);
+      newImagesRowOne.push(...firstImgsRowOne);
+      newImagesRowOne = isOdd
+        ? newImagesRowOne.slice(1)
+        : newImagesRowOne.slice(2);
+      setImagesOne(newImagesRowOne);
+    }
+
+    //Move images right
+    if (imageOneRowRight === 0) {
+      let newImagesRowTwo = imagesTwo.slice();
+
+      //remove the last entry and add it to the start
+      const lastImgsRowTwo = isOdd
+        ? newImagesRowTwo.slice(-1)
+        : newImagesRowTwo.slice(-3);
+      newImagesRowTwo.unshift(...lastImgsRowTwo);
+      newImagesRowTwo = isOdd
+        ? newImagesRowTwo.slice(0, -1)
+        : newImagesRowTwo.slice(0, -3);
+
+      setImagesTwo(newImagesRowTwo);
+      setImageTwoRowRight(maxImageRowRight);
+      setActiveImageRow(2);
+
+      //Above needs to be completed before the below runs
+      setImageOneRowRight(maxImageRowRight);
+      let newImagesRowOne = imagesOne.slice();
+      //remove the last entry and add it to the start
+      const lastImgsRowOne = isOdd
+        ? newImagesRowOne.slice(-1)
+        : newImagesRowOne.slice(-3);
+      newImagesRowOne.unshift(...lastImgsRowOne);
+      newImagesRowOne = isOdd
+        ? newImagesRowOne.slice(0, -1)
+        : newImagesRowOne.slice(0, -3);
+      setImagesOne(newImagesRowOne);
+    }
+    console.log("finished updateImagesOne");
+  }, [
+    MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG,
+    imageOneRowRight,
+    imagesOne,
+    imagesTwo,
+    isOdd,
+    maxImageRowRight,
+  ]);
+
+  const updateImagesTwo = useCallback(() => {
+    console.log("starting updateImagesTwo");
+    console.log("Transition ended imageTwoRow");
+    //Move images left
+    if (imageTwoRowRight === MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG) {
+      let newImagesRowOne = imagesOne.slice();
+      //move first entry to end
+      const firstImgsRowOne = isOdd
+        ? newImagesRowOne.slice(0, 1)
+        : newImagesRowOne.slice(0, 2);
+      newImagesRowOne.push(...firstImgsRowOne);
+      newImagesRowOne = isOdd
+        ? newImagesRowOne.slice(1)
+        : newImagesRowOne.slice(2);
+      setImagesOne(newImagesRowOne);
+      setImageOneRowRight(maxImageRowRight);
+      setActiveImageRow(1);
+
+      //Above needs to be completed before the below runs
+      setImageTwoRowRight(maxImageRowRight);
+      let newImagesRowTwo = imagesTwo.slice();
+      //move first entry to end
+      const firstImgsRowTwo = isOdd
+        ? newImagesRowTwo.slice(0, 1)
+        : newImagesRowTwo.slice(0, 2);
+      newImagesRowTwo.push(...firstImgsRowTwo);
+      newImagesRowTwo = isOdd
+        ? newImagesRowTwo.slice(1)
+        : newImagesRowTwo.slice(2);
+      setImagesTwo(newImagesRowTwo);
+    }
+
+    //Move images right
+    if (imageTwoRowRight === 0) {
+      let newImagesRowOne = imagesOne.slice();
+      //remove the last entry and add it to the start
+      const lastImgsRowOne = isOdd
+        ? newImagesRowOne.slice(-1)
+        : newImagesRowOne.slice(-3);
+      newImagesRowOne.unshift(...lastImgsRowOne);
+      newImagesRowOne = isOdd
+        ? newImagesRowOne.slice(0, -1)
+        : newImagesRowOne.slice(0, -3);
+
+      setImagesOne(newImagesRowOne);
+      setImageOneRowRight(maxImageRowRight);
+      setActiveImageRow(1);
+
+      //Above needs to be completed before the below runs
+      setImageTwoRowRight(maxImageRowRight);
+      let newImagesRowTwo = imagesTwo.slice();
+      //remove the last entry and add it to the start
+      const lastImgsRowTwo = isOdd
+        ? newImagesRowTwo.slice(-1)
+        : newImagesRowTwo.slice(-3);
+      newImagesRowTwo.unshift(...lastImgsRowTwo);
+      newImagesRowTwo = isOdd
+        ? newImagesRowTwo.slice(0, -1)
+        : newImagesRowTwo.slice(0, -3);
+      setImagesTwo(newImagesRowTwo);
+    }
+    console.log("finished updateImagesTwo");
+  }, [
+    MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG,
+    imageTwoRowRight,
+    imagesOne,
+    imagesTwo,
+    isOdd,
+    maxImageRowRight,
+  ]);
 
   //should only run when enableAutoplay changes
-  if (!isFirstRender.current && !hasAutoPlayInit.current && enableAutoPlay) {
+  if (
+    !isFirstRender.current &&
+    isAutoPlay &&
+    autoPlay.enableAutoPlay &&
+    !hasAutoPlayInit.current
+  ) {
     console.log("in if init autoplay");
-    startAutoPlay(autoPlayDelay, autoPlayDirection);
+    startAutoPlay(autoPlay.autoPlayDelay, autoPlay.autoPlayDirection);
     hasAutoPlayInit.current = true;
   }
-  if (previousEnableAutoPlay !== enableAutoPlay) {
-    console.log("enter autoPlay enabled if");
-    stopAutoPlay();
-    if (enableAutoPlay) {
-      startAutoPlay(autoPlayDelay, autoPlayDirection);
-    } else {
-      stopAutoPlay();
+
+  if (previousAutoPlay !== autoPlay) {
+    console.log("if (previousAutoPlay !== autoPlay");
+    //stopAutoPlay();
+    if (isAutoPlay) {
+      if (autoPlay.enableAutoPlay) {
+        startAutoPlay(autoPlay.autoPlayDelay, autoPlay.autoPlayDirection);
+      } else {
+        stopAutoPlay();
+      }
     }
-    setPreviousEnableAutoPlay(enableAutoPlay);
+    setPreviousAutoPlay(autoPlay);
   }
 
-  if (previousAutoPlayDir !== autoPlayDirection && enableAutoPlay) {
-    console.log("enter autoPlay direction if");
-    if (enableAutoPlay) {
-      stopAutoPlay();
-      startAutoPlay(autoPlayDelay, autoPlayDirection);
-    }
-    setPreviousAutoPlayDir(autoPlayDirection);
-  }
+  // if (previousEnableAutoPlay !== enableAutoPlay) {
+  //   console.log("enter autoPlay enabled if");
+  //   stopAutoPlay();
+  //   if (enableAutoPlay) {
+  //     startAutoPlay(autoPlayDelay, autoPlayDirection);
+  //   } else {
+  //     stopAutoPlay();
+  //   }
+  //   setPreviousEnableAutoPlay(enableAutoPlay);
+  // }
+
+  // if (previousAutoPlayDir !== autoPlayDirection && enableAutoPlay) {
+  //   console.log("enter autoPlay direction if and dir : " + autoPlayDirection);
+  //   if (enableAutoPlay) {
+  //     stopAutoPlay();
+  //     // if (activeImageRow === 1) {
+  //     //   updateImagesOne();
+  //     // } else {
+  //     //   updateImagesTwo();
+  //     // }
+  //     console.log("if and dir just b4 setTimeout : " + autoPlayDirection);
+  //     startAutoPlay(autoPlayDelay, autoPlayDirection);
+  //     // setTimeout(() => {
+  //     //   disableControls.current = false;
+  //     //   console.log("autoplay dir when timeout completed " + autoPlayDirection);
+  //     //   const test = autoPlayDirection === "LEFT" ? "RIGHT" : "LEFT";
+  //     //   startAutoPlay(autoPlayDelay, test);
+  //     // }, 300);
+  //   }
+  //   setPreviousAutoPlayDir(autoPlayDirection);
+  // }
 
   const deactivateControls = useCallback(() => {
     disableControls.current = true;
@@ -284,11 +481,13 @@ export function Carousel({
   }
 
   function restartAutoPlayUponIdle(delay: number) {
-    restartAutoPlayUponIdleTimeoutId.current &&
-      clearTimeout(restartAutoPlayUponIdleTimeoutId.current);
-    restartAutoPlayUponIdleTimeoutId.current = setTimeout(() => {
-      startAutoPlay(autoPlayDelay, autoPlayDirection);
-    }, delay);
+    if (isAutoPlay) {
+      restartAutoPlayUponIdleTimeoutId.current &&
+        clearTimeout(restartAutoPlayUponIdleTimeoutId.current);
+      restartAutoPlayUponIdleTimeoutId.current = setTimeout(() => {
+        startAutoPlay(autoPlay.autoPlayDelay, autoPlay.autoPlayDirection);
+      }, delay);
+    }
   }
 
   function startAutoPlay(delay: number, direction: "LEFT" | "RIGHT") {
@@ -315,72 +514,6 @@ export function Carousel({
   }
 
   useEffect(() => {
-    function updateImagesOne() {
-      console.log("Transition ended imageOneRow");
-      console.log("starting updateImagesOne");
-      //Move images left
-      if (imageOneRowRight === MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG) {
-        let newImagesRowTwo = imagesTwo.slice();
-        //move first entry to end
-        const firstImgsRowTwo = isOdd
-          ? newImagesRowTwo.slice(0, 1)
-          : newImagesRowTwo.slice(0, 2);
-        newImagesRowTwo.push(...firstImgsRowTwo);
-        newImagesRowTwo = isOdd
-          ? newImagesRowTwo.slice(1)
-          : newImagesRowTwo.slice(2);
-
-        setImagesTwo(newImagesRowTwo);
-        setImageTwoRowRight(maxImageRowRight);
-        setActiveImageRow(2);
-
-        //Above needs to be completed before the below runs
-        setImageOneRowRight(maxImageRowRight);
-        let newImagesRowOne = imagesOne.slice();
-        //move first entry to end
-        const firstImgsRowOne = isOdd
-          ? newImagesRowOne.slice(0, 1)
-          : newImagesRowOne.slice(0, 2);
-        newImagesRowOne.push(...firstImgsRowOne);
-        newImagesRowOne = isOdd
-          ? newImagesRowOne.slice(1)
-          : newImagesRowOne.slice(2);
-        setImagesOne(newImagesRowOne);
-      }
-
-      //Move images right
-      if (imageOneRowRight === 0) {
-        let newImagesRowTwo = imagesTwo.slice();
-
-        //remove the last entry and add it to the start
-        const lastImgsRowTwo = isOdd
-          ? newImagesRowTwo.slice(-1)
-          : newImagesRowTwo.slice(-3);
-        newImagesRowTwo.unshift(...lastImgsRowTwo);
-        newImagesRowTwo = isOdd
-          ? newImagesRowTwo.slice(0, -1)
-          : newImagesRowTwo.slice(0, -3);
-
-        setImagesTwo(newImagesRowTwo);
-        setImageTwoRowRight(maxImageRowRight);
-        setActiveImageRow(2);
-
-        //Above needs to be completed before the below runs
-        setImageOneRowRight(maxImageRowRight);
-        let newImagesRowOne = imagesOne.slice();
-        //remove the last entry and add it to the start
-        const lastImgsRowOne = isOdd
-          ? newImagesRowOne.slice(-1)
-          : newImagesRowOne.slice(-3);
-        newImagesRowOne.unshift(...lastImgsRowOne);
-        newImagesRowOne = isOdd
-          ? newImagesRowOne.slice(0, -1)
-          : newImagesRowOne.slice(0, -3);
-        setImagesOne(newImagesRowOne);
-      }
-      console.log("finished updateImagesOne");
-    }
-
     if (imagesArr.length > 1) {
       const imageRowEle = document.querySelector("#image-row-1");
       imageRowEle &&
@@ -407,74 +540,10 @@ export function Carousel({
     imagesTwo,
     isOdd,
     maxImageRowRight,
+    updateImagesOne,
   ]);
 
-  //To do: Extract duplicate code
   useEffect(() => {
-    function updateImagesTwo() {
-      console.log("starting updateImagesTwo");
-      console.log("Transition ended imageTwoRow");
-      //Move images left
-      if (imageTwoRowRight === MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG) {
-        let newImagesRowOne = imagesOne.slice();
-        //move first entry to end
-        const firstImgsRowOne = isOdd
-          ? newImagesRowOne.slice(0, 1)
-          : newImagesRowOne.slice(0, 2);
-        newImagesRowOne.push(...firstImgsRowOne);
-        newImagesRowOne = isOdd
-          ? newImagesRowOne.slice(1)
-          : newImagesRowOne.slice(2);
-        setImagesOne(newImagesRowOne);
-        setImageOneRowRight(maxImageRowRight);
-        setActiveImageRow(1);
-
-        //Above needs to be completed before the below runs
-        setImageTwoRowRight(maxImageRowRight);
-        let newImagesRowTwo = imagesTwo.slice();
-        //move first entry to end
-        const firstImgsRowTwo = isOdd
-          ? newImagesRowTwo.slice(0, 1)
-          : newImagesRowTwo.slice(0, 2);
-        newImagesRowTwo.push(...firstImgsRowTwo);
-        newImagesRowTwo = isOdd
-          ? newImagesRowTwo.slice(1)
-          : newImagesRowTwo.slice(2);
-        setImagesTwo(newImagesRowTwo);
-      }
-
-      //Move images right
-      if (imageTwoRowRight === 0) {
-        let newImagesRowOne = imagesOne.slice();
-        //remove the last entry and add it to the start
-        const lastImgsRowOne = isOdd
-          ? newImagesRowOne.slice(-1)
-          : newImagesRowOne.slice(-3);
-        newImagesRowOne.unshift(...lastImgsRowOne);
-        newImagesRowOne = isOdd
-          ? newImagesRowOne.slice(0, -1)
-          : newImagesRowOne.slice(0, -3);
-
-        setImagesOne(newImagesRowOne);
-        setImageOneRowRight(maxImageRowRight);
-        setActiveImageRow(1);
-
-        //Above needs to be completed before the below runs
-        setImageTwoRowRight(maxImageRowRight);
-        let newImagesRowTwo = imagesTwo.slice();
-        //remove the last entry and add it to the start
-        const lastImgsRowTwo = isOdd
-          ? newImagesRowTwo.slice(-1)
-          : newImagesRowTwo.slice(-3);
-        newImagesRowTwo.unshift(...lastImgsRowTwo);
-        newImagesRowTwo = isOdd
-          ? newImagesRowTwo.slice(0, -1)
-          : newImagesRowTwo.slice(0, -3);
-        setImagesTwo(newImagesRowTwo);
-      }
-      console.log("finished updateImagesTwo");
-    }
-
     if (imagesArr.length > 1) {
       const imageRowEle = document.querySelector("#image-row-2");
       imageRowEle &&
@@ -501,6 +570,7 @@ export function Carousel({
     imagesTwo,
     isOdd,
     maxImageRowRight,
+    updateImagesTwo,
   ]);
 
   const renderedImagesOne = useMemo(
@@ -640,7 +710,11 @@ export function Carousel({
           AutoPlay Right
         </Button>
         <Button
-          onClick={() => startAutoPlay(autoPlayDelay, autoPlayDirection)}
+          onClick={() => {
+            if (isAutoPlay) {
+              startAutoPlay(autoPlay.autoPlayDelay, autoPlay.autoPlayDirection);
+            }
+          }}
           variant="outlined">
           Start Autoplay
         </Button>

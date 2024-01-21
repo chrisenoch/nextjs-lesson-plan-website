@@ -2,13 +2,22 @@
 import { Box, Button, Grid, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import { Carousel } from "./Carousel/Carousel";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 export default function Hero() {
   const [enableAutoPlay, setEnableAutoPlay] = useState(true);
   const [autoPlayDirection, setAutoPlayDirection] = useState<"LEFT" | "RIGHT">(
     "LEFT"
   );
+  console.log("dir in parent: " + autoPlayDirection);
+
+  const autoPlay = useMemo(() => {
+    return {
+      enableAutoPlay,
+      autoPlayDirection,
+      autoPlayDelay: 3000,
+    };
+  }, [autoPlayDirection, enableAutoPlay]);
 
   return (
     <>
@@ -81,11 +90,7 @@ export default function Hero() {
         }}>
         Toggle Direction
       </Button>
-      <Carousel
-        enableAutoPlay={enableAutoPlay}
-        autoPlayDirection={autoPlayDirection}
-        autoPlayDelay={3000}
-      />
+      <Carousel autoPlay={autoPlay} />
     </>
   );
 }
