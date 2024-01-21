@@ -4,23 +4,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import useTriggerRerender from "@/customHooks/useTriggerRerender";
 
-// {
-//   autoPlayDirection,
-//   autoPlayDelay,
-//   enableAutoPlay,
-// }: {
-//   autoPlayDirection: "LEFT" | "RIGHT";
-//   autoPlayDelay: number;
-//   enableAutoPlay: boolean;
-// }
-
 //Transition duration must be less than autoplayDelay
 export function Carousel({
   autoPlay,
 }: {
   autoPlay?: {
-    autoPlayDirection: "LEFT" | "RIGHT";
-    autoPlayDelay: number;
+    direction: "LEFT" | "RIGHT";
+    delay: number;
     enableAutoPlay: boolean;
   };
 }) {
@@ -64,11 +54,11 @@ export function Carousel({
       imgPath:
         "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
     },
-    {
-      alt: "Shopping-1",
-      imgPath:
-        "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-    },
+    // {
+    //   alt: "Shopping-1",
+    //   imgPath:
+    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
+    // },
     // {
     //   alt: "Beach-2",
     //   imgPath:
@@ -190,7 +180,7 @@ export function Carousel({
     //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
     // },
   ];
-  //imagesArr = increaseArrayIfTooSmall(imagesArr);
+  imagesArr = increaseArrayIfTooSmall(imagesArr);
   const IMG_WIDTH = 200;
   const TOTAL_IMGS = imagesArr.length;
   const MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG = TOTAL_IMGS * IMG_WIDTH - IMG_WIDTH;
@@ -227,15 +217,15 @@ export function Carousel({
 
   const [previousAutoPlay, setPreviousAutoPlay] = useState<
     | {
-        autoPlayDirection: "LEFT" | "RIGHT";
-        autoPlayDelay: number;
+        direction: "LEFT" | "RIGHT";
+        delay: number;
         enableAutoPlay: boolean;
       }
     | undefined
   >(autoPlay);
 
   console.log("disableControls " + disableControls.current);
-  console.log("dir in child: " + autoPlay?.autoPlayDirection);
+  console.log("dir in child: " + autoPlay?.direction);
 
   const updateImagesOne = useCallback(() => {
     console.log("Transition ended imageOneRow");
@@ -389,16 +379,16 @@ export function Carousel({
     !hasAutoPlayInit.current
   ) {
     console.log("in if init autoplay");
-    startAutoPlay(autoPlay.autoPlayDelay, autoPlay.autoPlayDirection);
+    startAutoPlay(autoPlay.delay, autoPlay.direction);
     hasAutoPlayInit.current = true;
   }
 
   if (previousAutoPlay !== autoPlay) {
     console.log("if (previousAutoPlay !== autoPlay");
-    //stopAutoPlay();
+    stopAutoPlay();
     if (isAutoPlay) {
       if (autoPlay.enableAutoPlay) {
-        startAutoPlay(autoPlay.autoPlayDelay, autoPlay.autoPlayDirection);
+        startAutoPlay(autoPlay.delay, autoPlay.direction);
       } else {
         stopAutoPlay();
       }
@@ -485,7 +475,7 @@ export function Carousel({
       restartAutoPlayUponIdleTimeoutId.current &&
         clearTimeout(restartAutoPlayUponIdleTimeoutId.current);
       restartAutoPlayUponIdleTimeoutId.current = setTimeout(() => {
-        startAutoPlay(autoPlay.autoPlayDelay, autoPlay.autoPlayDirection);
+        startAutoPlay(autoPlay.delay, autoPlay.direction);
       }, delay);
     }
   }
@@ -712,7 +702,7 @@ export function Carousel({
         <Button
           onClick={() => {
             if (isAutoPlay) {
-              startAutoPlay(autoPlay.autoPlayDelay, autoPlay.autoPlayDirection);
+              startAutoPlay(autoPlay.delay, autoPlay.direction);
             }
           }}
           variant="outlined">

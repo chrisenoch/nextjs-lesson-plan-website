@@ -3,21 +3,39 @@ import { Box, Button, Grid, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import { Carousel } from "./Carousel/Carousel";
 import { useMemo, useState } from "react";
+import { AutoPlayDirection } from "@/models/AutoPlayDirection";
 
 export default function Hero() {
-  const [enableAutoPlay, setEnableAutoPlay] = useState(true);
-  const [autoPlayDirection, setAutoPlayDirection] = useState<"LEFT" | "RIGHT">(
-    "LEFT"
-  );
-  console.log("dir in parent: " + autoPlayDirection);
+  const [autoPlay, setAutoPlay] = useState<{
+    direction: "LEFT" | "RIGHT";
+    delay: number;
+    enableAutoPlay: boolean;
+  }>({
+    enableAutoPlay: true,
+    direction: "LEFT",
+    delay: 3000,
+  });
+  console.log("dir in parent: " + autoPlay.direction);
 
-  const autoPlay = useMemo(() => {
-    return {
-      enableAutoPlay,
-      autoPlayDirection,
-      autoPlayDelay: 3000,
+  function handleToggleAutoPlayDirection() {
+    const newAutoPlay = {
+      ...autoPlay,
+      direction:
+        autoPlay.direction === "RIGHT"
+          ? "LEFT"
+          : ("RIGHT" as AutoPlayDirection),
     };
-  }, [autoPlayDirection, enableAutoPlay]);
+    setAutoPlay(newAutoPlay);
+  }
+
+  function handleToggleEnableAutoPlay() {
+    console.log("in handleToggleAutoplay");
+    const newAutoPlay = {
+      ...autoPlay,
+      enableAutoPlay: !autoPlay.enableAutoPlay,
+    };
+    setAutoPlay(newAutoPlay);
+  }
 
   return (
     <>
@@ -72,7 +90,7 @@ export default function Hero() {
       </Stack>
       <Button
         size="small"
-        onClick={() => setEnableAutoPlay((enable) => !enable)}
+        onClick={handleToggleEnableAutoPlay}
         variant="contained"
         sx={{
           color: "white",
@@ -81,9 +99,7 @@ export default function Hero() {
       </Button>
       <Button
         size="small"
-        onClick={() =>
-          setAutoPlayDirection(autoPlayDirection === "LEFT" ? "RIGHT" : "LEFT")
-        }
+        onClick={handleToggleAutoPlayDirection}
         variant="contained"
         sx={{
           color: "white",
