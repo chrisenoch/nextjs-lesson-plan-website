@@ -1,8 +1,15 @@
+"use client";
 import { Box, Button, Grid, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import { Carousel } from "./Carousel/Carousel";
+import { useState } from "react";
 
 export default function Hero() {
+  const [enableAutoPlay, setEnableAutoPlay] = useState(true);
+  const [autoPlayDirection, setAutoPlayDirection] = useState<"LEFT" | "RIGHT">(
+    "LEFT"
+  );
+
   return (
     <>
       <Stack
@@ -54,10 +61,30 @@ export default function Hero() {
           </Grid>
         </Grid>
       </Stack>
+      <Button
+        size="small"
+        onClick={() => setEnableAutoPlay((enable) => !enable)}
+        variant="contained"
+        sx={{
+          color: "white",
+        }}>
+        Toggle Enable Autoplay
+      </Button>
+      <Button
+        size="small"
+        onClick={() =>
+          setAutoPlayDirection(autoPlayDirection === "LEFT" ? "RIGHT" : "LEFT")
+        }
+        variant="contained"
+        sx={{
+          color: "white",
+        }}>
+        Toggle Direction
+      </Button>
       <Carousel
-        enableAutoPlay={true}
-        autoPlayDirection="LEFT"
-        autoPlayDelay={2000}
+        enableAutoPlay={enableAutoPlay}
+        autoPlayDirection={autoPlayDirection}
+        autoPlayDelay={3000}
       />
     </>
   );

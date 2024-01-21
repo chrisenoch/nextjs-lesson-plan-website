@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import useTriggerRerender from "@/customHooks/useTriggerRerender";
 
+//Transition duration must be less than autoplayDelay
 export function Carousel({
   autoPlayDirection,
   autoPlayDelay,
@@ -13,7 +14,6 @@ export function Carousel({
   autoPlayDelay: number;
   enableAutoPlay: boolean;
 }) {
-  console.log("carousel rendered");
   let imagesArr = [
     // {
     //   alt: "Giraffes",
@@ -198,32 +198,61 @@ export function Carousel({
   const [imageTwoRowRight, setImageTwoRowRight] =
     useState<number>(maxImageRowRight);
   const [activeImageRow, setActiveImageRow] = useState<1 | 2>(1);
-  const [disableControls, setDisableControls] = useState<boolean>(false);
+  //const [disableControls, setDisableControls] = useState<boolean>(false);
+  const disableControls = useRef<boolean>(false);
   const autoPlayIntervalIds = useRef<ReturnType<typeof setInterval>[]>([]);
   const restartAutoPlayUponIdleTimeoutId = useRef<ReturnType<
     typeof setTimeout
   > | null>(null);
   const isFirstRender = useRef(true);
+  const hasAutoPlayInit = useRef(false);
   const { triggerRerender } = useTriggerRerender();
-  const [count, setCount] = useState(0);
+  const [previousEnableAutoPlay, setPreviousEnableAutoPlay] =
+    useState<boolean>(enableAutoPlay);
+  const [previousAutoPlayDir, setPreviousAutoPlayDir] = useState<
+    "LEFT" | "RIGHT"
+  >(autoPlayDirection);
+
+  console.log("disableControls " + disableControls.current);
 
   //should only run when enableAutoplay changes
-  if (!isFirstRender.current && enableAutoPlay && count === 1) {
+  if (!isFirstRender.current && !hasAutoPlayInit.current && enableAutoPlay) {
     console.log("in if init autoplay");
     startAutoPlay(autoPlayDelay, autoPlayDirection);
-    setCount(0);
+    hasAutoPlayInit.current = true;
+  }
+  if (previousEnableAutoPlay !== enableAutoPlay) {
+    console.log("enter autoPlay enabled if");
+    stopAutoPlay();
+    if (enableAutoPlay) {
+      startAutoPlay(autoPlayDelay, autoPlayDirection);
+    } else {
+      stopAutoPlay();
+    }
+    setPreviousEnableAutoPlay(enableAutoPlay);
+  }
+
+  if (previousAutoPlayDir !== autoPlayDirection && enableAutoPlay) {
+    console.log("enter autoPlay direction if");
+    if (enableAutoPlay) {
+      stopAutoPlay();
+      startAutoPlay(autoPlayDelay, autoPlayDirection);
+    }
+    setPreviousAutoPlayDir(autoPlayDirection);
   }
 
   const deactivateControls = useCallback(() => {
-    setDisableControls(true);
+    disableControls.current = true;
+    //setDisableControls(true);
   }, []);
 
   const activateControls = useCallback(() => {
-    setDisableControls(false);
+    //setDisableControls(false);
+    disableControls.current = false;
   }, []);
 
   function moveRightManualControls() {
-    if (!disableControls && imagesArr.length > 1) {
+    if (!disableControls.current && imagesArr.length > 1) {
       stopAutoPlay();
       restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
       setImageOneRowRight((px) => px - 200);
@@ -232,7 +261,7 @@ export function Carousel({
   }
 
   function moveLeftManualControls() {
-    if (!disableControls && imagesArr.length > 1) {
+    if (!disableControls.current && imagesArr.length > 1) {
       stopAutoPlay();
       restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
       setImageOneRowRight((px) => px + 200);
@@ -241,14 +270,14 @@ export function Carousel({
   }
 
   function moveRightWithAutoPlay() {
-    if (!disableControls && imagesArr.length > 1) {
+    if (!disableControls.current && imagesArr.length > 1) {
       setImageOneRowRight((px) => px - 200);
       setImageTwoRowRight((px) => px - 200);
     }
   }
 
   function moveLeftWithAutoPlay() {
-    if (!disableControls && imagesArr.length > 1) {
+    if (!disableControls.current && imagesArr.length > 1) {
       setImageOneRowRight((px) => px + 200);
       setImageTwoRowRight((px) => px + 200);
     }
@@ -477,8 +506,6 @@ export function Carousel({
   const renderedImagesOne = useMemo(
     () =>
       imagesOne.map((image, index, arr) => {
-        console.log("map renderedImagesOne runs");
-
         return (
           <Image
             key={image.alt + "-1-" + index + 1}
@@ -500,7 +527,6 @@ export function Carousel({
   const renderedImagesTwo = useMemo(
     () =>
       imagesTwo.map((image, index, arr) => {
-        console.log("map runs renderedImagesTwo");
         return (
           <Image
             key={image.alt + "-2-" + index + 1}
@@ -521,9 +547,10 @@ export function Carousel({
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
-      setCount(1);
+      //setCount(1);
+      triggerRerender();
     }
-  }, []);
+  }, [triggerRerender]);
 
   const imageRowOneDisplay = activeImageRow === 1 ? "flex" : "none";
   const imageRowTwoDisplay = activeImageRow === 2 ? "flex" : "none";
@@ -552,7 +579,7 @@ export function Carousel({
               display: `${imageRowOneDisplay}`,
               height: "200px",
               backgroundColor: "gray",
-              transition: "right 1s ease-out",
+              transition: "right 2s ease-out",
               position: "absolute",
               //right: "totalImagesLengthpx", //decreasing the value 'right' moves the Images from left to right
               right: `${imageOneRowRight}px`,
@@ -567,7 +594,7 @@ export function Carousel({
               display: `${imageRowTwoDisplay}`,
               height: "200px",
               backgroundColor: "gray",
-              transition: "right 1s ease-out",
+              transition: "right 2s ease-out",
               position: "absolute",
               //right: "totalImagesLengthpx", //decreasing the value 'right' moves the Images from left to right
               right: `${imageTwoRowRight}px`,
