@@ -176,10 +176,11 @@ export function Carousel({
     //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
     // },
   ];
-  imagesArr = increaseArrayIfTooSmall(imagesArr);
+  //imagesArr = increaseArrayIfTooSmall(imagesArr);
   const IMG_WIDTH = 200;
   const TOTAL_IMGS = imagesArr.length;
   const MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG = TOTAL_IMGS * IMG_WIDTH - IMG_WIDTH;
+  const RESTART_AUTOPLAY_DELAY = 3000;
   let maxImageRowRight: number;
   const isOdd = TOTAL_IMGS % 2 === 0 ? false : true;
   if (isOdd) {
@@ -197,6 +198,9 @@ export function Carousel({
   const [activeImageRow, setActiveImageRow] = useState<1 | 2>(1);
   const [disableControls, setDisableControls] = useState<boolean>(false);
   const autoPlayIntervalIds = useRef<ReturnType<typeof setInterval>[]>([]);
+  const restartAutoPlayUponIdleTimeoutId = useRef<ReturnType<
+    typeof setTimeout
+  > | null>(null);
 
   const stopAutoPlayIfActiveTimeoutId = useRef<ReturnType<
     typeof setTimeout
@@ -227,8 +231,18 @@ export function Carousel({
     }
   }, [imagesArr.length]);
 
+  function restartAutoPlayUponIdle(delay: number) {
+    restartAutoPlayUponIdleTimeoutId.current &&
+      clearTimeout(restartAutoPlayUponIdleTimeoutId.current);
+    restartAutoPlayUponIdleTimeoutId.current = setTimeout(() => {
+      startAutoPlay(autoPlayDelay, autoPlayDirection);
+    }, delay);
+  }
+
   function moveRightManualControls() {
     if (!disableControls && imagesArr.length > 1) {
+      stopAutoPlay();
+      restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
       setImageOneRowRight((px) => px - 200);
       setImageTwoRowRight((px) => px - 200);
     }
@@ -236,6 +250,8 @@ export function Carousel({
 
   function moveLeftManualControls() {
     if (!disableControls && imagesArr.length > 1) {
+      stopAutoPlay();
+      restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
       setImageOneRowRight((px) => px + 200);
       setImageTwoRowRight((px) => px + 200);
     }
@@ -271,6 +287,8 @@ export function Carousel({
 
   useEffect(() => {
     function updateImagesOne() {
+      console.log("Transition ended imageOneRow");
+      console.log("starting updateImagesOne");
       //Move images left
       if (imageOneRowRight === MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG) {
         let newImagesRowTwo = imagesTwo.slice();
@@ -331,6 +349,7 @@ export function Carousel({
           : newImagesRowOne.slice(0, -3);
         setImagesOne(newImagesRowOne);
       }
+      console.log("finished updateImagesOne");
     }
 
     if (imagesArr.length > 1) {
@@ -364,6 +383,7 @@ export function Carousel({
   //To do: Extract duplicate code
   useEffect(() => {
     function updateImagesTwo() {
+      console.log("starting updateImagesTwo");
       console.log("Transition ended imageTwoRow");
       //Move images left
       if (imageTwoRowRight === MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG) {
@@ -423,6 +443,7 @@ export function Carousel({
           : newImagesRowTwo.slice(0, -3);
         setImagesTwo(newImagesRowTwo);
       }
+      console.log("finished updateImagesTwo");
     }
 
     if (imagesArr.length > 1) {
@@ -452,45 +473,6 @@ export function Carousel({
     isOdd,
     maxImageRowRight,
   ]);
-
-  useEffect(() => {
-    function stopAutoPlayIfActive() {
-      console.log("in stopAutoPlayIfActive");
-      stopAutoPlayIfActiveTimeoutId.current &&
-        clearTimeout(stopAutoPlayIfActiveTimeoutId.current);
-      stopAutoPlayIfActiveTimeoutId.current = setTimeout(() => {
-        if (enableAutoPlay) {
-          stopAutoPlay();
-        }
-      }, 300);
-    }
-
-    function resumeAutoPlayIfActive() {
-      console.log("in resumeAutoPlayIfActive");
-
-      resumeAutoPlayIfActiveTimeoutId.current &&
-        clearTimeout(resumeAutoPlayIfActiveTimeoutId.current);
-      resumeAutoPlayIfActiveTimeoutId.current = setTimeout(() => {
-        if (enableAutoPlay) {
-          startAutoPlay(autoPlayDelay, autoPlayDirection);
-        }
-      }, 300);
-    }
-
-    const imageDisplayBoxEle = document.querySelector("#image-display-box");
-    imageDisplayBoxEle?.addEventListener("mouseenter", stopAutoPlayIfActive);
-    imageDisplayBoxEle?.addEventListener("mouseleave", resumeAutoPlayIfActive);
-    return () => {
-      imageDisplayBoxEle?.removeEventListener(
-        "mouseenter",
-        stopAutoPlayIfActive
-      );
-      imageDisplayBoxEle?.removeEventListener(
-        "mouseleave",
-        resumeAutoPlayIfActive
-      );
-    };
-  }, [autoPlayDelay, autoPlayDirection, enableAutoPlay, startAutoPlay]);
 
   const renderedImagesOne = useMemo(
     () =>
@@ -563,7 +545,7 @@ export function Carousel({
               display: `${imageRowOneDisplay}`,
               height: "200px",
               backgroundColor: "gray",
-              transition: "right .5s ease-out",
+              transition: "right 1s ease-out",
               position: "absolute",
               //right: "totalImagesLengthpx", //decreasing the value 'right' moves the Images from left to right
               right: `${imageOneRowRight}px`,
@@ -578,7 +560,7 @@ export function Carousel({
               display: `${imageRowTwoDisplay}`,
               height: "200px",
               backgroundColor: "gray",
-              transition: "right .5s ease-out",
+              transition: "right 1s ease-out",
               position: "absolute",
               //right: "totalImagesLengthpx", //decreasing the value 'right' moves the Images from left to right
               right: `${imageTwoRowRight}px`,
@@ -622,6 +604,11 @@ export function Carousel({
         </Button>
         <Button onClick={() => startAutoPlay(2000, "RIGHT")} variant="outlined">
           AutoPlay Right
+        </Button>
+        <Button
+          onClick={() => startAutoPlay(autoPlayDelay, autoPlayDirection)}
+          variant="outlined">
+          Start Autoplay
         </Button>
         <Button onClick={stopAutoPlay} variant="outlined">
           Stop Autoplay
