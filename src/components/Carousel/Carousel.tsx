@@ -3,17 +3,10 @@ import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import useTriggerRerender from "@/customHooks/useTriggerRerender";
+import { AutoPlay, AutoPlayDirection } from "@/models/types/AutoPlay";
 
 //Transition duration must be less than autoplayDelay
-export function Carousel({
-  autoPlay,
-}: {
-  autoPlay?: {
-    direction: "LEFT" | "RIGHT";
-    delay: number;
-    enableAutoPlay: boolean;
-  };
-}) {
+export function Carousel({ autoPlay }: { autoPlay?: AutoPlay }) {
   const isAutoPlay = !!autoPlay;
 
   let imagesArr = [
@@ -200,7 +193,6 @@ export function Carousel({
   const [imageTwoRowRight, setImageTwoRowRight] =
     useState<number>(maxImageRowRight);
   const [activeImageRow, setActiveImageRow] = useState<1 | 2>(1);
-  //const [disableControls, setDisableControls] = useState<boolean>(false);
   const disableControls = useRef<boolean>(false);
   const autoPlayIntervalIds = useRef<ReturnType<typeof setInterval>[]>([]);
   const restartAutoPlayUponIdleTimeoutId = useRef<ReturnType<
@@ -209,23 +201,10 @@ export function Carousel({
   const isFirstRender = useRef(true);
   const hasAutoPlayInit = useRef(false);
   const { triggerRerender } = useTriggerRerender();
-  // const [previousEnableAutoPlay, setPreviousEnableAutoPlay] =
-  //   useState<boolean>(enableAutoPlay);
-  // const [previousAutoPlayDir, setPreviousAutoPlayDir] = useState<
-  //   "LEFT" | "RIGHT"
-  // >(autoPlayDirection);
 
   const [previousAutoPlay, setPreviousAutoPlay] = useState<
-    | {
-        direction: "LEFT" | "RIGHT";
-        delay: number;
-        enableAutoPlay: boolean;
-      }
-    | undefined
+    AutoPlay | undefined
   >(autoPlay);
-
-  console.log("disableControls " + disableControls.current);
-  console.log("dir in child: " + autoPlay?.direction);
 
   const updateImagesOne = useCallback(() => {
     console.log("Transition ended imageOneRow");
@@ -371,20 +350,17 @@ export function Carousel({
     maxImageRowRight,
   ]);
 
-  //should only run when enableAutoplay changes
   if (
     !isFirstRender.current &&
+    !hasAutoPlayInit.current &&
     isAutoPlay &&
-    autoPlay.enableAutoPlay &&
-    !hasAutoPlayInit.current
+    autoPlay.enableAutoPlay
   ) {
-    console.log("in if init autoplay");
     startAutoPlay(autoPlay.delay, autoPlay.direction);
     hasAutoPlayInit.current = true;
   }
 
   if (previousAutoPlay !== autoPlay) {
-    console.log("if (previousAutoPlay !== autoPlay");
     stopAutoPlay();
     if (isAutoPlay) {
       if (autoPlay.enableAutoPlay) {
@@ -396,45 +372,11 @@ export function Carousel({
     setPreviousAutoPlay(autoPlay);
   }
 
-  // if (previousEnableAutoPlay !== enableAutoPlay) {
-  //   console.log("enter autoPlay enabled if");
-  //   stopAutoPlay();
-  //   if (enableAutoPlay) {
-  //     startAutoPlay(autoPlayDelay, autoPlayDirection);
-  //   } else {
-  //     stopAutoPlay();
-  //   }
-  //   setPreviousEnableAutoPlay(enableAutoPlay);
-  // }
-
-  // if (previousAutoPlayDir !== autoPlayDirection && enableAutoPlay) {
-  //   console.log("enter autoPlay direction if and dir : " + autoPlayDirection);
-  //   if (enableAutoPlay) {
-  //     stopAutoPlay();
-  //     // if (activeImageRow === 1) {
-  //     //   updateImagesOne();
-  //     // } else {
-  //     //   updateImagesTwo();
-  //     // }
-  //     console.log("if and dir just b4 setTimeout : " + autoPlayDirection);
-  //     startAutoPlay(autoPlayDelay, autoPlayDirection);
-  //     // setTimeout(() => {
-  //     //   disableControls.current = false;
-  //     //   console.log("autoplay dir when timeout completed " + autoPlayDirection);
-  //     //   const test = autoPlayDirection === "LEFT" ? "RIGHT" : "LEFT";
-  //     //   startAutoPlay(autoPlayDelay, test);
-  //     // }, 300);
-  //   }
-  //   setPreviousAutoPlayDir(autoPlayDirection);
-  // }
-
   const deactivateControls = useCallback(() => {
     disableControls.current = true;
-    //setDisableControls(true);
   }, []);
 
   const activateControls = useCallback(() => {
-    //setDisableControls(false);
     disableControls.current = false;
   }, []);
 
@@ -480,7 +422,7 @@ export function Carousel({
     }
   }
 
-  function startAutoPlay(delay: number, direction: "LEFT" | "RIGHT") {
+  function startAutoPlay(delay: number, direction: AutoPlayDirection) {
     direction === "RIGHT" ? moveRightWithAutoPlay() : moveLeftWithAutoPlay();
 
     const intervalId = setInterval(() => {

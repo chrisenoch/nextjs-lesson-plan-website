@@ -3,22 +3,17 @@ import { Box, Button, Grid, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import { Carousel } from "./Carousel/Carousel";
 import { useMemo, useState } from "react";
-import { AutoPlayDirection } from "@/models/AutoPlayDirection";
+import { AutoPlay, AutoPlayDirection } from "@/models/types/AutoPlay";
 
 export default function Hero() {
-  const [autoPlay, setAutoPlay] = useState<{
-    direction: "LEFT" | "RIGHT";
-    delay: number;
-    enableAutoPlay: boolean;
-  }>({
+  const [autoPlay, setAutoPlay] = useState<AutoPlay>({
     enableAutoPlay: true,
     direction: "LEFT",
     delay: 3000,
   });
-  console.log("dir in parent: " + autoPlay.direction);
 
   function handleToggleAutoPlayDirection() {
-    const newAutoPlay = {
+    const newAutoPlay: AutoPlay = {
       ...autoPlay,
       direction:
         autoPlay.direction === "RIGHT"
@@ -30,7 +25,7 @@ export default function Hero() {
 
   function handleToggleEnableAutoPlay() {
     console.log("in handleToggleAutoplay");
-    const newAutoPlay = {
+    const newAutoPlay: AutoPlay = {
       ...autoPlay,
       enableAutoPlay: !autoPlay.enableAutoPlay,
     };
@@ -39,7 +34,7 @@ export default function Hero() {
 
   function handleIncreaseAutoPlayDelay() {
     console.log("in handleToggleAutoplay");
-    const newAutoPlay = {
+    const newAutoPlay: AutoPlay = {
       ...autoPlay,
       delay: autoPlay.delay + 1000,
     };
