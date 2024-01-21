@@ -2,6 +2,7 @@
 import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
+import useTriggerRerender from "@/customHooks/useTriggerRerender";
 
 export function Carousel({
   autoPlayDirection,
@@ -12,6 +13,7 @@ export function Carousel({
   autoPlayDelay: number;
   enableAutoPlay: boolean;
 }) {
+  console.log("carousel rendered");
   let imagesArr = [
     // {
     //   alt: "Giraffes",
@@ -201,6 +203,16 @@ export function Carousel({
   const restartAutoPlayUponIdleTimeoutId = useRef<ReturnType<
     typeof setTimeout
   > | null>(null);
+  const isFirstRender = useRef(true);
+  const { triggerRerender } = useTriggerRerender();
+  const [count, setCount] = useState(0);
+
+  //should only run when enableAutoplay changes
+  if (!isFirstRender.current && enableAutoPlay && count === 1) {
+    console.log("in if init autoplay");
+    startAutoPlay(autoPlayDelay, autoPlayDirection);
+    setCount(0);
+  }
 
   const deactivateControls = useCallback(() => {
     setDisableControls(true);
@@ -506,6 +518,13 @@ export function Carousel({
     [imagesTwo]
   );
 
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      setCount(1);
+    }
+  }, []);
+
   const imageRowOneDisplay = activeImageRow === 1 ? "flex" : "none";
   const imageRowTwoDisplay = activeImageRow === 2 ? "flex" : "none";
   return (
@@ -600,6 +619,9 @@ export function Carousel({
         </Button>
         <Button onClick={stopAutoPlay} variant="outlined">
           Stop Autoplay
+        </Button>
+        <Button onClick={triggerRerender} variant="outlined">
+          Rerender
         </Button>
         <Button
           onClick={() =>
