@@ -186,7 +186,9 @@ export function Carousel({
   const IMG_WIDTH = 200;
   const TOTAL_IMGS = imagesArr.length;
   const MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG = TOTAL_IMGS * IMG_WIDTH - IMG_WIDTH;
-  const RESTART_AUTOPLAY_DELAY = 3000;
+  const RESTART_AUTOPLAY_DELAY = autoPlay?.restartDelayAfterLastUserInteraction
+    ? autoPlay?.restartDelayAfterLastUserInteraction
+    : 3000;
   let maxImageRowRight: number;
   const isOdd = TOTAL_IMGS % 2 === 0 ? false : true;
   if (isOdd) {
@@ -217,6 +219,16 @@ export function Carousel({
   if (transitions && autoPlay && autoPlay.delay < transitions.durationMs) {
     console.warn(
       "Error: AutoPlay delay must be greater than transition duration."
+    );
+  }
+  if (
+    autoPlay &&
+    autoPlay.restartDelayAfterLastUserInteraction &&
+    autoPlay.restartDelayAfterLastUserInteraction < 1000
+  ) {
+    console.warn(
+      "Setting restartDelayAfterLastUserInteraction# to less than 1000ms is likely to make it difficult" +
+        " for the user to interact with the carousel. An example of interacting with the carousel is the user pressing the left or right buttons."
     );
   }
 

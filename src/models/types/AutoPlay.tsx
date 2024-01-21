@@ -4,6 +4,7 @@ export type AutoPlay = {
   direction: "LEFT" | "RIGHT";
   delay: number;
   enableAutoPlay: boolean;
+  restartDelayAfterLastUserInteraction?: number;
 };
 
 type transitionEasingFunction =

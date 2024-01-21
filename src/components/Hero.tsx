@@ -13,11 +13,11 @@ export default function Hero() {
   const [autoPlay, setAutoPlay] = useState<AutoPlay>({
     enableAutoPlay: true,
     direction: "LEFT",
-    delay: 500,
+    delay: 2000,
   });
 
   const transitions: Transitions = {
-    durationMs: 300,
+    durationMs: 1000,
     easingFunction: "ease-out",
   };
 
