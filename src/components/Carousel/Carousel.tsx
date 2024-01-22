@@ -11,180 +11,18 @@ import {
 
 //Transition duration must be less than autoplayDelay
 export function Carousel({
+  images: unPreparedImages,
   autoPlay,
   transitions,
 }: {
   autoPlay?: AutoPlay;
   transitions?: Transitions;
+  images: { alt: string; imagePath: string }[];
 }) {
-  let imagesArr = [
-    // {
-    //   alt: "Giraffes",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/giraffes_south_africa.jpg",
-    // },
-
-    // {
-    //   alt: "Fortress",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/Narilka%20fortress%20Tbilisi.jpg",
-    // },
-    // {
-    //   alt: "Virgin",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/virgin_cruises.jpg",
-    // },
-
-    // {
-    //   alt: "Antalya",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/antalya-shutterstock.jpg",
-    // },
-    // {
-    //   alt: "Fuerteventura",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/fuerteventura-shutterstock.jpg",
-    // },
-    {
-      alt: "Beach-1",
-      imgPath:
-        "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-    },
-    {
-      alt: "Driverless-1",
-      imgPath:
-        "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-    },
-    {
-      alt: "Shopping-1",
-      imgPath:
-        "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-    },
-    // {
-    //   alt: "Beach-2",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-    // },
-    // {
-    //   alt: "Driverless cars-2",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-    // },
-    // {
-    //   alt: "Shopping-2",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-    // },
-    // {
-    //   alt: "Beach-3",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-    // },
-    // {
-    //   alt: "Driverless cars-3",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-    // },
-    // {
-    //   alt: "Shopping-3",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-    // },
-    // {
-    //   alt: "Beach-4",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-    // },
-    // {
-    //   alt: "Driverless cars-4",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-    // },
-    // {
-    //   alt: "Shopping-4",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-    // },
-    // {
-    //   alt: "Beach-5",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-    // },
-    // {
-    //   alt: "Driverless cars-5",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-    // },
-    // {
-    //   alt: "Shopping-5",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-    // },
-    // {
-    //   alt: "Beach-6",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-    // },
-    // {
-    //   alt: "Driverless cars-6",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-    // },
-    // {
-    //   alt: "Shopping-6",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-    // },
-    // {
-    //   alt: "Beach-7",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-    // },
-    // {
-    //   alt: "Driverless cars-7",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-    // },
-    // {
-    //   alt: "Shopping-7",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-    // },
-    // {
-    //   alt: "Beach-8",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-    // },
-    // {
-    //   alt: "Driverless cars-8",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-    // },
-    // {
-    //   alt: "Shopping-8",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-    // },
-    // {
-    //   alt: "Beach-9",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-    // },
-    // {
-    //   alt: "Driverless cars-9",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-    // },
-    // {
-    //   alt: "Shopping-9",
-    //   imgPath:
-    //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-    // },
-  ];
-  //imagesArr = increaseArrayIfTooSmall(imagesArr);
+  const images = increaseArrayIfTooSmall(unPreparedImages);
   const DEFAULT_TRANSITION_DURATION = 1000;
   const IMG_WIDTH = 200;
-  const TOTAL_IMGS = imagesArr.length;
+  const TOTAL_IMGS = images.length;
   const MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG = TOTAL_IMGS * IMG_WIDTH - IMG_WIDTH;
   const RESTART_AUTOPLAY_DELAY = autoPlay?.restartDelayAfterLastUserInteraction
     ? autoPlay?.restartDelayAfterLastUserInteraction
@@ -197,8 +35,10 @@ export function Carousel({
     maxImageRowRight = Math.ceil(TOTAL_IMGS / 2) * IMG_WIDTH;
   }
   const [isOverFlowHidden, setOverflowHidden] = useState<boolean>(false);
-  const [imagesOne, setImagesOne] = useState<any[]>(imagesArr);
-  const [imagesTwo, setImagesTwo] = useState<any[]>(imagesArr);
+  const [imagesOne, setImagesOne] =
+    useState<{ alt: string; imagePath: string }[]>(images);
+  const [imagesTwo, setImagesTwo] =
+    useState<{ alt: string; imagePath: string }[]>(images);
   const [imageOneRowRight, setImageOneRowRight] =
     useState<number>(maxImageRowRight);
   const [imageTwoRowRight, setImageTwoRowRight] =
@@ -216,21 +56,7 @@ export function Carousel({
     AutoPlay | undefined
   >(autoPlay);
 
-  if (transitions && autoPlay && autoPlay.delay < transitions.durationMs) {
-    console.warn(
-      "Error: AutoPlay delay must be greater than transition duration."
-    );
-  }
-  if (
-    autoPlay &&
-    autoPlay.restartDelayAfterLastUserInteraction &&
-    autoPlay.restartDelayAfterLastUserInteraction < 1000
-  ) {
-    console.warn(
-      "Setting restartDelayAfterLastUserInteraction# to less than 1000ms is likely to make it difficult" +
-        " for the user to interact with the carousel. An example of interacting with the carousel is the user pressing the left or right buttons."
-    );
-  }
+  checkForPropsErrors();
 
   const updateImagesOne = useCallback(() => {
     console.log("Transition ended imageOneRow");
@@ -408,7 +234,7 @@ export function Carousel({
 
   function moveRightManualControls() {
     stopAutoPlay();
-    if (!disableControls.current && imagesArr.length > 1) {
+    if (!disableControls.current && images.length > 1) {
       restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
       setImageOneRowRight((px) => px - 200);
       setImageTwoRowRight((px) => px - 200);
@@ -417,7 +243,7 @@ export function Carousel({
 
   function moveLeftManualControls() {
     stopAutoPlay();
-    if (!disableControls.current && imagesArr.length > 1) {
+    if (!disableControls.current && images.length > 1) {
       restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
       setImageOneRowRight((px) => px + 200);
       setImageTwoRowRight((px) => px + 200);
@@ -425,14 +251,14 @@ export function Carousel({
   }
 
   function moveRightWithAutoPlay() {
-    if (!disableControls.current && imagesArr.length > 1) {
+    if (!disableControls.current && images.length > 1) {
       setImageOneRowRight((px) => px - 200);
       setImageTwoRowRight((px) => px - 200);
     }
   }
 
   function moveLeftWithAutoPlay() {
-    if (!disableControls.current && imagesArr.length > 1) {
+    if (!disableControls.current && images.length > 1) {
       setImageOneRowRight((px) => px + 200);
       setImageTwoRowRight((px) => px + 200);
     }
@@ -472,7 +298,7 @@ export function Carousel({
   }
 
   useEffect(() => {
-    if (imagesArr.length > 1) {
+    if (images.length > 1) {
       const imageRowEle = document.querySelector("#image-row-1");
       imageRowEle &&
         imageRowEle.addEventListener("transitionend", updateImagesOne);
@@ -493,7 +319,7 @@ export function Carousel({
     activateControls,
     deactivateControls,
     imageOneRowRight,
-    imagesArr.length,
+    images.length,
     imagesOne,
     imagesTwo,
     isOdd,
@@ -502,7 +328,7 @@ export function Carousel({
   ]);
 
   useEffect(() => {
-    if (imagesArr.length > 1) {
+    if (images.length > 1) {
       const imageRowEle = document.querySelector("#image-row-2");
       imageRowEle &&
         imageRowEle.addEventListener("transitionend", updateImagesTwo);
@@ -523,7 +349,7 @@ export function Carousel({
     activateControls,
     deactivateControls,
     imageTwoRowRight,
-    imagesArr.length,
+    images.length,
     imagesOne,
     imagesTwo,
     isOdd,
@@ -538,7 +364,7 @@ export function Carousel({
           <Image
             key={image.alt + "-1-" + index + 1}
             alt={image.alt}
-            src={image.imgPath}
+            src={image.imagePath}
             //width={index === 0 ? firstImageWidth : 200}
             width={200}
             height={200}
@@ -559,7 +385,7 @@ export function Carousel({
           <Image
             key={image.alt + "-2-" + index + 1}
             alt={image.alt}
-            src={image.imgPath}
+            src={image.imagePath}
             width={200}
             height={200}
             style={{
@@ -574,13 +400,28 @@ export function Carousel({
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
-      //setCount(1);
       triggerRerender();
     }
   }, [triggerRerender]);
 
-  const imageRowOneDisplay = activeImageRow === 1 ? "flex" : "none";
-  const imageRowTwoDisplay = activeImageRow === 2 ? "flex" : "none";
+  function checkForPropsErrors() {
+    if (transitions && autoPlay && autoPlay.delay < transitions.durationMs) {
+      console.warn(
+        "Error: AutoPlay delay must be greater than transition duration."
+      );
+    }
+    if (
+      autoPlay &&
+      autoPlay.restartDelayAfterLastUserInteraction &&
+      autoPlay.restartDelayAfterLastUserInteraction < 1000
+    ) {
+      console.warn(
+        "Setting restartDelayAfterLastUserInteraction# to less than 1000ms is likely to make it difficult" +
+          " for the user to interact with the carousel. An example of interacting with the carousel is the user pressing the left or right buttons."
+      );
+    }
+  }
+
   return (
     <>
       <Stack>
@@ -603,10 +444,9 @@ export function Carousel({
             id="image-row-1"
             sx={{
               width: "200px",
-              display: `${imageRowOneDisplay}`,
+              display: `${activeImageRow === 1 ? "flex" : "none"}`,
               height: "200px",
               backgroundColor: "gray",
-              //transition: `right 2s ease-out`,
               transition: `right ${
                 transitions
                   ? transitions.durationMs + "ms"
@@ -622,7 +462,7 @@ export function Carousel({
             id="image-row-2"
             sx={{
               width: "200px",
-              display: `${imageRowTwoDisplay}`,
+              display: `${activeImageRow === 2 ? "flex" : "none"}`,
               height: "200px",
               backgroundColor: "gray",
               transition: `right ${
@@ -697,7 +537,7 @@ export function Carousel({
 }
 
 function increaseArrayIfTooSmall(
-  imagesArr: { alt: string; imgPath: string }[]
+  imagesArr: { alt: string; imagePath: string }[]
 ) {
   let multiplier = 0;
   if (imagesArr.length === 2 || imagesArr.length === 3) {
