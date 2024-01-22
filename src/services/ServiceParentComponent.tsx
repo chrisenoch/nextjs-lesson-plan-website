@@ -2,7 +2,7 @@
 
 import { ReactElement } from "react";
 
-export default function TestServiceparent({
+export default function ServiceParentComponent({
   dispatchObject,
   children,
 }: {
