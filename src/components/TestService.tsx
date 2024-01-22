@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { userLoginSubscribe } from "./TestServiceThree";
 
 export default function TestService({
   dispatchObject,
@@ -8,6 +9,16 @@ export default function TestService({
   dispatchObject: any;
 }) {
   console.log("TestService Component rendered");
+
+  const mySubscription = {
+    subscribe: runWhenSubReceived,
+  };
+  userLoginSubscribe(mySubscription);
+
+  function runWhenSubReceived() {
+    console.log("Sub received. Do sth because there was a userLogin");
+  }
+
   const dispatcher = useMemo(() => dispatchObject, [dispatchObject]);
   dispatcher.boo = function boo(...args) {
     console.log(args);
@@ -20,6 +31,7 @@ export default function TestService({
 function sayHi() {
   console.log("hi");
 }
+
 //   dispatcher.emit = function emit(...args) {
 //     dispatcher.callback(...args);
 //   };
