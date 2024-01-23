@@ -2,7 +2,11 @@
 
 import { store } from "./SubscriberConfigObjectStore";
 import { emit } from "./SimpleService";
-import { addGame } from "./GamesSliceComponent";
+import {
+  addGame,
+  addTopAdultPlayer,
+  addTopChildPlayer,
+} from "./GamesSliceComponent";
 
 export default function EmitWithSimpleService({
   dispatchObject,
@@ -34,6 +38,18 @@ export default function EmitWithSimpleService({
           addGame("Sonic");
         }}>
         Add game
+      </button>
+      <button
+        onClick={() => {
+          addTopChildPlayer();
+        }}>
+        Add Top Child Player
+      </button>
+      <button
+        onClick={() => {
+          addTopAdultPlayer();
+        }}>
+        Add Top Adult Player
       </button>
     </>
   );
