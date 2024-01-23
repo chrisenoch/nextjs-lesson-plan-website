@@ -16,6 +16,15 @@ export default function ServiceParentComponent({
   store.set("userLogout", {
     subscribers: new Set(),
   });
+  // const gamesSlice: {
+  //   subscribers: Set<{ subscribe: () => void }>;
+  //   games: string[];
+  // } = {
+  //   subscribers: new Set(),
+  //   games: [],
+  // };
+  // store.set("gamesSlice", gamesSlice);
+
   useEffect(() => {
     return () => {
       console.log("store objects being deleted in useEffect return");

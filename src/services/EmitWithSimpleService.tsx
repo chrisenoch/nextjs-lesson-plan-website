@@ -2,6 +2,7 @@
 
 import { store } from "./SubscriberConfigObjectStore";
 import { emit } from "./SimpleService";
+import { addGame } from "./SliceComponent";
 
 export default function EmitWithSimpleService({
   dispatchObject,
@@ -10,6 +11,8 @@ export default function EmitWithSimpleService({
 }) {
   const userLogin = store.get("userLogin"); // Will always be the same object so don't need to use useMemo.
   const userLogout = store.get("userLogout");
+  //const gamesSlice = store.get("gamesSlice");
+
   return (
     <>
       <h1>Emitter</h1>
@@ -25,6 +28,12 @@ export default function EmitWithSimpleService({
           userLogout && emit(userLogout);
         }}>
         Emit UserLogout
+      </button>
+      <button
+        onClick={() => {
+          addGame("Sonic");
+        }}>
+        Add game
       </button>
     </>
   );
