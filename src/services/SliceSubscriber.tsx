@@ -4,14 +4,14 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { store } from "./SubscriberConfigObjectStore";
 import { subscribe, unsubscribe } from "./SimpleService";
+import { useHydrated } from "@/customHooks/useHydrated";
 
 export default function SliceSubscriber() {
   console.log("SliceSubscriber component rendered");
 
   const gamesSlice = store.get("gamesSlice"); // Will always be the same object so don't need to use useMemo.
-
   //To do: Set correct type and remove !
-  const [games, setGames] = useState<any>(gamesSlice!.games);
+  const [games, setGames] = useState<string[]>(gamesSlice!.games);
 
   //Should run when a new game has been added from a different component.
   const onAddGame = useCallback(() => {
@@ -32,6 +32,11 @@ export default function SliceSubscriber() {
       gamesSlice && unsubscribe(gamesSlice, gamesSubscription);
     };
   }, [gamesSlice, gamesSubscription]);
+
+  const isHydrated = useHydrated();
+  if (!isHydrated || gamesSlice.games.length < 1) {
+    return <h1>Loading</h1>;
+  }
 
   return (
     <>
