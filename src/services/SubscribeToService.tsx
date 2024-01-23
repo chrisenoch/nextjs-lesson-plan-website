@@ -4,11 +4,13 @@ import { useMemo } from "react";
 import {
   userLoginSubscribe,
   userLoginUnsubscribe,
-} from "./SericeOneWithSimpleService";
+} from "./ServiceOneWithSimpleService";
 import {
   userLogoutSubscribe,
   userLogoutUnsubscribe,
-} from "./SericeTwoWithSimpleService";
+} from "./ServiceTwoWithSimpleService";
+import { SubscriberConfigObject } from "./SimpleService";
+import { userLoginSubscriberConfigObject } from "./UserLogin";
 // import { userLoginSubscribe, userLoginUnsubscribe } from "./TestServiceThree";
 
 export default function SubscribeToService({
@@ -80,7 +82,13 @@ export default function SubscribeToService({
     );
   }
 
-  userLoginSubscribe(mySubscriptionOne);
+  //get object from central store
+  const userLogin = useMemo(() => userLoginSubscriberConfigObject, []);
+  //userLoginSubscriberConfigObject.subscribers.add("{}");
+  console.log("userLoginConfig in SubscribeToService ");
+  console.log(userLogin);
+
+  userLoginSubscribe(userLogin, mySubscriptionOne);
   userLogoutSubscribe(mySubscriptionTwo);
 
   const dispatcher = useMemo(() => dispatchObject, [dispatchObject]);
@@ -93,10 +101,12 @@ export default function SubscribeToService({
     <>
       <h1>My Service Subscriber 1</h1>
       <div>
-        <button onClick={() => userLoginUnsubscribe(mySubscriptionOne)}>
+        <button
+          onClick={() => userLoginUnsubscribe(userLogin, mySubscriptionOne)}>
           Unsubscribe subscription 1;
         </button>
-        <button onClick={() => userLoginSubscribe(mySubscriptionOne)}>
+        <button
+          onClick={() => userLoginSubscribe(userLogin, mySubscriptionOne)}>
           Re-subscribe, susbcription 1.
         </button>
       </div>

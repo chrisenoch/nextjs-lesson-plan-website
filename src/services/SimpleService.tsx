@@ -6,6 +6,9 @@ export function subscribe(
   subscriberConfigObject: SubscriberConfigObject,
   subscriberObj: { subscribe: () => void }
 ) {
+  console.log("subscriberConfigObject in susbcribe");
+  console.log(subscriberConfigObject);
+
   subscriberConfigObject.subscribers.add(subscriberObj);
 }
 

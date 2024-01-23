@@ -4,11 +4,11 @@ import { useMemo } from "react";
 import {
   userLoginSubscribe,
   userLoginUnsubscribe,
-} from "./SericeOneWithSimpleService";
+} from "./ServiceOneWithSimpleService";
 import {
   userLogoutSubscribe,
   userLogoutUnsubscribe,
-} from "./SericeTwoWithSimpleService";
+} from "./ServiceTwoWithSimpleService";
 // import { userLoginSubscribe, userLoginUnsubscribe } from "./TestServiceThree";
 
 export default function SubscribeToServiceTwo() {

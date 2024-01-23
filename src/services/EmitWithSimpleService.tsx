@@ -1,7 +1,8 @@
 "use client";
 
-import { emitUserLogin } from "./SericeOneWithSimpleService";
-import { emitUserLogout } from "./SericeTwoWithSimpleService";
+import { emitUserLogin } from "./ServiceOneWithSimpleService";
+import { emitUserLogout } from "./ServiceTwoWithSimpleService";
+import { userLoginSubscriberConfigObject } from "./UserLogin";
 // import { emitUserLogin } from "./TestServiceThree";
 
 export default function EmitWithSimpleService({
@@ -9,6 +10,7 @@ export default function EmitWithSimpleService({
 }: {
   dispatchObject: any;
 }) {
+  const userLogin = userLoginSubscriberConfigObject;
   // emitUserLogin();
   // emitUserLogout();
   return (
@@ -17,7 +19,7 @@ export default function EmitWithSimpleService({
       <button onClick={() => dispatchObject.boo(7, 8, 9)}>
         Boo from TestServiceTwo
       </button>
-      <button onClick={() => emitUserLogin()}>
+      <button onClick={() => emitUserLogin(userLogin)}>
         Emit UserLogin from TestServiceTwo
       </button>
       <button onClick={() => emitUserLogout()}>

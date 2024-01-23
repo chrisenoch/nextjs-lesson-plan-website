@@ -26,7 +26,7 @@ export default function ServicePage() {
       <TestServiceParent dispatchObject={dispatchCarouselHook}>
         <>
           <SubscribeToService dispatchObject={dispatchCarouselHook} />
-          <SubscribeToServiceTwo />
+          {/* <SubscribeToServiceTwo /> */}
           <EmitWithSimpleService dispatchObject={dispatchCarouselHook} />
         </>
       </TestServiceParent>
