@@ -1,11 +1,11 @@
 "use client";
 
-import SubscribeToService from "@/services/SubscribeToService";
+import SubscriberOne from "@/services/SubscriberOne";
 import TestServiceParent from "@/services/ServiceParentComponent";
 import EmitWithSimpleService from "@/services/EmitWithSimpleService";
 import useEventEmitter from "@/customHooks/useEventEmitter";
 import { useState } from "react";
-import SubscribeToServiceTwo from "@/services/SubscribeToServiceTwo";
+import SubscriberTwo from "@/services/SubscriberTwo";
 
 export default function ServicePage() {
   console.log("ServicePage rendered");
@@ -25,8 +25,8 @@ export default function ServicePage() {
       <button onClick={() => dispatchCarouselHook.sayHi()}>Say hi</button>
       <TestServiceParent dispatchObject={dispatchCarouselHook}>
         <>
-          <SubscribeToService dispatchObject={dispatchCarouselHook} />
-          {/* <SubscribeToServiceTwo /> */}
+          <SubscriberOne dispatchObject={dispatchCarouselHook} />
+          <SubscriberTwo />
           <EmitWithSimpleService dispatchObject={dispatchCarouselHook} />
         </>
       </TestServiceParent>
