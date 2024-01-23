@@ -10,12 +10,13 @@ import {
   userLogoutUnsubscribe,
 } from "./UserLogoutWithSimpleService";
 import { userLoginSubscriberConfigObject } from "./UserLogin";
+import { store } from "./SubscriberConfigObjectStore";
 
 export default function SubscriberTwo() {
   console.log("SubscribeToServiceTwo Component rendered");
 
   //get object from central store
-  const userLogin = useMemo(() => userLoginSubscriberConfigObject, []);
+  const userLogin = store.get("userLogin"); // Will always be the same object so don't need to use useMemo.
 
   const userLoginSubscription = useMemo(() => {
     return {

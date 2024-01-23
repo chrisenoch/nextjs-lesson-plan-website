@@ -6,20 +6,29 @@ import {
 } from "./SimpleService";
 
 export function userLoginSubscribe(
-  subscriberConfigObject: SubscriberConfigObject,
+  subscriberConfigObject: SubscriberConfigObject | undefined,
   subscriberObj: { subscribe: () => void }
 ) {
-  subscribe(subscriberConfigObject, subscriberObj);
+  if (subscriberConfigObject) {
+    subscribe(subscriberConfigObject, subscriberObj);
+  }
 }
 
 export function userLoginUnsubscribe(
-  subscriberConfigObject: SubscriberConfigObject,
+  subscriberConfigObject: SubscriberConfigObject | undefined,
   subscriberObj: { subscribe: () => void }
 ) {
-  unsubscribe(subscriberConfigObject, subscriberObj);
+  if (subscriberConfigObject) {
+    unsubscribe(subscriberConfigObject, subscriberObj);
+  }
+  //unsubscribe(subscriberConfigObject, subscriberObj);
 }
 
 //If we don't export this, only this file can emit, but anybody can listen
-export function emitUserLogin(subscriberConfigObject: SubscriberConfigObject) {
-  emit(subscriberConfigObject);
+export function emitUserLogin(
+  subscriberConfigObject: SubscriberConfigObject | undefined
+) {
+  if (subscriberConfigObject) {
+    emit(subscriberConfigObject);
+  }
 }
