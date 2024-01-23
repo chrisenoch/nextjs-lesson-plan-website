@@ -1,17 +1,32 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { store } from "./SubscriberConfigObjectStore";
-import { subscribe, unsubscribe } from "./SimpleService";
+import {
+  SubscriberConfigObject,
+  subscribe,
+  unsubscribe,
+} from "./SimpleService";
 import { useHydrated } from "@/customHooks/useHydrated";
+import { selectTopAdultPlayers } from "./GamesSliceComponent";
 
 export default function SliceSubscriber() {
   console.log("SliceSubscriber component rendered");
 
-  const gamesSlice = store.get("gamesSlice"); // Will always be the same object so don't need to use useMemo.
+  //I understand that this should be available as parent components are rendered before child components.
+  const gamesSlice = store.get("gamesSlice") as SubscriberConfigObject; // Will always be the same object so don't need to use useMemo.
+  console.log("gamesSlice in SliceSubscriber ");
+  console.log(gamesSlice);
   //To do: Set correct type and remove !
-  const [games, setGames] = useState<string[]>(gamesSlice!.games);
+  const [games, setGames] = useState<string[]>([]);
+  const isGamesInit = useRef<boolean>(false);
+
+  //Extract to hook?
+  if (gamesSlice && !isGamesInit.current) {
+    setGames(gamesSlice.games);
+    isGamesInit.current = true;
+  }
 
   //Should run when a new game has been added from a different component.
   const onAddGame = useCallback(() => {
@@ -32,6 +47,11 @@ export default function SliceSubscriber() {
       gamesSlice && unsubscribe(gamesSlice, gamesSubscription);
     };
   }, [gamesSlice, gamesSubscription]);
+
+  const topAdultPlayers = selectTopAdultPlayers();
+  const renderedTopAdultPlayers = topAdultPlayers.map((player) => (
+    <li key={player.firstName}>{player.firstName}</li>
+  ));
 
   const isHydrated = useHydrated();
   if (!isHydrated || gamesSlice.games.length < 1) {
@@ -56,6 +76,8 @@ export default function SliceSubscriber() {
           Re-subscribe games.
         </button>
       </div>
+      <h2>Top adult players</h2>
+      <ul>{renderedTopAdultPlayers}</ul>
     </>
   );
 }

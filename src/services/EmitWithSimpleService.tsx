@@ -2,7 +2,7 @@
 
 import { store } from "./SubscriberConfigObjectStore";
 import { emit } from "./SimpleService";
-import { addGame } from "./SliceComponent";
+import { addGame } from "./GamesSliceComponent";
 
 export default function EmitWithSimpleService({
   dispatchObject,

@@ -6,7 +6,7 @@ import EmitWithSimpleService from "@/services/EmitWithSimpleService";
 import useEventEmitter from "@/customHooks/useEventEmitter";
 import SubscriberTwo from "@/services/SubscriberTwo";
 import SliceSubscriber from "@/services/SliceSubscriber";
-import SliceComponent from "@/services/SliceComponent";
+import GamesSliceComponent from "@/services/GamesSliceComponent";
 
 export default function ServicePage() {
   console.log("ServicePage rendered");
@@ -19,7 +19,7 @@ export default function ServicePage() {
       </button>
       <button onClick={() => dispatchCarouselHook.sayHi()}>Say hi</button>
       <ServiceParentComponent dispatchObject={dispatchCarouselHook}>
-        <SliceComponent>
+        <GamesSliceComponent>
           <>
             <SubscriberOne dispatchObject={dispatchCarouselHook} />
             <SubscriberTwo />
@@ -27,7 +27,7 @@ export default function ServicePage() {
             <SliceSubscriber />
             <EmitWithSimpleService dispatchObject={dispatchCarouselHook} />
           </>
-        </SliceComponent>
+        </GamesSliceComponent>
       </ServiceParentComponent>
     </>
   );

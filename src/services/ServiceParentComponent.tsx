@@ -10,6 +10,7 @@ export default function ServiceParentComponent({
   dispatchObject: any;
   children: ReactElement;
 }) {
+  console.log("ServiceParentComponent rendered");
   store.set("userLogin", {
     subscribers: new Set(),
   });
