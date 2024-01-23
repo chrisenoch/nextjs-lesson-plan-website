@@ -4,6 +4,7 @@ import { emitUserLogin } from "./UserLoginWithSimpleService";
 import { emitUserLogout } from "./UserLogoutWithSimpleService";
 import { userLoginSubscriberConfigObject } from "./UserLogin";
 import { store } from "./SubscriberConfigObjectStore";
+import { emit } from "./SimpleService";
 // import { emitUserLogin } from "./TestServiceThree";
 
 export default function EmitWithSimpleService({
@@ -16,7 +17,13 @@ export default function EmitWithSimpleService({
     <>
       <h1>Emitter</h1>
       <button onClick={() => dispatchObject.boo(7, 8, 9)}>Boo</button>
-      <button onClick={() => emitUserLogin(userLogin)}>Emit UserLogin</button>
+      <button
+        onClick={() => {
+          userLogin && emit(userLogin);
+        }}>
+        Emit UserLogin
+      </button>
+      <button onClick={() => false}>Return false</button>
       <button onClick={() => emitUserLogout()}>Emit UserLogout</button>
     </>
   );

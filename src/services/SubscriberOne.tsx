@@ -11,7 +11,11 @@ import {
   userLogoutUnsubscribe,
 } from "./UserLogoutWithSimpleService";
 import { store } from "./SubscriberConfigObjectStore";
-import { SubscriberConfigObject } from "./SimpleService";
+import {
+  SubscriberConfigObject,
+  subscribe,
+  unsubscribe,
+} from "./SimpleService";
 
 export default function SubscriberOne({
   dispatchObject,
@@ -36,11 +40,11 @@ export default function SubscriberOne({
   }, []);
 
   useEffect(() => {
-    userLoginSubscribe(userLogin, userLoginSubscription);
+    userLogin && subscribe(userLogin, userLoginSubscription);
     userLogoutSubscribe(userLogoutSubscription);
 
     return () => {
-      userLoginUnsubscribe(userLogin, userLoginSubscription);
+      userLogin && unsubscribe(userLogin, userLoginSubscription);
       userLogoutUnsubscribe(userLogoutSubscription);
     };
   }, [userLogin, userLoginSubscription, userLogoutSubscription]);
@@ -74,13 +78,15 @@ export default function SubscriberOne({
       <h1>First component that subscribes</h1>
       <div>
         <button
-          onClick={() =>
-            userLoginUnsubscribe(userLogin, userLoginSubscription)
-          }>
+          onClick={() => {
+            userLogin && unsubscribe(userLogin, userLoginSubscription);
+          }}>
           Unsubscribe userLogin;
         </button>
         <button
-          onClick={() => userLoginSubscribe(userLogin, userLoginSubscription)}>
+          onClick={() => {
+            userLogin && subscribe(userLogin, userLoginSubscription);
+          }}>
           Re-subscribe userLogin.
         </button>
       </div>

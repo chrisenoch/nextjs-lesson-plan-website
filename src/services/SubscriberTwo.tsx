@@ -11,6 +11,7 @@ import {
 } from "./UserLogoutWithSimpleService";
 import { userLoginSubscriberConfigObject } from "./UserLogin";
 import { store } from "./SubscriberConfigObjectStore";
+import { subscribe, unsubscribe } from "./SimpleService";
 
 export default function SubscriberTwo() {
   console.log("SubscribeToServiceTwo Component rendered");
@@ -31,11 +32,11 @@ export default function SubscriberTwo() {
   }, []);
 
   useEffect(() => {
-    userLoginSubscribe(userLogin, userLoginSubscription);
+    userLogin && subscribe(userLogin, userLoginSubscription);
     userLogoutSubscribe(userLogoutSubscription);
 
     return () => {
-      userLoginUnsubscribe(userLogin, userLoginSubscription);
+      userLogin && unsubscribe(userLogin, userLoginSubscription);
       userLogoutUnsubscribe(userLogoutSubscription);
     };
   }, [userLogin, userLoginSubscription, userLogoutSubscription]);
@@ -56,13 +57,15 @@ export default function SubscriberTwo() {
       <h1>Second component that subscribes</h1>
       <div>
         <button
-          onClick={() =>
-            userLoginUnsubscribe(userLogin, userLoginSubscription)
-          }>
+          onClick={() => {
+            userLogin && unsubscribe(userLogin, userLoginSubscription);
+          }}>
           Unsubscribe userLogin;
         </button>
         <button
-          onClick={() => userLoginSubscribe(userLogin, userLoginSubscription)}>
+          onClick={() => {
+            userLogin && subscribe(userLogin, userLoginSubscription);
+          }}>
           Re-subscribe userLogin.
         </button>
       </div>
