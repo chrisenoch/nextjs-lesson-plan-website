@@ -14,6 +14,9 @@ export default function ServiceParentComponent({
   store.set("userLogin", {
     subscribers: new Set(),
   });
+  store.set("userLogout", {
+    subscribers: new Set(),
+  });
 
   return (
     <>

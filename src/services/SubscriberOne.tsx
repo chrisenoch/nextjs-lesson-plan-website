@@ -1,21 +1,9 @@
 "use client";
 
 import { useEffect, useMemo } from "react";
-import {
-  userLoginSubscribe,
-  userLoginUnsubscribe,
-} from "./UserLoginWithSimpleService";
-import { userLoginSubscriberConfigObject } from "./UserLogin";
-import {
-  userLogoutSubscribe,
-  userLogoutUnsubscribe,
-} from "./UserLogoutWithSimpleService";
+
 import { store } from "./SubscriberConfigObjectStore";
-import {
-  SubscriberConfigObject,
-  subscribe,
-  unsubscribe,
-} from "./SimpleService";
+import { subscribe, unsubscribe } from "./SimpleService";
 
 export default function SubscriberOne({
   dispatchObject,
@@ -26,6 +14,7 @@ export default function SubscriberOne({
 
   //get object from central store
   const userLogin = store.get("userLogin"); // Will always be the same object so don't need to use useMemo.
+  const userLogout = store.get("userLogout");
 
   const userLoginSubscription = useMemo(() => {
     return {
@@ -41,13 +30,13 @@ export default function SubscriberOne({
 
   useEffect(() => {
     userLogin && subscribe(userLogin, userLoginSubscription);
-    userLogoutSubscribe(userLogoutSubscription);
+    userLogout && subscribe(userLogout, userLogoutSubscription);
 
     return () => {
       userLogin && unsubscribe(userLogin, userLoginSubscription);
-      userLogoutUnsubscribe(userLogoutSubscription);
+      userLogout && unsubscribe(userLogout, userLogoutSubscription);
     };
-  }, [userLogin, userLoginSubscription, userLogoutSubscription]);
+  }, [userLogin, userLoginSubscription, userLogout, userLogoutSubscription]);
 
   function onUserLoginSubReceived(firstName: string, secondName: string) {
     console.log(
@@ -91,10 +80,16 @@ export default function SubscriberOne({
         </button>
       </div>
       <div>
-        <button onClick={() => userLogoutUnsubscribe(userLogoutSubscription)}>
+        <button
+          onClick={() => {
+            userLogout && unsubscribe(userLogout, userLogoutSubscription);
+          }}>
           Unsubscribe userLogout.
         </button>
-        <button onClick={() => userLogoutSubscribe(userLogoutSubscription)}>
+        <button
+          onClick={() => {
+            userLogout && subscribe(userLogout, userLogoutSubscription);
+          }}>
           Re-subscribe userLogout.
         </button>
       </div>

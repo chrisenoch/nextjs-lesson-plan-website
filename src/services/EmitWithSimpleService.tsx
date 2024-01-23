@@ -1,11 +1,7 @@
 "use client";
 
-import { emitUserLogin } from "./UserLoginWithSimpleService";
-import { emitUserLogout } from "./UserLogoutWithSimpleService";
-import { userLoginSubscriberConfigObject } from "./UserLogin";
 import { store } from "./SubscriberConfigObjectStore";
 import { emit } from "./SimpleService";
-// import { emitUserLogin } from "./TestServiceThree";
 
 export default function EmitWithSimpleService({
   dispatchObject,
@@ -13,6 +9,7 @@ export default function EmitWithSimpleService({
   dispatchObject: any;
 }) {
   const userLogin = store.get("userLogin"); // Will always be the same object so don't need to use useMemo.
+  const userLogout = store.get("userLogout");
   return (
     <>
       <h1>Emitter</h1>
@@ -23,8 +20,12 @@ export default function EmitWithSimpleService({
         }}>
         Emit UserLogin
       </button>
-      <button onClick={() => false}>Return false</button>
-      <button onClick={() => emitUserLogout()}>Emit UserLogout</button>
+      <button
+        onClick={() => {
+          userLogout && emit(userLogout);
+        }}>
+        Emit UserLogout
+      </button>
     </>
   );
 }
