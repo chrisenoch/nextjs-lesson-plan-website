@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactElement } from "react";
+import { ReactElement, useEffect } from "react";
 import { store } from "./SubscriberConfigObjectStore";
 
 export default function ServiceParentComponent({
@@ -10,13 +10,19 @@ export default function ServiceParentComponent({
   dispatchObject: any;
   children: ReactElement;
 }) {
-  //Add userLogin SubscriberConfigObject to store
   store.set("userLogin", {
     subscribers: new Set(),
   });
   store.set("userLogout", {
     subscribers: new Set(),
   });
+  useEffect(() => {
+    return () => {
+      console.log("store objects being deleted in useEffect return");
+      store.delete("userLogin");
+      store.delete("userLogout");
+    };
+  }, []);
 
   return (
     <>
