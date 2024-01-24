@@ -33,15 +33,10 @@ export function selectTopChildPlayers() {
 let topPlayers: TopPlayers = [];
 let adultTopPlayers: TopPlayers = [];
 function runOnInit() {
-  console.log("topPlayersSlice in runOnInit");
-  console.log(JSON.stringify(topPlayersSlice));
-
   topPlayers = topPlayersSlice.slice.topPlayers;
   adultTopPlayers = topPlayersSlice.slice.topPlayers.filter(
     (player) => player.age > 17
   );
-  console.log("adultTopPlayers before selectTopAdultPlayers function");
-  console.log(adultTopPlayers);
   topPlayersSlice.slice.adultTopPlayers = adultTopPlayers; //Optional. Only needed if you want to
   //implement an equality function to prevent re-renders. May be overkill.
 }
@@ -79,14 +74,14 @@ export function selectTopAdultPlayers() {
 
   //Only run some expensive function if topPlayers has changed.
   //(Imagine this is an expensive function)
-  adultTopPlayers = newAdultTopPlayers;
+  adultTopPlayers = newAdultTopPlayers; //Looks strange, but is necessary to reinit adultToPlayers, which lives outside of this function.
   topPlayersSlice.slice.adultTopPlayers = adultTopPlayers; //Optional. Only needed if you want to
   //implement an equality function to prevent re-renders. May be overkill.
   topPlayers = topPlayersSlice.slice.topPlayers;
   return { adultTopPlayers, hasChanged };
 }
 
-//Hard-code this for testing. Would be called fom cmponent.
+//Hard-code this for testing. Would be called from a component.
 export function addTopChildPlayer() {
   const newTopPlayers = topPlayersSlice.slice.topPlayers.slice();
   newTopPlayers.push({
@@ -99,7 +94,7 @@ export function addTopChildPlayer() {
   emit(topPlayersSlice);
 }
 
-//Hard-code this for testing. Would be called fom cmponent.
+//Hard-code this for testing. Would be called from a component.
 export function addTopAdultPlayer() {
   const newTopPlayers = topPlayersSlice.slice.topPlayers.slice();
   newTopPlayers.push({ id: 7, firstName: "Paul", lastName: "Wesley", age: 18 });
@@ -123,6 +118,7 @@ setTimeout(() => {
   emit(topPlayersSlice);
 }, 6000);
 
+//No prop-drilling is needed
 export default function TopPlayersSliceComponent({
   children,
 }: {

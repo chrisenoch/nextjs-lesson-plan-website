@@ -26,6 +26,7 @@ setTimeout(() => {
   emit(gamesSlice);
 }, 3000);
 
+//No prop-drilling is needed
 export default function GamesSliceComponent({
   children,
 }: {

@@ -31,6 +31,7 @@ setTimeout(() => {
   emit(booksSlice);
 }, 3000);
 
+//No prop-drilling is needed
 export default function BooksSliceComponent({
   children,
 }: {

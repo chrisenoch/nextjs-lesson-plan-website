@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactElement, useEffect } from "react";
-import { gamesStore } from "./SubscriberConfigObjectStore";
+import { gamesStore, authStore } from "./SubscriberConfigObjectStore";
 
 export default function ServiceParentComponent({
   dispatchObject,
@@ -11,10 +11,10 @@ export default function ServiceParentComponent({
   children: ReactElement;
 }) {
   console.log("ServiceParentComponent rendered");
-  gamesStore.set("userLogin", {
+  authStore.set("userLogin", {
     subscribers: new Set(),
   });
-  gamesStore.set("userLogout", {
+  authStore.set("userLogout", {
     subscribers: new Set(),
   });
   // const gamesSlice: {
@@ -29,8 +29,8 @@ export default function ServiceParentComponent({
   useEffect(() => {
     return () => {
       console.log("store objects being deleted in useEffect return");
-      gamesStore.delete("userLogin");
-      gamesStore.delete("userLogout");
+      authStore.delete("userLogin");
+      authStore.delete("userLogout");
     };
   }, []);
 
