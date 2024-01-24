@@ -1,5 +1,5 @@
 import { emit } from "./SimpleService";
-import { store } from "./SubscriberConfigObjectStore";
+import { gamesStore } from "./SubscriberConfigObjectStore";
 
 //To do, change type of the store.
 const gamesSlice: {
@@ -11,7 +11,7 @@ const gamesSlice: {
   subscribers: new Set(),
   slice: { games: [] },
 };
-store.set("gamesSlice", gamesSlice);
+gamesStore.set("gamesSlice", gamesSlice);
 
 export function addGame(gameTitle: string) {
   const newGames = gamesSlice.slice.games.slice();

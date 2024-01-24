@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo } from "react";
 
-import { store } from "./SubscriberConfigObjectStore";
+import { gamesStore } from "./SubscriberConfigObjectStore";
 import { subscribe, unsubscribe } from "./SimpleService";
 
 export default function SubscriberOne({
@@ -13,8 +13,8 @@ export default function SubscriberOne({
   console.log("TestService Component rendered");
 
   //get object from central store
-  const userLogin = store.get("userLogin"); // Will always be the same object so don't need to use useMemo.
-  const userLogout = store.get("userLogout");
+  const userLogin = gamesStore.get("userLogin"); // Will always be the same object so don't need to use useMemo.
+  const userLogout = gamesStore.get("userLogout");
 
   const userLoginSubscription = useMemo(() => {
     return {

@@ -8,6 +8,7 @@ import SubscriberTwo from "@/services/SubscriberTwo";
 import SliceSubscriber from "@/services/SliceSubscriber";
 import GamesSliceComponent from "@/services/GamesSliceComponent";
 import StoreClientWrapper from "@/services/StoreClientWrapper";
+import BooksSliceComponent from "@/services/BooksSliceComponent";
 
 export default function ServicePage() {
   console.log("ServicePage rendered");
@@ -21,15 +22,18 @@ export default function ServicePage() {
       <button onClick={() => dispatchCarouselHook.sayHi()}>Say hi</button>
       <StoreClientWrapper>
         <ServiceParentComponent dispatchObject={dispatchCarouselHook}>
-          <GamesSliceComponent>
-            <>
-              <SubscriberOne dispatchObject={dispatchCarouselHook} />
-              <SubscriberTwo />
-              <br />
-              <SliceSubscriber />
-              <EmitWithSimpleService dispatchObject={dispatchCarouselHook} />
-            </>
-          </GamesSliceComponent>
+          <>
+            <GamesSliceComponent>
+              <>
+                <SubscriberOne dispatchObject={dispatchCarouselHook} />
+                <SubscriberTwo />
+                <br />
+                <SliceSubscriber />
+                <EmitWithSimpleService dispatchObject={dispatchCarouselHook} />
+              </>
+            </GamesSliceComponent>
+            <BooksSliceComponent>Hi from books</BooksSliceComponent>
+          </>
         </ServiceParentComponent>
       </StoreClientWrapper>
     </>

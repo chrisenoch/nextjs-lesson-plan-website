@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { store } from "./SubscriberConfigObjectStore";
+import { booksStore, gamesStore } from "./SubscriberConfigObjectStore";
 import {
   SubscriberConfigObject,
   subscribe,
@@ -15,17 +15,22 @@ export default function SliceSubscriber() {
   console.log("SliceSubscriber component rendered");
 
   //I understand that this should be available as I believe parent components are rendered before child components.
-  const gamesSlice = store.get("gamesSlice") as SubscriberConfigObject; // Will always be the same object so don't need to use useMemo.
-  const topPlayersSlice = store.get(
+  const gamesSlice = gamesStore.get("gamesSlice") as SubscriberConfigObject; // Will always be the same object so don't need to use useMemo.
+  const topPlayersSlice = gamesStore.get(
     "topPlayersSlice"
   ) as SubscriberConfigObject;
+  const booksSlice = booksStore.get("booksSlice") as SubscriberConfigObject;
   const [games, setGames] = useState<string[]>([]);
   const [topAdultPlayers, setTopAdultPlayers] = useState<TopPlayers>([]);
+  const [books, setBooks] = useState<string[]>([]);
   const areSlicesInit = useRef<boolean>(false);
   const isFirstRenderOfAdultTopPlayers = useRef<boolean>(true);
 
   //Extract to hook?
-  if (gamesSlice && topPlayersSlice && !areSlicesInit.current) {
+  if (gamesSlice && topPlayersSlice && booksSlice && !areSlicesInit.current) {
+    console.log("booksSlice");
+    console.log(booksSlice);
+    setBooks(booksSlice.slice.books);
     setGames(gamesSlice.slice.games);
     const { adultTopPlayers } = selectTopAdultPlayers();
     setTopAdultPlayers(adultTopPlayers);
@@ -36,6 +41,12 @@ export default function SliceSubscriber() {
     console.log("onAddGame has run. About to set new games array.");
     setGames(gamesSlice.slice.games); //At this point gamesSlice.games should have updated.
   }, [gamesSlice.slice.games]);
+
+  const onAddBook = useCallback(() => {
+    console.log("onAddBook has run. About to set new books array.");
+    //console.log(booksSlice);
+    setBooks(booksSlice.slice.books); //At this point booksSlice.games should have updated.
+  }, [booksSlice.slice.books]);
 
   const onAddAdultTopPlayer = useCallback(() => {
     console.log(
@@ -57,6 +68,12 @@ export default function SliceSubscriber() {
     }
   }, []);
 
+  const booksSubscription = useMemo(() => {
+    return {
+      subscribe: onAddBook,
+    };
+  }, [onAddBook]);
+
   const gamesSubscription = useMemo(() => {
     return {
       subscribe: onAddGame,
@@ -72,13 +89,17 @@ export default function SliceSubscriber() {
   useEffect(() => {
     gamesSlice && subscribe(gamesSlice, gamesSubscription);
     topPlayersSlice && subscribe(topPlayersSlice, topAdultPlayersSubscription);
+    booksSlice && subscribe(booksSlice, booksSubscription);
 
     return () => {
       gamesSlice && unsubscribe(gamesSlice, gamesSubscription);
       topPlayersSlice &&
         unsubscribe(topPlayersSlice, topAdultPlayersSubscription);
+      booksSlice && unsubscribe(booksSlice, booksSubscription);
     };
   }, [
+    booksSlice,
+    booksSubscription,
     gamesSlice,
     gamesSubscription,
     topAdultPlayersSubscription,
@@ -99,6 +120,7 @@ export default function SliceSubscriber() {
       <h1>First games slice subscriber</h1>
       <div>
         <p>Games: {games}</p>
+        <p>Books: {books}</p>
         <button
           onClick={() => {
             gamesSlice && unsubscribe(gamesSlice, gamesSubscription);

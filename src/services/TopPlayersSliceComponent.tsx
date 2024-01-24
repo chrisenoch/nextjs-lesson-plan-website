@@ -1,6 +1,6 @@
 import { checkEqualityByObjectProperty } from "@/utils/array-functions";
 import { emit } from "./SimpleService";
-import { store } from "./SubscriberConfigObjectStore";
+import { gamesStore } from "./SubscriberConfigObjectStore";
 
 export type TopPlayers = {
   id: number;
@@ -20,7 +20,7 @@ const topPlayersSlice: {
   subscribers: new Set(),
   slice: { topPlayers: [], adultTopPlayers: [] },
 };
-store.set("topPlayersSlice", topPlayersSlice);
+gamesStore.set("topPlayersSlice", topPlayersSlice);
 
 //My version of a basic selector function
 export function selectTopChildPlayers() {
