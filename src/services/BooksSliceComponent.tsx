@@ -1,13 +1,15 @@
 import { emit } from "./SimpleService";
 import { booksStore } from "./SubscriberConfigObjectStore";
-
 console.log("booksSlice was rendered");
-const booksSlice: {
+
+export type BooksSlice = {
   subscribers: Set<{ subscribe: () => void }>;
   slice: {
     books: string[];
   };
-} = {
+};
+
+const booksSlice: BooksSlice = {
   subscribers: new Set(),
   slice: {
     books: [],

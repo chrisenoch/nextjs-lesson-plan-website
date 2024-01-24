@@ -1,13 +1,17 @@
-import { emit } from "./SimpleService";
+import { SubscriberConfigObject, emit } from "./SimpleService";
 import { gamesStore } from "./SubscriberConfigObjectStore";
 
-//To do, change type of the store.
-const gamesSlice: {
-  subscribers: Set<{ subscribe: () => void }>;
+export type GamesSlice = {
+  subscribers: Set<{
+    subscribe: () => void;
+  }>;
   slice: {
     games: string[];
   };
-} = {
+};
+
+//To do, change type of the store.
+const gamesSlice: GamesSlice = {
   subscribers: new Set(),
   slice: { games: [] },
 };

@@ -10,16 +10,18 @@ import {
 } from "./SimpleService";
 import { useHydrated } from "@/customHooks/useHydrated";
 import { TopPlayers, selectTopAdultPlayers } from "./TopPlayersSliceComponent";
+import { GamesSlice } from "./GamesSliceComponent";
+import { BooksSlice } from "./BooksSliceComponent";
 
 export default function SliceSubscriber() {
   console.log("SliceSubscriber component rendered");
 
   //I understand that this should be available as I believe parent components are rendered before child components.
-  const gamesSlice = gamesStore.get("gamesSlice") as SubscriberConfigObject; // Will always be the same object so don't need to use useMemo.
+  const gamesSlice = gamesStore.get("gamesSlice") as GamesSlice; // Will always be the same object so don't need to use useMemo.
   const topPlayersSlice = gamesStore.get(
     "topPlayersSlice"
   ) as SubscriberConfigObject;
-  const booksSlice = booksStore.get("booksSlice") as SubscriberConfigObject;
+  const booksSlice = booksStore.get("booksSlice") as BooksSlice;
   const [games, setGames] = useState<string[]>([]);
   const [topAdultPlayers, setTopAdultPlayers] = useState<TopPlayers>([]);
   const [books, setBooks] = useState<string[]>([]);

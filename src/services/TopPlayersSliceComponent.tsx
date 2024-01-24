@@ -2,6 +2,14 @@ import { checkEqualityByObjectProperty } from "@/utils/array-functions";
 import { emit } from "./SimpleService";
 import { gamesStore } from "./SubscriberConfigObjectStore";
 
+export type TopPlayersSlice = {
+  subscribers: Set<{ subscribe: () => void }>;
+  slice: {
+    topPlayers: TopPlayers;
+    adultTopPlayers: TopPlayers;
+  };
+};
+
 export type TopPlayers = {
   id: number;
   firstName: string;
@@ -10,13 +18,7 @@ export type TopPlayers = {
 }[];
 
 //To do, change type of the store.
-const topPlayersSlice: {
-  subscribers: Set<{ subscribe: () => void }>;
-  slice: {
-    topPlayers: TopPlayers;
-    adultTopPlayers: TopPlayers;
-  };
-} = {
+const topPlayersSlice: TopPlayersSlice = {
   subscribers: new Set(),
   slice: { topPlayers: [], adultTopPlayers: [] },
 };
