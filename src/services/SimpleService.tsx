@@ -21,6 +21,8 @@ export function unsubscribe(
 
 export function emit(subscriberConfigObject: SubscriberConfigObject) {
   subscriberConfigObject.subscribers.forEach((subscriber) => {
+    console.log("susbcriber below");
+    console.log(subscriber);
     subscriber.subscribe();
   });
 }

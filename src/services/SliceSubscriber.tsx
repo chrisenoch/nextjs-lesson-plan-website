@@ -29,7 +29,9 @@ export default function SliceSubscriber() {
     isGamesInit.current = true;
   }
 
-  //Should run when a new game has been added from a different component.
+  //The advantage of having two subscriptions is that we can unsubscribe from just one of them at any time.
+  //We could combine the various subscriptions into one, and run both functions when the subscribe method is called by emit.
+  //However, in that case, you can only susbcribe to both at once and unsubscribe from both at once.
   const onAddGame = useCallback(() => {
     console.log("onAddGame has run. About to set new games array.");
     setGames(gamesSlice.slice.games); //At this point gamesSlice.games should have updated.

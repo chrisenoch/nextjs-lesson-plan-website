@@ -21,18 +21,17 @@ export function addGame(gameTitle: string) {
   emit(gamesSlice);
 }
 
-//Only needed if you want to memoize selctor functions.
-// let previousSlice = gamesSlice.slice;
-// export function mutate(mutatorFn: () => void) {
-//   mutatorFn();
-//   previousSlice = gamesSlice.slice;
-// }
+//My version of a basic selector function
+export function selectTopChildPlayers() {
+  const childPlayers = gamesSlice.slice.topPlayers.filter(
+    (player) => player.age < 18
+  );
+  return childPlayers;
+}
 
 //My version of a memoized selector function
-let topPlayers = gamesSlice.slice.topPlayers;
-let adultTopPlayers = gamesSlice.slice.topPlayers.filter(
-  (player) => player.age > 17
-);
+let topPlayers: TopPlayers = [];
+let adultTopPlayers: TopPlayers = [];
 export function selectTopAdultPlayers() {
   if (topPlayers === gamesSlice.slice.topPlayers) {
     console.log(
@@ -44,6 +43,8 @@ export function selectTopAdultPlayers() {
     "There has been a change in topPlayers array, running filter fn again."
   );
 
+  //Only run some expensive function if topPlayers has changed.
+  //(Imagine this is an expensive function)
   adultTopPlayers = gamesSlice.slice.topPlayers.filter(
     (player) => player.age > 17
   );
@@ -51,7 +52,7 @@ export function selectTopAdultPlayers() {
   return adultTopPlayers;
 }
 
-//Hard-code this for now
+//Hard-code this for testing. Would be called fom cmponent.
 export function addTopChildPlayer() {
   const newTopPlayers = gamesSlice.slice.topPlayers.slice();
   newTopPlayers.push({ firstName: "Cat", lastName: "Peterson", age: 12 });
@@ -59,19 +60,12 @@ export function addTopChildPlayer() {
   emit(gamesSlice);
 }
 
+//Hard-code this for testing. Would be called fom cmponent.
 export function addTopAdultPlayer() {
   const newTopPlayers = gamesSlice.slice.topPlayers.slice();
   newTopPlayers.push({ firstName: "Paul", lastName: "Wesley", age: 18 });
   gamesSlice.slice.topPlayers = newTopPlayers;
   emit(gamesSlice);
-}
-
-//My version of a basic selector function
-export function selectTopChildPlayers() {
-  const childPlayers = gamesSlice.slice.topPlayers.filter(
-    (player) => player.age < 18
-  );
-  return childPlayers;
 }
 
 const topPlayersArr: TopPlayers = [
