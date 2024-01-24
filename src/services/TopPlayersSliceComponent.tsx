@@ -121,7 +121,7 @@ setTimeout(() => {
   topPlayersSlice.slice.topPlayers = topPlayersArr;
   runOnInit();
   emit(topPlayersSlice);
-}, 3000);
+}, 6000);
 
 export default function TopPlayersSliceComponent({
   children,
