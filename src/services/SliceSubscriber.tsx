@@ -9,30 +9,29 @@ import {
   unsubscribe,
 } from "./SimpleService";
 import { useHydrated } from "@/customHooks/useHydrated";
-import { TopPlayers, selectTopAdultPlayers } from "./GamesSliceComponent";
+import { TopPlayers, selectTopAdultPlayers } from "./TopPlayersSliceComponent";
 
 export default function SliceSubscriber() {
   console.log("SliceSubscriber component rendered");
 
   //I understand that this should be available as I believe parent components are rendered before child components.
   const gamesSlice = store.get("gamesSlice") as SubscriberConfigObject; // Will always be the same object so don't need to use useMemo.
-  console.log("gamesSlice in SliceSubscriber ");
+  const topPlayersSlice = store.get(
+    "topPlayersSlice"
+  ) as SubscriberConfigObject;
   const [games, setGames] = useState<string[]>([]);
   const [topAdultPlayers, setTopAdultPlayers] = useState<TopPlayers>([]);
-  const isGamesInit = useRef<boolean>(false);
+  const areSlicesInit = useRef<boolean>(false);
   const isFirstRenderOfAdultTopPlayers = useRef<boolean>(true);
 
   //Extract to hook?
-  if (gamesSlice && !isGamesInit.current) {
+  if (gamesSlice && topPlayersSlice && !areSlicesInit.current) {
     setGames(gamesSlice.slice.games);
     const { adultTopPlayers } = selectTopAdultPlayers();
     setTopAdultPlayers(adultTopPlayers);
-    isGamesInit.current = true;
+    areSlicesInit.current = true;
   }
 
-  //The advantage of having two subscriptions is that we can unsubscribe from just one of them at any time.
-  //We could combine the various subscriptions into one, and run both functions when the subscribe method is called by emit.
-  //However, in that case, you can only susbcribe to both at once and unsubscribe from both at once.
   const onAddGame = useCallback(() => {
     console.log("onAddGame has run. About to set new games array.");
     setGames(gamesSlice.slice.games); //At this point gamesSlice.games should have updated.
@@ -72,13 +71,19 @@ export default function SliceSubscriber() {
 
   useEffect(() => {
     gamesSlice && subscribe(gamesSlice, gamesSubscription);
-    gamesSlice && subscribe(gamesSlice, topAdultPlayersSubscription);
+    topPlayersSlice && subscribe(topPlayersSlice, topAdultPlayersSubscription);
 
     return () => {
       gamesSlice && unsubscribe(gamesSlice, gamesSubscription);
-      gamesSlice && unsubscribe(gamesSlice, topAdultPlayersSubscription);
+      topPlayersSlice &&
+        unsubscribe(topPlayersSlice, topAdultPlayersSubscription);
     };
-  }, [gamesSlice, gamesSubscription, topAdultPlayersSubscription]);
+  }, [
+    gamesSlice,
+    gamesSubscription,
+    topAdultPlayersSubscription,
+    topPlayersSlice,
+  ]);
 
   const renderedTopAdultPlayers = topAdultPlayers.map((player) => (
     <li key={player.firstName}>{player.firstName}</li>

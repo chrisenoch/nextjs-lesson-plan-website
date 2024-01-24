@@ -2,11 +2,11 @@
 
 import { store } from "./SubscriberConfigObjectStore";
 import { emit } from "./SimpleService";
+import { addGame } from "./GamesSliceComponent";
 import {
-  addGame,
   addTopAdultPlayer,
   addTopChildPlayer,
-} from "./GamesSliceComponent";
+} from "./TopPlayersSliceComponent";
 
 export default function EmitWithSimpleService({
   dispatchObject,
