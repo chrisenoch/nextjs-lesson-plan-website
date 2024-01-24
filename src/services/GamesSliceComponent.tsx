@@ -55,12 +55,15 @@ function runOnInit() {
   gamesSlice.slice.adultTopPlayers = adultTopPlayers; //Optional. Only needed if you want to
   //implement an equality function to prevent re-renders. May be overkill.
 }
+
 export function selectTopAdultPlayers() {
+  let hasChanged = false;
+
   if (topPlayers === gamesSlice.slice.topPlayers) {
     console.log(
       "returning same adultTopPlayers because topPlayers array hasn't changed."
     );
-    return adultTopPlayers;
+    return { adultTopPlayers, hasChanged };
   }
   console.log(
     "There has been a change in topPlayers array, running filter fn again."
@@ -80,9 +83,10 @@ export function selectTopAdultPlayers() {
   console.log("value of areEqual: " + areEqual);
   if (areEqual) {
     //Do not change object reference
-    return adultTopPlayers;
+    return { adultTopPlayers, hasChanged };
   }
   console.log("adult topPlayers equality function failed.");
+  hasChanged = true;
 
   //Only run some expensive function if topPlayers has changed.
   //(Imagine this is an expensive function)
@@ -90,7 +94,7 @@ export function selectTopAdultPlayers() {
   gamesSlice.slice.adultTopPlayers = adultTopPlayers; //Optional. Only needed if you want to
   //implement an equality function to prevent re-renders. May be overkill.
   topPlayers = gamesSlice.slice.topPlayers;
-  return adultTopPlayers;
+  return { adultTopPlayers, hasChanged };
 }
 
 //Hard-code this for testing. Would be called fom cmponent.

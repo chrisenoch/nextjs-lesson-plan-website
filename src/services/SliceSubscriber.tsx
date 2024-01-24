@@ -20,12 +20,13 @@ export default function SliceSubscriber() {
   const [games, setGames] = useState<string[]>([]);
   const [topAdultPlayers, setTopAdultPlayers] = useState<TopPlayers>([]);
   const isGamesInit = useRef<boolean>(false);
+  const isFirstRenderOfAdultTopPlayers = useRef<boolean>(true);
 
   //Extract to hook?
   if (gamesSlice && !isGamesInit.current) {
     setGames(gamesSlice.slice.games);
-    const topAdultPlayers = selectTopAdultPlayers();
-    setTopAdultPlayers(topAdultPlayers);
+    const { adultTopPlayers } = selectTopAdultPlayers();
+    setTopAdultPlayers(adultTopPlayers);
     isGamesInit.current = true;
   }
 
@@ -41,8 +42,20 @@ export default function SliceSubscriber() {
     console.log(
       "onAddAdultTopPlayer has run. About to set new adult top player."
     );
-    const newAdultTopPlayers = selectTopAdultPlayers();
-    setTopAdultPlayers(newAdultTopPlayers);
+    const { adultTopPlayers: newAdultTopPlayers, hasChanged } =
+      selectTopAdultPlayers();
+
+    if (isFirstRenderOfAdultTopPlayers.current) {
+      setTopAdultPlayers(newAdultTopPlayers);
+      isFirstRenderOfAdultTopPlayers.current = false;
+    } else if (hasChanged) {
+      console.log("has changed: in hasChanged in onAddAdultTopPlayer");
+      setTopAdultPlayers(newAdultTopPlayers);
+    } else {
+      console.log(
+        "Has not changed: in else of hasChanged in onAddAdultTopPlayer"
+      );
+    }
   }, []);
 
   const gamesSubscription = useMemo(() => {
