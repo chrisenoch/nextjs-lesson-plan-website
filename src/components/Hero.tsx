@@ -1,5 +1,13 @@
 "use client";
-import { Box, Button, Grid, Stack, Typography, duration } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  Stack,
+  Typography,
+  duration,
+} from "@mui/material";
 import Image from "next/image";
 import { Carousel } from "./Carousel/Carousel";
 import { useMemo, useRef, useState } from "react";
@@ -14,6 +22,12 @@ import {
   emit,
 } from "@/services/my-custom-event-emitter/SubscriberService";
 import { useIsFirstRender } from "@/customHooks/useIsFirstRender";
+import ColorFactory from "./ColorFactory";
+import {
+  ArrowBackIos,
+  ArrowForward,
+  ArrowForwardIos,
+} from "@mui/icons-material";
 
 export default function Hero() {
   //const isFirstRender = useIsFirstRender();
@@ -352,24 +366,16 @@ export default function Hero() {
             left: "50%",
             bottom: "0px",
           }}>
-          <Button
-            id="left-button"
-            size="small"
-            onClick={() => emit(carouselMoveLeft)}
-            color="secondary"
-            variant="outlined"
-            sx={{
-              color: "white",
-            }}>
-            LEFT
-          </Button>
-          <Button
-            id="right-button"
-            size="small"
-            onClick={() => emit(carouselMoveRight)}
-            variant="outlined">
-            Right
-          </Button>
+          <ColorFactory primary="#FFFFFF">
+            <IconButton color="primary" onClick={() => emit(carouselMoveLeft)}>
+              <ArrowBackIos />
+            </IconButton>
+          </ColorFactory>
+          <ColorFactory primary="#FFFFFF">
+            <IconButton color="primary" onClick={() => emit(carouselMoveRight)}>
+              <ArrowForwardIos />
+            </IconButton>
+          </ColorFactory>
         </Stack>{" "}
       </Carousel>
     </>
