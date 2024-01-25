@@ -21,12 +21,14 @@ export function Carousel({
   transitions,
   carouselMoveLeft,
   carouselMoveRight,
+  children,
 }: {
   autoPlay?: AutoPlay;
   transitions?: Transitions;
   images: { alt: string; imagePath: string }[];
   carouselMoveLeft: SubscriberConfigObject;
   carouselMoveRight: SubscriberConfigObject;
+  children: React.ReactNode;
 }) {
   const images = increaseArrayIfTooSmall(unPreparedImages);
   const DEFAULT_TRANSITION_DURATION = 1000;
@@ -211,6 +213,41 @@ export function Carousel({
     maxImageRowRight,
   ]);
 
+  const moveRightWithAutoPlay = useCallback(() => {
+    if (!disableControls.current && images.length > 1) {
+      setImageOneRowRight((px) => px - 200);
+      setImageTwoRowRight((px) => px - 200);
+    }
+  }, [images.length]);
+
+  const moveLeftWithAutoPlay = useCallback(() => {
+    if (!disableControls.current && images.length > 1) {
+      setImageOneRowRight((px) => px + 200);
+      setImageTwoRowRight((px) => px + 200);
+    }
+  }, [images.length]);
+
+  const startAutoPlay = useCallback(
+    (delay: number, direction: AutoPlayDirection) => {
+      direction === "RIGHT" ? moveRightWithAutoPlay() : moveLeftWithAutoPlay();
+
+      const intervalId = setInterval(() => {
+        if (direction === "RIGHT") {
+          moveRightWithAutoPlay();
+        }
+        if (direction === "LEFT") {
+          moveLeftWithAutoPlay();
+        }
+      }, delay);
+
+      autoPlayIntervalIds.current.push(intervalId);
+      console.log(
+        "number of interval ids " + autoPlayIntervalIds.current.length
+      );
+    },
+    [moveLeftWithAutoPlay, moveRightWithAutoPlay]
+  );
+
   if (
     !isFirstRender.current &&
     !hasAutoPlayInit.current &&
@@ -241,65 +278,38 @@ export function Carousel({
     disableControls.current = false;
   }, []);
 
-  function moveRightManualControls() {
-    console.log("in moveRightManualControls");
-    stopAutoPlay();
-    if (!disableControls.current && images.length > 1) {
-      restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
-      setImageOneRowRight((px) => px - 200);
-      setImageTwoRowRight((px) => px - 200);
-    }
-  }
+  // function moveRightManualControls() {
+  //   console.log("in moveRightManualControls");
+  //   stopAutoPlay();
+  //   if (!disableControls.current && images.length > 1) {
+  //     restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
+  //     setImageOneRowRight((px) => px - 200);
+  //     setImageTwoRowRight((px) => px - 200);
+  //   }
+  // }
 
-  function moveLeftManualControls() {
-    console.log("in moveLeftManualControls");
-    stopAutoPlay();
-    if (!disableControls.current && images.length > 1) {
-      restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
-      setImageOneRowRight((px) => px + 200);
-      setImageTwoRowRight((px) => px + 200);
-    }
-  }
+  // function moveLeftManualControls() {
+  //   console.log("in moveLeftManualControls");
+  //   stopAutoPlay();
+  //   if (!disableControls.current && images.length > 1) {
+  //     restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
+  //     setImageOneRowRight((px) => px + 200);
+  //     setImageTwoRowRight((px) => px + 200);
+  //   }
+  // }
 
-  function moveRightWithAutoPlay() {
-    if (!disableControls.current && images.length > 1) {
-      setImageOneRowRight((px) => px - 200);
-      setImageTwoRowRight((px) => px - 200);
-    }
-  }
-
-  function moveLeftWithAutoPlay() {
-    if (!disableControls.current && images.length > 1) {
-      setImageOneRowRight((px) => px + 200);
-      setImageTwoRowRight((px) => px + 200);
-    }
-  }
-
-  function restartAutoPlayUponIdle(delay: number) {
-    if (autoPlay) {
-      restartAutoPlayUponIdleTimeoutId.current &&
-        clearTimeout(restartAutoPlayUponIdleTimeoutId.current);
-      restartAutoPlayUponIdleTimeoutId.current = setTimeout(() => {
-        startAutoPlay(autoPlay.delay, autoPlay.direction);
-      }, delay);
-    }
-  }
-
-  function startAutoPlay(delay: number, direction: AutoPlayDirection) {
-    direction === "RIGHT" ? moveRightWithAutoPlay() : moveLeftWithAutoPlay();
-
-    const intervalId = setInterval(() => {
-      if (direction === "RIGHT") {
-        moveRightWithAutoPlay();
+  const restartAutoPlayUponIdle = useCallback(
+    (delay: number) => {
+      if (autoPlay) {
+        restartAutoPlayUponIdleTimeoutId.current &&
+          clearTimeout(restartAutoPlayUponIdleTimeoutId.current);
+        restartAutoPlayUponIdleTimeoutId.current = setTimeout(() => {
+          startAutoPlay(autoPlay.delay, autoPlay.direction);
+        }, delay);
       }
-      if (direction === "LEFT") {
-        moveLeftWithAutoPlay();
-      }
-    }, delay);
-
-    autoPlayIntervalIds.current.push(intervalId);
-    console.log("number of interval ids " + autoPlayIntervalIds.current.length);
-  }
+    },
+    [autoPlay, startAutoPlay]
+  );
 
   function stopAutoPlay() {
     autoPlayIntervalIds.current.forEach((intervalId) =>
@@ -434,15 +444,33 @@ export function Carousel({
   }
 
   const moveLeftSubscription = useMemo(() => {
+    function moveLeftManualControls() {
+      console.log("in moveLeftManualControls");
+      stopAutoPlay();
+      if (!disableControls.current && images.length > 1) {
+        restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
+        setImageOneRowRight((px) => px + 200);
+        setImageTwoRowRight((px) => px + 200);
+      }
+    }
     return {
-      subscribe: onMoveLeft,
+      subscribe: moveLeftManualControls,
     };
-  }, []);
+  }, [RESTART_AUTOPLAY_DELAY, images.length, restartAutoPlayUponIdle]);
   const moveRightSubscription = useMemo(() => {
+    function moveRightManualControls() {
+      console.log("in moveRightManualControls");
+      stopAutoPlay();
+      if (!disableControls.current && images.length > 1) {
+        restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
+        setImageOneRowRight((px) => px - 200);
+        setImageTwoRowRight((px) => px - 200);
+      }
+    }
     return {
-      subscribe: onMoveRight,
+      subscribe: moveRightManualControls,
     };
-  }, []);
+  }, [RESTART_AUTOPLAY_DELAY, images.length, restartAutoPlayUponIdle]);
 
   useEffect(() => {
     carouselMoveLeft && subscribe(carouselMoveLeft, moveLeftSubscription);
@@ -521,7 +549,7 @@ export function Carousel({
             }}>
             {renderedImagesTwo}
           </Stack>
-          <Stack
+          {/* <Stack
             marginTop={1}
             direction={"row"}
             sx={{
@@ -548,7 +576,8 @@ export function Carousel({
               variant="outlined">
               Right
             </Button>
-          </Stack>
+          </Stack> */}
+          {children}
         </Box>
       </Stack>
 

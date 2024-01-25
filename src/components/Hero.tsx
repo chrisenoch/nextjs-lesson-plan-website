@@ -342,8 +342,36 @@ export default function Hero() {
         transitions={transitions}
         images={images}
         carouselMoveLeft={carouselMoveLeft}
-        carouselMoveRight={carouselMoveRight}
-      />
+        carouselMoveRight={carouselMoveRight}>
+        <Stack
+          marginTop={1}
+          direction={"row"}
+          sx={{
+            position: "absolute",
+            transform: "translatex(-50%)",
+            left: "50%",
+            bottom: "0px",
+          }}>
+          <Button
+            id="left-button"
+            size="small"
+            onClick={() => emit(carouselMoveLeft)}
+            color="secondary"
+            variant="outlined"
+            sx={{
+              color: "white",
+            }}>
+            LEFT
+          </Button>
+          <Button
+            id="right-button"
+            size="small"
+            onClick={() => emit(carouselMoveRight)}
+            variant="outlined">
+            Right
+          </Button>
+        </Stack>{" "}
+      </Carousel>
     </>
   );
 }
