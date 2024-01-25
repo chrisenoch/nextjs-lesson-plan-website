@@ -76,16 +76,16 @@ export default function Hero() {
       //     "https://raw.githubusercontent.com/chrisenoch/assets/main/virgin_cruises.jpg",
       // },
 
-      // {
-      //   alt: "Antalya",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/antalya-shutterstock.jpg",
-      // },
-      // {
-      //   alt: "Fuerteventura",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/fuerteventura-shutterstock.jpg",
-      // },
+      {
+        alt: "Antalya",
+        imagePath:
+          "https://raw.githubusercontent.com/chrisenoch/assets/main/antalya-shutterstock.jpg",
+      },
+      {
+        alt: "Fuerteventura",
+        imagePath:
+          "https://raw.githubusercontent.com/chrisenoch/assets/main/fuerteventura-shutterstock.jpg",
+      },
       {
         alt: "Beach-1",
         imagePath:
@@ -263,29 +263,43 @@ export default function Hero() {
         mx={"auto"}
         marginTop={0}
         marginBottom={2}>
-        <Grid container alignItems="center" justifyContent="center">
-          <Grid item xs={6}>
-            <Typography gutterBottom variant="h3" component="h1">
-              Get{" "}
-              <Box component="span" fontWeight="medium" color="secondary.light">
-                creative{" "}
-              </Box>
-              lesson plans
-            </Typography>
-            <Typography variant="h5" component="p" mb={3}>
-              Spend less time lesson planning and more time with friends.
-              Download
-              <Box component="span" fontWeight="bold" color="secondary.main">
-                {" "}
-                60 free lessons{" "}
-              </Box>
-              now.
-            </Typography>
-            <Button variant={"contained"} size="large">
-              Download
-            </Button>
+        <Grid
+          container
+          alignItems="center"
+          justifyContent="center"
+          height="50vh">
+          <Grid
+            item
+            xs={6}
+            height="100%"
+            display={"flex"}
+            alignItems={"center"}>
+            <Stack alignItems={"start"}>
+              <Typography gutterBottom variant="h3" component="h1">
+                Get{" "}
+                <Box
+                  component="span"
+                  fontWeight="medium"
+                  color="secondary.light">
+                  creative{" "}
+                </Box>
+                lesson plans
+              </Typography>
+              <Typography variant="h5" component="p" mb={3}>
+                Spend less time lesson planning and more time with friends.
+                Download
+                <Box component="span" fontWeight="bold" color="secondary.main">
+                  {" "}
+                  60 free lessons{" "}
+                </Box>
+                now.
+              </Typography>
+              <Button variant={"contained"} size="large">
+                Download
+              </Button>
+            </Stack>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={6} height="100%">
             <Image
               alt={"A beach with palm trees"}
               src={
@@ -295,11 +309,10 @@ export default function Hero() {
               height={550}
               priority
               style={{
-                maxWidth: "100%",
-                height: "auto",
-                //   height: "400px",
-                //   width: "auto",
+                maxHeight: "100%",
+                width: "auto",
                 objectFit: "cover",
+                objectPosition: "center",
                 borderRadius: 32,
               }}
             />

@@ -30,7 +30,8 @@ export function Carousel({
   carouselMoveRight: SubscriberConfigObject;
   children: React.ReactNode;
 }) {
-  const images = increaseArrayIfTooSmall(unPreparedImages);
+  //const images = increaseArrayIfTooSmall(unPreparedImages);
+  const images = unPreparedImages;
   const DEFAULT_TRANSITION_DURATION = 1000;
   const IMG_WIDTH = 200;
   const TOTAL_IMGS = images.length;
@@ -44,6 +45,7 @@ export function Carousel({
     maxImageRowRight = Math.floor(TOTAL_IMGS / 2) * IMG_WIDTH;
   } else {
     maxImageRowRight = Math.ceil(TOTAL_IMGS / 2) * IMG_WIDTH;
+    //maxImageRowRight = (TOTAL_IMGS / 2) * IMG_WIDTH;
   }
   const [isOverFlowHidden, setOverflowHidden] = useState<boolean>(false);
   const [imagesOne, setImagesOne] =
@@ -393,7 +395,7 @@ export function Carousel({
               maxWidth: "100%",
               objectFit: "cover",
             }}
-            priority={index === 0 ? true : false}
+            priority={true}
           />
         );
       }),
