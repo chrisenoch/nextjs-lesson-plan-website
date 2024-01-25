@@ -8,16 +8,25 @@ import {
   AutoPlayDirection,
   Transitions,
 } from "@/models/types/AutoPlay";
+import {
+  SubscriberConfigObject,
+  subscribe,
+  unsubscribe,
+} from "@/services/my-custom-event-emitter/SubscriberService";
 
 //Transition duration must be less than autoplayDelay
 export function Carousel({
   images: unPreparedImages,
   autoPlay,
   transitions,
+  carouselMoveLeft,
+  carouselMoveRight,
 }: {
   autoPlay?: AutoPlay;
   transitions?: Transitions;
   images: { alt: string; imagePath: string }[];
+  carouselMoveLeft: SubscriberConfigObject;
+  carouselMoveRight: SubscriberConfigObject;
 }) {
   const images = increaseArrayIfTooSmall(unPreparedImages);
   const DEFAULT_TRANSITION_DURATION = 1000;
@@ -233,6 +242,7 @@ export function Carousel({
   }, []);
 
   function moveRightManualControls() {
+    console.log("in moveRightManualControls");
     stopAutoPlay();
     if (!disableControls.current && images.length > 1) {
       restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
@@ -242,6 +252,7 @@ export function Carousel({
   }
 
   function moveLeftManualControls() {
+    console.log("in moveLeftManualControls");
     stopAutoPlay();
     if (!disableControls.current && images.length > 1) {
       restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
@@ -420,6 +431,40 @@ export function Carousel({
           " for the user to interact with the carousel. An example of interacting with the carousel is the user pressing the left or right buttons."
       );
     }
+  }
+
+  const moveLeftSubscription = useMemo(() => {
+    return {
+      subscribe: onMoveLeft,
+    };
+  }, []);
+  const moveRightSubscription = useMemo(() => {
+    return {
+      subscribe: onMoveRight,
+    };
+  }, []);
+
+  useEffect(() => {
+    carouselMoveLeft && subscribe(carouselMoveLeft, moveLeftSubscription);
+    carouselMoveRight && subscribe(carouselMoveRight, moveRightSubscription);
+    return () => {
+      carouselMoveLeft && unsubscribe(carouselMoveLeft, moveLeftSubscription);
+      carouselMoveRight &&
+        unsubscribe(carouselMoveRight, moveRightSubscription);
+    };
+  }, [
+    carouselMoveLeft,
+    carouselMoveRight,
+    moveLeftSubscription,
+    moveRightSubscription,
+  ]);
+
+  function onMoveLeft() {
+    console.log("Told to move left from outside the carousel component");
+  }
+
+  function onMoveRight() {
+    console.log("Told to move right from outside the carousel component");
   }
 
   return (
