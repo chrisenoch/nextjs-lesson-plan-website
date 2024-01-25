@@ -493,13 +493,6 @@ export function Carousel({
     <>
       <Stack>
         <Box
-          marginLeft="-200px"
-          height="200px"
-          width={maxImageRowRight}
-          sx={{
-            backgroundColor: "gray",
-          }}></Box>
-        <Box
           id="image-display-box"
           width="200px"
           height="200px"

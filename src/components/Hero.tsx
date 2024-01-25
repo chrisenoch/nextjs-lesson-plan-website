@@ -306,51 +306,53 @@ export default function Hero() {
           </Grid>
         </Grid>
       </Stack>
-      <Button
-        size="small"
-        onClick={handleToggleEnableAutoPlay}
-        variant="contained"
-        sx={{
-          color: "white",
-        }}>
-        Toggle Enable Autoplay
-      </Button>
-      <Button
-        size="small"
-        onClick={handleToggleAutoPlayDirection}
-        variant="contained"
-        sx={{
-          color: "white",
-        }}>
-        Toggle Direction
-      </Button>
-      <Button
-        size="small"
-        onClick={handleIncreaseAutoPlayDelay}
-        variant="contained"
-        sx={{
-          color: "white",
-        }}>
-        Increase delay
-      </Button>
-      <Button
-        size="small"
-        onClick={() => emit(carouselMoveLeft)}
-        variant="contained"
-        sx={{
-          color: "white",
-        }}>
-        Emit move left to carousel
-      </Button>
-      <Button
-        size="small"
-        onClick={() => emit(carouselMoveRight)}
-        variant="contained"
-        sx={{
-          color: "white",
-        }}>
-        Emit move right to carousel
-      </Button>
+      <Stack direction="row" marginBottom={4}>
+        <Button
+          size="small"
+          onClick={handleToggleEnableAutoPlay}
+          variant="contained"
+          sx={{
+            color: "white",
+          }}>
+          Toggle Enable Autoplay
+        </Button>
+        <Button
+          size="small"
+          onClick={handleToggleAutoPlayDirection}
+          variant="contained"
+          sx={{
+            color: "white",
+          }}>
+          Toggle Direction
+        </Button>
+        <Button
+          size="small"
+          onClick={handleIncreaseAutoPlayDelay}
+          variant="contained"
+          sx={{
+            color: "white",
+          }}>
+          Increase delay
+        </Button>
+        <Button
+          size="small"
+          onClick={() => emit(carouselMoveLeft)}
+          variant="contained"
+          sx={{
+            color: "white",
+          }}>
+          Emit move left to carousel
+        </Button>
+        <Button
+          size="small"
+          onClick={() => emit(carouselMoveRight)}
+          variant="contained"
+          sx={{
+            color: "white",
+          }}>
+          Emit move right to carousel
+        </Button>
+      </Stack>
       <Carousel
         autoPlay={autoPlay}
         transitions={transitions}
@@ -358,21 +360,28 @@ export default function Hero() {
         carouselMoveLeft={carouselMoveLeft}
         carouselMoveRight={carouselMoveRight}>
         <Stack
-          marginTop={1}
           direction={"row"}
           sx={{
             position: "absolute",
-            transform: "translatex(-50%)",
-            left: "50%",
-            bottom: "0px",
+            transform: "translatey(-50%)",
+            justifyContent: "space-between",
+            width: "100%",
+            //left: "50%",
+            top: "50%",
           }}>
           <ColorFactory primary="#FFFFFF">
-            <IconButton color="primary" onClick={() => emit(carouselMoveLeft)}>
+            <IconButton
+              color="primary"
+              size="large"
+              onClick={() => emit(carouselMoveLeft)}>
               <ArrowBackIos />
             </IconButton>
           </ColorFactory>
           <ColorFactory primary="#FFFFFF">
-            <IconButton color="primary" onClick={() => emit(carouselMoveRight)}>
+            <IconButton
+              size="small"
+              color="primary"
+              onClick={() => emit(carouselMoveRight)}>
               <ArrowForwardIos />
             </IconButton>
           </ColorFactory>
