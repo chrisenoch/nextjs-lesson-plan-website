@@ -391,6 +391,7 @@ export function Carousel({
             height={200}
             style={{
               maxWidth: "100%",
+              objectFit: "cover",
             }}
             priority={index === 0 ? true : false}
           />
@@ -411,6 +412,7 @@ export function Carousel({
             height={200}
             style={{
               maxWidth: "100%",
+              objectFit: "cover",
             }}
           />
         );
@@ -487,14 +489,6 @@ export function Carousel({
     moveRightSubscription,
   ]);
 
-  function onMoveLeft() {
-    console.log("Told to move left from outside the carousel component");
-  }
-
-  function onMoveRight() {
-    console.log("Told to move right from outside the carousel component");
-  }
-
   return (
     <>
       <Stack>
@@ -549,34 +543,6 @@ export function Carousel({
             }}>
             {renderedImagesTwo}
           </Stack>
-          {/* <Stack
-            marginTop={1}
-            direction={"row"}
-            sx={{
-              position: "absolute",
-              transform: "translatex(-50%)",
-              left: "50%",
-              bottom: "0px",
-            }}>
-            <Button
-              id="left-button"
-              size="small"
-              onClick={moveLeftManualControls}
-              color="secondary"
-              variant="outlined"
-              sx={{
-                color: "white",
-              }}>
-              LEFT
-            </Button>
-            <Button
-              id="right-button"
-              size="small"
-              onClick={moveRightManualControls}
-              variant="outlined">
-              Right
-            </Button>
-          </Stack> */}
           {children}
         </Box>
       </Stack>
