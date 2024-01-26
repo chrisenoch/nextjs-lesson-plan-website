@@ -59,32 +59,37 @@ export default function Hero() {
 
   const images = useMemo(
     () => [
-      // {
-      //   alt: "Giraffes",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/giraffes_south_africa.jpg",
-      // },
-
-      // {
-      //   alt: "Fortress",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/Narilka%20fortress%20Tbilisi.jpg",
-      // },
-      // {
-      //   alt: "Virgin",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/virgin_cruises.jpg",
-      // },
+      {
+        alt: "Giraffes",
+        imagePath:
+          "https://raw.githubusercontent.com/chrisenoch/assets/main/giraffes_south_africa.jpg",
+      },
 
       {
-        alt: "Antalya",
+        alt: "Fortress",
         imagePath:
-          "https://raw.githubusercontent.com/chrisenoch/assets/main/antalya-shutterstock.jpg",
+          "https://raw.githubusercontent.com/chrisenoch/assets/main/Narilka%20fortress%20Tbilisi.jpg",
       },
       {
-        alt: "Fuerteventura",
+        alt: "Virgin",
         imagePath:
-          "https://raw.githubusercontent.com/chrisenoch/assets/main/fuerteventura-shutterstock.jpg",
+          "https://raw.githubusercontent.com/chrisenoch/assets/main/virgin_cruises.jpg",
+      },
+      {
+        alt: "Salad",
+        imagePath:
+          "https://raw.githubusercontent.com/chrisenoch/assets/main/salad.jpg",
+      },
+      {
+        alt: "Swimming",
+        imagePath:
+          "https://raw.githubusercontent.com/chrisenoch/assets/main/swimming.jpg",
+      },
+
+      {
+        alt: "Laptop",
+        imagePath:
+          "https://raw.githubusercontent.com/chrisenoch/assets/main/laptop.jpg",
       },
       {
         alt: "Beach-1",
@@ -101,6 +106,17 @@ export default function Hero() {
         imagePath:
           "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
       },
+      {
+        alt: "Fuerteventura",
+        imagePath:
+          "https://raw.githubusercontent.com/chrisenoch/assets/main/fuerteventura-shutterstock.jpg",
+      },
+
+      // {
+      //   alt: "Antalya",
+      //   imagePath:
+      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/antalya-shutterstock.jpg",
+      // },
       // {
       //   alt: "Beach-2",
       //   imagePath:

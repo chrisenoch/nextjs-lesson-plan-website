@@ -47,7 +47,11 @@ export function Carousel({
     maxImageRowRight = Math.ceil(TOTAL_IMGS / 2) * IMG_WIDTH;
     //maxImageRowRight = (TOTAL_IMGS / 2) * IMG_WIDTH;
   }
-  const [isOverFlowHidden, setOverflowHidden] = useState<boolean>(false);
+  const LEFT_ODD_IMAGES_TO_MOVE = Math.floor(TOTAL_IMGS / 2);
+  const LEFT_EVEN_IMAGES_TO_MOVE = Math.floor(TOTAL_IMGS / 2) - 1;
+  const RIGHT_ODD_IMAGES_TO_MOVE = Math.floor(TOTAL_IMGS / 2) * -1;
+  const RIGHT_EVEN_IMAGES_TO_MOVE = (TOTAL_IMGS / 2) * -1;
+  const [isOverFlowHidden, setOverflowHidden] = useState<boolean>(true);
   const [imagesOne, setImagesOne] =
     useState<{ alt: string; imagePath: string }[]>(images);
   const [imagesTwo, setImagesTwo] =
@@ -70,7 +74,6 @@ export function Carousel({
   >(autoPlay);
 
   checkForPropsErrors();
-
   const updateImagesOne = useCallback(() => {
     console.log("Transition ended imageOneRow");
     console.log("starting updateImagesOne");
@@ -79,12 +82,12 @@ export function Carousel({
       let newImagesRowTwo = imagesTwo.slice();
       //move first entry to end
       const firstImgsRowTwo = isOdd
-        ? newImagesRowTwo.slice(0, 1)
-        : newImagesRowTwo.slice(0, 2);
+        ? newImagesRowTwo.slice(0, LEFT_ODD_IMAGES_TO_MOVE)
+        : newImagesRowTwo.slice(0, LEFT_EVEN_IMAGES_TO_MOVE);
       newImagesRowTwo.push(...firstImgsRowTwo);
       newImagesRowTwo = isOdd
-        ? newImagesRowTwo.slice(1)
-        : newImagesRowTwo.slice(2);
+        ? newImagesRowTwo.slice(LEFT_ODD_IMAGES_TO_MOVE)
+        : newImagesRowTwo.slice(LEFT_EVEN_IMAGES_TO_MOVE);
 
       setImagesTwo(newImagesRowTwo);
       setImageTwoRowRight(maxImageRowRight);
@@ -95,12 +98,12 @@ export function Carousel({
       let newImagesRowOne = imagesOne.slice();
       //move first entry to end
       const firstImgsRowOne = isOdd
-        ? newImagesRowOne.slice(0, 1)
-        : newImagesRowOne.slice(0, 2);
+        ? newImagesRowOne.slice(0, LEFT_ODD_IMAGES_TO_MOVE)
+        : newImagesRowOne.slice(0, LEFT_EVEN_IMAGES_TO_MOVE);
       newImagesRowOne.push(...firstImgsRowOne);
       newImagesRowOne = isOdd
-        ? newImagesRowOne.slice(1)
-        : newImagesRowOne.slice(2);
+        ? newImagesRowOne.slice(LEFT_ODD_IMAGES_TO_MOVE)
+        : newImagesRowOne.slice(LEFT_EVEN_IMAGES_TO_MOVE);
       setImagesOne(newImagesRowOne);
     }
 
@@ -110,12 +113,12 @@ export function Carousel({
 
       //remove the last entry and add it to the start
       const lastImgsRowTwo = isOdd
-        ? newImagesRowTwo.slice(-1)
-        : newImagesRowTwo.slice(-3);
+        ? newImagesRowTwo.slice(RIGHT_ODD_IMAGES_TO_MOVE)
+        : newImagesRowTwo.slice(RIGHT_EVEN_IMAGES_TO_MOVE);
       newImagesRowTwo.unshift(...lastImgsRowTwo);
       newImagesRowTwo = isOdd
-        ? newImagesRowTwo.slice(0, -1)
-        : newImagesRowTwo.slice(0, -3);
+        ? newImagesRowTwo.slice(0, RIGHT_ODD_IMAGES_TO_MOVE)
+        : newImagesRowTwo.slice(0, RIGHT_EVEN_IMAGES_TO_MOVE);
 
       setImagesTwo(newImagesRowTwo);
       setImageTwoRowRight(maxImageRowRight);
@@ -126,17 +129,21 @@ export function Carousel({
       let newImagesRowOne = imagesOne.slice();
       //remove the last entry and add it to the start
       const lastImgsRowOne = isOdd
-        ? newImagesRowOne.slice(-1)
-        : newImagesRowOne.slice(-3);
+        ? newImagesRowOne.slice(RIGHT_ODD_IMAGES_TO_MOVE)
+        : newImagesRowOne.slice(RIGHT_EVEN_IMAGES_TO_MOVE);
       newImagesRowOne.unshift(...lastImgsRowOne);
       newImagesRowOne = isOdd
-        ? newImagesRowOne.slice(0, -1)
-        : newImagesRowOne.slice(0, -3);
+        ? newImagesRowOne.slice(0, RIGHT_ODD_IMAGES_TO_MOVE)
+        : newImagesRowOne.slice(0, RIGHT_EVEN_IMAGES_TO_MOVE);
       setImagesOne(newImagesRowOne);
     }
     console.log("finished updateImagesOne");
   }, [
+    LEFT_EVEN_IMAGES_TO_MOVE,
+    LEFT_ODD_IMAGES_TO_MOVE,
     MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG,
+    RIGHT_EVEN_IMAGES_TO_MOVE,
+    RIGHT_ODD_IMAGES_TO_MOVE,
     imageOneRowRight,
     imagesOne,
     imagesTwo,
@@ -152,12 +159,12 @@ export function Carousel({
       let newImagesRowOne = imagesOne.slice();
       //move first entry to end
       const firstImgsRowOne = isOdd
-        ? newImagesRowOne.slice(0, 1)
-        : newImagesRowOne.slice(0, 2);
+        ? newImagesRowOne.slice(0, LEFT_ODD_IMAGES_TO_MOVE)
+        : newImagesRowOne.slice(0, LEFT_EVEN_IMAGES_TO_MOVE);
       newImagesRowOne.push(...firstImgsRowOne);
       newImagesRowOne = isOdd
-        ? newImagesRowOne.slice(1)
-        : newImagesRowOne.slice(2);
+        ? newImagesRowOne.slice(LEFT_ODD_IMAGES_TO_MOVE)
+        : newImagesRowOne.slice(LEFT_EVEN_IMAGES_TO_MOVE);
       setImagesOne(newImagesRowOne);
       setImageOneRowRight(maxImageRowRight);
       setActiveImageRow(1);
@@ -167,12 +174,12 @@ export function Carousel({
       let newImagesRowTwo = imagesTwo.slice();
       //move first entry to end
       const firstImgsRowTwo = isOdd
-        ? newImagesRowTwo.slice(0, 1)
-        : newImagesRowTwo.slice(0, 2);
+        ? newImagesRowTwo.slice(0, LEFT_ODD_IMAGES_TO_MOVE)
+        : newImagesRowTwo.slice(0, LEFT_EVEN_IMAGES_TO_MOVE);
       newImagesRowTwo.push(...firstImgsRowTwo);
       newImagesRowTwo = isOdd
-        ? newImagesRowTwo.slice(1)
-        : newImagesRowTwo.slice(2);
+        ? newImagesRowTwo.slice(LEFT_ODD_IMAGES_TO_MOVE)
+        : newImagesRowTwo.slice(LEFT_EVEN_IMAGES_TO_MOVE);
       setImagesTwo(newImagesRowTwo);
     }
 
@@ -181,12 +188,12 @@ export function Carousel({
       let newImagesRowOne = imagesOne.slice();
       //remove the last entry and add it to the start
       const lastImgsRowOne = isOdd
-        ? newImagesRowOne.slice(-1)
-        : newImagesRowOne.slice(-3);
+        ? newImagesRowOne.slice(RIGHT_ODD_IMAGES_TO_MOVE)
+        : newImagesRowOne.slice(RIGHT_EVEN_IMAGES_TO_MOVE);
       newImagesRowOne.unshift(...lastImgsRowOne);
       newImagesRowOne = isOdd
-        ? newImagesRowOne.slice(0, -1)
-        : newImagesRowOne.slice(0, -3);
+        ? newImagesRowOne.slice(0, RIGHT_ODD_IMAGES_TO_MOVE)
+        : newImagesRowOne.slice(0, RIGHT_EVEN_IMAGES_TO_MOVE);
 
       setImagesOne(newImagesRowOne);
       setImageOneRowRight(maxImageRowRight);
@@ -197,17 +204,21 @@ export function Carousel({
       let newImagesRowTwo = imagesTwo.slice();
       //remove the last entry and add it to the start
       const lastImgsRowTwo = isOdd
-        ? newImagesRowTwo.slice(-1)
-        : newImagesRowTwo.slice(-3);
+        ? newImagesRowTwo.slice(RIGHT_ODD_IMAGES_TO_MOVE)
+        : newImagesRowTwo.slice(RIGHT_EVEN_IMAGES_TO_MOVE);
       newImagesRowTwo.unshift(...lastImgsRowTwo);
       newImagesRowTwo = isOdd
-        ? newImagesRowTwo.slice(0, -1)
-        : newImagesRowTwo.slice(0, -3);
+        ? newImagesRowTwo.slice(0, RIGHT_ODD_IMAGES_TO_MOVE)
+        : newImagesRowTwo.slice(0, RIGHT_EVEN_IMAGES_TO_MOVE);
       setImagesTwo(newImagesRowTwo);
     }
     console.log("finished updateImagesTwo");
   }, [
+    LEFT_EVEN_IMAGES_TO_MOVE,
+    LEFT_ODD_IMAGES_TO_MOVE,
     MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG,
+    RIGHT_EVEN_IMAGES_TO_MOVE,
+    RIGHT_ODD_IMAGES_TO_MOVE,
     imageTwoRowRight,
     imagesOne,
     imagesTwo,
