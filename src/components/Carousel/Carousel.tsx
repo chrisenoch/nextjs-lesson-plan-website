@@ -17,18 +17,19 @@ import {
 //Transition duration must be less than autoplayDelay
 export function Carousel({
   images: unPreparedImages,
+  renderedImageWidth,
+  renderedImageHeight,
   imageDisplayWidth: IMG_DISPLAY_WIDTH,
   imageDisplayHeight: IMG_DISPLAY_HEIGHT,
   imageDisplayWidthUnit: IMG_DISPLAY_WIDTH_UNIT,
   imageDisplayHeightUnit: IMG_DISPLAY_HEIGHT_UNIT,
-  renderedImageWidth,
-  renderedImageHeight,
   autoPlay,
   transitions,
   carouselMoveLeft,
   carouselMoveRight,
   children,
 }: {
+  images: { alt: string; imagePath: string }[];
   renderedImageWidth: number;
   renderedImageHeight: number;
   imageDisplayWidth: number;
@@ -37,7 +38,6 @@ export function Carousel({
   imageDisplayHeightUnit: string;
   autoPlay?: AutoPlay;
   transitions?: Transitions;
-  images: { alt: string; imagePath: string }[];
   carouselMoveLeft: SubscriberConfigObject;
   carouselMoveRight: SubscriberConfigObject;
   children: React.ReactNode;
