@@ -28,6 +28,7 @@ import {
   ArrowForward,
   ArrowForwardIos,
 } from "@mui/icons-material";
+import { CarouselWorks } from "./Carousel/CrouselWorks";
 
 export default function Hero() {
   const carouselMoveLeft: SubscriberConfigObject = useMemo(() => {
@@ -369,6 +370,41 @@ export default function Hero() {
           </ColorFactory>
         </Stack>{" "}
       </Carousel>
+      <CarouselWorks
+        renderedImageWidth={1000}
+        renderedImageHeight={1000}
+        autoPlay={autoPlay}
+        transitions={transitions}
+        images={images}
+        carouselMoveLeft={carouselMoveLeft}
+        carouselMoveRight={carouselMoveRight}>
+        <Stack
+          direction={"row"}
+          sx={{
+            position: "absolute",
+            transform: "translatey(-50%)",
+            justifyContent: "space-between",
+            width: "100%",
+            top: "50%",
+          }}>
+          <ColorFactory primary="#FFFFFF">
+            <IconButton
+              color="primary"
+              size="large"
+              onClick={() => emit(carouselMoveLeft)}>
+              <ArrowBackIos />
+            </IconButton>
+          </ColorFactory>
+          <ColorFactory primary="#FFFFFF">
+            <IconButton
+              size="small"
+              color="primary"
+              onClick={() => emit(carouselMoveRight)}>
+              <ArrowForwardIos />
+            </IconButton>
+          </ColorFactory>
+        </Stack>{" "}
+      </CarouselWorks>
     </>
   );
 }

@@ -15,7 +15,7 @@ import {
 } from "@/services/my-custom-event-emitter/SubscriberService";
 
 //Transition duration must be less than autoplayDelay
-export function Carousel({
+export function CarouselWorks({
   images: unPreparedImages,
   renderedImageWidth,
   renderedImageHeight,
@@ -378,25 +378,19 @@ export function Carousel({
     () =>
       imagesOne.map((image, index) => {
         return (
-          <Box
+          <Image
             key={image.alt + "-1-" + index + 1}
-            height={200}
-            width={200}
-            flexShrink={0}>
-            <Image
-              // key={image.alt + "-1-" + index + 1}
-              alt={image.alt}
-              src={image.imagePath}
-              width={renderedImageWidth}
-              height={renderedImageHeight}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-              }}
-              priority={true}
-            />
-          </Box>
+            alt={image.alt}
+            src={image.imagePath}
+            width={renderedImageWidth}
+            height={renderedImageHeight}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+            priority={true}
+          />
         );
       }),
     [imagesOne, renderedImageHeight, renderedImageWidth]
@@ -406,24 +400,18 @@ export function Carousel({
     () =>
       imagesTwo.map((image, index) => {
         return (
-          <Box
+          <Image
             key={image.alt + "-2-" + index + 1}
-            height={200}
-            width={200}
-            flexShrink={0}>
-            <Image
-              // key={image.alt + "-2-" + index + 1}
-              alt={image.alt}
-              src={image.imagePath}
-              width={renderedImageWidth}
-              height={renderedImageHeight}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-              }}
-            />
-          </Box>
+            alt={image.alt}
+            src={image.imagePath}
+            width={renderedImageWidth}
+            height={renderedImageHeight}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
         );
       }),
     [imagesTwo, renderedImageHeight, renderedImageWidth]
@@ -513,10 +501,8 @@ export function Carousel({
             id="image-row-1"
             sx={{
               width: "200px",
-              height: "200px",
-              // width: "fit-content",
-              // height: "fit-content",
               display: `${activeImageRow === 1 ? "flex" : "none"}`,
+              height: "200px",
               backgroundColor: "gray",
               transition: `right ${
                 transitions
@@ -533,10 +519,8 @@ export function Carousel({
             id="image-row-2"
             sx={{
               width: "200px",
-              height: "200px",
-              // width: "fit-content",
-              // height: "fit-content",
               display: `${activeImageRow === 2 ? "flex" : "none"}`,
+              height: "200px",
               backgroundColor: "gray",
               transition: `right ${
                 transitions
