@@ -378,19 +378,21 @@ export function Carousel({
     () =>
       imagesOne.map((image, index) => {
         return (
-          <Image
-            key={image.alt + "-1-" + index + 1}
-            alt={image.alt}
-            src={image.imagePath}
-            width={renderedImageWidth}
-            height={renderedImageHeight}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-            priority={true}
-          />
+          <Box key={image.alt + "-1-" + index + 1} height={200} width={200}>
+            <Image
+              // key={image.alt + "-1-" + index + 1}
+              alt={image.alt}
+              src={image.imagePath}
+              width={renderedImageWidth}
+              height={renderedImageHeight}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+              priority={true}
+            />
+          </Box>
         );
       }),
     [imagesOne, renderedImageHeight, renderedImageWidth]
@@ -400,18 +402,20 @@ export function Carousel({
     () =>
       imagesTwo.map((image, index) => {
         return (
-          <Image
-            key={image.alt + "-2-" + index + 1}
-            alt={image.alt}
-            src={image.imagePath}
-            width={renderedImageWidth}
-            height={renderedImageHeight}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          />
+          <Box key={image.alt + "-2-" + index + 1} height={200} width={200}>
+            <Image
+              // key={image.alt + "-2-" + index + 1}
+              alt={image.alt}
+              src={image.imagePath}
+              width={renderedImageWidth}
+              height={renderedImageHeight}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
+          </Box>
         );
       }),
     [imagesTwo, renderedImageHeight, renderedImageWidth]
@@ -500,9 +504,11 @@ export function Carousel({
             direction="row"
             id="image-row-1"
             sx={{
-              width: "200px",
+              // width: "200px",
+              // height: "200px",
+              width: "fit-content",
+              height: "fit-content",
               display: `${activeImageRow === 1 ? "flex" : "none"}`,
-              height: "200px",
               backgroundColor: "gray",
               transition: `right ${
                 transitions
@@ -518,9 +524,11 @@ export function Carousel({
             direction="row"
             id="image-row-2"
             sx={{
-              width: "200px",
+              // width: "200px",
+              // height: "200px",
+              width: "fit-content",
+              height: "fit-content",
               display: `${activeImageRow === 2 ? "flex" : "none"}`,
-              height: "200px",
               backgroundColor: "gray",
               transition: `right ${
                 transitions
