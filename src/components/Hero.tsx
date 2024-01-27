@@ -30,7 +30,6 @@ import {
 } from "@mui/icons-material";
 
 export default function Hero() {
-  //const isFirstRender = useIsFirstRender();
   const carouselMoveLeft: SubscriberConfigObject = useMemo(() => {
     return {
       subscribers: new Set(),
@@ -48,7 +47,7 @@ export default function Hero() {
 
   const [autoPlay, setAutoPlay] = useState<AutoPlay>({
     enableAutoPlay: true,
-    direction: "LEFT",
+    direction: "RIGHT",
     delay: 2000,
   });
 
@@ -59,17 +58,17 @@ export default function Hero() {
 
   const images = useMemo(
     () => [
-      {
-        alt: "Giraffes",
-        imagePath:
-          "https://raw.githubusercontent.com/chrisenoch/assets/main/giraffes_south_africa.jpg",
-      },
+      // {
+      //   alt: "Giraffes",
+      //   imagePath:
+      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/giraffes_south_africa.jpg",
+      // },
 
-      {
-        alt: "Fortress",
-        imagePath:
-          "https://raw.githubusercontent.com/chrisenoch/assets/main/Narilka%20fortress%20Tbilisi.jpg",
-      },
+      // {
+      //   alt: "Fortress",
+      //   imagePath:
+      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/Narilka%20fortress%20Tbilisi.jpg",
+      // },
       {
         alt: "Virgin",
         imagePath:
@@ -86,31 +85,31 @@ export default function Hero() {
           "https://raw.githubusercontent.com/chrisenoch/assets/main/swimming.jpg",
       },
 
-      {
-        alt: "Laptop",
-        imagePath:
-          "https://raw.githubusercontent.com/chrisenoch/assets/main/laptop.jpg",
-      },
-      {
-        alt: "Beach-1",
-        imagePath:
-          "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-      },
-      {
-        alt: "Driverless-1",
-        imagePath:
-          "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-      },
-      {
-        alt: "Shopping-1",
-        imagePath:
-          "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-      },
-      {
-        alt: "Fuerteventura",
-        imagePath:
-          "https://raw.githubusercontent.com/chrisenoch/assets/main/fuerteventura-shutterstock.jpg",
-      },
+      // {
+      //   alt: "Laptop",
+      //   imagePath:
+      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/laptop.jpg",
+      // },
+      // {
+      //   alt: "Beach-1",
+      //   imagePath:
+      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
+      // },
+      // {
+      //   alt: "Driverless-1",
+      //   imagePath:
+      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
+      // },
+      // {
+      //   alt: "Shopping-1",
+      //   imagePath:
+      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
+      // },
+      // {
+      //   alt: "Fuerteventura",
+      //   imagePath:
+      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/fuerteventura-shutterstock.jpg",
+      // },
 
       // {
       //   alt: "Antalya",
@@ -335,54 +334,9 @@ export default function Hero() {
           </Grid>
         </Grid>
       </Stack>
-      <Stack direction="row" marginBottom={4}>
-        <Button
-          size="small"
-          onClick={handleToggleEnableAutoPlay}
-          variant="contained"
-          sx={{
-            color: "white",
-          }}>
-          Toggle Enable Autoplay
-        </Button>
-        <Button
-          size="small"
-          onClick={handleToggleAutoPlayDirection}
-          variant="contained"
-          sx={{
-            color: "white",
-          }}>
-          Toggle Direction
-        </Button>
-        <Button
-          size="small"
-          onClick={handleIncreaseAutoPlayDelay}
-          variant="contained"
-          sx={{
-            color: "white",
-          }}>
-          Increase delay
-        </Button>
-        <Button
-          size="small"
-          onClick={() => emit(carouselMoveLeft)}
-          variant="contained"
-          sx={{
-            color: "white",
-          }}>
-          Emit move left to carousel
-        </Button>
-        <Button
-          size="small"
-          onClick={() => emit(carouselMoveRight)}
-          variant="contained"
-          sx={{
-            color: "white",
-          }}>
-          Emit move right to carousel
-        </Button>
-      </Stack>
       <Carousel
+        renderedImageWidth={1000}
+        renderedImageHeight={1000}
         autoPlay={autoPlay}
         transitions={transitions}
         images={images}
@@ -395,7 +349,6 @@ export default function Hero() {
             transform: "translatey(-50%)",
             justifyContent: "space-between",
             width: "100%",
-            //left: "50%",
             top: "50%",
           }}>
           <ColorFactory primary="#FFFFFF">

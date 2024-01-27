@@ -17,12 +17,16 @@ import {
 //Transition duration must be less than autoplayDelay
 export function Carousel({
   images: unPreparedImages,
+  renderedImageWidth,
+  renderedImageHeight,
   autoPlay,
   transitions,
   carouselMoveLeft,
   carouselMoveRight,
   children,
 }: {
+  renderedImageWidth: number;
+  renderedImageHeight: number;
   autoPlay?: AutoPlay;
   transitions?: Transitions;
   images: { alt: string; imagePath: string }[];
@@ -44,14 +48,13 @@ export function Carousel({
   if (isOdd) {
     maxImageRowRight = Math.floor(TOTAL_IMGS / 2) * IMG_WIDTH;
   } else {
-    maxImageRowRight = Math.ceil(TOTAL_IMGS / 2) * IMG_WIDTH;
-    //maxImageRowRight = (TOTAL_IMGS / 2) * IMG_WIDTH;
+    maxImageRowRight = (TOTAL_IMGS / 2) * IMG_WIDTH;
   }
   const LEFT_ODD_IMAGES_TO_MOVE = Math.floor(TOTAL_IMGS / 2);
   const LEFT_EVEN_IMAGES_TO_MOVE = Math.floor(TOTAL_IMGS / 2) - 1;
   const RIGHT_ODD_IMAGES_TO_MOVE = Math.floor(TOTAL_IMGS / 2) * -1;
   const RIGHT_EVEN_IMAGES_TO_MOVE = (TOTAL_IMGS / 2) * -1;
-  const [isOverFlowHidden, setOverflowHidden] = useState<boolean>(true);
+  const [isOverFlowShown, setIsOverflowShown] = useState<boolean>(false);
   const [imagesOne, setImagesOne] =
     useState<{ alt: string; imagePath: string }[]>(images);
   const [imagesTwo, setImagesTwo] =
@@ -291,26 +294,6 @@ export function Carousel({
     disableControls.current = false;
   }, []);
 
-  // function moveRightManualControls() {
-  //   console.log("in moveRightManualControls");
-  //   stopAutoPlay();
-  //   if (!disableControls.current && images.length > 1) {
-  //     restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
-  //     setImageOneRowRight((px) => px - 200);
-  //     setImageTwoRowRight((px) => px - 200);
-  //   }
-  // }
-
-  // function moveLeftManualControls() {
-  //   console.log("in moveLeftManualControls");
-  //   stopAutoPlay();
-  //   if (!disableControls.current && images.length > 1) {
-  //     restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
-  //     setImageOneRowRight((px) => px + 200);
-  //     setImageTwoRowRight((px) => px + 200);
-  //   }
-  // }
-
   const restartAutoPlayUponIdle = useCallback(
     (delay: number) => {
       if (autoPlay) {
@@ -393,44 +376,45 @@ export function Carousel({
 
   const renderedImagesOne = useMemo(
     () =>
-      imagesOne.map((image, index, arr) => {
+      imagesOne.map((image, index) => {
         return (
           <Image
             key={image.alt + "-1-" + index + 1}
             alt={image.alt}
             src={image.imagePath}
-            //width={index === 0 ? firstImageWidth : 200}
-            width={200}
-            height={200}
+            width={renderedImageWidth}
+            height={renderedImageHeight}
             style={{
-              maxWidth: "100%",
+              width: "100%",
+              height: "100%",
               objectFit: "cover",
             }}
             priority={true}
           />
         );
       }),
-    [imagesOne]
+    [imagesOne, renderedImageHeight, renderedImageWidth]
   );
 
   const renderedImagesTwo = useMemo(
     () =>
-      imagesTwo.map((image, index, arr) => {
+      imagesTwo.map((image, index) => {
         return (
           <Image
             key={image.alt + "-2-" + index + 1}
             alt={image.alt}
             src={image.imagePath}
-            width={200}
-            height={200}
+            width={renderedImageWidth}
+            height={renderedImageHeight}
             style={{
-              maxWidth: "100%",
+              width: "100%",
+              height: "100%",
               objectFit: "cover",
             }}
           />
         );
       }),
-    [imagesTwo]
+    [imagesTwo, renderedImageHeight, renderedImageWidth]
   );
 
   useEffect(() => {
@@ -509,7 +493,7 @@ export function Carousel({
           id="image-display-box"
           width="200px"
           height="200px"
-          overflow={isOverFlowHidden ? "visible" : "hidden"}
+          overflow={isOverFlowShown ? "visible" : "hidden"}
           marginLeft="500px"
           position="relative">
           <Stack
@@ -544,8 +528,7 @@ export function Carousel({
                   : DEFAULT_TRANSITION_DURATION + "ms"
               } ${transitions ? transitions.easingFunction : "ease-out"} `,
               position: "absolute",
-              //right: "totalImagesLengthpx", //decreasing the value 'right' moves the Images from left to right
-              right: `${imageTwoRowRight}px`,
+              right: `${imageTwoRowRight}px`, //decreasing the value 'right' moves the Images from left to right
             }}>
             {renderedImagesTwo}
           </Stack>
@@ -571,7 +554,7 @@ export function Carousel({
         </Button>
         <Button
           onClick={() =>
-            setOverflowHidden((isOverFlowHidden) => !isOverFlowHidden)
+            setIsOverflowShown((isOverFlowHidden) => !isOverFlowHidden)
           }
           color="secondary"
           variant="outlined">
