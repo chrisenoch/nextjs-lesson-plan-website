@@ -17,6 +17,8 @@ import {
 //Transition duration must be less than autoplayDelay
 export function Carousel({
   images: unPreparedImages,
+  imageDisplayWidth: IMG_DISPLAY_WIDTH,
+  imageDisplayHeight: IMG_DISPLAY_HEIGHT,
   renderedImageWidth,
   renderedImageHeight,
   autoPlay,
@@ -27,6 +29,8 @@ export function Carousel({
 }: {
   renderedImageWidth: number;
   renderedImageHeight: number;
+  imageDisplayWidth: number;
+  imageDisplayHeight: number;
   autoPlay?: AutoPlay;
   transitions?: Transitions;
   images: { alt: string; imagePath: string }[];
@@ -37,18 +41,21 @@ export function Carousel({
   //const images = increaseArrayIfTooSmall(unPreparedImages);
   const images = unPreparedImages;
   const DEFAULT_TRANSITION_DURATION = 1000;
-  const IMG_WIDTH = 200;
+  // const IMG_WIDTH = 200;
+  //const IMG_WIDTH = imageDisplayWidth;
+  //const IMG_DISPLAY_WIDTH_xx = 200;
   const TOTAL_IMGS = images.length;
-  const MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG = TOTAL_IMGS * IMG_WIDTH - IMG_WIDTH;
+  const MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG =
+    TOTAL_IMGS * IMG_DISPLAY_WIDTH - IMG_DISPLAY_WIDTH;
   const RESTART_AUTOPLAY_DELAY = autoPlay?.restartDelayAfterLastUserInteraction
     ? autoPlay?.restartDelayAfterLastUserInteraction
     : 3000;
   let maxImageRowRight: number;
   const isOdd = TOTAL_IMGS % 2 === 0 ? false : true;
   if (isOdd) {
-    maxImageRowRight = Math.floor(TOTAL_IMGS / 2) * IMG_WIDTH;
+    maxImageRowRight = Math.floor(TOTAL_IMGS / 2) * IMG_DISPLAY_WIDTH;
   } else {
-    maxImageRowRight = (TOTAL_IMGS / 2) * IMG_WIDTH;
+    maxImageRowRight = (TOTAL_IMGS / 2) * IMG_DISPLAY_WIDTH;
   }
   const LEFT_ODD_IMAGES_TO_MOVE = Math.floor(TOTAL_IMGS / 2);
   const LEFT_EVEN_IMAGES_TO_MOVE = Math.floor(TOTAL_IMGS / 2) - 1;
@@ -231,17 +238,17 @@ export function Carousel({
 
   const moveRightWithAutoPlay = useCallback(() => {
     if (!disableControls.current && images.length > 1) {
-      setImageOneRowRight((px) => px - 200);
-      setImageTwoRowRight((px) => px - 200);
+      setImageOneRowRight((px) => px - IMG_DISPLAY_WIDTH);
+      setImageTwoRowRight((px) => px - IMG_DISPLAY_WIDTH);
     }
-  }, [images.length]);
+  }, [IMG_DISPLAY_WIDTH, images.length]);
 
   const moveLeftWithAutoPlay = useCallback(() => {
     if (!disableControls.current && images.length > 1) {
-      setImageOneRowRight((px) => px + 200);
-      setImageTwoRowRight((px) => px + 200);
+      setImageOneRowRight((px) => px + IMG_DISPLAY_WIDTH);
+      setImageTwoRowRight((px) => px + IMG_DISPLAY_WIDTH);
     }
-  }, [images.length]);
+  }, [IMG_DISPLAY_WIDTH, images.length]);
 
   const startAutoPlay = useCallback(
     (delay: number, direction: AutoPlayDirection) => {
@@ -380,11 +387,11 @@ export function Carousel({
         return (
           <Box
             key={image.alt + "-1-" + index + 1}
-            height={200}
-            width={200}
-            flexShrink={0}>
+            height={IMG_DISPLAY_HEIGHT}
+            width={IMG_DISPLAY_WIDTH}
+            flexShrink={0}
+            flexGrow={0}>
             <Image
-              // key={image.alt + "-1-" + index + 1}
               alt={image.alt}
               src={image.imagePath}
               width={renderedImageWidth}
@@ -399,7 +406,13 @@ export function Carousel({
           </Box>
         );
       }),
-    [imagesOne, renderedImageHeight, renderedImageWidth]
+    [
+      IMG_DISPLAY_WIDTH,
+      IMG_DISPLAY_HEIGHT,
+      imagesOne,
+      renderedImageHeight,
+      renderedImageWidth,
+    ]
   );
 
   const renderedImagesTwo = useMemo(
@@ -408,11 +421,11 @@ export function Carousel({
         return (
           <Box
             key={image.alt + "-2-" + index + 1}
-            height={200}
-            width={200}
-            flexShrink={0}>
+            height={IMG_DISPLAY_HEIGHT}
+            width={IMG_DISPLAY_WIDTH}
+            flexShrink={0}
+            flexGrow={0}>
             <Image
-              // key={image.alt + "-2-" + index + 1}
               alt={image.alt}
               src={image.imagePath}
               width={renderedImageWidth}
@@ -426,7 +439,13 @@ export function Carousel({
           </Box>
         );
       }),
-    [imagesTwo, renderedImageHeight, renderedImageWidth]
+    [
+      IMG_DISPLAY_HEIGHT,
+      IMG_DISPLAY_WIDTH,
+      imagesTwo,
+      renderedImageHeight,
+      renderedImageWidth,
+    ]
   );
 
   useEffect(() => {
@@ -460,28 +479,38 @@ export function Carousel({
       stopAutoPlay();
       if (!disableControls.current && images.length > 1) {
         restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
-        setImageOneRowRight((px) => px + 200);
-        setImageTwoRowRight((px) => px + 200);
+        setImageOneRowRight((px) => px + IMG_DISPLAY_WIDTH);
+        setImageTwoRowRight((px) => px + IMG_DISPLAY_WIDTH);
       }
     }
     return {
       subscribe: moveLeftManualControls,
     };
-  }, [RESTART_AUTOPLAY_DELAY, images.length, restartAutoPlayUponIdle]);
+  }, [
+    IMG_DISPLAY_WIDTH,
+    RESTART_AUTOPLAY_DELAY,
+    images.length,
+    restartAutoPlayUponIdle,
+  ]);
   const moveRightSubscription = useMemo(() => {
     function moveRightManualControls() {
       console.log("in moveRightManualControls");
       stopAutoPlay();
       if (!disableControls.current && images.length > 1) {
         restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
-        setImageOneRowRight((px) => px - 200);
-        setImageTwoRowRight((px) => px - 200);
+        setImageOneRowRight((px) => px - IMG_DISPLAY_WIDTH);
+        setImageTwoRowRight((px) => px - IMG_DISPLAY_WIDTH);
       }
     }
     return {
       subscribe: moveRightManualControls,
     };
-  }, [RESTART_AUTOPLAY_DELAY, images.length, restartAutoPlayUponIdle]);
+  }, [
+    IMG_DISPLAY_WIDTH,
+    RESTART_AUTOPLAY_DELAY,
+    images.length,
+    restartAutoPlayUponIdle,
+  ]);
 
   useEffect(() => {
     carouselMoveLeft && subscribe(carouselMoveLeft, moveLeftSubscription);
@@ -503,8 +532,8 @@ export function Carousel({
       <Stack>
         <Box
           id="image-display-box"
-          width="200px"
-          height="200px"
+          width={`${IMG_DISPLAY_WIDTH}px`}
+          height={`${IMG_DISPLAY_HEIGHT}px`}
           overflow={isOverFlowShown ? "visible" : "hidden"}
           marginLeft="500px"
           position="relative">
@@ -512,8 +541,9 @@ export function Carousel({
             direction="row"
             id="image-row-1"
             sx={{
-              width: "200px",
-              height: "200px",
+              width: `${IMG_DISPLAY_WIDTH}px`,
+              height: `${IMG_DISPLAY_HEIGHT}px`,
+              //height: "200px",
               // width: "fit-content",
               // height: "fit-content",
               display: `${activeImageRow === 1 ? "flex" : "none"}`,
@@ -532,8 +562,8 @@ export function Carousel({
             direction="row"
             id="image-row-2"
             sx={{
-              width: "200px",
-              height: "200px",
+              width: `${IMG_DISPLAY_WIDTH}px`,
+              height: `${IMG_DISPLAY_HEIGHT}px`,
               // width: "fit-content",
               // height: "fit-content",
               display: `${activeImageRow === 2 ? "flex" : "none"}`,

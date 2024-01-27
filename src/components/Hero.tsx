@@ -65,11 +65,11 @@ export default function Hero() {
       //     "https://raw.githubusercontent.com/chrisenoch/assets/main/giraffes_south_africa.jpg",
       // },
 
-      // {
-      //   alt: "Fortress",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/Narilka%20fortress%20Tbilisi.jpg",
-      // },
+      {
+        alt: "Fortress",
+        imagePath:
+          "https://raw.githubusercontent.com/chrisenoch/assets/main/Narilka%20fortress%20Tbilisi.jpg",
+      },
       {
         alt: "Virgin",
         imagePath:
@@ -86,11 +86,11 @@ export default function Hero() {
           "https://raw.githubusercontent.com/chrisenoch/assets/main/swimming.jpg",
       },
 
-      // {
-      //   alt: "Laptop",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/laptop.jpg",
-      // },
+      {
+        alt: "Laptop",
+        imagePath:
+          "https://raw.githubusercontent.com/chrisenoch/assets/main/laptop.jpg",
+      },
       // {
       //   alt: "Beach-1",
       //   imagePath:
@@ -335,7 +335,56 @@ export default function Hero() {
           </Grid>
         </Grid>
       </Stack>
+      <Stack direction="row" marginBottom={4}>
+        <Button
+          size="small"
+          onClick={handleToggleEnableAutoPlay}
+          variant="contained"
+          sx={{
+            color: "white",
+          }}>
+          Toggle Enable Autoplay
+        </Button>
+        <Button
+          size="small"
+          onClick={handleToggleAutoPlayDirection}
+          variant="contained"
+          sx={{
+            color: "white",
+          }}>
+          Toggle Direction
+        </Button>
+        <Button
+          size="small"
+          onClick={handleIncreaseAutoPlayDelay}
+          variant="contained"
+          sx={{
+            color: "white",
+          }}>
+          Increase delay
+        </Button>
+        <Button
+          size="small"
+          onClick={() => emit(carouselMoveLeft)}
+          variant="contained"
+          sx={{
+            color: "white",
+          }}>
+          Emit move left to carousel
+        </Button>
+        <Button
+          size="small"
+          onClick={() => emit(carouselMoveRight)}
+          variant="contained"
+          sx={{
+            color: "white",
+          }}>
+          Emit move right to carousel
+        </Button>
+      </Stack>
       <Carousel
+        imageDisplayWidth={200}
+        imageDisplayHeight={500}
         renderedImageWidth={1000}
         renderedImageHeight={1000}
         autoPlay={autoPlay}
@@ -370,41 +419,6 @@ export default function Hero() {
           </ColorFactory>
         </Stack>{" "}
       </Carousel>
-      <CarouselWorks
-        renderedImageWidth={1000}
-        renderedImageHeight={1000}
-        autoPlay={autoPlay}
-        transitions={transitions}
-        images={images}
-        carouselMoveLeft={carouselMoveLeft}
-        carouselMoveRight={carouselMoveRight}>
-        <Stack
-          direction={"row"}
-          sx={{
-            position: "absolute",
-            transform: "translatey(-50%)",
-            justifyContent: "space-between",
-            width: "100%",
-            top: "50%",
-          }}>
-          <ColorFactory primary="#FFFFFF">
-            <IconButton
-              color="primary"
-              size="large"
-              onClick={() => emit(carouselMoveLeft)}>
-              <ArrowBackIos />
-            </IconButton>
-          </ColorFactory>
-          <ColorFactory primary="#FFFFFF">
-            <IconButton
-              size="small"
-              color="primary"
-              onClick={() => emit(carouselMoveRight)}>
-              <ArrowForwardIos />
-            </IconButton>
-          </ColorFactory>
-        </Stack>{" "}
-      </CarouselWorks>
     </>
   );
 }
