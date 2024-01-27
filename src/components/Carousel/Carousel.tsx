@@ -62,6 +62,10 @@ export function Carousel({
   const LEFT_EVEN_IMAGES_TO_MOVE = Math.floor(TOTAL_IMGS / 2) - 1;
   const RIGHT_ODD_IMAGES_TO_MOVE = Math.floor(TOTAL_IMGS / 2) * -1;
   const RIGHT_EVEN_IMAGES_TO_MOVE = (TOTAL_IMGS / 2) * -1;
+
+  const firstImageIndex = isOdd ? Math.floor(TOTAL_IMGS / 2) : TOTAL_IMGS / 2;
+  console.log("firstImageIndex " + firstImageIndex);
+
   const [isOverFlowShown, setIsOverflowShown] = useState<boolean>(false);
   const [imagesOne, setImagesOne] =
     useState<{ alt: string; imagePath: string }[]>(images);
@@ -402,19 +406,26 @@ export function Carousel({
                 height: "100%",
                 objectFit: "cover",
               }}
-              priority={true}
+              priority={
+                index === firstImageIndex ||
+                index === firstImageIndex + 1 ||
+                index === firstImageIndex - 1
+                  ? true
+                  : false
+              }
             />
           </Box>
         );
       }),
     [
       imagesOne,
-      IMG_DISPLAY_HEIGHT,
-      IMG_DISPLAY_HEIGHT_UNIT,
       IMG_DISPLAY_WIDTH,
       IMG_DISPLAY_WIDTH_UNIT,
+      IMG_DISPLAY_HEIGHT,
+      IMG_DISPLAY_HEIGHT_UNIT,
       renderedImageWidth,
       renderedImageHeight,
+      firstImageIndex,
     ]
   );
 
@@ -534,58 +545,55 @@ export function Carousel({
 
   return (
     <>
-      <Stack overflow={"hidden"}>
-        <Box
-          id="image-display-box"
-          width={`${IMG_DISPLAY_WIDTH}${IMG_DISPLAY_WIDTH_UNIT}`}
-          height={`${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`}
-          overflow={isOverFlowShown ? "visible" : "hidden"}
-          marginLeft="500px"
-          position="relative">
-          <Stack
-            direction="row"
-            id="image-row-1"
-            sx={{
-              width: `${IMG_DISPLAY_WIDTH}${IMG_DISPLAY_WIDTH_UNIT}`,
-              height: `${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`,
-              //height: "200px",
-              // width: "fit-content",
-              // height: "fit-content",
-              display: `${activeImageRow === 1 ? "flex" : "none"}`,
-              backgroundColor: "gray",
-              transition: `right ${
-                transitions
-                  ? transitions.durationMs + "ms"
-                  : DEFAULT_TRANSITION_DURATION + "ms"
-              } ${transitions ? transitions.easingFunction : "ease-out"} `,
-              position: "absolute",
-              right: `${imageOneRowRight}${IMG_DISPLAY_WIDTH_UNIT}`,
-            }}>
-            {renderedImagesOne}
-          </Stack>
-          <Stack
-            direction="row"
-            id="image-row-2"
-            sx={{
-              width: `${IMG_DISPLAY_WIDTH}${IMG_DISPLAY_WIDTH_UNIT}`,
-              height: `${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`,
-              // width: "fit-content",
-              // height: "fit-content",
-              display: `${activeImageRow === 2 ? "flex" : "none"}`,
-              backgroundColor: "gray",
-              transition: `right ${
-                transitions
-                  ? transitions.durationMs + "ms"
-                  : DEFAULT_TRANSITION_DURATION + "ms"
-              } ${transitions ? transitions.easingFunction : "ease-out"} `,
-              position: "absolute",
-              right: `${imageTwoRowRight}${IMG_DISPLAY_WIDTH_UNIT}`, //decreasing the value 'right' moves the Images from left to right
-            }}>
-            {renderedImagesTwo}
-          </Stack>
-          {children}
-        </Box>
-      </Stack>
+      <Box
+        id="image-display-box"
+        width={`${IMG_DISPLAY_WIDTH}${IMG_DISPLAY_WIDTH_UNIT}`}
+        height={`${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`}
+        overflow={isOverFlowShown ? "visible" : "hidden"}
+        position="relative">
+        <Stack
+          direction="row"
+          id="image-row-1"
+          sx={{
+            width: `${IMG_DISPLAY_WIDTH}${IMG_DISPLAY_WIDTH_UNIT}`,
+            height: `${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`,
+            //height: "200px",
+            // width: "fit-content",
+            // height: "fit-content",
+            display: `${activeImageRow === 1 ? "flex" : "none"}`,
+            backgroundColor: "gray",
+            transition: `right ${
+              transitions
+                ? transitions.durationMs + "ms"
+                : DEFAULT_TRANSITION_DURATION + "ms"
+            } ${transitions ? transitions.easingFunction : "ease-out"} `,
+            position: "absolute",
+            right: `${imageOneRowRight}${IMG_DISPLAY_WIDTH_UNIT}`,
+          }}>
+          {renderedImagesOne}
+        </Stack>
+        <Stack
+          direction="row"
+          id="image-row-2"
+          sx={{
+            width: `${IMG_DISPLAY_WIDTH}${IMG_DISPLAY_WIDTH_UNIT}`,
+            height: `${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`,
+            // width: "fit-content",
+            // height: "fit-content",
+            display: `${activeImageRow === 2 ? "flex" : "none"}`,
+            backgroundColor: "gray",
+            transition: `right ${
+              transitions
+                ? transitions.durationMs + "ms"
+                : DEFAULT_TRANSITION_DURATION + "ms"
+            } ${transitions ? transitions.easingFunction : "ease-out"} `,
+            position: "absolute",
+            right: `${imageTwoRowRight}${IMG_DISPLAY_WIDTH_UNIT}`, //decreasing the value 'right' moves the Images from left to right
+          }}>
+          {renderedImagesTwo}
+        </Stack>
+        {children}
+      </Box>
 
       <Stack marginTop={8} direction={"row"}>
         <Button

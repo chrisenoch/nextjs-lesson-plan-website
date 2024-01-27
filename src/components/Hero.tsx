@@ -28,7 +28,6 @@ import {
   ArrowForward,
   ArrowForwardIos,
 } from "@mui/icons-material";
-import { CarouselWorks } from "./Carousel/CrouselWorks";
 
 export default function Hero() {
   const carouselMoveLeft: SubscriberConfigObject = useMemo(() => {
@@ -101,16 +100,16 @@ export default function Hero() {
         imagePath:
           "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
       },
-      // {
-      //   alt: "Shopping-1",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-      // },
-      // {
-      //   alt: "Fuerteventura",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/fuerteventura-shutterstock.jpg",
-      // },
+      {
+        alt: "Shopping-1",
+        imagePath:
+          "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
+      },
+      {
+        alt: "Fuerteventura",
+        imagePath:
+          "https://raw.githubusercontent.com/chrisenoch/assets/main/fuerteventura-shutterstock.jpg",
+      },
 
       // {
       //   alt: "Antalya",
@@ -382,45 +381,47 @@ export default function Hero() {
           Emit move right to carousel
         </Button>
       </Stack>
-      <Carousel
-        imageDisplayWidth={40}
-        imageDisplayHeight={40}
-        imageDisplayWidthUnit={"vw"}
-        imageDisplayHeightUnit={"vh"}
-        renderedImageWidth={1000}
-        renderedImageHeight={1000}
-        autoPlay={autoPlay}
-        transitions={transitions}
-        images={images}
-        carouselMoveLeft={carouselMoveLeft}
-        carouselMoveRight={carouselMoveRight}>
-        <Stack
-          direction={"row"}
-          sx={{
-            position: "absolute",
-            transform: "translatey(-50%)",
-            justifyContent: "space-between",
-            width: "100%",
-            top: "50%",
-          }}>
-          <ColorFactory primary="#FFFFFF">
-            <IconButton
-              color="primary"
-              size="large"
-              onClick={() => emit(carouselMoveLeft)}>
-              <ArrowBackIos />
-            </IconButton>
-          </ColorFactory>
-          <ColorFactory primary="#FFFFFF">
-            <IconButton
-              size="small"
-              color="primary"
-              onClick={() => emit(carouselMoveRight)}>
-              <ArrowForwardIos />
-            </IconButton>
-          </ColorFactory>
-        </Stack>{" "}
-      </Carousel>
+      <Stack alignItems={"center"}>
+        <Carousel
+          imageDisplayWidth={8}
+          imageDisplayHeight={20}
+          imageDisplayWidthUnit={"vw"}
+          imageDisplayHeightUnit={"vh"}
+          renderedImageWidth={1000}
+          renderedImageHeight={1000}
+          autoPlay={autoPlay}
+          transitions={transitions}
+          images={images}
+          carouselMoveLeft={carouselMoveLeft}
+          carouselMoveRight={carouselMoveRight}>
+          <Stack
+            direction={"row"}
+            sx={{
+              position: "absolute",
+              transform: "translatey(-50%)",
+              justifyContent: "space-between",
+              width: "100%",
+              top: "50%",
+            }}>
+            <ColorFactory primary="#FFFFFF">
+              <IconButton
+                color="primary"
+                size="large"
+                onClick={() => emit(carouselMoveLeft)}>
+                <ArrowBackIos />
+              </IconButton>
+            </ColorFactory>
+            <ColorFactory primary="#FFFFFF">
+              <IconButton
+                size="small"
+                color="primary"
+                onClick={() => emit(carouselMoveRight)}>
+                <ArrowForwardIos />
+              </IconButton>
+            </ColorFactory>
+          </Stack>{" "}
+        </Carousel>
+      </Stack>
     </>
   );
 }
