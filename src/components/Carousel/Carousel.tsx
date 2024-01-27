@@ -42,8 +42,7 @@ export function Carousel({
   carouselMoveRight: SubscriberConfigObject;
   children: React.ReactNode;
 }) {
-  //const images = increaseArrayIfTooSmall(unPreparedImages);
-  const images = unPreparedImages;
+  const images = increaseArrayIfTooSmall(unPreparedImages);
   const DEFAULT_TRANSITION_DURATION = 1000;
   const TOTAL_IMGS = images.length;
   const MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG =
@@ -87,8 +86,6 @@ export function Carousel({
   const [previousAutoPlay, setPreviousAutoPlay] = useState<
     AutoPlay | undefined
   >(autoPlay);
-
-  console.log("disableControls.current " + disableControls.current);
 
   checkForPropsErrors();
   const updateImagesOne = useCallback(() => {
@@ -244,18 +241,18 @@ export function Carousel({
   ]);
 
   const moveRightWithAutoPlay = useCallback(() => {
-    if (!disableControls.current && images.length > 1) {
+    if (!disableControls.current) {
       setImageOneRowRight((width) => width - IMG_DISPLAY_WIDTH);
       setImageTwoRowRight((width) => width - IMG_DISPLAY_WIDTH);
     }
-  }, [IMG_DISPLAY_WIDTH, images.length]);
+  }, [IMG_DISPLAY_WIDTH]);
 
   const moveLeftWithAutoPlay = useCallback(() => {
-    if (!disableControls.current && images.length > 1) {
+    if (!disableControls.current) {
       setImageOneRowRight((width) => width + IMG_DISPLAY_WIDTH);
       setImageTwoRowRight((width) => width + IMG_DISPLAY_WIDTH);
     }
-  }, [IMG_DISPLAY_WIDTH, images.length]);
+  }, [IMG_DISPLAY_WIDTH]);
 
   const startAutoPlay = useCallback(
     (delay: number, direction: AutoPlayDirection) => {
@@ -329,28 +326,25 @@ export function Carousel({
   }
 
   useEffect(() => {
-    if (images.length > 1) {
-      const imageRowEle = document.querySelector("#image-row-1");
-      imageRowEle &&
-        imageRowEle.addEventListener("transitionend", updateImagesOne);
-      imageRowEle &&
-        imageRowEle.addEventListener("transitionend", activateControls);
+    const imageRowEle = document.querySelector("#image-row-1");
+    imageRowEle &&
+      imageRowEle.addEventListener("transitionend", updateImagesOne);
+    imageRowEle &&
+      imageRowEle.addEventListener("transitionend", activateControls);
 
-      imageRowEle &&
-        imageRowEle.addEventListener("transitionstart", deactivateControls);
+    imageRowEle &&
+      imageRowEle.addEventListener("transitionstart", deactivateControls);
 
-      return () => {
-        imageRowEle?.removeEventListener("transitionend", updateImagesOne);
-        imageRowEle?.removeEventListener("transitionend", activateControls);
-        imageRowEle?.removeEventListener("transitionstart", deactivateControls);
-      };
-    }
+    return () => {
+      imageRowEle?.removeEventListener("transitionend", updateImagesOne);
+      imageRowEle?.removeEventListener("transitionend", activateControls);
+      imageRowEle?.removeEventListener("transitionstart", deactivateControls);
+    };
   }, [
     MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG,
     activateControls,
     deactivateControls,
     imageOneRowRight,
-    images.length,
     imagesOne,
     imagesTwo,
     isOdd,
@@ -359,28 +353,25 @@ export function Carousel({
   ]);
 
   useEffect(() => {
-    if (images.length > 1) {
-      const imageRowEle = document.querySelector("#image-row-2");
-      imageRowEle &&
-        imageRowEle.addEventListener("transitionend", updateImagesTwo);
-      imageRowEle &&
-        imageRowEle.addEventListener("transitionend", activateControls);
+    const imageRowEle = document.querySelector("#image-row-2");
+    imageRowEle &&
+      imageRowEle.addEventListener("transitionend", updateImagesTwo);
+    imageRowEle &&
+      imageRowEle.addEventListener("transitionend", activateControls);
 
-      imageRowEle &&
-        imageRowEle.addEventListener("transitionstart", deactivateControls);
+    imageRowEle &&
+      imageRowEle.addEventListener("transitionstart", deactivateControls);
 
-      return () => {
-        imageRowEle?.removeEventListener("transitionend", updateImagesTwo);
-        imageRowEle?.removeEventListener("transitionend", activateControls);
-        imageRowEle?.removeEventListener("transitionstart", deactivateControls);
-      };
-    }
+    return () => {
+      imageRowEle?.removeEventListener("transitionend", updateImagesTwo);
+      imageRowEle?.removeEventListener("transitionend", activateControls);
+      imageRowEle?.removeEventListener("transitionstart", deactivateControls);
+    };
   }, [
     MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG,
     activateControls,
     deactivateControls,
     imageTwoRowRight,
-    images.length,
     imagesOne,
     imagesTwo,
     isOdd,
@@ -474,6 +465,9 @@ export function Carousel({
   }, [triggerRerender]);
 
   function checkForPropsErrors() {
+    if (images.length < 2) {
+      throw new Error("You must include at least two images.");
+    }
     if (transitions && autoPlay && autoPlay.delay < transitions.durationMs) {
       console.warn(
         "Error: AutoPlay delay must be greater than transition duration."
@@ -496,7 +490,7 @@ export function Carousel({
       console.log("in moveLeftManualControls");
       stopAutoPlay();
       restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
-      if (!disableControls.current && images.length > 1) {
+      if (!disableControls.current) {
         // restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
         setImageOneRowRight((width) => width + IMG_DISPLAY_WIDTH);
         setImageTwoRowRight((width) => width + IMG_DISPLAY_WIDTH);
@@ -505,18 +499,13 @@ export function Carousel({
     return {
       subscribe: moveLeftManualControls,
     };
-  }, [
-    IMG_DISPLAY_WIDTH,
-    RESTART_AUTOPLAY_DELAY,
-    images.length,
-    restartAutoPlayUponIdle,
-  ]);
+  }, [IMG_DISPLAY_WIDTH, RESTART_AUTOPLAY_DELAY, restartAutoPlayUponIdle]);
   const moveRightSubscription = useMemo(() => {
     function moveRightManualControls() {
       console.log("in moveRightManualControls");
       stopAutoPlay();
       restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
-      if (!disableControls.current && images.length > 1) {
+      if (!disableControls.current) {
         // restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
         setImageOneRowRight((width) => width - IMG_DISPLAY_WIDTH);
         setImageTwoRowRight((width) => width - IMG_DISPLAY_WIDTH);
@@ -525,12 +514,7 @@ export function Carousel({
     return {
       subscribe: moveRightManualControls,
     };
-  }, [
-    IMG_DISPLAY_WIDTH,
-    RESTART_AUTOPLAY_DELAY,
-    images.length,
-    restartAutoPlayUponIdle,
-  ]);
+  }, [IMG_DISPLAY_WIDTH, RESTART_AUTOPLAY_DELAY, restartAutoPlayUponIdle]);
 
   useEffect(() => {
     carouselMoveLeft && subscribe(carouselMoveLeft, moveLeftSubscription);
