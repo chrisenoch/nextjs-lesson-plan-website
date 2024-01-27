@@ -91,16 +91,16 @@ export default function Hero() {
         imagePath:
           "https://raw.githubusercontent.com/chrisenoch/assets/main/laptop.jpg",
       },
-      // {
-      //   alt: "Beach-1",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-      // },
-      // {
-      //   alt: "Driverless-1",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-      // },
+      {
+        alt: "Beach-1",
+        imagePath:
+          "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
+      },
+      {
+        alt: "Driverless-1",
+        imagePath:
+          "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
+      },
       // {
       //   alt: "Shopping-1",
       //   imagePath:
@@ -383,8 +383,10 @@ export default function Hero() {
         </Button>
       </Stack>
       <Carousel
-        imageDisplayWidth={200}
-        imageDisplayHeight={500}
+        imageDisplayWidth={40}
+        imageDisplayHeight={40}
+        imageDisplayWidthUnit={"vw"}
+        imageDisplayHeightUnit={"vh"}
         renderedImageWidth={1000}
         renderedImageHeight={1000}
         autoPlay={autoPlay}

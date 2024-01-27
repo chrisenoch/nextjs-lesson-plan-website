@@ -19,6 +19,8 @@ export function Carousel({
   images: unPreparedImages,
   imageDisplayWidth: IMG_DISPLAY_WIDTH,
   imageDisplayHeight: IMG_DISPLAY_HEIGHT,
+  imageDisplayWidthUnit: IMG_DISPLAY_WIDTH_UNIT,
+  imageDisplayHeightUnit: IMG_DISPLAY_HEIGHT_UNIT,
   renderedImageWidth,
   renderedImageHeight,
   autoPlay,
@@ -31,6 +33,8 @@ export function Carousel({
   renderedImageHeight: number;
   imageDisplayWidth: number;
   imageDisplayHeight: number;
+  imageDisplayWidthUnit: string;
+  imageDisplayHeightUnit: string;
   autoPlay?: AutoPlay;
   transitions?: Transitions;
   images: { alt: string; imagePath: string }[];
@@ -41,9 +45,6 @@ export function Carousel({
   //const images = increaseArrayIfTooSmall(unPreparedImages);
   const images = unPreparedImages;
   const DEFAULT_TRANSITION_DURATION = 1000;
-  // const IMG_WIDTH = 200;
-  //const IMG_WIDTH = imageDisplayWidth;
-  //const IMG_DISPLAY_WIDTH_xx = 200;
   const TOTAL_IMGS = images.length;
   const MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG =
     TOTAL_IMGS * IMG_DISPLAY_WIDTH - IMG_DISPLAY_WIDTH;
@@ -238,15 +239,15 @@ export function Carousel({
 
   const moveRightWithAutoPlay = useCallback(() => {
     if (!disableControls.current && images.length > 1) {
-      setImageOneRowRight((px) => px - IMG_DISPLAY_WIDTH);
-      setImageTwoRowRight((px) => px - IMG_DISPLAY_WIDTH);
+      setImageOneRowRight((width) => width - IMG_DISPLAY_WIDTH);
+      setImageTwoRowRight((width) => width - IMG_DISPLAY_WIDTH);
     }
   }, [IMG_DISPLAY_WIDTH, images.length]);
 
   const moveLeftWithAutoPlay = useCallback(() => {
     if (!disableControls.current && images.length > 1) {
-      setImageOneRowRight((px) => px + IMG_DISPLAY_WIDTH);
-      setImageTwoRowRight((px) => px + IMG_DISPLAY_WIDTH);
+      setImageOneRowRight((width) => width + IMG_DISPLAY_WIDTH);
+      setImageTwoRowRight((width) => width + IMG_DISPLAY_WIDTH);
     }
   }, [IMG_DISPLAY_WIDTH, images.length]);
 
@@ -387,8 +388,8 @@ export function Carousel({
         return (
           <Box
             key={image.alt + "-1-" + index + 1}
-            height={IMG_DISPLAY_HEIGHT}
-            width={IMG_DISPLAY_WIDTH}
+            width={`${IMG_DISPLAY_WIDTH}${IMG_DISPLAY_WIDTH_UNIT}`}
+            height={`${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`}
             flexShrink={0}
             flexGrow={0}>
             <Image
@@ -407,11 +408,13 @@ export function Carousel({
         );
       }),
     [
-      IMG_DISPLAY_WIDTH,
-      IMG_DISPLAY_HEIGHT,
       imagesOne,
-      renderedImageHeight,
+      IMG_DISPLAY_HEIGHT,
+      IMG_DISPLAY_HEIGHT_UNIT,
+      IMG_DISPLAY_WIDTH,
+      IMG_DISPLAY_WIDTH_UNIT,
       renderedImageWidth,
+      renderedImageHeight,
     ]
   );
 
@@ -421,8 +424,8 @@ export function Carousel({
         return (
           <Box
             key={image.alt + "-2-" + index + 1}
-            height={IMG_DISPLAY_HEIGHT}
-            width={IMG_DISPLAY_WIDTH}
+            width={`${IMG_DISPLAY_WIDTH}${IMG_DISPLAY_WIDTH_UNIT}`}
+            height={`${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`}
             flexShrink={0}
             flexGrow={0}>
             <Image
@@ -441,7 +444,9 @@ export function Carousel({
       }),
     [
       IMG_DISPLAY_HEIGHT,
+      IMG_DISPLAY_HEIGHT_UNIT,
       IMG_DISPLAY_WIDTH,
+      IMG_DISPLAY_WIDTH_UNIT,
       imagesTwo,
       renderedImageHeight,
       renderedImageWidth,
@@ -479,8 +484,8 @@ export function Carousel({
       stopAutoPlay();
       if (!disableControls.current && images.length > 1) {
         restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
-        setImageOneRowRight((px) => px + IMG_DISPLAY_WIDTH);
-        setImageTwoRowRight((px) => px + IMG_DISPLAY_WIDTH);
+        setImageOneRowRight((width) => width + IMG_DISPLAY_WIDTH);
+        setImageTwoRowRight((width) => width + IMG_DISPLAY_WIDTH);
       }
     }
     return {
@@ -498,8 +503,8 @@ export function Carousel({
       stopAutoPlay();
       if (!disableControls.current && images.length > 1) {
         restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
-        setImageOneRowRight((px) => px - IMG_DISPLAY_WIDTH);
-        setImageTwoRowRight((px) => px - IMG_DISPLAY_WIDTH);
+        setImageOneRowRight((width) => width - IMG_DISPLAY_WIDTH);
+        setImageTwoRowRight((width) => width - IMG_DISPLAY_WIDTH);
       }
     }
     return {
@@ -529,11 +534,11 @@ export function Carousel({
 
   return (
     <>
-      <Stack>
+      <Stack overflow={"hidden"}>
         <Box
           id="image-display-box"
-          width={`${IMG_DISPLAY_WIDTH}px`}
-          height={`${IMG_DISPLAY_HEIGHT}px`}
+          width={`${IMG_DISPLAY_WIDTH}${IMG_DISPLAY_WIDTH_UNIT}`}
+          height={`${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`}
           overflow={isOverFlowShown ? "visible" : "hidden"}
           marginLeft="500px"
           position="relative">
@@ -541,8 +546,8 @@ export function Carousel({
             direction="row"
             id="image-row-1"
             sx={{
-              width: `${IMG_DISPLAY_WIDTH}px`,
-              height: `${IMG_DISPLAY_HEIGHT}px`,
+              width: `${IMG_DISPLAY_WIDTH}${IMG_DISPLAY_WIDTH_UNIT}`,
+              height: `${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`,
               //height: "200px",
               // width: "fit-content",
               // height: "fit-content",
@@ -554,7 +559,7 @@ export function Carousel({
                   : DEFAULT_TRANSITION_DURATION + "ms"
               } ${transitions ? transitions.easingFunction : "ease-out"} `,
               position: "absolute",
-              right: `${imageOneRowRight}px`,
+              right: `${imageOneRowRight}${IMG_DISPLAY_WIDTH_UNIT}`,
             }}>
             {renderedImagesOne}
           </Stack>
@@ -562,8 +567,8 @@ export function Carousel({
             direction="row"
             id="image-row-2"
             sx={{
-              width: `${IMG_DISPLAY_WIDTH}px`,
-              height: `${IMG_DISPLAY_HEIGHT}px`,
+              width: `${IMG_DISPLAY_WIDTH}${IMG_DISPLAY_WIDTH_UNIT}`,
+              height: `${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`,
               // width: "fit-content",
               // height: "fit-content",
               display: `${activeImageRow === 2 ? "flex" : "none"}`,
@@ -574,7 +579,7 @@ export function Carousel({
                   : DEFAULT_TRANSITION_DURATION + "ms"
               } ${transitions ? transitions.easingFunction : "ease-out"} `,
               position: "absolute",
-              right: `${imageTwoRowRight}px`, //decreasing the value 'right' moves the Images from left to right
+              right: `${imageTwoRowRight}${IMG_DISPLAY_WIDTH_UNIT}`, //decreasing the value 'right' moves the Images from left to right
             }}>
             {renderedImagesTwo}
           </Stack>
