@@ -66,7 +66,7 @@ export function Carousel({
   const firstImageIndex = isOdd ? Math.floor(TOTAL_IMGS / 2) : TOTAL_IMGS / 2;
   console.log("firstImageIndex " + firstImageIndex);
 
-  const [isOverFlowShown, setIsOverflowShown] = useState<boolean>(false);
+  const [isOverFlowShown, setIsOverflowShown] = useState<boolean>(true);
   const [imagesOne, setImagesOne] =
     useState<{ alt: string; imagePath: string }[]>(images);
   const [imagesTwo, setImagesTwo] =
@@ -87,6 +87,8 @@ export function Carousel({
   const [previousAutoPlay, setPreviousAutoPlay] = useState<
     AutoPlay | undefined
   >(autoPlay);
+
+  console.log("disableControls.current " + disableControls.current);
 
   checkForPropsErrors();
   const updateImagesOne = useCallback(() => {
@@ -308,7 +310,7 @@ export function Carousel({
 
   const restartAutoPlayUponIdle = useCallback(
     (delay: number) => {
-      if (autoPlay) {
+      if (autoPlay && !disableControls.current) {
         restartAutoPlayUponIdleTimeoutId.current &&
           clearTimeout(restartAutoPlayUponIdleTimeoutId.current);
         restartAutoPlayUponIdleTimeoutId.current = setTimeout(() => {
@@ -493,8 +495,9 @@ export function Carousel({
     function moveLeftManualControls() {
       console.log("in moveLeftManualControls");
       stopAutoPlay();
+      restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
       if (!disableControls.current && images.length > 1) {
-        restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
+        // restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
         setImageOneRowRight((width) => width + IMG_DISPLAY_WIDTH);
         setImageTwoRowRight((width) => width + IMG_DISPLAY_WIDTH);
       }
@@ -512,8 +515,9 @@ export function Carousel({
     function moveRightManualControls() {
       console.log("in moveRightManualControls");
       stopAutoPlay();
+      restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
       if (!disableControls.current && images.length > 1) {
-        restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
+        // restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
         setImageOneRowRight((width) => width - IMG_DISPLAY_WIDTH);
         setImageTwoRowRight((width) => width - IMG_DISPLAY_WIDTH);
       }

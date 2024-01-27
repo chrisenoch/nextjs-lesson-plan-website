@@ -48,11 +48,11 @@ export default function Hero() {
   const [autoPlay, setAutoPlay] = useState<AutoPlay>({
     enableAutoPlay: true,
     direction: "RIGHT",
-    delay: 2000,
+    delay: 1000,
   });
 
   const transitions: Transitions = {
-    durationMs: 1000,
+    durationMs: 700,
     easingFunction: "ease-out",
   };
 
@@ -95,21 +95,21 @@ export default function Hero() {
         imagePath:
           "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
       },
-      {
-        alt: "Driverless-1",
-        imagePath:
-          "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-      },
-      {
-        alt: "Shopping-1",
-        imagePath:
-          "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-      },
-      {
-        alt: "Fuerteventura",
-        imagePath:
-          "https://raw.githubusercontent.com/chrisenoch/assets/main/fuerteventura-shutterstock.jpg",
-      },
+      // {
+      //   alt: "Driverless-1",
+      //   imagePath:
+      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
+      // },
+      // {
+      //   alt: "Shopping-1",
+      //   imagePath:
+      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
+      // },
+      // {
+      //   alt: "Fuerteventura",
+      //   imagePath:
+      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/fuerteventura-shutterstock.jpg",
+      // },
 
       // {
       //   alt: "Antalya",
