@@ -307,15 +307,19 @@ export function Carousel({
 
   const restartAutoPlayUponIdle = useCallback(
     (delay: number) => {
-      if (autoPlay && !disableControls.current) {
+      if (autoPlay && autoPlay.enableAutoPlay) {
         restartAutoPlayUponIdleTimeoutId.current &&
           clearTimeout(restartAutoPlayUponIdleTimeoutId.current);
         restartAutoPlayUponIdleTimeoutId.current = setTimeout(() => {
-          startAutoPlay(autoPlay.delay, autoPlay.direction);
+          if (!disableControls.current) {
+            startAutoPlay(autoPlay.delay, autoPlay.direction);
+          } else {
+            restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
+          }
         }, delay);
       }
     },
-    [autoPlay, startAutoPlay]
+    [RESTART_AUTOPLAY_DELAY, autoPlay, startAutoPlay]
   );
 
   function stopAutoPlay() {
@@ -584,18 +588,6 @@ export function Carousel({
       </Box>
 
       <Stack marginTop={8} direction={"row"}>
-        <Button
-          onClick={() => {
-            if (autoPlay) {
-              startAutoPlay(autoPlay.delay, autoPlay.direction);
-            }
-          }}
-          variant="outlined">
-          Start Autoplay
-        </Button>
-        <Button onClick={stopAutoPlay} variant="outlined">
-          Stop Autoplay
-        </Button>
         <Button onClick={triggerRerender} variant="outlined">
           Rerender
         </Button>
