@@ -46,13 +46,13 @@ export default function Hero() {
   carouselStore.set("moveRight", carouselMoveRight);
 
   const [autoPlay, setAutoPlay] = useState<AutoPlay>({
-    enableAutoPlay: true,
+    enableAutoPlay: false,
     direction: "RIGHT",
-    delay: 1000,
+    delay: 4500,
   });
 
   const transitions: Transitions = {
-    durationMs: 700,
+    durationMs: 2000,
     easingFunction: "ease-out",
   };
 
@@ -240,36 +240,6 @@ export default function Hero() {
     []
   );
 
-  function handleToggleAutoPlayDirection() {
-    const newAutoPlay: AutoPlay = {
-      ...autoPlay,
-      direction:
-        autoPlay.direction === "RIGHT"
-          ? "LEFT"
-          : ("RIGHT" as AutoPlayDirection),
-    };
-    setAutoPlay(newAutoPlay);
-  }
-
-  function handleToggleEnableAutoPlay() {
-    console.log("in handleToggleAutoplay");
-    const newAutoPlay: AutoPlay = {
-      ...autoPlay,
-      enableAutoPlay: !autoPlay.enableAutoPlay,
-    };
-    setAutoPlay(newAutoPlay);
-  }
-
-  function handleIncreaseAutoPlayDelay() {
-    console.log("in handleToggleAutoplay");
-    const newAutoPlay: AutoPlay = {
-      ...autoPlay,
-      delay: autoPlay.delay + 1000,
-    };
-    console.log("delay from aprent: " + newAutoPlay.delay);
-    setAutoPlay(newAutoPlay);
-  }
-
   return (
     <>
       <Stack
@@ -315,112 +285,47 @@ export default function Hero() {
             </Stack>
           </Grid>
           <Grid item xs={6} height="100%">
-            <Image
-              alt={"A beach with palm trees"}
-              src={
-                "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg"
-              }
-              width={600}
-              height={550}
-              priority
-              style={{
-                maxHeight: "100%",
-                width: "auto",
-                objectFit: "cover",
-                objectPosition: "center",
-                borderRadius: 32,
-              }}
-            />
+            <Carousel
+              imageDisplayWidth={40}
+              imageDisplayHeight={50}
+              imageDisplayWidthUnit={"vw"}
+              imageDisplayHeightUnit={"vh"}
+              renderedImageWidth={1000}
+              renderedImageHeight={1000}
+              autoPlay={autoPlay}
+              transitions={transitions}
+              images={images}
+              carouselMoveLeft={carouselMoveLeft}
+              carouselMoveRight={carouselMoveRight}>
+              <Stack
+                direction={"row"}
+                sx={{
+                  position: "absolute",
+                  transform: "translatey(-50%)",
+                  justifyContent: "space-between",
+                  width: "100%",
+                  top: "50%",
+                }}>
+                <ColorFactory primary="#FFFFFF">
+                  <IconButton
+                    color="primary"
+                    size="large"
+                    onClick={() => emit(carouselMoveLeft)}>
+                    <ArrowBackIos />
+                  </IconButton>
+                </ColorFactory>
+                <ColorFactory primary="#FFFFFF">
+                  <IconButton
+                    size="small"
+                    color="primary"
+                    onClick={() => emit(carouselMoveRight)}>
+                    <ArrowForwardIos />
+                  </IconButton>
+                </ColorFactory>
+              </Stack>{" "}
+            </Carousel>
           </Grid>
         </Grid>
-      </Stack>
-      <Stack direction="row" marginBottom={4}>
-        <Button
-          size="small"
-          onClick={handleToggleEnableAutoPlay}
-          variant="contained"
-          sx={{
-            color: "white",
-          }}>
-          Toggle Enable Autoplay
-        </Button>
-        <Button
-          size="small"
-          onClick={handleToggleAutoPlayDirection}
-          variant="contained"
-          sx={{
-            color: "white",
-          }}>
-          Toggle Direction
-        </Button>
-        <Button
-          size="small"
-          onClick={handleIncreaseAutoPlayDelay}
-          variant="contained"
-          sx={{
-            color: "white",
-          }}>
-          Increase delay
-        </Button>
-        <Button
-          size="small"
-          onClick={() => emit(carouselMoveLeft)}
-          variant="contained"
-          sx={{
-            color: "white",
-          }}>
-          Emit move left to carousel
-        </Button>
-        <Button
-          size="small"
-          onClick={() => emit(carouselMoveRight)}
-          variant="contained"
-          sx={{
-            color: "white",
-          }}>
-          Emit move right to carousel
-        </Button>
-      </Stack>
-      <Stack alignItems={"center"}>
-        <Carousel
-          imageDisplayWidth={40}
-          imageDisplayHeight={40}
-          imageDisplayWidthUnit={"vw"}
-          imageDisplayHeightUnit={"vh"}
-          renderedImageWidth={1000}
-          renderedImageHeight={1000}
-          autoPlay={autoPlay}
-          transitions={transitions}
-          images={images}
-          carouselMoveLeft={carouselMoveLeft}
-          carouselMoveRight={carouselMoveRight}>
-          <Stack
-            direction={"row"}
-            sx={{
-              position: "absolute",
-              transform: "translatey(-50%)",
-              justifyContent: "space-between",
-              width: "100%",
-              top: "50%",
-            }}>
-            <ColorFactory primary="#FFFFFF">
-              <IconButton
-                color="primary"
-                size="large"
-                onClick={() => emit(carouselMoveLeft)}>
-                <ArrowBackIos />
-              </IconButton>
-            </ColorFactory>
-            <ColorFactory primary="#FFFFFF">
-              <IconButton
-                size="small"
-                color="primary"
-                onClick={() => emit(carouselMoveRight)}>
-                <ArrowForwardIos />
-              </IconButton>
-            </ColorFactory>
-          </Stack>{" "}
-        </Carousel>
       </Stack>
     </>
   );

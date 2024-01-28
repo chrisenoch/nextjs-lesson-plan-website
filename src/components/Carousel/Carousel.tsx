@@ -539,6 +539,7 @@ export function Carousel({
     <Box
       id="image-display-box"
       width={`${IMG_DISPLAY_WIDTH}${IMG_DISPLAY_WIDTH_UNIT}`}
+      maxWidth={"100%"}
       height={`${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`}
       overflow={isOverFlowShown ? "visible" : "hidden"}
       position="relative">
