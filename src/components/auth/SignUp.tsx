@@ -1,5 +1,5 @@
 "use client";
-import { AppDispatch, registerUser } from "@/store";
+import { AppDispatch } from "@/store";
 import { Box, TextField, Button, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,7 +19,7 @@ export function SignUp() {
   function handleSubmit(e) {
     e.preventDefault();
 
-    dispatch(registerUser({ email: email.toLowerCase(), password }));
+    //dispatch(registerUser({ email: email.toLowerCase(), password }));
   }
 
   useEffect(() => {

@@ -33,6 +33,7 @@ import SecureNextLink from "./SecureNextLink";
 import InSecureNextLink from "next/link";
 import { LoginStatus } from "@/models/types/LoginStatus";
 import MenuButton from "./MenuButton";
+import Image from "next/image";
 
 export default function ResponsiveAppBar({
   DRAWER_WIDTH,
@@ -88,12 +89,15 @@ export default function ResponsiveAppBar({
               sx={{ mr: 2, display: { sm: "none" } }}>
               <MenuIcon />
             </IconButton>
-            <Typography
-              variant="h6"
-              component="div"
-              sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}>
-              Lesson Planz
-            </Typography>
+            <Box sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}>
+              <Link
+                href="/"
+                underline="none"
+                component={SecureNextLink}
+                sx={{ fontWeight: "medium" }}>
+                Lesson planz
+              </Link>
+            </Box>
             <Box
               sx={{
                 display: { xs: "none", sm: "block" },
