@@ -1,5 +1,13 @@
 "use client";
-import { Box, Button, Paper, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Paper,
+  Stack,
+  SxProps,
+  Theme,
+  Typography,
+} from "@mui/material";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import useTriggerRerender from "@/customHooks/useTriggerRerender";
@@ -13,10 +21,14 @@ import {
   subscribe,
   unsubscribe,
 } from "@/services/my-custom-event-emitter/SubscriberService";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
+import { BoxTypeMap } from "@mui/system";
+import { Theme as MaterialTheme } from "@mui/material/styles";
 
 //Transition duration must be less than autoplayDelay
 export function Carousel({
   images: unPreparedImages,
+  styles,
   renderedImageWidth,
   renderedImageHeight,
   imageDisplayWidth: IMG_DISPLAY_WIDTH,
@@ -30,6 +42,9 @@ export function Carousel({
   children,
 }: {
   images: { alt: string; imagePath: string }[];
+  styles?: {
+    imageDisplayBox: SxProps<Theme> | undefined;
+  };
   renderedImageWidth: number;
   renderedImageHeight: number;
   imageDisplayWidth: number;
@@ -542,7 +557,8 @@ export function Carousel({
       maxWidth={"100%"}
       height={`${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`}
       overflow={isOverFlowShown ? "visible" : "hidden"}
-      position="relative">
+      position="relative"
+      sx={{ ...styles?.imageDisplayBox }}>
       <Stack
         direction="row"
         id="image-row-1"

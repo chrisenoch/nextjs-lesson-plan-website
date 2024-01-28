@@ -286,6 +286,11 @@ export default function Hero() {
           </Grid>
           <Grid item xs={6} height="100%">
             <Carousel
+              styles={{
+                imageDisplayBox: {
+                  borderRadius: 4,
+                },
+              }}
               imageDisplayWidth={40}
               imageDisplayHeight={50}
               imageDisplayWidthUnit={"vw"}
