@@ -46,7 +46,7 @@ export default function Hero() {
   carouselStore.set("moveRight", carouselMoveRight);
 
   const [autoPlay, setAutoPlay] = useState<AutoPlay>({
-    enableAutoPlay: false,
+    enableAutoPlay: true,
     direction: "RIGHT",
     delay: 4500,
   });
@@ -85,16 +85,16 @@ export default function Hero() {
           "https://raw.githubusercontent.com/chrisenoch/assets/main/swimming.jpg",
       },
 
-      {
-        alt: "Laptop",
-        imagePath:
-          "https://raw.githubusercontent.com/chrisenoch/assets/main/laptop.jpg",
-      },
-      {
-        alt: "Beach-1",
-        imagePath:
-          "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-      },
+      // {
+      //   alt: "Laptop",
+      //   imagePath:
+      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/laptop.jpg",
+      // },
+      // {
+      //   alt: "Beach-1",
+      //   imagePath:
+      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
+      // },
       // {
       //   alt: "Driverless-1",
       //   imagePath:

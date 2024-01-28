@@ -103,29 +103,13 @@ export function Carousel({
 
   checkForPropsErrors();
 
-  let imageDisplayBoxStyles: SxProps<Theme> = {
-    maxWidth: "100%",
-    position: "relative",
-    overflow: "hidden",
-  };
-
-  if (styles?.imageDisplayBox) {
-    imageDisplayBoxStyles = {
-      ...imageDisplayBoxStyles,
-      ...styles.imageDisplayBox,
-    };
-  }
-
-  let overRiddableImageRowStyles: SxProps<Theme> = {
-    position: "absolute",
-    backgroundColor: "gray",
-  };
-  if (styles?.imageDisplayBox) {
-    overRiddableImageRowStyles = {
-      ...overRiddableImageRowStyles,
-      ...styles.imageRow,
-    };
-  }
+  const {
+    imageDisplayBoxStyles,
+    overRiddableImageRowStyles,
+  }: {
+    imageDisplayBoxStyles: SxProps<Theme>;
+    overRiddableImageRowStyles: SxProps<Theme>;
+  } = initSXProps();
 
   const updateImagesOne = useCallback(() => {
     console.log("Transition ended imageOneRow");
@@ -360,6 +344,33 @@ export function Carousel({
     },
     [RESTART_AUTOPLAY_DELAY, autoPlay, startAutoPlay]
   );
+
+  function initSXProps() {
+    let imageDisplayBoxStyles: SxProps<Theme> = {
+      maxWidth: "100%",
+      position: "relative",
+      overflow: "hidden",
+    };
+    let overRiddableImageRowStyles: SxProps<Theme> = {
+      position: "absolute",
+      backgroundColor: "gray",
+    };
+
+    if (styles?.imageDisplayBox) {
+      imageDisplayBoxStyles = {
+        ...imageDisplayBoxStyles,
+        ...styles.imageDisplayBox,
+      };
+    }
+
+    if (styles?.imageDisplayBox) {
+      overRiddableImageRowStyles = {
+        ...overRiddableImageRowStyles,
+        ...styles.imageRow,
+      };
+    }
+    return { imageDisplayBoxStyles, overRiddableImageRowStyles };
+  }
 
   function stopAutoPlay() {
     autoPlayIntervalIds.current.forEach((intervalId) =>
