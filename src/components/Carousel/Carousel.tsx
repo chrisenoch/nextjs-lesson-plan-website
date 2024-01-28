@@ -21,32 +21,12 @@ import {
   subscribe,
   unsubscribe,
 } from "@/services/my-custom-event-emitter/SubscriberService";
-import { OverridableComponent } from "@mui/material/OverridableComponent";
-import { BoxTypeMap } from "@mui/system";
-import { Theme as MaterialTheme } from "@mui/material/styles";
+import { ImageDisplayBox, ImageRow } from "@/models/types/Carousel/Styles";
 
 //Transition duration must be less than autoplayDelay
 export function Carousel({
   images: unPreparedImages,
-  // styles = {
-  //   imageDisplayBox: {
-  //     maxWidth: "100%",
-  //     position: "relative",
-  //     overflow: "hidden",
-  //   },
-  // },
-
-  // styles:{imageDisplayBox: {maxWidth: "100%"}}
-
-  // styles = {
-  //   imageDisplayBox: {
-  //     maxWidth: "100%",
-  //     position: "relative",
-  //     overflow: "hidden",
-  //   },
-  // },
   styles,
-
   renderedImageWidth,
   renderedImageHeight,
   imageDisplayWidth: IMG_DISPLAY_WIDTH,
@@ -61,7 +41,8 @@ export function Carousel({
 }: {
   images: { alt: string; imagePath: string }[];
   styles?: {
-    imageDisplayBox: SxProps<Theme> | undefined;
+    imageDisplayBox?: ImageDisplayBox;
+    imageRow?: ImageRow;
   };
   renderedImageWidth: number;
   renderedImageHeight: number;
@@ -122,20 +103,7 @@ export function Carousel({
 
   checkForPropsErrors();
 
-  // const imageDisplayBoxDefaultStyles = {
-  //   maxWidth: "100%",
-  //   position: "relative",
-  //   overflow: "hidden",
-  // };
-
-  // const imageDisplayBoxFinalStyles = {
-  //   ...imageDisplayBoxDefaultStyles,
-  //   ...styles?.imageDisplayBox,
-  // }
-  // console.log("imageDisplayBoxFinalStyles ");
-  // console.log(imageDisplayBoxFinalStyles);
-
-  let imageDisplayBoxStyles: SxProps<Theme> | undefined = {
+  let imageDisplayBoxStyles: SxProps<Theme> = {
     maxWidth: "100%",
     position: "relative",
     overflow: "hidden",
@@ -148,12 +116,16 @@ export function Carousel({
     };
   }
 
-  // const imageDisplayBoxFinalStyles = {
-  //   ...imageDisplayBoxStyles,
-  //   ...styles?.imageDisplayBox,
-  // }
-  // console.log("imageDisplayBoxFinalStyles ");
-  // console.log(imageDisplayBoxFinalStyles);
+  let overRiddableImageRowStyles: SxProps<Theme> = {
+    position: "absolute",
+    backgroundColor: "gray",
+  };
+  if (styles?.imageDisplayBox) {
+    overRiddableImageRowStyles = {
+      ...overRiddableImageRowStyles,
+      ...styles.imageRow,
+    };
+  }
 
   const updateImagesOne = useCallback(() => {
     console.log("Transition ended imageOneRow");
@@ -607,8 +579,6 @@ export function Carousel({
       id="image-display-box"
       width={`${IMG_DISPLAY_WIDTH}${IMG_DISPLAY_WIDTH_UNIT}`}
       height={`${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`}
-      // maxWidth={"100%"}
-      // position="relative"
       sx={imageDisplayBoxStyles}>
       <Stack
         direction="row"
@@ -616,18 +586,14 @@ export function Carousel({
         sx={{
           width: `${IMG_DISPLAY_WIDTH}${IMG_DISPLAY_WIDTH_UNIT}`,
           height: `${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`,
-          //height: "200px",
-          // width: "fit-content",
-          // height: "fit-content",
           display: `${activeImageRow === 1 ? "flex" : "none"}`,
-          backgroundColor: "gray",
           transition: `right ${
             transitions
               ? transitions.durationMs + "ms"
               : DEFAULT_TRANSITION_DURATION + "ms"
           } ${transitions ? transitions.easingFunction : "ease-out"} `,
-          position: "absolute",
           right: `${imageOneRowRight}${IMG_DISPLAY_WIDTH_UNIT}`,
+          ...overRiddableImageRowStyles,
         }}>
         {renderedImagesOne}
       </Stack>
@@ -637,17 +603,14 @@ export function Carousel({
         sx={{
           width: `${IMG_DISPLAY_WIDTH}${IMG_DISPLAY_WIDTH_UNIT}`,
           height: `${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`,
-          // width: "fit-content",
-          // height: "fit-content",
           display: `${activeImageRow === 2 ? "flex" : "none"}`,
-          backgroundColor: "gray",
           transition: `right ${
             transitions
               ? transitions.durationMs + "ms"
               : DEFAULT_TRANSITION_DURATION + "ms"
           } ${transitions ? transitions.easingFunction : "ease-out"} `,
-          position: "absolute",
           right: `${imageTwoRowRight}${IMG_DISPLAY_WIDTH_UNIT}`, //decreasing the value 'right' moves the Images from left to right
+          ...overRiddableImageRowStyles,
         }}>
         {renderedImagesTwo}
       </Stack>
