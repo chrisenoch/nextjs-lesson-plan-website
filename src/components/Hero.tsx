@@ -28,6 +28,7 @@ import {
   ArrowForward,
   ArrowForwardIos,
 } from "@mui/icons-material";
+import SecureNextLink from "./SecureNextLink";
 
 export default function Hero() {
   const carouselMoveLeft: SubscriberConfigObject = useMemo(() => {
@@ -253,7 +254,7 @@ export default function Hero() {
           alignItems="center"
           justifyContent="center"
           height="50vh"
-          gap={1}
+          gap={4}
           flexWrap={"nowrap"}>
           <Grid
             item
@@ -284,15 +285,20 @@ export default function Hero() {
                 fontWeight={"regular"}
                 component="p"
                 mb={3}>
-                Spend less time lesson planning and more time with friends.
-                Download
+                Spend less time lesson planning and more time doing the things
+                you love. Get your
                 <Box component="span" fontWeight="bold" color="secondary.main">
                   {" "}
                   60 free lessons{" "}
                 </Box>
                 now.
               </Typography>
-              <Button variant={"contained"} size="large">
+              <Button
+                download="Free lesson plans"
+                href={"http://localhost:3000/lessonplans/free-lesson-plans.txt"}
+                component="a"
+                variant={"contained"}
+                size="large">
                 Download
               </Button>
             </Stack>
@@ -304,7 +310,7 @@ export default function Hero() {
                   borderRadius: 4,
                 },
               }}
-              imageDisplayWidth={40}
+              imageDisplayWidth={30}
               imageDisplayHeight={50}
               imageDisplayWidthUnit={"vw"}
               imageDisplayHeightUnit={"vh"}
