@@ -53,12 +53,11 @@ export default function RootLayout({
                   //height: "100%",
                   height: "fit-content",
                   minHeight: "100vh",
-
                   flexGrow: 1,
                   bgcolor: "grey.100",
                   px: 3,
                   pb: 3,
-                  pt: 11,
+                  pt: 12,
                 }}>
                 {children}
               </Box>

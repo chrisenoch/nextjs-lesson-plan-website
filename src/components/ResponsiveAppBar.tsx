@@ -89,7 +89,12 @@ export default function ResponsiveAppBar({
               sx={{ mr: 2, display: { sm: "none" } }}>
               <MenuIcon />
             </IconButton>
-            <Box sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}>
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: { xs: "none", sm: "block" },
+                fontSize: "h6.fontSize",
+              }}>
               <Link
                 href="/"
                 underline="none"
@@ -101,10 +106,11 @@ export default function ResponsiveAppBar({
             <Box
               sx={{
                 display: { xs: "none", sm: "block" },
+                //fontSize: "16x",
               }}>
               <MenuButton
                 id="lesson-plans-nav-button"
-                buttonComponent={<Button>Lesson Plans</Button>}
+                buttonComponent={<Button size="large">Lesson Plans</Button>}
                 menuItems={[
                   { name: "All Lesson Plans", href: "/lessonplans" },
                   { name: "Saved", href: "/lessonplans/saved" },
@@ -115,7 +121,8 @@ export default function ResponsiveAppBar({
                   <Button
                     key={item.title}
                     href={item.href}
-                    component={SecureNextLink}>
+                    component={SecureNextLink}
+                    size="large">
                     {item.title}
                   </Button>
                 );
@@ -126,7 +133,8 @@ export default function ResponsiveAppBar({
                   key="Logout"
                   onClick={() => {
                     dispatch(userLogout());
-                  }}>
+                  }}
+                  size="large">
                   Logout
                 </Button>
               )}
@@ -134,7 +142,8 @@ export default function ResponsiveAppBar({
                 <Button
                   key="Login"
                   href={"/auth/signin"}
-                  component={InSecureNextLink}>
+                  component={InSecureNextLink}
+                  size="large">
                   {/* We don't need to check the login route in middleware */}
                   Login
                 </Button>
@@ -144,7 +153,8 @@ export default function ResponsiveAppBar({
                   key={"loading-placeholder"}
                   loading
                   disabled
-                  variant="outlined">
+                  variant="outlined"
+                  size="large">
                   {/* value here affects the button size */}
                   Login
                 </LoadingButton>

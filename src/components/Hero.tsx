@@ -46,7 +46,7 @@ export default function Hero() {
   carouselStore.set("moveRight", carouselMoveRight);
 
   const [autoPlay, setAutoPlay] = useState<AutoPlay>({
-    enableAutoPlay: true,
+    enableAutoPlay: false,
     direction: "RIGHT",
     delay: 4500,
   });
@@ -260,8 +260,15 @@ export default function Hero() {
             display={"flex"}
             alignItems={"center"}>
             <Stack alignItems={"start"}>
-              <Typography gutterBottom variant="h3" component="h1">
+              <Typography gutterBottom variant="h2" component="h1">
                 Get{" "}
+                <Box
+                  component="span"
+                  fontWeight="medium"
+                  color="secondary.light">
+                  fun{" "}
+                </Box>
+                and{" "}
                 <Box
                   component="span"
                   fontWeight="medium"
@@ -270,7 +277,11 @@ export default function Hero() {
                 </Box>
                 lesson plans
               </Typography>
-              <Typography variant="h5" component="p" mb={3}>
+              <Typography
+                variant="h6"
+                fontWeight={"regular"}
+                component="p"
+                mb={3}>
                 Spend less time lesson planning and more time with friends.
                 Download
                 <Box component="span" fontWeight="bold" color="secondary.main">
