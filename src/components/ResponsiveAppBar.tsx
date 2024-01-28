@@ -31,7 +31,7 @@ import {
 } from "@/store";
 import SecureNextLink from "./SecureNextLink";
 import InSecureNextLink from "next/link";
-import { LoginStatus } from "@/models/types/LoginStatus";
+import { LoginStatus } from "@/models/types/Auth/LoginStatus";
 import MenuButton from "./MenuButton";
 import Image from "next/image";
 

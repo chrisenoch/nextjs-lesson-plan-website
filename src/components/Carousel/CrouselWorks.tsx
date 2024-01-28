@@ -7,7 +7,7 @@ import {
   AutoPlay,
   AutoPlayDirection,
   Transitions,
-} from "@/models/types/AutoPlay";
+} from "@/models/types/Carousel/AutoPlay";
 import {
   SubscriberConfigObject,
   subscribe,

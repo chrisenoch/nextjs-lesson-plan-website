@@ -15,7 +15,7 @@ import {
   AutoPlay,
   AutoPlayDirection,
   Transitions,
-} from "@/models/types/AutoPlay";
+} from "@/models/types/Carousel/AutoPlay";
 import { carouselStore } from "@/services/my-custom-event-emitter/SubscriberConfigObjectStore";
 import {
   SubscriberConfigObject,

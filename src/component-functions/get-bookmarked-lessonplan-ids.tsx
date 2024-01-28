@@ -1,4 +1,4 @@
-import { LessonPlan } from "@/models/types/LessonPlan";
+import { LessonPlan } from "@/models/types/LessonPlans/LessonPlan";
 
 export function getBookmakedLessonPlanIds(
   lessonPlans: LessonPlan[],

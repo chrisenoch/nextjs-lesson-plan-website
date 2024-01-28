@@ -1,7 +1,7 @@
 "use client";
 import { Box, Grid } from "@mui/material";
 import LessonPlanCard from "./LessonPlanCard";
-import { LessonPlan } from "../../models/types/LessonPlan";
+import { LessonPlan } from "../../models/types/LessonPlans/LessonPlan";
 import { useDispatch, useSelector } from "react-redux";
 import {
   AppDispatch,
@@ -14,7 +14,7 @@ import {
   fetchBookmarks,
   toggleBookmark,
 } from "@/store/slices/with-thunks/lessonplans-slice";
-import { LoginStatus } from "@/models/types/LoginStatus";
+import { LoginStatus } from "@/models/types/Auth/LoginStatus";
 import { getBookmakedLessonPlanIds } from "@/component-functions/get-bookmarked-lessonplan-ids";
 
 export default function DisplayLessonplans({

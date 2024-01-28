@@ -9,11 +9,11 @@ import { Avatar, IconButton, Divider, Stack, Chip } from "@mui/material";
 import Circle from "@mui/icons-material/Circle";
 import Bookmark from "@mui/icons-material/Bookmark";
 import Diamond from "@mui/icons-material/Diamond";
-import { LessonPlan } from "@/models/types/LessonPlan";
+import { LessonPlan } from "@/models/types/LessonPlans/LessonPlan";
 import SecureNextLink from "../SecureNextLink";
 import { LoadingButton } from "@mui/lab";
-import { LessonPlanBookmarkStatus } from "@/models/types/LessonPlanBookmarkStatus";
-import { LessonPlanCard } from "@/models/types/LessonPlanCard";
+import { LessonPlanBookmarkStatus } from "@/models/types/LessonPlans/LessonPlanBookmarkStatus";
+import { LessonPlanCard } from "@/models/types/LessonPlans/LessonPlanCard";
 import { ArrowForward, Done, RocketLaunch } from "@mui/icons-material";
 
 export default function LessonPlanCard({

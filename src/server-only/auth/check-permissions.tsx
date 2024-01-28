@@ -1,6 +1,6 @@
 import "server-only";
 
-import { UserRole, isUserRole } from "@/models/types/UserRole";
+import { UserRole, isUserRole } from "@/models/types/Auth/UserRole";
 import { NextRequest } from "next/server";
 import * as jose from "jose";
 

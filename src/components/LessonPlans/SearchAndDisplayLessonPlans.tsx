@@ -4,9 +4,9 @@ import { useCallback, useMemo, useState } from "react";
 import DisplayLessonPlans from "./DisplayLessonPlans";
 import SearchLessonPlans from "./SearchLessonPlans";
 import AutoCompleteMultiSelect from "../AutoCompleteMultiSelect";
-import { LessonPlan } from "@/models/types/LessonPlan";
-import { LessonPlanCategory } from "@/models/types/LessonPlanCategory";
-import { LessonPlanSubCategory } from "@/models/types/LessonPlanSubCategory";
+import { LessonPlan } from "@/models/types/LessonPlans/LessonPlan";
+import { LessonPlanCategory } from "@/models/types/LessonPlans/LessonPlanCategory";
+import { LessonPlanSubCategory } from "@/models/types/LessonPlans/LessonPlanSubCategory";
 import DisplayLessonPlansFactory from "./DisplayLessonPlansFactory";
 
 export default function SearchAndDisplayLessonPlans({

@@ -3,7 +3,7 @@
 import { Search } from "@mui/icons-material";
 import { Autocomplete, Chip, InputAdornment, TextField } from "@mui/material";
 import { memo, useMemo } from "react";
-import { LessonPlanCategory } from "@/models/types/LessonPlanCategory";
+import { LessonPlanCategory } from "@/models/types/LessonPlans/LessonPlanCategory";
 
 const AutoCompleteMultiSelect = memo(function AutoCompleteMultiSelect({
   selectedLessonPlanCategories,
