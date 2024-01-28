@@ -28,7 +28,25 @@ import { Theme as MaterialTheme } from "@mui/material/styles";
 //Transition duration must be less than autoplayDelay
 export function Carousel({
   images: unPreparedImages,
+  // styles = {
+  //   imageDisplayBox: {
+  //     maxWidth: "100%",
+  //     position: "relative",
+  //     overflow: "hidden",
+  //   },
+  // },
+
+  // styles:{imageDisplayBox: {maxWidth: "100%"}}
+
+  // styles = {
+  //   imageDisplayBox: {
+  //     maxWidth: "100%",
+  //     position: "relative",
+  //     overflow: "hidden",
+  //   },
+  // },
   styles,
+
   renderedImageWidth,
   renderedImageHeight,
   imageDisplayWidth: IMG_DISPLAY_WIDTH,
@@ -103,6 +121,40 @@ export function Carousel({
   >(autoPlay);
 
   checkForPropsErrors();
+
+  // const imageDisplayBoxDefaultStyles = {
+  //   maxWidth: "100%",
+  //   position: "relative",
+  //   overflow: "hidden",
+  // };
+
+  // const imageDisplayBoxFinalStyles = {
+  //   ...imageDisplayBoxDefaultStyles,
+  //   ...styles?.imageDisplayBox,
+  // }
+  // console.log("imageDisplayBoxFinalStyles ");
+  // console.log(imageDisplayBoxFinalStyles);
+
+  let imageDisplayBoxStyles: SxProps<Theme> | undefined = {
+    maxWidth: "100%",
+    position: "relative",
+    overflow: "hidden",
+  };
+
+  if (styles?.imageDisplayBox) {
+    imageDisplayBoxStyles = {
+      ...imageDisplayBoxStyles,
+      ...styles.imageDisplayBox,
+    };
+  }
+
+  // const imageDisplayBoxFinalStyles = {
+  //   ...imageDisplayBoxStyles,
+  //   ...styles?.imageDisplayBox,
+  // }
+  // console.log("imageDisplayBoxFinalStyles ");
+  // console.log(imageDisplayBoxFinalStyles);
+
   const updateImagesOne = useCallback(() => {
     console.log("Transition ended imageOneRow");
     console.log("starting updateImagesOne");
@@ -554,11 +606,10 @@ export function Carousel({
     <Box
       id="image-display-box"
       width={`${IMG_DISPLAY_WIDTH}${IMG_DISPLAY_WIDTH_UNIT}`}
-      maxWidth={"100%"}
       height={`${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`}
-      overflow={isOverFlowShown ? "visible" : "hidden"}
-      position="relative"
-      sx={{ ...styles?.imageDisplayBox }}>
+      // maxWidth={"100%"}
+      // position="relative"
+      sx={imageDisplayBoxStyles}>
       <Stack
         direction="row"
         id="image-row-1"
