@@ -72,7 +72,10 @@ export default function ResponsiveAppBar({
         <AppBar
           position="fixed"
           sx={{
-            backgroundColor: "grey.100",
+            backgroundColor: "background.paper",
+            // backgroundColor: "white",
+
+            boxShadow: "0 1px #0000001f",
             color: "primary.main",
           }}>
           <Toolbar
