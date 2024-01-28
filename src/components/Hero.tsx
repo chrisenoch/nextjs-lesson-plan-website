@@ -285,13 +285,8 @@ export default function Hero() {
                 fontWeight={"regular"}
                 component="p"
                 mb={3}>
-                Spend less time lesson planning and more time doing the things
-                you love. Get your
-                <Box component="span" fontWeight="bold" color="secondary.main">
-                  {" "}
-                  60 free lessons{" "}
-                </Box>
-                now.
+                Spend less time lesson planning and more time making money or
+                doing the things you love.{" "}
               </Typography>
               <Button
                 download="Free lesson plans"
@@ -299,7 +294,7 @@ export default function Hero() {
                 component="a"
                 variant={"contained"}
                 size="large">
-                Download
+                Get 60 free lesson plans
               </Button>
             </Stack>
           </Grid>
