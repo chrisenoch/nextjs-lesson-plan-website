@@ -252,7 +252,9 @@ export default function Hero() {
           container
           alignItems="center"
           justifyContent="center"
-          height="50vh">
+          height="50vh"
+          gap={1}
+          flexWrap={"nowrap"}>
           <Grid
             item
             xs={6}
