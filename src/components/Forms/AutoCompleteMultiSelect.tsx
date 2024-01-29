@@ -84,11 +84,10 @@ const AutoCompleteMultiSelect = memo(function AutoCompleteMultiSelect({
       renderInput={(params) => (
         <TextField
           {...params}
-          //   variant="standard"
-          label="Find your lesson plan"
+          label="Find your lesson plan."
           sx={{
             "& .MuiInputBase-root": {
-              borderRadius: "32px",
+              borderRadius: "24px",
 
               "&:hover .MuiOutlinedInput-notchedOutline": {
                 borderColor: "primary.main",
