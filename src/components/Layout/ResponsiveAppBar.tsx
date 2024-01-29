@@ -3,7 +3,6 @@
 import {
   AppBar,
   Toolbar,
-  Typography,
   Drawer,
   Divider,
   List,
@@ -14,21 +13,17 @@ import {
   IconButton,
   Box,
   Button,
-  Container,
   useScrollTrigger,
   Link,
+  Icon,
+  SvgIconTypeMap,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useState } from "react";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  AppDispatch,
-  selectGetAccessTokenWithRefreshTokenOnAppMount,
-  selectLoginStatus,
-  userLogout,
-} from "@/store";
+import { AppDispatch, selectLoginStatus, userLogout } from "@/store";
 import SecureNextLink from "../Utils/SecureNextLink";
 import InSecureNextLink from "next/link";
 import { LoginStatus } from "@/models/types/Auth/LoginStatus";
@@ -36,23 +31,28 @@ import MenuButton from "../MenuButton";
 import LogoutIcon from "@mui/icons-material/Logout";
 import LoginIcon from "@mui/icons-material/Login";
 import CloseIcon from "@mui/icons-material/Close";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
 
 export default function ResponsiveAppBar({
-  DRAWER_WIDTH,
-  LINKS,
-  PLACEHOLDER_LINKS,
+  drawerWidth,
+  burgerTopLinks,
+  navBarItems,
+}: {
+  drawerWidth: number;
+  burgerTopLinks: {
+    text: string;
+    href: string;
+    icon: OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
+      muiName: string;
+    };
+  }[];
+  navBarItems: { title: string; href: string }[];
 }) {
   console.log("Responsive AppBar mounts");
   const loginStatus: LoginStatus = useSelector(selectLoginStatus);
-
   const dispatch = useDispatch<AppDispatch>();
 
-  const navItems = [
-    { title: "All Jobs", href: "/all-jobs" },
-    { title: "My Jobs", href: "/my-jobs" },
-  ];
   const [mobileOpen, setMobileOpen] = useState(false);
-
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
@@ -118,7 +118,7 @@ export default function ResponsiveAppBar({
                   { name: "Saved", href: "/lessonplans/saved" },
                 ]}
               />
-              {navItems.map((item) => {
+              {navBarItems.map((item) => {
                 return (
                   <Button
                     key={item.title}
@@ -178,7 +178,7 @@ export default function ResponsiveAppBar({
             flexShrink: 0,
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
-              width: DRAWER_WIDTH,
+              width: drawerWidth,
               maxHeight: "100vh",
             },
           }}>
@@ -201,7 +201,7 @@ export default function ResponsiveAppBar({
                 </ListItemIcon>
               </ListItemButton>
             </ListItem>
-            {LINKS.map(({ text, href, icon: Icon }) => (
+            {burgerTopLinks.map(({ text, href, icon: Icon }) => (
               <ListItem
                 key={href}
                 disablePadding
