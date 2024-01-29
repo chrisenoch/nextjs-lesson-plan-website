@@ -33,7 +33,8 @@ import SecureNextLink from "./SecureNextLink";
 import InSecureNextLink from "next/link";
 import { LoginStatus } from "@/models/types/Auth/LoginStatus";
 import MenuButton from "./MenuButton";
-import Image from "next/image";
+import LogoutIcon from "@mui/icons-material/Logout";
+import LoginIcon from "@mui/icons-material/Login";
 
 export default function ResponsiveAppBar({
   DRAWER_WIDTH,
@@ -73,8 +74,6 @@ export default function ResponsiveAppBar({
           position="fixed"
           sx={{
             backgroundColor: "background.paper",
-            // backgroundColor: "white",
-
             boxShadow: "0 1px #0000001f",
             color: "primary.main",
           }}>
@@ -109,7 +108,6 @@ export default function ResponsiveAppBar({
             <Box
               sx={{
                 display: { xs: "none", sm: "block" },
-                //fontSize: "16x",
               }}>
               <MenuButton
                 id="lesson-plans-nav-button"
@@ -185,7 +183,10 @@ export default function ResponsiveAppBar({
           <Divider />
           <List>
             {LINKS.map(({ text, href, icon: Icon }) => (
-              <ListItem key={href} disablePadding>
+              <ListItem
+                key={href}
+                disablePadding
+                onClick={() => setMobileOpen(false)}>
                 <ListItemButton component={SecureNextLink} href={href}>
                   <ListItemIcon>
                     <Icon />
@@ -195,9 +196,19 @@ export default function ResponsiveAppBar({
               </ListItem>
             ))}
           </List>
+          <List>
+            <MenuButton
+              id="lesson-plans-nav-button"
+              buttonComponent={<Button size="large">Lesson Plans</Button>}
+              menuItems={[
+                { name: "All Lesson Plans", href: "/lessonplans" },
+                { name: "Saved", href: "/lessonplans/saved" },
+              ]}
+            />
+          </List>
           <Divider sx={{ mt: "auto" }} />
           <List>
-            {PLACEHOLDER_LINKS.map(({ text, icon: Icon }) => (
+            {/* {PLACEHOLDER_LINKS.map(({ text, icon: Icon }) => (
               <ListItem key={text} disablePadding>
                 <ListItemButton>
                   <ListItemIcon>
@@ -206,7 +217,38 @@ export default function ResponsiveAppBar({
                   <ListItemText primary={text} />
                 </ListItemButton>
               </ListItem>
-            ))}
+            ))} */}
+            {loginStatus === "LOGGED_IN" && (
+              <ListItem
+                key="Logout"
+                disablePadding
+                onClick={() => setMobileOpen(false)}>
+                <ListItemButton
+                  onClick={() => {
+                    dispatch(userLogout());
+                  }}>
+                  <ListItemIcon>
+                    <LogoutIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Logout" />
+                </ListItemButton>
+              </ListItem>
+            )}
+            {loginStatus === "LOGGED_OUT" && (
+              <ListItem
+                key="Login"
+                disablePadding
+                onClick={() => setMobileOpen(false)}>
+                <ListItemButton
+                  component={SecureNextLink}
+                  href={"/auth/signin"}>
+                  <ListItemIcon>
+                    <LoginIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Login" />
+                </ListItemButton>
+              </ListItem>
+            )}
           </List>
         </Drawer>
       </nav>
