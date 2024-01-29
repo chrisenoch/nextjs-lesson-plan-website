@@ -1,5 +1,8 @@
 import { Stack, Typography } from "@mui/material";
 import { ReactNode } from "react";
+import Svg from "../SVGs/SVG";
+import { underline } from "../SVGs/Paths";
+import { SVGPath } from "../SVGs/StyledSVGPath";
 
 export default function SearchLessonPlans({
   searchTitle,
@@ -17,15 +20,24 @@ export default function SearchLessonPlans({
         mb: 4,
         mx: "auto",
       }}>
-      <Typography
-        id="search-lesson-plans"
-        variant="h4"
-        component="h3"
-        borderBottom={4}
-        borderColor={"primary.light"}
-        alignSelf={"center"}>
-        {searchTitle}
-      </Typography>
+      <Stack alignSelf={"center"}>
+        <Typography
+          id="search-lesson-plans"
+          variant="h4"
+          component="h3"
+          display={"inline-block"}
+          // borderBottom={4}
+          // borderColor={"primary.light"}
+        >
+          {searchTitle}
+        </Typography>
+        <Svg
+          width="300px"
+          height="21.5px"
+          viewBox={{ minY: 0, minX: 0, height: 21.5, width: 445.5 }}>
+          <SVGPath d={underline} sx={{ fill: "orange" }} />
+        </Svg>
+      </Stack>
 
       {children}
     </Stack>
