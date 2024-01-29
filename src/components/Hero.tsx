@@ -22,13 +22,13 @@ import {
   emit,
 } from "@/services/my-custom-event-emitter/SubscriberService";
 import { useIsFirstRender } from "@/customHooks/useIsFirstRender";
-import ColorFactory from "./ColorFactory";
+import ColorFactory from "./Utils/ColorFactory";
 import {
   ArrowBackIos,
   ArrowForward,
   ArrowForwardIos,
 } from "@mui/icons-material";
-import SecureNextLink from "./SecureNextLink";
+import SecureNextLink from "./Utils/SecureNextLink";
 
 export default function Hero() {
   const carouselMoveLeft: SubscriberConfigObject = useMemo(() => {

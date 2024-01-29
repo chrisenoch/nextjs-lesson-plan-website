@@ -1,4 +1,4 @@
-import { SignIn } from "@/components/auth/SignIn";
+import { SignIn } from "@/components/Auth/SignIn";
 import { Stack } from "@mui/material";
 
 export default function SignInPage() {

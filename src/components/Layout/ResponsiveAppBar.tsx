@@ -29,10 +29,10 @@ import {
   selectLoginStatus,
   userLogout,
 } from "@/store";
-import SecureNextLink from "./SecureNextLink";
+import SecureNextLink from "../Utils/SecureNextLink";
 import InSecureNextLink from "next/link";
 import { LoginStatus } from "@/models/types/Auth/LoginStatus";
-import MenuButton from "./MenuButton";
+import MenuButton from "../MenuButton";
 import LogoutIcon from "@mui/icons-material/Logout";
 import LoginIcon from "@mui/icons-material/Login";
 import CloseIcon from "@mui/icons-material/Close";

@@ -10,7 +10,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import WorkIcon from "@mui/icons-material/Work";
 import BadgeIcon from "@mui/icons-material/Badge";
 import ThemeRegistry from "@/components/ThemeRegistry/ThemeRegistry";
-import ResponsiveAppBar from "@/components/ResponsiveAppBar";
+import ResponsiveAppBar from "@/components/Layout/ResponsiveAppBar";
 import ReduxProvider from "@/components/ReduxStore/ReduxProvider";
 import EssentialClientConfig from "@/components/EssentialClientConfig";
 

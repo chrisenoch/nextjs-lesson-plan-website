@@ -4,7 +4,7 @@ import useAutoLogoutWhenJwtTokenExpires from "@/customHooks/useAutoLogoutWhenJwt
 import { AppDispatch, getAccessTokenWithRefreshTokenOnAppMount } from "@/store";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { LogoutWarning } from "./auth/LogoutWarning";
+import { LogoutWarning } from "./Auth/LogoutWarning";
 
 export default function EssentialClientConfig({
   children,
