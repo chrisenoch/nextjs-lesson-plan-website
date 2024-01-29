@@ -35,6 +35,7 @@ import { LoginStatus } from "@/models/types/Auth/LoginStatus";
 import MenuButton from "./MenuButton";
 import LogoutIcon from "@mui/icons-material/Logout";
 import LoginIcon from "@mui/icons-material/Login";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function ResponsiveAppBar({
   DRAWER_WIDTH,
@@ -178,10 +179,28 @@ export default function ResponsiveAppBar({
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: DRAWER_WIDTH,
+              maxHeight: "100vh",
             },
           }}>
           <Divider />
           <List>
+            <ListItem
+              disablePadding
+              // sx={{
+              //   minWidth: "fit-content",
+              //   marginLeft: "auto",
+              // }}
+            >
+              <ListItemButton onClick={() => setMobileOpen(false)}>
+                <ListItemIcon
+                  sx={{
+                    minWidth: "fit-content",
+                    marginLeft: "auto",
+                  }}>
+                  <CloseIcon />
+                </ListItemIcon>
+              </ListItemButton>
+            </ListItem>
             {LINKS.map(({ text, href, icon: Icon }) => (
               <ListItem
                 key={href}
