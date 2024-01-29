@@ -2,10 +2,13 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import HomeIcon from "@mui/icons-material/Home";
 import StarIcon from "@mui/icons-material/Star";
+import SchoolIcon from "@mui/icons-material/School";
 import ChecklistIcon from "@mui/icons-material/Checklist";
 import SettingsIcon from "@mui/icons-material/Settings";
 import SupportIcon from "@mui/icons-material/Support";
 import LogoutIcon from "@mui/icons-material/Logout";
+import WorkIcon from "@mui/icons-material/Work";
+import BadgeIcon from "@mui/icons-material/Badge";
 import ThemeRegistry from "@/components/ThemeRegistry/ThemeRegistry";
 import ResponsiveAppBar from "@/components/ResponsiveAppBar";
 import ReduxProvider from "@/components/ReduxStore/ReduxProvider";
@@ -20,8 +23,10 @@ const DRAWER_WIDTH = 240;
 
 const LINKS = [
   { text: "Home", href: "/", icon: HomeIcon },
-  { text: "Starred", href: "/starred", icon: StarIcon },
-  { text: "Tasks", href: "/tasks", icon: ChecklistIcon },
+  { text: "Lesson Plans", href: "/lessonplans", icon: SchoolIcon },
+  { text: "Saved Lesson Plans", href: "/lessonplans/saved", icon: StarIcon },
+  { text: "Jobs", href: "/all-jobs", icon: WorkIcon },
+  { text: "My Jobs", href: "/my-jobs", icon: BadgeIcon },
 ];
 
 const PLACEHOLDER_LINKS = [
