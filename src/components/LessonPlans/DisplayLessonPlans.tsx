@@ -1,7 +1,7 @@
 "use client";
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Stack, Typography } from "@mui/material";
 import LessonPlanCard from "./LessonPlanCard";
-import { LessonPlan } from "../../models/types/LessonPlan";
+import { LessonPlan } from "../../models/types/LessonPlans/LessonPlan";
 import { useDispatch, useSelector } from "react-redux";
 import {
   AppDispatch,
@@ -14,8 +14,10 @@ import {
   fetchBookmarks,
   toggleBookmark,
 } from "@/store/slices/with-thunks/lessonplans-slice";
-import { LoginStatus } from "@/models/types/LoginStatus";
+import { LoginStatus } from "@/models/types/Auth/LoginStatus";
 import { getBookmakedLessonPlanIds } from "@/component-functions/get-bookmarked-lessonplan-ids";
+import NotificationBox from "../NotificationBox";
+import { BorderColor } from "@mui/icons-material";
 
 export default function DisplayLessonplans({
   lessonPlans,
@@ -89,10 +91,18 @@ export default function DisplayLessonplans({
       sx={{
         display: "flex",
         maxWidth: "1200px",
+        minHeight: "600px",
         margin: "0 auto",
       }}>
       <Grid container rowSpacing={3} columnSpacing={3}>
-        {lessonPlansToDisplay}
+        {lessonPlansToDisplay.length > 0 ? (
+          lessonPlansToDisplay
+        ) : (
+          <NotificationBox
+            title="Too many filters"
+            message=" No lesson plans are available that match all the filters you selected. Please try removing some filters from the search box to find more lesson plans."
+          />
+        )}
       </Grid>
     </Box>
   );

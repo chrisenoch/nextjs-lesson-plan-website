@@ -11,7 +11,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import FloatingId from "@/components/FloatingId";
+import FloatingId from "@/components/Layout/FloatingId";
 import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 import { useEffect, useMemo, useState } from "react";
 import InsecureNextLink from "next/link";

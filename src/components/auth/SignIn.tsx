@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { redirect, useSearchParams } from "next/navigation";
 import useHideMessageOnNavAway from "@/customHooks/useHideMessageOnNavAway";
 import { LoadingButton } from "@mui/lab";
-import { LoginStatus } from "@/models/types/LoginStatus";
+import { LoginStatus } from "@/models/types/Auth/LoginStatus";
 
 export function SignIn() {
   const loginStatus: LoginStatus = useSelector(selectLoginStatus);

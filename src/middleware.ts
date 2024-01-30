@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { UserRole, isUserRole } from "./models/types/UserRole";
+import { UserRole, isUserRole } from "./models/types/Auth/UserRole";
 import {
   ProtectedRouteInfo,
   ProtectedRouteInfoNoChildrenBySecondaryRoute,
   ProtectedRoutes,
   isProtectedRouteChildren,
   ProtectedRouteInfoNoChildren,
-} from "./models/types/ProtectedRoutes";
+} from "./models/types/Auth/ProtectedRoutes";
 import { getArrayIntersection } from "./utils/array-functions";
 import { joseVerifyToken } from "./server-only/auth/check-permissions";
 

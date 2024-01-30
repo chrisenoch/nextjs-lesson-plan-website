@@ -1,4 +1,4 @@
-import { LoginStatus } from "@/models/types/LoginStatus";
+import { LoginStatus } from "@/models/types/Auth/LoginStatus";
 import {
   AppDispatch,
   reinitWasLastRefreshSuccessful,

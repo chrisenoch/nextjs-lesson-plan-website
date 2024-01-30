@@ -1,5 +1,13 @@
 "use client";
-import { Box, Button, Paper, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Paper,
+  Stack,
+  SxProps,
+  Theme,
+  Typography,
+} from "@mui/material";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import useTriggerRerender from "@/customHooks/useTriggerRerender";
@@ -7,16 +15,18 @@ import {
   AutoPlay,
   AutoPlayDirection,
   Transitions,
-} from "@/models/types/AutoPlay";
+} from "@/models/types/Carousel/AutoPlay";
 import {
   SubscriberConfigObject,
   subscribe,
   unsubscribe,
 } from "@/services/my-custom-event-emitter/SubscriberService";
+import { ImageDisplayBox, ImageRow } from "@/models/types/Carousel/Styles";
 
 //Transition duration must be less than autoplayDelay
 export function Carousel({
   images: unPreparedImages,
+  styles,
   renderedImageWidth,
   renderedImageHeight,
   imageDisplayWidth: IMG_DISPLAY_WIDTH,
@@ -30,6 +40,10 @@ export function Carousel({
   children,
 }: {
   images: { alt: string; imagePath: string }[];
+  styles?: {
+    imageDisplayBox?: ImageDisplayBox;
+    imageRow?: ImageRow;
+  };
   renderedImageWidth: number;
   renderedImageHeight: number;
   imageDisplayWidth: number;
@@ -88,6 +102,15 @@ export function Carousel({
   >(autoPlay);
 
   checkForPropsErrors();
+
+  const {
+    imageDisplayBoxStyles,
+    overRiddableImageRowStyles,
+  }: {
+    imageDisplayBoxStyles: SxProps<Theme>;
+    overRiddableImageRowStyles: SxProps<Theme>;
+  } = initSXProps();
+
   const updateImagesOne = useCallback(() => {
     console.log("Transition ended imageOneRow");
     console.log("starting updateImagesOne");
@@ -322,6 +345,33 @@ export function Carousel({
     [RESTART_AUTOPLAY_DELAY, autoPlay, startAutoPlay]
   );
 
+  function initSXProps() {
+    let imageDisplayBoxStyles: SxProps<Theme> = {
+      maxWidth: "100%",
+      position: "relative",
+      overflow: "hidden",
+    };
+    let overRiddableImageRowStyles: SxProps<Theme> = {
+      position: "absolute",
+      backgroundColor: "gray",
+    };
+
+    if (styles?.imageDisplayBox) {
+      imageDisplayBoxStyles = {
+        ...imageDisplayBoxStyles,
+        ...styles.imageDisplayBox,
+      };
+    }
+
+    if (styles?.imageDisplayBox) {
+      overRiddableImageRowStyles = {
+        ...overRiddableImageRowStyles,
+        ...styles.imageRow,
+      };
+    }
+    return { imageDisplayBoxStyles, overRiddableImageRowStyles };
+  }
+
   function stopAutoPlay() {
     autoPlayIntervalIds.current.forEach((intervalId) =>
       clearInterval(intervalId)
@@ -540,26 +590,21 @@ export function Carousel({
       id="image-display-box"
       width={`${IMG_DISPLAY_WIDTH}${IMG_DISPLAY_WIDTH_UNIT}`}
       height={`${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`}
-      overflow={isOverFlowShown ? "visible" : "hidden"}
-      position="relative">
+      sx={imageDisplayBoxStyles}>
       <Stack
         direction="row"
         id="image-row-1"
         sx={{
           width: `${IMG_DISPLAY_WIDTH}${IMG_DISPLAY_WIDTH_UNIT}`,
           height: `${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`,
-          //height: "200px",
-          // width: "fit-content",
-          // height: "fit-content",
           display: `${activeImageRow === 1 ? "flex" : "none"}`,
-          backgroundColor: "gray",
           transition: `right ${
             transitions
               ? transitions.durationMs + "ms"
               : DEFAULT_TRANSITION_DURATION + "ms"
           } ${transitions ? transitions.easingFunction : "ease-out"} `,
-          position: "absolute",
           right: `${imageOneRowRight}${IMG_DISPLAY_WIDTH_UNIT}`,
+          ...overRiddableImageRowStyles,
         }}>
         {renderedImagesOne}
       </Stack>
@@ -569,17 +614,14 @@ export function Carousel({
         sx={{
           width: `${IMG_DISPLAY_WIDTH}${IMG_DISPLAY_WIDTH_UNIT}`,
           height: `${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`,
-          // width: "fit-content",
-          // height: "fit-content",
           display: `${activeImageRow === 2 ? "flex" : "none"}`,
-          backgroundColor: "gray",
           transition: `right ${
             transitions
               ? transitions.durationMs + "ms"
               : DEFAULT_TRANSITION_DURATION + "ms"
           } ${transitions ? transitions.easingFunction : "ease-out"} `,
-          position: "absolute",
           right: `${imageTwoRowRight}${IMG_DISPLAY_WIDTH_UNIT}`, //decreasing the value 'right' moves the Images from left to right
+          ...overRiddableImageRowStyles,
         }}>
         {renderedImagesTwo}
       </Stack>

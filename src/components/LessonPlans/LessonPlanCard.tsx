@@ -7,13 +7,10 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Avatar, IconButton, Divider, Stack, Chip } from "@mui/material";
 import Circle from "@mui/icons-material/Circle";
-import Bookmark from "@mui/icons-material/Bookmark";
 import Diamond from "@mui/icons-material/Diamond";
-import { LessonPlan } from "@/models/types/LessonPlan";
-import SecureNextLink from "../SecureNextLink";
+import SecureNextLink from "../Utils/SecureNextLink";
 import { LoadingButton } from "@mui/lab";
-import { LessonPlanBookmarkStatus } from "@/models/types/LessonPlanBookmarkStatus";
-import { LessonPlanCard } from "@/models/types/LessonPlanCard";
+import { LessonPlanCard } from "@/models/types/LessonPlans/LessonPlanCard";
 import { ArrowForward, Done, RocketLaunch } from "@mui/icons-material";
 
 export default function LessonPlanCard({
@@ -120,7 +117,10 @@ export default function LessonPlanCard({
           variant={"contained"}
           size="small"
           startIcon={<ArrowForward />}
-          component={SecureNextLink}>
+          component={SecureNextLink}
+          sx={{
+            marginRight: 1,
+          }}>
           View
         </Button>
 

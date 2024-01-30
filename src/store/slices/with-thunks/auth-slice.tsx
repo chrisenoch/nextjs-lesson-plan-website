@@ -5,13 +5,13 @@ import {
   getAccessTokenWithRefreshToken,
   getAccessTokenWithRefreshTokenOnAppMount,
 } from "./auth-thunks";
-import { UserInfo } from "@/models/types/UserInfo";
+import { UserInfo } from "@/models/types/Auth/UserInfo";
 import {
   handleFulfilled,
   handlePending,
   handleRejected,
 } from "./thunk-helpers";
-import { LoginStatus } from "@/models/types/LoginStatus";
+import { LoginStatus } from "@/models/types/Auth/LoginStatus";
 
 const initialState: {
   userInfo: UserInfo | null;

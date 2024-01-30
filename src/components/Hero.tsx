@@ -15,19 +15,20 @@ import {
   AutoPlay,
   AutoPlayDirection,
   Transitions,
-} from "@/models/types/AutoPlay";
+} from "@/models/types/Carousel/AutoPlay";
 import { carouselStore } from "@/services/my-custom-event-emitter/SubscriberConfigObjectStore";
 import {
   SubscriberConfigObject,
   emit,
 } from "@/services/my-custom-event-emitter/SubscriberService";
 import { useIsFirstRender } from "@/customHooks/useIsFirstRender";
-import ColorFactory from "./ColorFactory";
+import ColorFactory from "./Utils/ColorFactory";
 import {
   ArrowBackIos,
   ArrowForward,
   ArrowForwardIos,
 } from "@mui/icons-material";
+import SecureNextLink from "./Utils/SecureNextLink";
 
 export default function Hero() {
   const carouselMoveLeft: SubscriberConfigObject = useMemo(() => {
@@ -46,13 +47,13 @@ export default function Hero() {
   carouselStore.set("moveRight", carouselMoveRight);
 
   const [autoPlay, setAutoPlay] = useState<AutoPlay>({
-    enableAutoPlay: true,
+    enableAutoPlay: false,
     direction: "RIGHT",
-    delay: 1000,
+    delay: 4500,
   });
 
   const transitions: Transitions = {
-    durationMs: 700,
+    durationMs: 2000,
     easingFunction: "ease-out",
   };
 
@@ -85,16 +86,16 @@ export default function Hero() {
           "https://raw.githubusercontent.com/chrisenoch/assets/main/swimming.jpg",
       },
 
-      {
-        alt: "Laptop",
-        imagePath:
-          "https://raw.githubusercontent.com/chrisenoch/assets/main/laptop.jpg",
-      },
-      {
-        alt: "Beach-1",
-        imagePath:
-          "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-      },
+      // {
+      //   alt: "Laptop",
+      //   imagePath:
+      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/laptop.jpg",
+      // },
+      // {
+      //   alt: "Beach-1",
+      //   imagePath:
+      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
+      // },
       // {
       //   alt: "Driverless-1",
       //   imagePath:
@@ -240,36 +241,6 @@ export default function Hero() {
     []
   );
 
-  function handleToggleAutoPlayDirection() {
-    const newAutoPlay: AutoPlay = {
-      ...autoPlay,
-      direction:
-        autoPlay.direction === "RIGHT"
-          ? "LEFT"
-          : ("RIGHT" as AutoPlayDirection),
-    };
-    setAutoPlay(newAutoPlay);
-  }
-
-  function handleToggleEnableAutoPlay() {
-    console.log("in handleToggleAutoplay");
-    const newAutoPlay: AutoPlay = {
-      ...autoPlay,
-      enableAutoPlay: !autoPlay.enableAutoPlay,
-    };
-    setAutoPlay(newAutoPlay);
-  }
-
-  function handleIncreaseAutoPlayDelay() {
-    console.log("in handleToggleAutoplay");
-    const newAutoPlay: AutoPlay = {
-      ...autoPlay,
-      delay: autoPlay.delay + 1000,
-    };
-    console.log("delay from aprent: " + newAutoPlay.delay);
-    setAutoPlay(newAutoPlay);
-  }
-
   return (
     <>
       <Stack
@@ -282,7 +253,9 @@ export default function Hero() {
           container
           alignItems="center"
           justifyContent="center"
-          height="50vh">
+          height="50vh"
+          gap={4}
+          flexWrap={"nowrap"}>
           <Grid
             item
             xs={6}
@@ -290,8 +263,15 @@ export default function Hero() {
             display={"flex"}
             alignItems={"center"}>
             <Stack alignItems={"start"}>
-              <Typography gutterBottom variant="h3" component="h1">
+              <Typography gutterBottom variant="h2" component="h1">
                 Get{" "}
+                <Box
+                  component="span"
+                  fontWeight="medium"
+                  color="secondary.light">
+                  fun{" "}
+                </Box>
+                and{" "}
                 <Box
                   component="span"
                   fontWeight="medium"
@@ -300,127 +280,71 @@ export default function Hero() {
                 </Box>
                 lesson plans
               </Typography>
-              <Typography variant="h5" component="p" mb={3}>
-                Spend less time lesson planning and more time with friends.
-                Download
-                <Box component="span" fontWeight="bold" color="secondary.main">
-                  {" "}
-                  60 free lessons{" "}
-                </Box>
-                now.
+              <Typography
+                variant="h6"
+                fontWeight={"regular"}
+                component="p"
+                mb={3}>
+                Spend less time lesson planning and more time making money or
+                doing the things you love.{" "}
               </Typography>
-              <Button variant={"contained"} size="large">
-                Download
+              <Button
+                download="Free lesson plans"
+                href={"http://localhost:3000/lessonplans/free-lesson-plans.txt"}
+                component="a"
+                variant={"contained"}
+                size="large">
+                Get 60 free lesson plans
               </Button>
             </Stack>
           </Grid>
           <Grid item xs={6} height="100%">
-            <Image
-              alt={"A beach with palm trees"}
-              src={
-                "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg"
-              }
-              width={600}
-              height={550}
-              priority
-              style={{
-                maxHeight: "100%",
-                width: "auto",
-                objectFit: "cover",
-                objectPosition: "center",
-                borderRadius: 32,
+            <Carousel
+              styles={{
+                imageDisplayBox: {
+                  borderRadius: 4,
+                },
               }}
-            />
+              imageDisplayWidth={30}
+              imageDisplayHeight={50}
+              imageDisplayWidthUnit={"vw"}
+              imageDisplayHeightUnit={"vh"}
+              renderedImageWidth={1000}
+              renderedImageHeight={1000}
+              autoPlay={autoPlay}
+              transitions={transitions}
+              images={images}
+              carouselMoveLeft={carouselMoveLeft}
+              carouselMoveRight={carouselMoveRight}>
+              <Stack
+                direction={"row"}
+                sx={{
+                  position: "absolute",
+                  transform: "translatey(-50%)",
+                  justifyContent: "space-between",
+                  width: "100%",
+                  top: "50%",
+                }}>
+                <ColorFactory primary="#FFFFFF">
+                  <IconButton
+                    color="primary"
+                    size="large"
+                    onClick={() => emit(carouselMoveLeft)}>
+                    <ArrowBackIos />
+                  </IconButton>
+                </ColorFactory>
+                <ColorFactory primary="#FFFFFF">
+                  <IconButton
+                    size="small"
+                    color="primary"
+                    onClick={() => emit(carouselMoveRight)}>
+                    <ArrowForwardIos />
+                  </IconButton>
+                </ColorFactory>
+              </Stack>{" "}
+            </Carousel>
           </Grid>
         </Grid>
-      </Stack>
-      <Stack direction="row" marginBottom={4}>
-        <Button
-          size="small"
-          onClick={handleToggleEnableAutoPlay}
-          variant="contained"
-          sx={{
-            color: "white",
-          }}>
-          Toggle Enable Autoplay
-        </Button>
-        <Button
-          size="small"
-          onClick={handleToggleAutoPlayDirection}
-          variant="contained"
-          sx={{
-            color: "white",
-          }}>
-          Toggle Direction
-        </Button>
-        <Button
-          size="small"
-          onClick={handleIncreaseAutoPlayDelay}
-          variant="contained"
-          sx={{
-            color: "white",
-          }}>
-          Increase delay
-        </Button>
-        <Button
-          size="small"
-          onClick={() => emit(carouselMoveLeft)}
-          variant="contained"
-          sx={{
-            color: "white",
-          }}>
-          Emit move left to carousel
-        </Button>
-        <Button
-          size="small"
-          onClick={() => emit(carouselMoveRight)}
-          variant="contained"
-          sx={{
-            color: "white",
-          }}>
-          Emit move right to carousel
-        </Button>
-      </Stack>
-      <Stack alignItems={"center"}>
-        <Carousel
-          imageDisplayWidth={40}
-          imageDisplayHeight={40}
-          imageDisplayWidthUnit={"vw"}
-          imageDisplayHeightUnit={"vh"}
-          renderedImageWidth={1000}
-          renderedImageHeight={1000}
-          autoPlay={autoPlay}
-          transitions={transitions}
-          images={images}
-          carouselMoveLeft={carouselMoveLeft}
-          carouselMoveRight={carouselMoveRight}>
-          <Stack
-            direction={"row"}
-            sx={{
-              position: "absolute",
-              transform: "translatey(-50%)",
-              justifyContent: "space-between",
-              width: "100%",
-              top: "50%",
-            }}>
-            <ColorFactory primary="#FFFFFF">
-              <IconButton
-                color="primary"
-                size="large"
-                onClick={() => emit(carouselMoveLeft)}>
-                <ArrowBackIos />
-              </IconButton>
-            </ColorFactory>
-            <ColorFactory primary="#FFFFFF">
-              <IconButton
-                size="small"
-                color="primary"
-                onClick={() => emit(carouselMoveRight)}>
-                <ArrowForwardIos />
-              </IconButton>
-            </ColorFactory>
-          </Stack>{" "}
-        </Carousel>
       </Stack>
     </>
   );

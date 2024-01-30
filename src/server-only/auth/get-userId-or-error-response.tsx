@@ -1,5 +1,5 @@
 import "server-only";
-import { UserRole } from "@/models/types/UserRole";
+import { UserRole } from "@/models/types/Auth/UserRole";
 import { NextRequest, NextResponse } from "next/server";
 import { checkPermissions } from "./check-permissions";
 import { getAccessTokenInfo } from "./get-access-token-info";

@@ -1,4 +1,4 @@
-import { LessonPlan } from "../../models/types/LessonPlan";
+import { LessonPlan } from "../../models/types/LessonPlans/LessonPlan";
 import { cloneElement } from "react";
 import DisplayBookmarkedLessonPlans from "./DisplayBookmarkedLessonPlans";
 import DisplayLessonPlans from "./DisplayLessonPlans";

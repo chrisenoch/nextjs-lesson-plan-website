@@ -3,7 +3,6 @@
 import {
   AppBar,
   Toolbar,
-  Typography,
   Drawer,
   Divider,
   List,
@@ -14,43 +13,46 @@ import {
   IconButton,
   Box,
   Button,
-  Container,
   useScrollTrigger,
   Link,
+  Icon,
+  SvgIconTypeMap,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useState } from "react";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  AppDispatch,
-  selectGetAccessTokenWithRefreshTokenOnAppMount,
-  selectLoginStatus,
-  userLogout,
-} from "@/store";
-import SecureNextLink from "./SecureNextLink";
+import { AppDispatch, selectLoginStatus, userLogout } from "@/store";
+import SecureNextLink from "../Utils/SecureNextLink";
 import InSecureNextLink from "next/link";
-import { LoginStatus } from "@/models/types/LoginStatus";
-import MenuButton from "./MenuButton";
-import Image from "next/image";
+import { LoginStatus } from "@/models/types/Auth/LoginStatus";
+import MenuButton from "../MenuButton";
+import LogoutIcon from "@mui/icons-material/Logout";
+import LoginIcon from "@mui/icons-material/Login";
+import CloseIcon from "@mui/icons-material/Close";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
 
 export default function ResponsiveAppBar({
-  DRAWER_WIDTH,
-  LINKS,
-  PLACEHOLDER_LINKS,
+  drawerWidth,
+  burgerTopLinks,
+  navBarItems,
+}: {
+  drawerWidth: number;
+  burgerTopLinks: {
+    text: string;
+    href: string;
+    icon: OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
+      muiName: string;
+    };
+  }[];
+  navBarItems: { title: string; href: string }[];
 }) {
   console.log("Responsive AppBar mounts");
   const loginStatus: LoginStatus = useSelector(selectLoginStatus);
-
   const dispatch = useDispatch<AppDispatch>();
 
-  const navItems = [
-    { title: "All Jobs", href: "/all-jobs" },
-    { title: "My Jobs", href: "/my-jobs" },
-  ];
   const [mobileOpen, setMobileOpen] = useState(false);
-
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
@@ -72,7 +74,8 @@ export default function ResponsiveAppBar({
         <AppBar
           position="fixed"
           sx={{
-            backgroundColor: "grey.100",
+            backgroundColor: "background.paper",
+            boxShadow: "0 1px #0000001f",
             color: "primary.main",
           }}>
           <Toolbar
@@ -89,7 +92,12 @@ export default function ResponsiveAppBar({
               sx={{ mr: 2, display: { sm: "none" } }}>
               <MenuIcon />
             </IconButton>
-            <Box sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}>
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: { xs: "none", sm: "block" },
+                fontSize: "h6.fontSize",
+              }}>
               <Link
                 href="/"
                 underline="none"
@@ -104,18 +112,19 @@ export default function ResponsiveAppBar({
               }}>
               <MenuButton
                 id="lesson-plans-nav-button"
-                buttonComponent={<Button>Lesson Plans</Button>}
+                buttonComponent={<Button size="large">Lesson Plans</Button>}
                 menuItems={[
                   { name: "All Lesson Plans", href: "/lessonplans" },
                   { name: "Saved", href: "/lessonplans/saved" },
                 ]}
               />
-              {navItems.map((item) => {
+              {navBarItems.map((item) => {
                 return (
                   <Button
                     key={item.title}
                     href={item.href}
-                    component={SecureNextLink}>
+                    component={SecureNextLink}
+                    size="large">
                     {item.title}
                   </Button>
                 );
@@ -126,7 +135,8 @@ export default function ResponsiveAppBar({
                   key="Logout"
                   onClick={() => {
                     dispatch(userLogout());
-                  }}>
+                  }}
+                  size="large">
                   Logout
                 </Button>
               )}
@@ -134,7 +144,8 @@ export default function ResponsiveAppBar({
                 <Button
                   key="Login"
                   href={"/auth/signin"}
-                  component={InSecureNextLink}>
+                  component={InSecureNextLink}
+                  size="large">
                   {/* We don't need to check the login route in middleware */}
                   Login
                 </Button>
@@ -144,7 +155,8 @@ export default function ResponsiveAppBar({
                   key={"loading-placeholder"}
                   loading
                   disabled
-                  variant="outlined">
+                  variant="outlined"
+                  size="large">
                   {/* value here affects the button size */}
                   Login
                 </LoadingButton>
@@ -166,13 +178,34 @@ export default function ResponsiveAppBar({
             flexShrink: 0,
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
-              width: DRAWER_WIDTH,
+              width: drawerWidth,
+              maxHeight: "100vh",
             },
           }}>
           <Divider />
           <List>
-            {LINKS.map(({ text, href, icon: Icon }) => (
-              <ListItem key={href} disablePadding>
+            <ListItem
+              disablePadding
+              // sx={{
+              //   minWidth: "fit-content",
+              //   marginLeft: "auto",
+              // }}
+            >
+              <ListItemButton onClick={() => setMobileOpen(false)}>
+                <ListItemIcon
+                  sx={{
+                    minWidth: "fit-content",
+                    marginLeft: "auto",
+                  }}>
+                  <CloseIcon />
+                </ListItemIcon>
+              </ListItemButton>
+            </ListItem>
+            {burgerTopLinks.map(({ text, href, icon: Icon }) => (
+              <ListItem
+                key={href}
+                disablePadding
+                onClick={() => setMobileOpen(false)}>
                 <ListItemButton component={SecureNextLink} href={href}>
                   <ListItemIcon>
                     <Icon />
@@ -184,16 +217,37 @@ export default function ResponsiveAppBar({
           </List>
           <Divider sx={{ mt: "auto" }} />
           <List>
-            {PLACEHOLDER_LINKS.map(({ text, icon: Icon }) => (
-              <ListItem key={text} disablePadding>
-                <ListItemButton>
+            {loginStatus === "LOGGED_IN" && (
+              <ListItem
+                key="Logout"
+                disablePadding
+                onClick={() => setMobileOpen(false)}>
+                <ListItemButton
+                  onClick={() => {
+                    dispatch(userLogout());
+                  }}>
                   <ListItemIcon>
-                    <Icon />
+                    <LogoutIcon />
                   </ListItemIcon>
-                  <ListItemText primary={text} />
+                  <ListItemText primary="Logout" />
                 </ListItemButton>
               </ListItem>
-            ))}
+            )}
+            {loginStatus === "LOGGED_OUT" && (
+              <ListItem
+                key="Login"
+                disablePadding
+                onClick={() => setMobileOpen(false)}>
+                <ListItemButton
+                  component={SecureNextLink}
+                  href={"/auth/signin"}>
+                  <ListItemIcon>
+                    <LoginIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Login" />
+                </ListItemButton>
+              </ListItem>
+            )}
           </List>
         </Drawer>
       </nav>
