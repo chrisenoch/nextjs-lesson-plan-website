@@ -15,6 +15,7 @@ import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 import { useMemo } from "react";
 import InsecureNextLink from "next/link";
 import CurvedUnderlineTitle from "../CurvedUnderline";
+import { orange } from "@mui/material/colors";
 
 export default function LessonPlan({
   isPremium,
@@ -221,7 +222,7 @@ export default function LessonPlan({
               component={"h1"}
               variant="h2"
               title={title}
-              color="orange"
+              color={orange[300]}
               sxUnderline={{ left: 2 }}
               sxTypography={{ marginBottom: 6 }}
             />
