@@ -220,15 +220,11 @@ export default function LessonPlan({
             <CurvedUnderlineTitle
               component={"h1"}
               variant="h2"
-              title="Driverless Cars"
-              sxUnderline={{ left: 2 }}></CurvedUnderlineTitle>
-            <Typography
-              gutterBottom
-              variant="h2"
-              component={"h1"}
-              marginBottom={4}>
-              {title}
-            </Typography>
+              title={title}
+              color="orange"
+              sxUnderline={{ left: 2 }}
+              sxTypography={{ marginBottom: 6 }}
+            />
             <Typography
               id="summary"
               gutterBottom

@@ -6,17 +6,19 @@ export default function CurvedUnderlineTitle({
   variant,
   title,
   sxUnderline,
+  sxTypography,
   color = "primary.main",
 }: {
   component: any;
   variant: any;
   title: string;
   sxUnderline?: SxProps<Theme>;
+  sxTypography?: SxProps<Theme>;
   color?: string;
 }) {
   const sxUnderlineDefault: SxProps<Theme> = {
     position: "absolute",
-    bottom: "-24px",
+    bottom: "-28px",
     left: "0",
     height: "30px",
     width: "100%",
@@ -28,11 +30,20 @@ export default function CurvedUnderlineTitle({
     borderRadius: "50%",
   };
 
-  const { sxUnderlineFinal } = setSXValues([
+  const sxTypographyDefault: SxProps<Theme> = {
+    display: "inline-block",
+  };
+
+  const { sxUnderlineFinal, sxTypographyFinal } = setSXValues([
     {
       userValues: sxUnderline,
       defaultValues: sxUnderlineDefault,
       sxName: "Underline",
+    },
+    {
+      userValues: sxTypography,
+      defaultValues: sxTypographyDefault,
+      sxName: "Typography",
     },
   ]);
 
@@ -41,7 +52,7 @@ export default function CurvedUnderlineTitle({
       component={component}
       variant={variant}
       position={"relative"}
-      display="inline-block">
+      sx={sxTypographyFinal}>
       {title}
       <Box component="span" sx={sxUnderlineFinal}></Box>
     </Typography>
