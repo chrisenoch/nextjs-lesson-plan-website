@@ -226,11 +226,6 @@
     },
     {
       "userId": "1",
-      "lessonPlanId": "3",
-      "id": 10
-    },
-    {
-      "userId": "1",
       "lessonPlanId": "2",
       "id": 11
     }

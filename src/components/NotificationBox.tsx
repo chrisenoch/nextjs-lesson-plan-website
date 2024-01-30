@@ -1,3 +1,4 @@
+import { setSXValues } from "@/component-functions/set-sx-values";
 import { Stack, Typography, Box, SxProps, Theme } from "@mui/material";
 
 export default function NotificationBox({
@@ -47,16 +48,28 @@ export default function NotificationBox({
     sxInnerContainerFinal,
     sxTitleFinal,
     sxMessageFinal,
-  } = setSXValues(
-    sxOuterContainer,
-    sxOuterContainerDefault,
-    sxInnerContainer,
-    sxInnerContainerDefault,
-    sxTitle,
-    sxTitleDefault,
-    sxMessage,
-    sxMessageDefault
-  );
+  } = setSXValues([
+    {
+      userValues: sxOuterContainer,
+      defaultValues: sxOuterContainerDefault,
+      sxName: "OuterContainer",
+    },
+    {
+      userValues: sxInnerContainer,
+      defaultValues: sxInnerContainerDefault,
+      sxName: "InnerContainer",
+    },
+    {
+      userValues: sxTitle,
+      defaultValues: sxTitleDefault,
+      sxName: "Title",
+    },
+    {
+      userValues: sxMessage,
+      defaultValues: sxMessageDefault,
+      sxName: "Message",
+    },
+  ]);
 
   return (
     <Stack sx={sxOuterContainerFinal}>
@@ -70,49 +83,4 @@ export default function NotificationBox({
       </Stack>
     </Stack>
   );
-}
-
-//To do: Create a reusable function which sets sx props.
-function setSXValues(
-  sxOuterContainer: SxProps<Theme> | undefined,
-  sxOuterContainerDefault: SxProps<Theme>,
-  sxInnerContainer: SxProps<Theme> | undefined,
-  sxInnerContainerDefault: SxProps<Theme>,
-  sxTitle: SxProps<Theme> | undefined,
-  sxTitleDefault: SxProps<Theme>,
-  sxMessage: SxProps<Theme> | undefined,
-  sxMessageDefault: SxProps<Theme>
-) {
-  let sxOuterContainerFinal = sxOuterContainerDefault;
-  let sxInnerContainerFinal = sxInnerContainerDefault;
-  let sxTitleFinal = sxTitleDefault;
-  let sxMessageFinal = sxMessageDefault;
-
-  if (sxOuterContainer) {
-    sxOuterContainerFinal = {
-      ...sxOuterContainerDefault,
-      ...sxOuterContainer,
-    } as SxProps<Theme>;
-  }
-
-  if (sxInnerContainer) {
-    sxInnerContainerFinal = {
-      ...sxInnerContainerDefault,
-      ...sxInnerContainer,
-    } as SxProps<Theme>;
-  }
-
-  if (sxTitle) {
-    sxTitleFinal = { ...sxTitleDefault, ...sxTitle } as SxProps<Theme>;
-  }
-
-  if (sxMessage) {
-    sxMessageFinal = { ...sxMessageDefault, ...sxMessage } as SxProps<Theme>;
-  }
-  return {
-    sxOuterContainerFinal,
-    sxInnerContainerFinal,
-    sxTitleFinal,
-    sxMessageFinal,
-  };
 }
