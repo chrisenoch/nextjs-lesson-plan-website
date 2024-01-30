@@ -1,5 +1,5 @@
 "use client";
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Stack, Typography } from "@mui/material";
 import LessonPlanCard from "./LessonPlanCard";
 import { LessonPlan } from "../../models/types/LessonPlans/LessonPlan";
 import { useDispatch, useSelector } from "react-redux";
@@ -89,10 +89,43 @@ export default function DisplayLessonplans({
       sx={{
         display: "flex",
         maxWidth: "1200px",
+        minHeight: "600px",
         margin: "0 auto",
       }}>
       <Grid container rowSpacing={3} columnSpacing={3}>
-        {lessonPlansToDisplay}
+        {lessonPlansToDisplay.length > 0 ? (
+          lessonPlansToDisplay
+        ) : (
+          <Stack
+            alignItems={"center"}
+            sx={{
+              maxWidth: "900px",
+              mt: 6,
+              mx: "auto",
+            }}>
+            <Stack
+              alignItems={"center"}
+              maxWidth={"90%"}
+              marginBottom={4}
+              borderRadius={4}
+              border="1px solid"
+              borderColor="text.secondary">
+              <Typography
+                gutterBottom
+                variant="h4"
+                component="p"
+                display={"inline-block"}
+                marginTop={2}>
+                Too many filters
+              </Typography>
+              <Box maxWidth={"70%"} component="p" display={"inline-block"}>
+                No lesson plans are available that match all the filters you
+                selected. Please try removing some filters from the search box
+                to find more lesson plans.
+              </Box>
+            </Stack>
+          </Stack>
+        )}
       </Grid>
     </Box>
   );
