@@ -17,6 +17,7 @@ import {
 import { LoginStatus } from "@/models/types/Auth/LoginStatus";
 import { getBookmakedLessonPlanIds } from "@/component-functions/get-bookmarked-lessonplan-ids";
 import NotificationBox from "../NotificationBox";
+import { BorderColor } from "@mui/icons-material";
 
 export default function DisplayLessonplans({
   lessonPlans,

@@ -15,14 +15,14 @@ export default function NotificationBox({
   sxTitle?: SxProps<Theme>;
   sxMessage?: SxProps<Theme>;
 }) {
-  let sxOuterContainerFinal: SxProps<Theme> = {
+  const sxOuterContainerDefault: SxProps<Theme> = {
     alignItems: "center",
     maxWidth: "900px",
     mt: 6,
     mx: "auto",
   };
 
-  let sxInnerContainerFinal: SxProps<Theme> = {
+  const sxInnerContainerDefault: SxProps<Theme> = {
     alignItems: "center",
     maxWidth: "90%",
     borderRadius: 4,
@@ -30,32 +30,33 @@ export default function NotificationBox({
     borderColor: "text.secondary",
   };
 
-  let sxTitleFinal: SxProps<Theme> = {
+  const sxTitleDefault: SxProps<Theme> = {
     maxWidth: "90%",
     display: "inline-block",
     marginTop: 2,
   };
 
-  let sxMessageFinal: SxProps<Theme> = {
+  const sxMessageDefault: SxProps<Theme> = {
     maxWidth: "90%",
     display: "inline-block",
   };
 
-  ({
+  //To do: Create a reusable function which sets sx props.
+  const {
     sxOuterContainerFinal,
     sxInnerContainerFinal,
     sxTitleFinal,
     sxMessageFinal,
   } = setSXValues(
     sxOuterContainer,
-    sxOuterContainerFinal,
+    sxOuterContainerDefault,
     sxInnerContainer,
-    sxInnerContainerFinal,
+    sxInnerContainerDefault,
     sxTitle,
-    sxTitleFinal,
+    sxTitleDefault,
     sxMessage,
-    sxMessageFinal
-  ));
+    sxMessageDefault
+  );
 
   return (
     <Stack sx={sxOuterContainerFinal}>
@@ -70,36 +71,43 @@ export default function NotificationBox({
     </Stack>
   );
 }
+
+//To do: Create a reusable function which sets sx props.
 function setSXValues(
   sxOuterContainer: SxProps<Theme> | undefined,
-  sxOuterContainerFinal: SxProps<Theme>,
+  sxOuterContainerDefault: SxProps<Theme>,
   sxInnerContainer: SxProps<Theme> | undefined,
-  sxInnerContainerFinal: SxProps<Theme>,
+  sxInnerContainerDefault: SxProps<Theme>,
   sxTitle: SxProps<Theme> | undefined,
-  sxTitleFinal: SxProps<Theme>,
+  sxTitleDefault: SxProps<Theme>,
   sxMessage: SxProps<Theme> | undefined,
-  sxMessageFinal: SxProps<Theme>
+  sxMessageDefault: SxProps<Theme>
 ) {
+  let sxOuterContainerFinal = sxOuterContainerDefault;
+  let sxInnerContainerFinal = sxInnerContainerDefault;
+  let sxTitleFinal = sxTitleDefault;
+  let sxMessageFinal = sxMessageDefault;
+
   if (sxOuterContainer) {
     sxOuterContainerFinal = {
-      ...sxOuterContainerFinal,
+      ...sxOuterContainerDefault,
       ...sxOuterContainer,
     } as SxProps<Theme>;
   }
 
   if (sxInnerContainer) {
     sxInnerContainerFinal = {
-      ...sxInnerContainerFinal,
+      ...sxInnerContainerDefault,
       ...sxInnerContainer,
     } as SxProps<Theme>;
   }
 
   if (sxTitle) {
-    sxTitleFinal = { ...sxTitleFinal, ...sxTitle } as SxProps<Theme>;
+    sxTitleFinal = { ...sxTitleDefault, ...sxTitle } as SxProps<Theme>;
   }
 
   if (sxMessage) {
-    sxMessageFinal = { ...sxMessageFinal, ...sxMessage } as SxProps<Theme>;
+    sxMessageFinal = { ...sxMessageDefault, ...sxMessage } as SxProps<Theme>;
   }
   return {
     sxOuterContainerFinal,
