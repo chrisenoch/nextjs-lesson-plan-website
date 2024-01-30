@@ -2,7 +2,6 @@
 
 import useScrollSpy from "@/customHooks/useScrollSpy";
 import {
-  Box,
   Grid,
   List,
   ListItem,
@@ -13,8 +12,9 @@ import {
 } from "@mui/material";
 import FloatingId from "@/components/Layout/FloatingId";
 import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import InsecureNextLink from "next/link";
+import CurvedUnderlineTitle from "../CurvedUnderline";
 
 export default function LessonPlan({
   isPremium,
@@ -216,7 +216,12 @@ export default function LessonPlan({
               </ListItem>
             </List>
           </Grid>
-          <Grid item xs={8} bgcolor={"background.paper"} marginTop={4}>
+          <Grid item xs={8} bgcolor={"background.paper"}>
+            <CurvedUnderlineTitle
+              component={"h1"}
+              variant="h2"
+              title="Driverless Cars"
+              sxUnderline={{ left: 2 }}></CurvedUnderlineTitle>
             <Typography
               gutterBottom
               variant="h2"
