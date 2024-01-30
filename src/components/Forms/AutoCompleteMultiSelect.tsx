@@ -47,6 +47,9 @@ const AutoCompleteMultiSelect = memo(function AutoCompleteMultiSelect({
   colorsByCategory.set("Vocabulary", orange);
   return (
     <Autocomplete
+      sx={{
+        marginTop: "24px !important",
+      }}
       clearOnBlur={false}
       autoHighlight={true}
       clearText="Clear all filters"

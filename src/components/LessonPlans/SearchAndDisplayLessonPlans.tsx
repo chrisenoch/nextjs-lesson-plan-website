@@ -8,17 +8,25 @@ import { LessonPlan } from "@/models/types/LessonPlans/LessonPlan";
 import { LessonPlanCategory } from "@/models/types/LessonPlans/LessonPlanCategory";
 import { LessonPlanSubCategory } from "@/models/types/LessonPlans/LessonPlanSubCategory";
 import DisplayLessonPlansFactory from "./DisplayLessonPlansFactory";
+import { SxProps, Theme } from "@mui/material";
 
 export default function SearchAndDisplayLessonPlans({
   lessonPlans,
   searchTitle,
   displayLessonPlansComponent,
+  sxSearchLessonPlansOuterContainer,
+  sxSearchLessonPlansInnerContainer,
+  sxSearchLessonPlansTitle,
 }: {
   lessonPlans: LessonPlan[];
   searchTitle: string;
   displayLessonPlansComponent:
     | "DisplayLessonPlans"
     | "DisplayBookmarkedLessonPlans";
+
+  sxSearchLessonPlansOuterContainer?: SxProps<Theme>;
+  sxSearchLessonPlansInnerContainer?: SxProps<Theme>;
+  sxSearchLessonPlansTitle?: SxProps<Theme>;
 }) {
   const [selectedLessonPlanCategories, setSelectedLessonPlanCategories] =
     useState<{ title: string; category: LessonPlanCategory }[]>([]);
@@ -67,7 +75,11 @@ export default function SearchAndDisplayLessonPlans({
 
   return (
     <>
-      <SearchLessonPlans searchTitle={searchTitle}>
+      <SearchLessonPlans
+        searchTitle={searchTitle}
+        sxOuterContainer={sxSearchLessonPlansOuterContainer}
+        sxInnerContainer={sxSearchLessonPlansInnerContainer}
+        sxTitle={sxSearchLessonPlansTitle}>
         {/* Avoiding prop drilling via SearchLessonPlans by using children */}
         <AutoCompleteMultiSelect
           optionValues={multiSelectOptionValues}

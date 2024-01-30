@@ -20,7 +20,7 @@ export default function SearchLessonPlans({
 }) {
   const sxOuterContainerDefault: SxProps<Theme> = {
     maxWidth: "900px",
-    mt: 10,
+    //mt: 10,
     mb: 4,
     mx: "auto",
   };

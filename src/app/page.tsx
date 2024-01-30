@@ -14,6 +14,7 @@ export default async function HomePage() {
         searchTitle="Search lesson plans"
         displayLessonPlansComponent="DisplayLessonPlans"
         lessonPlans={lessonPlans}
+        sxSearchLessonPlansOuterContainer={{ mt: 12 }}
       />
     </>
   );

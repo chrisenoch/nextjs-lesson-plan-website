@@ -11,6 +11,7 @@ export default async function SavedLessonPlans() {
       searchTitle="Search saved plans"
       displayLessonPlansComponent="DisplayBookmarkedLessonPlans"
       lessonPlans={lessonPlans}
+      //sxSearchLessonPlansOuterContainer={{ mt: 0 }}
     />
   );
 }
