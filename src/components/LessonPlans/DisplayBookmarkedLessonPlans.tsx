@@ -17,6 +17,7 @@ import {
 import { LoginStatus } from "@/models/types/Auth/LoginStatus";
 import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 import { getBookmakedLessonPlanIds } from "@/component-functions/get-bookmarked-lessonplan-ids";
+import NotificationBox from "../NotificationBox";
 
 export default function DisplayLessonPlanBookmarks({
   lessonPlans,
@@ -91,7 +92,14 @@ export default function DisplayLessonPlanBookmarks({
         margin: "0 auto",
       }}>
       <Grid container rowSpacing={3} columnSpacing={3}>
-        {lessonPlansToDisplay}
+        {lessonPlansToDisplay.length > 0 ? (
+          lessonPlansToDisplay
+        ) : (
+          <NotificationBox
+            title="Too many filters"
+            message=" No lesson plans are available that match all the filters you selected. Please try removing some filters from the search box to find more lesson plans."
+          />
+        )}
       </Grid>
     </Box>
   );

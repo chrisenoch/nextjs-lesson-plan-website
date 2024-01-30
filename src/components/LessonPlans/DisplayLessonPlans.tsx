@@ -16,6 +16,7 @@ import {
 } from "@/store/slices/with-thunks/lessonplans-slice";
 import { LoginStatus } from "@/models/types/Auth/LoginStatus";
 import { getBookmakedLessonPlanIds } from "@/component-functions/get-bookmarked-lessonplan-ids";
+import NotificationBox from "../NotificationBox";
 
 export default function DisplayLessonplans({
   lessonPlans,
@@ -96,35 +97,10 @@ export default function DisplayLessonplans({
         {lessonPlansToDisplay.length > 0 ? (
           lessonPlansToDisplay
         ) : (
-          <Stack
-            alignItems={"center"}
-            sx={{
-              maxWidth: "900px",
-              mt: 6,
-              mx: "auto",
-            }}>
-            <Stack
-              alignItems={"center"}
-              maxWidth={"90%"}
-              marginBottom={4}
-              borderRadius={4}
-              border="1px solid"
-              borderColor="text.secondary">
-              <Typography
-                gutterBottom
-                variant="h4"
-                component="p"
-                display={"inline-block"}
-                marginTop={2}>
-                Too many filters
-              </Typography>
-              <Box maxWidth={"70%"} component="p" display={"inline-block"}>
-                No lesson plans are available that match all the filters you
-                selected. Please try removing some filters from the search box
-                to find more lesson plans.
-              </Box>
-            </Stack>
-          </Stack>
+          <NotificationBox
+            title="Too many filters"
+            message=" No lesson plans are available that match all the filters you selected. Please try removing some filters from the search box to find more lesson plans."
+          />
         )}
       </Grid>
     </Box>
