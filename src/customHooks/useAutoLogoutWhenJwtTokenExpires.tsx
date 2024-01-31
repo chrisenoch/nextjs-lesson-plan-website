@@ -33,44 +33,13 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   const [renderLogoutWarning, setRenderLogoutWarning] = useState<{
     hasAutoLoggedOut: boolean;
   }>({ hasAutoLoggedOut: false });
-  const shouldPoll = useRef<boolean>(true);
 
   const sendRefreshToken = useCallback(() => {
     if (userInfo && loginStatus === "LOGGED_IN") {
       const tokenExpiry = new Date(userInfo.exp * 1000); //userInfo.exp is in seconds, new Date(value) is in milliseconds.
       //get the date X time from now
-      const timeInFuture =
-        Date.now() +
-        pollingInterval +
-        pollingInterval +
-        timeBeforeAccessTokenExpiryToSendRefreshToken;
 
-      console.log(
-        "timeInFuture: " + timeInFuture + " .Seconds: " + timeInFuture / 1000
-      );
-      console.log(
-        "pollingInetrval: " +
-          pollingInterval +
-          " .Seconds: " +
-          pollingInterval / 1000
-      );
-      console.log(
-        "send refresh will run when: if (timeInFuture > tokenExpiry.valueOf()) {"
-      );
-      console.log("timeInFuture " + timeInFuture);
-      console.log("tokenExpiry.valueOf() " + tokenExpiry.valueOf());
-      console.log(
-        "timeInFuture - tokenExpiry.valueOf()" +
-          (timeInFuture - tokenExpiry.valueOf())
-      );
-      // console.log(
-      //   "tokenExpiry.valueOf() " +
-      //     tokenExpiry.valueOf() +
-      //     " .Seconds: " +
-      //     tokenExpiry.valueOf() / 1000
-      // );
-
-      //check if token will expire in the next X time
+      //Start the timer to send the refresh token and get a new access token
       const timeUntilAutoLogout = tokenExpiry.valueOf() - Date.now();
       if (
         timeUntilAutoLogout - Date.now() <=
@@ -86,12 +55,11 @@ export default function useAutoLogoutWhenJwtTokenExpires(
         );
         console.log("currentTime (check) " + Date.now());
         console.log("tokenExpiry " + tokenExpiry.valueOf());
-        shouldPoll.current = false;
+
         refreshTokenTimeoutId.current = setTimeout(() => {
           console.log("getAccessTokenWithRefreshToken about to run");
           dispatch(getAccessTokenWithRefreshToken());
           console.log("getAccessTokenWithRefreshToken has just ran");
-          shouldPoll.current = true;
         }, timeUntilAutoLogout - timeBeforeAccessTokenExpiryToSendRefreshToken);
 
         console.log(
@@ -102,7 +70,6 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   }, [
     dispatch,
     loginStatus,
-    pollingInterval,
     timeBeforeAccessTokenExpiryToSendRefreshToken,
     userInfo,
   ]);
@@ -130,31 +97,12 @@ export default function useAutoLogoutWhenJwtTokenExpires(
       clearTimers();
       console.log("sending first refresh token in useEffect");
       sendRefreshToken();
-
-      intervalId.current = setInterval(() => {
-        console.log(
-          "polling interval ran and about to call sendRefreshToken()"
-        );
-        console.log(
-          "refreshTokenTimeoutId.current in interval timeout " +
-            refreshTokenTimeoutId.current
-        );
-        if (shouldPoll.current) {
-          sendRefreshToken();
-        }
-      }, pollingInterval);
     }
 
     return () => {
       clearTimers();
     };
-  }, [
-    dispatch,
-    sendRefreshToken,
-    pollingInterval,
-    wasLastRefresh,
-    loginStatus,
-  ]);
+  }, [dispatch, sendRefreshToken, wasLastRefresh, loginStatus]);
 
   //Show a warning and then right after log the user out if refresh token fails.
   //This is for when the refresh token has been revoked, changed or is no longer present when it

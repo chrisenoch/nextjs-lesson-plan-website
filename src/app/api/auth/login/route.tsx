@@ -82,7 +82,8 @@ export async function POST(request: Request) {
       process.env.ACCESS_TOKEN_COOKIE_NAME!,
       accessToken,
       {
-        maxAge: accessTokenCookieExpiry,
+        //maxAge: accessTokenCookieExpiry,
+        maxAge: refreshTokenCookieExpiry,
         httpOnly: true,
         sameSite: "strict",
       }

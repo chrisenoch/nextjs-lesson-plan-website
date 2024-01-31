@@ -105,7 +105,7 @@ export async function GET(request: NextRequest) {
       );
       resp.cookies.delete(process.env.ACCESS_TOKEN_COOKIE_NAME!);
       resp.cookies.set(process.env.ACCESS_TOKEN_COOKIE_NAME!, newAccessToken, {
-        maxAge: accessTokenCookieExpiry,
+        maxAge: oldAccessTokenClockTolerance,
         httpOnly: true,
         sameSite: "strict",
       });
