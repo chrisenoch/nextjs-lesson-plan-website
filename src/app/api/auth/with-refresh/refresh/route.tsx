@@ -24,6 +24,11 @@ export async function GET(request: NextRequest) {
   const refreshToken = request.cookies.get(
     process.env.REFRESH_TOKEN_COOKIE_NAME!
   );
+  console.log("time");
+  const time = new Date();
+  console.log(time.toLocaleString());
+  console.log("accessToken ");
+  console.log(accessToken);
 
   let resp;
   if (accessToken && refreshToken) {
@@ -85,6 +90,7 @@ export async function GET(request: NextRequest) {
         process.env.ACCESS_TOKEN_SECRET!
       );
 
+      console.log("refresh success");
       console.log("jwtAccessTokenPayload");
       console.log(jwtAccessTokenPayload);
 

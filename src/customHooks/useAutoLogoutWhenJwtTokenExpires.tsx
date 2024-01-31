@@ -33,12 +33,42 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   const [renderLogoutWarning, setRenderLogoutWarning] = useState<{
     hasAutoLoggedOut: boolean;
   }>({ hasAutoLoggedOut: false });
+  const shouldPoll = useRef<boolean>(true);
 
   const sendRefreshToken = useCallback(() => {
     if (userInfo && loginStatus === "LOGGED_IN") {
       const tokenExpiry = new Date(userInfo.exp * 1000); //userInfo.exp is in seconds, new Date(value) is in milliseconds.
       //get the date X time from now
-      const timeInFuture = Date.now() + pollingInterval;
+      const timeInFuture =
+        Date.now() +
+        pollingInterval +
+        pollingInterval +
+        timeBeforeAccessTokenExpiryToSendRefreshToken;
+
+      console.log(
+        "timeInFuture: " + timeInFuture + " .Seconds: " + timeInFuture / 1000
+      );
+      console.log(
+        "pollingInetrval: " +
+          pollingInterval +
+          " .Seconds: " +
+          pollingInterval / 1000
+      );
+      console.log(
+        "send refresh will run when: if (timeInFuture > tokenExpiry.valueOf()) {"
+      );
+      console.log("timeInFuture " + timeInFuture);
+      console.log("tokenExpiry.valueOf() " + tokenExpiry.valueOf());
+      console.log(
+        "timeInFuture - tokenExpiry.valueOf()" +
+          (timeInFuture - tokenExpiry.valueOf())
+      );
+      // console.log(
+      //   "tokenExpiry.valueOf() " +
+      //     tokenExpiry.valueOf() +
+      //     " .Seconds: " +
+      //     tokenExpiry.valueOf() / 1000
+      // );
 
       //check if token will expire in the next X time
       if (timeInFuture > tokenExpiry.valueOf()) {
@@ -48,11 +78,18 @@ export default function useAutoLogoutWhenJwtTokenExpires(
             (timeUntilAutoLogout -
               timeBeforeAccessTokenExpiryToSendRefreshToken)
         );
+        console.log("currentTime: " + new Date().toLocaleString());
+        shouldPoll.current = false;
         refreshTokenTimeoutId.current = setTimeout(() => {
           console.log("getAccessTokenWithRefreshToken about to run");
           dispatch(getAccessTokenWithRefreshToken());
           console.log("getAccessTokenWithRefreshToken has just ran");
+          shouldPoll.current = true;
         }, timeUntilAutoLogout - timeBeforeAccessTokenExpiryToSendRefreshToken);
+
+        console.log(
+          "refreshTokenTimeoutId.current " + refreshTokenTimeoutId.current
+        );
       }
     }
   }, [
@@ -91,7 +128,13 @@ export default function useAutoLogoutWhenJwtTokenExpires(
         console.log(
           "polling interval ran and about to call sendRefreshToken()"
         );
-        sendRefreshToken();
+        console.log(
+          "refreshTokenTimeoutId.current in interval timeout " +
+            refreshTokenTimeoutId.current
+        );
+        if (shouldPoll.current) {
+          sendRefreshToken();
+        }
       }, pollingInterval);
     }
 

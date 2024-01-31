@@ -30,6 +30,8 @@ export async function POST(request: Request) {
   const { jwtTime: refreshTokenExpiry, seconds: refreshTokenCookieExpiry } =
     authTimeHelper({ minutes: parseInt(process.env.REFRESH_TOKEN_MINS!) });
 
+  console.log("accessTokenCookieExpiry  " + accessTokenCookieExpiry);
+
   //In reality would do a database lookup here.
   if (res.email.toLowerCase() === "admin" && res.password === "admin") {
     //Prepare jwt access token
