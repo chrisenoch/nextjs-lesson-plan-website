@@ -71,14 +71,21 @@ export default function useAutoLogoutWhenJwtTokenExpires(
       // );
 
       //check if token will expire in the next X time
-      if (timeInFuture > tokenExpiry.valueOf()) {
-        const timeUntilAutoLogout = tokenExpiry.valueOf() - Date.now();
+      const timeUntilAutoLogout = tokenExpiry.valueOf() - Date.now();
+      if (
+        timeUntilAutoLogout - Date.now() <=
+        timeBeforeAccessTokenExpiryToSendRefreshToken
+      ) {
         console.log(
           "getAccessTokenWithRefreshToken will run in: " +
             (timeUntilAutoLogout -
               timeBeforeAccessTokenExpiryToSendRefreshToken)
         );
-        console.log("currentTime: " + new Date().toLocaleString());
+        console.log(
+          "currentTime before refresh: " + new Date().toLocaleString()
+        );
+        console.log("currentTime (check) " + Date.now());
+        console.log("tokenExpiry " + tokenExpiry.valueOf());
         shouldPoll.current = false;
         refreshTokenTimeoutId.current = setTimeout(() => {
           console.log("getAccessTokenWithRefreshToken about to run");
