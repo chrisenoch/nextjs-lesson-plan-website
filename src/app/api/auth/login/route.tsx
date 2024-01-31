@@ -12,9 +12,7 @@ export async function POST(request: Request) {
   const res: { email: string; password: string } = await request.json();
   const iat = Math.floor(Date.now() / 1000);
   let accessToken;
-  let accessTokenPromise;
   let refreshToken;
-  let refreshTokenPromise;
   let userDetailsPayload: {
     id: string; //Because query params are strings. This makes equality checks easier.
     firstName: string;
@@ -42,13 +40,12 @@ export async function POST(request: Request) {
       role: "USER",
     };
 
-    accessTokenPromise = new jose.SignJWT({ ...userDetailsPayload })
+    accessToken = await new jose.SignJWT({ ...userDetailsPayload })
       .setProtectedHeader({ alg: "HS256", typ: "JWT" })
       .setExpirationTime(accessTokenExpiry)
       .setIssuedAt()
       .sign(new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET));
 
-    accessToken = await accessTokenPromise;
     const { payload } = await joseVerifyToken(
       accessToken,
       process.env.ACCESS_TOKEN_SECRET!
@@ -57,13 +54,11 @@ export async function POST(request: Request) {
     jwtAccessTokenPayload = payload;
 
     //Prepare jwt refresh token
-    refreshTokenPromise = new jose.SignJWT({ ...userDetailsPayload })
+    refreshToken = await new jose.SignJWT({ ...userDetailsPayload })
       .setProtectedHeader({ alg: "HS256", typ: "JWT" })
       .setExpirationTime(refreshTokenExpiry)
       .setIssuedAt()
       .sign(new TextEncoder().encode(process.env.REFRESH_TOKEN_SECRET));
-
-    refreshToken = await refreshTokenPromise;
   }
 
   //set cookie
@@ -82,8 +77,7 @@ export async function POST(request: Request) {
       process.env.ACCESS_TOKEN_COOKIE_NAME!,
       accessToken,
       {
-        //maxAge: accessTokenCookieExpiry,
-        maxAge: refreshTokenCookieExpiry,
+        maxAge: refreshTokenCookieExpiry, //accessTokenCookieExpiry should be the same as refreshTokenCookieExpiry. An old access token (even if expired) is needed to get a new refresh token (See the auth/with-refresh/refresh.route.tsx). This ensures that the correct refresh token is associated with the correct user.
         httpOnly: true,
         sameSite: "strict",
       }
