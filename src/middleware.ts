@@ -386,11 +386,11 @@ async function getAccessTokenRole(request: NextRequest) {
     process.env.ACCESS_TOKEN_COOKIE_NAME!
   );
   if (accessToken) {
-    const accessTokenRolePromise = extractRoleFromAccessToken(
+    accessTokenRole = await extractRoleFromAccessToken(
       accessToken.value,
       process.env.ACCESS_TOKEN_SECRET!
     );
-    accessTokenRole = await accessTokenRolePromise;
+    //accessTokenRole = await accessTokenRolePromise;
   }
   return accessTokenRole;
 }
