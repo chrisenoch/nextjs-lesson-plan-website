@@ -14,7 +14,7 @@ export default function EssentialClientConfig({
   console.log("EssentialClientConfig mounts");
   const dispatch = useDispatch<AppDispatch>();
   //useAutoLogout(1_800_000);
-  const renderModal = useAutoLogoutWhenJwtTokenExpires(30_000, 10_000); //240_000 - 4 mins // 30_000 - 30 secs //10_000 - 10 secs
+  const renderModal = useAutoLogoutWhenJwtTokenExpires(10_000); //240_000 - 4 mins // 30_000 - 30 secs //10_000 - 10 secs
   const [previousRenderModal, setPreviousRenderModal] = useState<{
     hasAutoLoggedOut: boolean;
   }>(renderModal);

@@ -87,9 +87,6 @@ const authSlice = createSlice({
   name: "authSlice",
   initialState,
   reducers: {
-    reinitWasLastRefreshSuccessful(state) {
-      state.wasLastRefreshSuccessful = null;
-    },
     increaseLogoutCount(state) {
       state.logoutCount = state.logoutCount + 1;
     },
@@ -113,9 +110,11 @@ const authSlice = createSlice({
     });
     //Logout user
     builder.addCase(userLogout.pending, (state) => {
+      state.wasLastRefreshSuccessful = null;
       handlePending("userLogout", state);
     });
     builder.addCase(userLogout.fulfilled, (state, action) => {
+      state.wasLastRefreshSuccessful = null;
       handleFulfilled("userLogout", state, action);
       if (!action.payload.isError) {
         state.loginStatus = "LOGGED_OUT";
@@ -124,6 +123,7 @@ const authSlice = createSlice({
       }
     });
     builder.addCase(userLogout.rejected, (state, action) => {
+      state.wasLastRefreshSuccessful = null;
       handleRejected("userLogout", state, action);
       //state.loginStatus = "LOGGED_OUT";
     });
@@ -232,8 +232,7 @@ function setUserInfoFromLoggedInStatus(action, state) {
   }
 }
 
-export const { reinitWasLastRefreshSuccessful, increaseLogoutCount } =
-  authSlice.actions;
+export const { increaseLogoutCount } = authSlice.actions;
 export const authReducer = authSlice.reducer;
 export const selectUserInfo = (state) => state.authSlice.userInfo;
 export const selectLoginStatus = (state) => state.authSlice.loginStatus;
