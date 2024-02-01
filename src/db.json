@@ -38,21 +38,9 @@
     },
     {
       "userId": "1",
-      "jobTitle": "uu",
-      "jobDescription": "uu",
-      "id": 43
-    },
-    {
-      "userId": "1",
-      "jobTitle": "aa",
-      "jobDescription": "jj",
-      "id": 46
-    },
-    {
-      "userId": "1",
-      "jobTitle": "sg",
-      "jobDescription": "sg",
-      "id": 47
+      "jobTitle": "Software Developer",
+      "jobDescription": "Madrid\n",
+      "id": 48
     }
   ],
   "lesson-plans": [
