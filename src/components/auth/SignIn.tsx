@@ -37,17 +37,12 @@ export function SignIn() {
   if (searchParams.get("redirect")) {
     isProtectedPage = true;
   }
-
   let isMemberPage = false;
   if (searchParams.get("member")) {
     isMemberPage = true;
   }
 
   const shouldHideMessage = useHideMessageOnNavAway(userLoginInfo);
-
-  console.log("searchparams has redirect");
-  console.log(searchParams.has("redirect"));
-  console.log(searchParams.get("member"));
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -114,6 +109,7 @@ export function SignIn() {
           flexDirection={"column"}
           gap={2}>
           <TextField
+            autoFocus={true}
             id="email"
             name="email"
             label="Email"
