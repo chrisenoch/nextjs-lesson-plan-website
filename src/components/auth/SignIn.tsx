@@ -12,6 +12,8 @@ import { redirect, useSearchParams } from "next/navigation";
 import useHideMessageOnNavAway from "@/customHooks/useHideMessageOnNavAway";
 import { LoadingButton } from "@mui/lab";
 import { LoginStatus } from "@/models/types/Auth/LoginStatus";
+import NotificationBox from "../NotificationBox";
+import { red } from "@mui/material/colors";
 
 export function SignIn() {
   const loginStatus: LoginStatus = useSelector(selectLoginStatus);
@@ -75,15 +77,6 @@ export function SignIn() {
           setPassword(event.target.value);
         }}
       />
-      {!shouldHideMessage && userLoginInfo?.isError && (
-        <Box
-          component="p"
-          color={userLoginInfo?.isError ? "error.main" : "success.main"}
-          aria-live="polite"
-          role="status">
-          {userLoginInfo?.message}
-        </Box>
-      )}
 
       {!userLoginInfo?.isLoading && (
         <Button type="submit" variant="contained">
@@ -95,6 +88,27 @@ export function SignIn() {
           {/* value here affects the button size */}
           Submit
         </LoadingButton>
+      )}
+      {!shouldHideMessage && userLoginInfo?.isError && (
+        <NotificationBox //To do: put this into Notification component as an option. E.g. error, primary, secondary, info, success.
+          message={userLoginInfo?.message}
+          sxOuterContainer={{
+            marginTop: 2,
+          }}
+          sxInnerContainer={{
+            borderColor: red[100],
+            backgroundColor: "#fff8f9",
+          }}
+          sxMessage={{ color: red[800] }}
+        />
+
+        // <Box
+        //   component="p"
+        //   color={userLoginInfo?.isError ? "error.main" : "success.main"}
+        //   aria-live="polite"
+        //   role="status">
+        //   {userLoginInfo?.message}
+        // </Box>
       )}
     </Box>
   );
