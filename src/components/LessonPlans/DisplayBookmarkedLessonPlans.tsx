@@ -1,5 +1,5 @@
 "use client";
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import LessonPlanCard from "./LessonPlanCard";
 import { LessonPlan } from "../../models/types/LessonPlans/LessonPlan";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,15 +18,24 @@ import { LoginStatus } from "@/models/types/Auth/LoginStatus";
 import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 import { getBookmakedLessonPlanIds } from "@/component-functions/get-bookmarked-lessonplan-ids";
 import NotificationBox from "../NotificationBox";
+import { LessonPlanCategory } from "@/models/types/LessonPlans/LessonPlanCategory";
 
 export default function DisplayLessonPlanBookmarks({
   lessonPlans,
+  selectedLessonPlanCategories,
 }: {
   lessonPlans: LessonPlan[];
+  selectedLessonPlanCategories: {
+    title: string;
+    category: LessonPlanCategory;
+  }[];
 }) {
   console.log("LessonPlanBookmarks rendered");
   const dispatch = useDispatch<AppDispatch>();
   useRedirectWhenLoggedOut("/auth/signin");
+
+  console.log("lessonplans in displaybookmarked");
+  console.log(lessonPlans);
 
   const bookmarks: {
     userId: string;
@@ -84,6 +93,24 @@ export default function DisplayLessonPlanBookmarks({
       </Grid>
     ));
 
+  let renderedContent;
+  if (lessonPlansToDisplay.length > 0) {
+    renderedContent = lessonPlansToDisplay;
+  } else if (selectedLessonPlanCategories.length > 0 && bookmarks.length > 0) {
+    renderedContent = (
+      <NotificationBox
+        title="Too many filters"
+        message=" No lesson plans are available that match all the filters you selected. Please try removing some filters from the search box to find more lesson plans."
+      />
+    );
+  } else if (bookmarks.length < 1) {
+    renderedContent = (
+      <Typography component="h1" variant="h5">
+        You have not saved any lesson plans.
+      </Typography>
+    );
+  }
+
   return (
     <Box
       sx={{
@@ -92,14 +119,7 @@ export default function DisplayLessonPlanBookmarks({
         margin: "0 auto",
       }}>
       <Grid container rowSpacing={3} columnSpacing={3}>
-        {lessonPlansToDisplay.length > 0 ? (
-          lessonPlansToDisplay
-        ) : (
-          <NotificationBox
-            title="Too many filters"
-            message=" No lesson plans are available that match all the filters you selected. Please try removing some filters from the search box to find more lesson plans."
-          />
-        )}
+        {renderedContent}
       </Grid>
     </Box>
   );

@@ -9,7 +9,7 @@ import {
   selectFetchBookmarks,
   selectLoginStatus,
 } from "@/store";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   fetchBookmarks,
   toggleBookmark,
@@ -17,12 +17,17 @@ import {
 import { LoginStatus } from "@/models/types/Auth/LoginStatus";
 import { getBookmakedLessonPlanIds } from "@/component-functions/get-bookmarked-lessonplan-ids";
 import NotificationBox from "../NotificationBox";
-import { BorderColor } from "@mui/icons-material";
+import { LessonPlanCategory } from "@/models/types/LessonPlans/LessonPlanCategory";
 
 export default function DisplayLessonplans({
   lessonPlans,
+  selectedLessonPlanCategories,
 }: {
   lessonPlans: LessonPlan[];
+  selectedLessonPlanCategories: {
+    title: string;
+    category: LessonPlanCategory;
+  }[];
 }) {
   //To do: Move this to route component?
   const dispatch = useDispatch<AppDispatch>();
@@ -97,11 +102,13 @@ export default function DisplayLessonplans({
       <Grid container rowSpacing={3} columnSpacing={3}>
         {lessonPlansToDisplay.length > 0 ? (
           lessonPlansToDisplay
-        ) : (
+        ) : selectedLessonPlanCategories.length > 0 ? (
           <NotificationBox
             title="Too many filters"
             message=" No lesson plans are available that match all the filters you selected. Please try removing some filters from the search box to find more lesson plans."
           />
+        ) : (
+          <h1>No lesson plans to display</h1>
         )}
       </Grid>
     </Box>

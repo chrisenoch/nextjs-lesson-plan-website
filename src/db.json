@@ -222,12 +222,7 @@
     {
       "userId": "1",
       "lessonPlanId": "1",
-      "id": 12
-    },
-    {
-      "userId": "1",
-      "lessonPlanId": "2",
-      "id": 13
+      "id": 4
     }
   ]
 }
