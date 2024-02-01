@@ -123,12 +123,11 @@ export async function DELETE(request: NextRequest) {
   }
 
   //get userId
-  const accessTokenInfoPromise = getAccessTokenInfo({
+  const accessTokenInfo = await getAccessTokenInfo({
     request,
     accessTokenName: process.env.ACCESS_TOKEN_COOKIE_NAME!,
     accessTokenSecret: process.env.ACCESS_TOKEN_SECRET!,
   });
-  const accessTokenInfo = await accessTokenInfoPromise;
 
   if (
     !accessTokenInfo ||

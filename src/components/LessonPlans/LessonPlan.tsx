@@ -3,6 +3,7 @@
 import useScrollSpy from "@/customHooks/useScrollSpy";
 import {
   Box,
+  Divider,
   Grid,
   List,
   ListItem,
@@ -13,8 +14,11 @@ import {
 } from "@mui/material";
 import FloatingId from "@/components/Layout/FloatingId";
 import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import InsecureNextLink from "next/link";
+import CurvedUnderlineTitle from "../CurvedUnderline";
+import { orange } from "@mui/material/colors";
+import CircleIcon from "@mui/icons-material/Circle";
 
 export default function LessonPlan({
   isPremium,
@@ -67,10 +71,11 @@ export default function LessonPlan({
         marginTop={2}
         marginBottom={2}>
         <Grid container spacing={4}>
-          <Grid item xs={4}>
+          <Grid item xs={3.5}>
             <List
               sx={{
-                width: "100%",
+                //width: "100%",
+                width: "fit-content",
                 maxWidth: 360,
                 bgcolor: "background.paper",
                 position: "fixed",
@@ -216,14 +221,15 @@ export default function LessonPlan({
               </ListItem>
             </List>
           </Grid>
-          <Grid item xs={8} bgcolor={"background.paper"} marginTop={4}>
-            <Typography
-              gutterBottom
-              variant="h2"
+          <Grid item xs={8} bgcolor={"background.paper"}>
+            <CurvedUnderlineTitle
               component={"h1"}
-              marginBottom={4}>
-              {title}
-            </Typography>
+              variant="h2"
+              title={title}
+              color={orange[300]}
+              sxUnderline={{ left: 2 }}
+              sxTypography={{ marginBottom: 6 }}
+            />
             <Typography
               id="summary"
               gutterBottom
@@ -233,7 +239,10 @@ export default function LessonPlan({
               Summary
               <FloatingId id="summary-floating" />
             </Typography>
-            <Typography variant="body1" marginBottom={4}>
+            <Typography variant="body1" marginBottom={5}>
+              <CircleIcon
+                sx={{ fontSize: 10, marginRight: 1, color: "grey.600" }}
+              />
               {summary}
             </Typography>
             <Typography
@@ -245,7 +254,10 @@ export default function LessonPlan({
               Warmer
               <FloatingId id="warmer-floating" />
             </Typography>
-            <Typography variant="body1" marginBottom={4}>
+            <Typography variant="body1" marginBottom={5}>
+              <CircleIcon
+                sx={{ fontSize: 10, marginRight: 1, color: "grey.600" }}
+              />
               {warmer}
             </Typography>
             <Typography
@@ -257,7 +269,10 @@ export default function LessonPlan({
               Teach Vocabulary
               <FloatingId id="teach-vocabulary-floating" />
             </Typography>
-            <Typography variant="body1" marginBottom={4}>
+            <Typography variant="body1" marginBottom={5}>
+              <CircleIcon
+                sx={{ fontSize: 10, marginRight: 1, color: "grey.600" }}
+              />{" "}
               {teachVocabulary}
             </Typography>
             <Typography
@@ -269,7 +284,10 @@ export default function LessonPlan({
               Vocabulary exercise
               <FloatingId id="vocabulary-exercise-floating" />
             </Typography>
-            <Typography variant="body1" marginBottom={4}>
+            <Typography variant="body1" marginBottom={5}>
+              <CircleIcon
+                sx={{ fontSize: 10, marginRight: 1, color: "grey.600" }}
+              />
               {vocabularyExercises}
             </Typography>
             <Typography
@@ -281,7 +299,10 @@ export default function LessonPlan({
               Teach speaking phrases
               <FloatingId id="teach-speaking-phrases-floating" />
             </Typography>
-            <Typography variant="body1" marginBottom={4}>
+            <Typography variant="body1" marginBottom={5}>
+              <CircleIcon
+                sx={{ fontSize: 10, marginRight: 1, color: "grey.600" }}
+              />
               {teachSpeakingPhrases}
             </Typography>
             <Typography
@@ -293,7 +314,10 @@ export default function LessonPlan({
               Role play
               <FloatingId id="role-play-floating" />
             </Typography>
-            <Typography variant="body1" marginBottom={4}>
+            <Typography variant="body1" marginBottom={5}>
+              <CircleIcon
+                sx={{ fontSize: 10, marginRight: 1, color: "grey.600" }}
+              />
               {rolePlay}
             </Typography>
             <Typography
@@ -305,7 +329,10 @@ export default function LessonPlan({
               Feedback
               <FloatingId id="feedback-floating" />
             </Typography>
-            <Typography variant="body1" marginBottom={4}>
+            <Typography variant="body1" marginBottom={5}>
+              <CircleIcon
+                sx={{ fontSize: 10, marginRight: 1, color: "grey.600" }}
+              />
               {feedback}
             </Typography>
             <Typography
@@ -317,7 +344,10 @@ export default function LessonPlan({
               Plenary
               <FloatingId id="plenary-floating" />
             </Typography>
-            <Typography variant="body1" marginBottom={4}>
+            <Typography variant="body1" marginBottom={5}>
+              <CircleIcon
+                sx={{ fontSize: 10, marginRight: 1, color: "grey.600" }}
+              />
               {plenary}
             </Typography>
           </Grid>

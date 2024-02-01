@@ -2,10 +2,10 @@
 
 import { Search } from "@mui/icons-material";
 import { Autocomplete, Chip, InputAdornment, TextField } from "@mui/material";
-import { ReactElement, memo, useMemo } from "react";
+import { memo, useMemo } from "react";
 import { LessonPlanCategory } from "@/models/types/LessonPlans/LessonPlanCategory";
 import CircleIcon from "@mui/icons-material/Circle";
-import { OverridableComponent } from "@mui/material/OverridableComponent";
+import { purple, lime, blue, pink, orange } from "@mui/material/colors";
 
 const AutoCompleteMultiSelect = memo(function AutoCompleteMultiSelect({
   selectedLessonPlanCategories,
@@ -33,18 +33,12 @@ const AutoCompleteMultiSelect = memo(function AutoCompleteMultiSelect({
     return selectedLessonPlanCategories;
   }, [selectedLessonPlanCategories]);
 
-  const purple = "#ba68c8";
-  const lime = "#d4e157";
-  const blue = "#64b5f6";
-  const pink = "#f06292";
-  const orange = "#ffb74d";
-
   const colorsByCategory: Map<LessonPlanCategory, string> = new Map();
-  colorsByCategory.set("Activity", purple);
-  colorsByCategory.set("Grammar", lime);
-  colorsByCategory.set("Level", blue);
-  colorsByCategory.set("Type", pink);
-  colorsByCategory.set("Vocabulary", orange);
+  colorsByCategory.set("Activity", purple[300]);
+  colorsByCategory.set("Grammar", lime[400]);
+  colorsByCategory.set("Level", blue[300]);
+  colorsByCategory.set("Type", pink[300]);
+  colorsByCategory.set("Vocabulary", orange[300]);
   return (
     <Autocomplete
       sx={{

@@ -12,7 +12,6 @@ import {
 import {
   authReducer,
   increaseLogoutCount,
-  reinitWasLastRefreshSuccessful,
   selectGetAccessTokenWithRefreshTokenOnAppMount,
   selectLoginStatus,
   selectUserInfo,
@@ -58,7 +57,6 @@ export {
 export {
   userLogin,
   userLogout,
-  reinitWasLastRefreshSuccessful,
   increaseLogoutCount,
   getAccessTokenWithRefreshToken,
   getAccessTokenWithRefreshTokenOnAppMount,

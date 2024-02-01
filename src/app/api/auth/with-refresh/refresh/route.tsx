@@ -24,17 +24,24 @@ export async function GET(request: NextRequest) {
   const refreshToken = request.cookies.get(
     process.env.REFRESH_TOKEN_COOKIE_NAME!
   );
+  console.log("time");
+  const time = new Date();
+  console.log(time.toLocaleString());
+  console.log("accessToken ");
+  console.log(accessToken);
 
   let resp;
   if (accessToken && refreshToken) {
     try {
       //Prepare the expiry times
-      let { jwtTime: accessTokenExpiry, seconds: accessTokenCookieExpiry } =
-        authTimeHelper({ minutes: parseInt(process.env.ACCESS_TOKEN_MINS!) });
-
-      const { seconds: oldAccessTokenClockTolerance } = authTimeHelper({
-        minutes: parseInt(process.env.REFRESH_TOKEN_MINS!),
+      let { jwtTime: accessTokenExpiry } = authTimeHelper({
+        minutes: parseInt(process.env.ACCESS_TOKEN_MINS!),
       });
+
+      const { seconds: oldAccessTokenClockToleranceAndCookieExpiry } =
+        authTimeHelper({
+          minutes: parseInt(process.env.REFRESH_TOKEN_MINS!),
+        });
 
       // In this app, we want the user to be able to leave the website and come back to a logged-in session. Consequently, the accessToken can be expired here.
       // Alternatively, to ensure the user is logged out when the user navigates away, we could use the verify method here to ensure
@@ -43,7 +50,7 @@ export async function GET(request: NextRequest) {
       const { payload: oldAccessTokenPayload } = await jose.jwtVerify(
         accessToken.value,
         new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET!),
-        { clockTolerance: oldAccessTokenClockTolerance }
+        { clockTolerance: oldAccessTokenClockToleranceAndCookieExpiry }
       );
 
       const { payload: refreshTokenPayload } = await joseVerifyToken(
@@ -72,19 +79,18 @@ export async function GET(request: NextRequest) {
         wasLastRefresh = true;
       }
 
-      const newAccessTokenPromise = new jose.SignJWT({ ...rest })
+      const newAccessToken = await new jose.SignJWT({ ...rest })
         .setProtectedHeader({ alg: "HS256", typ: "JWT" })
         .setExpirationTime(accessTokenExpiry)
         .setIssuedAt()
         .sign(new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET!));
-
-      const newAccessToken = await newAccessTokenPromise;
 
       const { payload: jwtAccessTokenPayload } = await joseVerifyToken(
         newAccessToken,
         process.env.ACCESS_TOKEN_SECRET!
       );
 
+      console.log("refresh success");
       console.log("jwtAccessTokenPayload");
       console.log(jwtAccessTokenPayload);
 
@@ -99,7 +105,7 @@ export async function GET(request: NextRequest) {
       );
       resp.cookies.delete(process.env.ACCESS_TOKEN_COOKIE_NAME!);
       resp.cookies.set(process.env.ACCESS_TOKEN_COOKIE_NAME!, newAccessToken, {
-        maxAge: accessTokenCookieExpiry,
+        maxAge: oldAccessTokenClockToleranceAndCookieExpiry,
         httpOnly: true,
         sameSite: "strict",
       });
