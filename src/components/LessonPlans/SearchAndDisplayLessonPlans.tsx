@@ -31,6 +31,9 @@ export default function SearchAndDisplayLessonPlans({
   const [selectedLessonPlanCategories, setSelectedLessonPlanCategories] =
     useState<{ title: string; category: LessonPlanCategory }[]>([]);
 
+  console.log("selectedLessonPlanCategories");
+  console.log(selectedLessonPlanCategories);
+
   //using useMemo as warned in MUI docs: https://mui.com/material-ui/react-autocomplete/#controlled-states
   const multiSelectOptionValues: {
     title: LessonPlanSubCategory;
@@ -90,6 +93,7 @@ export default function SearchAndDisplayLessonPlans({
       <DisplayLessonPlansFactory
         displayLessonPlansComponent={displayLessonPlansComponent}
         lessonPlans={lessonPlansToDisplay}
+        selectedLessonPlanCategories={selectedLessonPlanCategories}
       />
     </>
   );
