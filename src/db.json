@@ -47,6 +47,12 @@
       "jobTitle": "aa",
       "jobDescription": "jj",
       "id": 46
+    },
+    {
+      "userId": "1",
+      "jobTitle": "sg",
+      "jobDescription": "sg",
+      "id": 47
     }
   ],
   "lesson-plans": [
@@ -221,8 +227,13 @@
     },
     {
       "userId": "1",
-      "lessonPlanId": "1",
+      "lessonPlanId": "2",
       "id": 4
+    },
+    {
+      "userId": "1",
+      "lessonPlanId": "1",
+      "id": 6
     }
   ]
 }

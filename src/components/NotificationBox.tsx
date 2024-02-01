@@ -9,7 +9,7 @@ export default function NotificationBox({
   sxTitle,
   sxMessage,
 }: {
-  title: string;
+  title?: string;
   message: string;
   sxOuterContainer?: SxProps<Theme>;
   sxInnerContainer?: SxProps<Theme>;
@@ -19,13 +19,15 @@ export default function NotificationBox({
   const sxOuterContainerDefault: SxProps<Theme> = {
     alignItems: "center",
     maxWidth: "900px",
-    mt: 6,
+    width: "100%",
+    mt: 3,
     mx: "auto",
   };
 
   const sxInnerContainerDefault: SxProps<Theme> = {
     alignItems: "center",
     maxWidth: "90%",
+    width: "100%",
     borderRadius: 4,
     border: "1px solid",
     borderColor: "text.secondary",
@@ -74,9 +76,11 @@ export default function NotificationBox({
   return (
     <Stack sx={sxOuterContainerFinal}>
       <Stack sx={sxInnerContainerFinal}>
-        <Typography component="p" variant="h4" sx={sxTitleFinal}>
-          {title}{" "}
-        </Typography>
+        {title && (
+          <Typography component="p" variant="h4" sx={sxTitleFinal}>
+            {title}{" "}
+          </Typography>
+        )}
         <Box component="p" sx={sxMessageFinal}>
           {message}
         </Box>
