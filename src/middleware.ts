@@ -103,19 +103,22 @@ const protectedRoutes: ProtectedRoutes = {
       {
         2: {
           roles: ["USER"],
-          notLoggedInRedirectUrlPath: SIGNIN_REDIRECT_START + "lessonplans/2",
+          notLoggedInRedirectUrlPath:
+            SIGNIN_REDIRECT_START + "lessonplans/2&member=gold",
         },
       },
       {
         3: {
           roles: ["USER"],
-          notLoggedInRedirectUrlPath: SIGNIN_REDIRECT_START + "lessonplans/3",
+          notLoggedInRedirectUrlPath:
+            SIGNIN_REDIRECT_START + "lessonplans/3&member=gold",
         },
       },
       {
         4: {
           roles: ["USER"],
-          notLoggedInRedirectUrlPath: SIGNIN_REDIRECT_START + "lessonplans/4",
+          notLoggedInRedirectUrlPath:
+            SIGNIN_REDIRECT_START + "lessonplans/4&member=gold",
         },
       },
     ],
