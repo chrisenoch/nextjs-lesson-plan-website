@@ -39,7 +39,6 @@ export default function NotificationBox({
     marginX: 2,
   };
 
-  //To do: Create a reusable function which sets sx props.
   const {
     sxOuterContainerFinal,
     sxInnerContainerFinal,

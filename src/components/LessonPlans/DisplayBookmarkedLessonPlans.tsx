@@ -34,14 +34,11 @@ export default function DisplayLessonPlanBookmarks({
   const dispatch = useDispatch<AppDispatch>();
   useRedirectWhenLoggedOut("/auth/signin");
 
-  console.log("lessonplans in displaybookmarked");
-  console.log(lessonPlans);
-
   const bookmarks: {
     userId: string;
     lessonPlanId: string;
   }[] = useSelector(selectAllBookmarks);
-  const fetchBookMarks: null | {
+  const fetchBookMarks: {
     isError: boolean;
     isLoading: boolean;
     message: string;
@@ -61,7 +58,7 @@ export default function DisplayLessonPlanBookmarks({
   );
 
   //Set here because bookmarks are not ready until they have both loaded and getBookmakedLessonPlanIds# has run.
-  if (!fetchBookMarks?.isLoading) {
+  if (!fetchBookMarks.isLoading) {
     areBookmarksReady = true;
   }
 
@@ -94,7 +91,9 @@ export default function DisplayLessonPlanBookmarks({
     ));
 
   let renderedContent;
-  if (lessonPlansToDisplay.length > 0) {
+  if (fetchBookMarks.isLoading) {
+    return <h1>Loading</h1>;
+  } else if (lessonPlansToDisplay.length > 0) {
     renderedContent = lessonPlansToDisplay;
   } else if (selectedLessonPlanCategories.length > 0 && bookmarks.length > 0) {
     renderedContent = (

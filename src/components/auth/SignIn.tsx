@@ -26,7 +26,7 @@ export function SignIn() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const userLoginInfo: null | {
+  const userLoginInfo: {
     isError: boolean;
     isLoading: boolean;
     message: string;
@@ -130,12 +130,12 @@ export function SignIn() {
             }}
           />
 
-          {!userLoginInfo?.isLoading && (
+          {!userLoginInfo.isLoading && (
             <Button type="submit" variant="contained">
               Submit
             </Button>
           )}
-          {userLoginInfo?.isLoading && (
+          {userLoginInfo.isLoading && (
             <LoadingButton
               key={"loading-placeholder"}
               loading
@@ -144,9 +144,9 @@ export function SignIn() {
               Submit
             </LoadingButton>
           )}
-          {!shouldHideMessage && userLoginInfo?.isError && (
+          {!shouldHideMessage && userLoginInfo.isError && (
             <NotificationBox //To do: put this into Notification component as an option. E.g. error, primary, secondary, info, success.
-              message={userLoginInfo?.message}
+              message={userLoginInfo.message}
               sxOuterContainer={{
                 marginTop: 2,
               }}

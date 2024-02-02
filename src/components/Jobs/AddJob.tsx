@@ -49,7 +49,7 @@ export function AddJob() {
   } = useFormClientStatus(inputRefs);
 
   const dispatch = useDispatch<AppDispatch>();
-  const addJobInfo: null | {
+  const addJobInfo: {
     isError: boolean;
     isLoading: boolean;
     message: string;
@@ -167,25 +167,25 @@ export function AddJob() {
 
           <Button
             type="submit"
-            disabled={addJobInfo?.isLoading || !isFormValid}
+            disabled={addJobInfo.isLoading || !isFormValid}
             variant="contained"
             color="primary">
             Add Job
           </Button>
-          {!shouldHideMessage && addJobInfo?.message && (
+          {!shouldHideMessage && addJobInfo.message && (
             <Box
               component="p"
-              color={addJobInfo?.isError ? "error.main" : "success.main"}
+              color={addJobInfo.isError ? "error.main" : "success.main"}
               aria-live="polite"
               role="status">
-              {!shouldHideMessage && addJobInfo?.message}
+              {!shouldHideMessage && addJobInfo.message}
             </Box>
           )}
         </Stack>
       </Box>
       <JobsPreview
         jobs={jobs}
-        isLoading={fetchJobsInfo?.isLoading}
+        isLoading={fetchJobsInfo.isLoading}
         isError={fetchJobsInfo.isError}
         handleJobDelete={handleJobDelete}></JobsPreview>
     </>
