@@ -142,6 +142,8 @@ export function JobsPreview({
   ) : isError ? (
     "Error: There was a problem fetching the jobs. Please reload the page and try again."
   ) : (
-    <div>{renderedJobs}</div>
+    <Stack direction={"row"} flexWrap={"wrap"} gap={2}>
+      {renderedJobs}
+    </Stack>
   );
 }

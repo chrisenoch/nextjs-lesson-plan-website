@@ -20,6 +20,8 @@ import {
   jobDescriptionValidator,
   jobTitleValidator,
 } from "@/validation/jobs/jobs-validators";
+import CurvedUnderlineTitle from "../CurvedUnderline";
+import { orange } from "@mui/material/colors";
 
 export function AddJob() {
   console.log("add job rendered");
@@ -97,79 +99,95 @@ export function AddJob() {
   }, []);
 
   return (
-    <Box
-      onSubmit={(e) => {
-        handleSubmit(e);
-      }}
-      component="form"
-      display={"flex"}
-      flexDirection={"column"}
-      gap={2}>
-      <TextField
-        id="job-title"
-        name="job-title"
-        label="Job title"
-        variant="outlined"
-        inputRef={jobTitleRef}
-        value={jobTitle}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-          setJobTitle(event.target.value);
+    <>
+      <CurvedUnderlineTitle
+        component={"h1"}
+        variant={"h3"}
+        title={"Add a Job"}
+        color={orange[300]}
+        sxUnderline={{ left: 2, borderRadius: "30%" }}
+        sxTypography={{
+          marginBottom: "12px !important",
+          alignSelf: "center",
         }}
-        error={!jobTitleIsValid && status?.get("jobTitle")?.isTouched}
-        helperText={
-          !jobTitleIsValid &&
-          (status?.get("jobTitle")?.hasBeenFocused ||
-            status?.get("jobTitle")?.isTouched) &&
-          "Insert two or more characters"
-        }
       />
-      {!isMounted.current ? (
-        <Skeleton variant="rectangular" width={"100%"} height={125} />
-      ) : (
-        <TextField
-          id="job-description"
-          name="job-description"
-          label="Job Description"
-          inputRef={jobDescriptionRef}
-          value={jobDescription}
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            setJobDescription(event.target.value);
-          }}
-          error={
-            !jobDescriptionIsValid && status?.get("jobDescription")?.isTouched
-          }
-          helperText={
-            !jobDescriptionIsValid &&
-            (status?.get("jobDescription")?.hasBeenFocused ||
-              status?.get("jobDescription")?.isTouched) &&
-            "Insert two or more characters"
-          }
-          multiline
-          minRows={4}
-        />
-      )}
+      <Box
+        onSubmit={(e) => {
+          handleSubmit(e);
+        }}
+        component="form"
+        display={"flex"}
+        flexDirection={"column"}
+        gap={2}>
+        <Stack maxWidth={"900px"} gap={2}>
+          <TextField
+            id="job-title"
+            name="job-title"
+            label="Job title"
+            variant="outlined"
+            inputRef={jobTitleRef}
+            value={jobTitle}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              setJobTitle(event.target.value);
+            }}
+            error={!jobTitleIsValid && status?.get("jobTitle")?.isTouched}
+            helperText={
+              !jobTitleIsValid &&
+              (status?.get("jobTitle")?.hasBeenFocused ||
+                status?.get("jobTitle")?.isTouched) &&
+              "Insert two or more characters"
+            }
+          />
+          {!isMounted.current ? (
+            <Skeleton variant="rectangular" width={"100%"} height={125} />
+          ) : (
+            <TextField
+              id="job-description"
+              name="job-description"
+              label="Job Description"
+              inputRef={jobDescriptionRef}
+              value={jobDescription}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setJobDescription(event.target.value);
+              }}
+              error={
+                !jobDescriptionIsValid &&
+                status?.get("jobDescription")?.isTouched
+              }
+              helperText={
+                !jobDescriptionIsValid &&
+                (status?.get("jobDescription")?.hasBeenFocused ||
+                  status?.get("jobDescription")?.isTouched) &&
+                "Insert two or more characters"
+              }
+              multiline
+              minRows={4}
+            />
+          )}
 
-      <Button
-        type="submit"
-        disabled={addJobInfo?.isLoading || !isFormValid}
-        variant="contained"
-        color="primary">
-        Add Job
-      </Button>
-      {!shouldHideMessage && addJobInfo?.message && (
-        <Box
-          component="p"
-          color={addJobInfo?.isError ? "error.main" : "success.main"}
-          aria-live="polite"
-          role="status">
-          {!shouldHideMessage && addJobInfo?.message}
-        </Box>
-      )}
+          <Button
+            type="submit"
+            disabled={addJobInfo?.isLoading || !isFormValid}
+            variant="contained"
+            color="primary">
+            Add Job
+          </Button>
+          {!shouldHideMessage && addJobInfo?.message && (
+            <Box
+              component="p"
+              color={addJobInfo?.isError ? "error.main" : "success.main"}
+              aria-live="polite"
+              role="status">
+              {!shouldHideMessage && addJobInfo?.message}
+            </Box>
+          )}
+        </Stack>
+      </Box>
       <JobsPreview
         jobs={jobs}
         isLoading={fetchJobsInfo?.isLoading}
         isError={fetchJobsInfo.isError}
         handleJobDelete={handleJobDelete}></JobsPreview>
-    </Box>
+    </>
   );
 }
