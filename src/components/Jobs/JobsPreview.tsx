@@ -119,13 +119,16 @@ export function JobsPreview({
                 }}>
                 View
               </Button>
-              <IconButton
-                onClick={() => {
-                  handleJobDelete && handleJobDelete(job.id);
-                }}
-                aria-label="delete">
-                <Delete />
-              </IconButton>
+
+              {handleJobDelete && (
+                <IconButton
+                  onClick={() => {
+                    handleJobDelete(job.id);
+                  }}
+                  aria-label="delete">
+                  <Delete />
+                </IconButton>
+              )}
             </CardActions>
           </Card>
         );

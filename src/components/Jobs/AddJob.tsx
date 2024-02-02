@@ -1,6 +1,6 @@
 "use client";
-import { Box, TextField, Button, Stack } from "@mui/material";
-import { useMemo, useRef, useState } from "react";
+import { Box, TextField, Button, Stack, Skeleton } from "@mui/material";
+import { useEffect, useMemo, useRef, useState } from "react";
 import useFormClientStatus from "@/customHooks/useFormClientStatus";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -24,6 +24,8 @@ import {
 export function AddJob() {
   console.log("add job rendered");
   useRedirectWhenLoggedOut("/auth/signin");
+
+  const isMounted = useRef<boolean>(false);
 
   const jobTitleRef = useRef<null | HTMLInputElement>(null);
   const jobDescriptionRef = useRef<null | HTMLInputElement>(null);
@@ -90,6 +92,10 @@ export function AddJob() {
     resetAll();
   }
 
+  useEffect(() => {
+    isMounted.current = true;
+  }, []);
+
   return (
     <Box
       onSubmit={(e) => {
@@ -117,27 +123,31 @@ export function AddJob() {
           "Insert two or more characters"
         }
       />
-      <TextField
-        id="job-description"
-        name="job-description"
-        label="Job Description"
-        inputRef={jobDescriptionRef}
-        value={jobDescription}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-          setJobDescription(event.target.value);
-        }}
-        error={
-          !jobDescriptionIsValid && status?.get("jobDescription")?.isTouched
-        }
-        helperText={
-          !jobDescriptionIsValid &&
-          (status?.get("jobDescription")?.hasBeenFocused ||
-            status?.get("jobDescription")?.isTouched) &&
-          "Insert two or more characters"
-        }
-        multiline
-        minRows={4}
-      />
+      {!isMounted.current ? (
+        <Skeleton variant="rectangular" width={"100%"} height={125} />
+      ) : (
+        <TextField
+          id="job-description"
+          name="job-description"
+          label="Job Description"
+          inputRef={jobDescriptionRef}
+          value={jobDescription}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            setJobDescription(event.target.value);
+          }}
+          error={
+            !jobDescriptionIsValid && status?.get("jobDescription")?.isTouched
+          }
+          helperText={
+            !jobDescriptionIsValid &&
+            (status?.get("jobDescription")?.hasBeenFocused ||
+              status?.get("jobDescription")?.isTouched) &&
+            "Insert two or more characters"
+          }
+          multiline
+          minRows={4}
+        />
+      )}
 
       <Button
         type="submit"
