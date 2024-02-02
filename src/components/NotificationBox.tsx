@@ -17,31 +17,26 @@ export default function NotificationBox({
   sxMessage?: SxProps<Theme>;
 }) {
   const sxOuterContainerDefault: SxProps<Theme> = {
-    alignItems: "center",
     maxWidth: "900px",
-    width: "100%",
     mt: 3,
     mx: "auto",
   };
 
   const sxInnerContainerDefault: SxProps<Theme> = {
     alignItems: "center",
-    maxWidth: "90%",
-    width: "100%",
     borderRadius: 4,
     border: "1px solid",
     borderColor: "text.secondary",
+    marginX: 2,
   };
 
   const sxTitleDefault: SxProps<Theme> = {
-    maxWidth: "90%",
-    display: "inline-block",
     marginTop: 2,
+    marginX: 2,
   };
 
   const sxMessageDefault: SxProps<Theme> = {
-    maxWidth: "90%",
-    display: "inline-block",
+    marginX: 2,
   };
 
   //To do: Create a reusable function which sets sx props.
