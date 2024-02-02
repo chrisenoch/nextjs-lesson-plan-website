@@ -9,22 +9,13 @@ import {
   Typography,
   CardHeader,
   IconButton,
-  Box,
   Stack,
   CardActions,
   Button,
-  Collapse,
-  styled,
-  IconButtonProps,
-  Divider,
 } from "@mui/material";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import EuroOutlinedIcon from "@mui/icons-material/EuroOutlined";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useState } from "react";
-import { orange } from "@mui/material/colors";
-import CurvedUnderlineTitle from "../CurvedUnderline";
 
 export function JobsPreview({
   jobs,
@@ -56,94 +47,66 @@ export function JobsPreview({
               maxWidth: "500px",
               border: "1px solid #c4ddf0",
               borderRadius: 4,
-              // boxShadow:
-              //   "0px 2px 1px -1px #67b26d, 0px 1px 1px 0px #67b26d, 0px 1px 3px 0px #67b26d",
             }}
             key={job.id}>
-            <CardContent>
-              <CurvedUnderlineTitle
-                component={"h1"}
-                variant="h5"
-                title="Software developer"
-                color={orange[200]}
-                sxUnderline={{ left: 2, borderRadius: "10%" }}
-                sxTypography={{ marginBottom: 1 }}
-              />
-            </CardContent>
-            {/* <CardHeader
+            <CardHeader
               color="primary"
               sx={{
                 "& .MuiCardHeader-title": {
-                  //color: "secondary.main",
+                  backgroundColor: "#dff3d7",
+                  display: "inline-block",
+                  padding: 1,
+                  borderRadius: 4,
                 },
               }}
-              action={
-                !handleJobDelete ? null : (
-                  <IconButton
-                    onClick={() => handleJobDelete(job.id)}
-                    aria-label="delete-job">
-                    <Delete />
-                  </IconButton>
-                )
-              }
               title={job.jobTitle}
-            /> */}
+            />
             <CardContent
               sx={{
                 display: "flex",
                 gap: 2,
                 paddingTop: 0,
-                color: "text.secondary",
                 flexWrap: "wrap",
                 marginTop: 0.5,
               }}>
               <Stack direction="row">
-                <PlaceOutlinedIcon
-                  sx={{
-                    fontWeight: "bold",
-                  }}
-                />
+                <PlaceOutlinedIcon />
                 <Typography marginLeft={0.5} noWrap>
                   Madrid
                 </Typography>
               </Stack>
 
               <Stack direction="row">
-                <EuroOutlinedIcon
-                  sx={{
-                    fontWeight: "bold",
-                  }}
-                />
+                <EuroOutlinedIcon />
                 <Typography marginLeft={0.5} noWrap>
                   €20000 - €25000 per annum
                 </Typography>
               </Stack>
               <Stack direction="row">
-                <BusinessOutlinedIcon
-                  sx={{
-                    fontWeight: "bold",
-                  }}
-                />
+                <BusinessOutlinedIcon />
                 <Typography marginLeft={0.5} noWrap>
                   Google
                 </Typography>
               </Stack>
             </CardContent>
 
-            <CardContent sx={{ paddingBottom: 0 }}>
+            <CardContent>
               <Typography
                 paragraph
                 sx={{
                   color: "text.secondary",
                   fontSize: "0.9375rem",
+                  marginBottom: 0,
                 }}>
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                Placeat doloribus quos maiores voluptate hic ex unde voluptatem
-                mollitia atque, ab earum, numquam minima facilis quaerat quis
-                alias, dolor culpa nemo.
+                {job.jobDescription}
               </Typography>
             </CardContent>
-            <CardActions sx={{ paddingX: 2, paddingBottom: 2 }}>
+            <CardActions
+              sx={{
+                paddingX: 2,
+                paddingBottom: 2,
+                justifyContent: "space-between",
+              }}>
               <Button
                 href={`#`}
                 color="secondary"
@@ -156,6 +119,13 @@ export function JobsPreview({
                 }}>
                 View
               </Button>
+              <IconButton
+                onClick={() => {
+                  handleJobDelete && handleJobDelete(job.id);
+                }}
+                aria-label="delete">
+                <Delete />
+              </IconButton>
             </CardActions>
           </Card>
         );
@@ -167,8 +137,4 @@ export function JobsPreview({
   ) : (
     <div>{renderedJobs}</div>
   );
-}
-
-{
-  /* <Typography variant="subtitle1">{job.jobDescription}</Typography> */
 }
