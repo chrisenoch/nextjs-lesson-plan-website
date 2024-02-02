@@ -99,6 +99,10 @@ export function JobsPreview({
                   marginBottom: 0,
                 }}>
                 {job.jobDescription}
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Mollitia facilis sequi id modi provident ab laboriosam, ea quod
+                voluptatibus reiciendis distinctio, totam vel sint odio
+                blanditiis quae vero impedit omnis!
               </Typography>
             </CardContent>
             <CardActions
