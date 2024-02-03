@@ -75,7 +75,15 @@ export function AddJob() {
   } = useSelector(selectFetchJobs);
 
   const jobs:
-    | { id: string; jobTitle: string; jobDescription: string; userId: string }[]
+    | {
+        id: string;
+        jobTitle: string;
+        jobDescription: string;
+        jobLocation: string;
+        jobCompany: string;
+        jobSalary: string;
+        userId: string;
+      }[]
     | undefined = useSelector(selectJobsByUserId);
 
   useClearFormOnSuccess(addJobInfo, clearForm);
@@ -141,8 +149,9 @@ export function AddJob() {
           alignSelf: "center",
         }}
       />
-      <Stack spacing={2} alignItems="center">
+      <Stack spacing={2} alignItems="center" marginTop={3}>
         <Box
+          component="form"
           display="flex"
           flexDirection={"column"}
           maxWidth={"900px"}
@@ -150,8 +159,7 @@ export function AddJob() {
           gap={2}
           onSubmit={(e) => {
             handleSubmit(e);
-          }}
-          component="form">
+          }}>
           <Stack direction={"row"} gap={2}>
             <TextField
               id="job-title"
@@ -264,7 +272,7 @@ export function AddJob() {
 
           <Button
             type="submit"
-            // disabled={addJobInfo.isLoading || !isFormValid}
+            disabled={addJobInfo.isLoading || !isFormValid}
             variant="contained"
             color="primary">
             Add Job
@@ -289,7 +297,7 @@ export function AddJob() {
         sxTypography={{
           marginBottom: "12px !important",
           alignSelf: "center",
-          paddingTop: 4,
+          paddingTop: 6,
         }}
       />
       <JobsPreview
