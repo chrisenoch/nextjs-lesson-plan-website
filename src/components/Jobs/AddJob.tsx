@@ -19,6 +19,9 @@ import { zodValidator } from "@/validation/zod-validator";
 import {
   jobDescriptionValidator,
   jobTitleValidator,
+  jobLocationValidator,
+  jobCompanyValidator,
+  jobSalaryValidator,
 } from "@/validation/jobs/jobs-validators";
 import CurvedUnderlineTitle from "../CurvedUnderline";
 import { orange } from "@mui/material/colors";
@@ -26,12 +29,17 @@ import { orange } from "@mui/material/colors";
 export function AddJob() {
   console.log("add job rendered");
   useRedirectWhenLoggedOut("/auth/signin");
-
   const isMounted = useRef<boolean>(false);
 
   const jobTitleRef = useRef<null | HTMLInputElement>(null);
+  const jobLocationRef = useRef<null | HTMLInputElement>(null);
+  const jobCompanyRef = useRef<null | HTMLInputElement>(null);
+  const jobSalaryRef = useRef<null | HTMLInputElement>(null);
   const jobDescriptionRef = useRef<null | HTMLInputElement>(null);
   const [jobTitle, setJobTitle] = useState<string>("");
+  const [jobLocation, setJobLocation] = useState<string>("");
+  const [jobCompany, setJobCompany] = useState<string>("");
+  const [jobSalary, setJobSalary] = useState<string>("");
   const [jobDescription, setJobDescription] = useState<string>("");
 
   const inputRefs = useMemo(
@@ -39,6 +47,9 @@ export function AddJob() {
       new Map([
         ["jobTitle", jobTitleRef],
         ["jobDescription", jobDescriptionRef],
+        ["jobLocation", jobLocationRef],
+        ["jobCompany", jobCompanyRef],
+        ["jobSalary", jobSalaryRef],
       ]),
     []
   );
@@ -76,7 +87,21 @@ export function AddJob() {
   const jobDescriptionIsValid = zodValidator(jobDescription, {
     jobDescription: jobDescriptionValidator,
   });
-  const isFormValid = jobTitleIsValid && jobDescriptionIsValid;
+  const jobLocationIsValid = zodValidator(jobLocation, {
+    jobLocation: jobLocationValidator,
+  });
+  const jobCompanyIsValid = zodValidator(jobCompany, {
+    jobCompany: jobCompanyValidator,
+  });
+  const jobSalaryIsValid = zodValidator(jobSalary, {
+    jobSalary: jobSalaryValidator,
+  });
+  const isFormValid =
+    jobTitleIsValid &&
+    jobDescriptionIsValid &&
+    jobLocationIsValid &&
+    jobCompanyIsValid &&
+    jobSalaryIsValid;
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -140,6 +165,61 @@ export function AddJob() {
               "Insert two or more characters"
             }
           />
+          <TextField
+            id="job-location"
+            name="job-location"
+            label="Job location"
+            variant="outlined"
+            inputRef={jobLocationRef}
+            value={jobLocation}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              setJobLocation(event.target.value);
+            }}
+            error={!jobLocationIsValid && status?.get("jobLocation")?.isTouched}
+            helperText={
+              !jobLocationIsValid &&
+              (status?.get("jobLocation")?.hasBeenFocused ||
+                status?.get("jobLocation")?.isTouched) &&
+              "Insert two or more characters"
+            }
+          />
+          <TextField
+            id="job-company"
+            name="job-company"
+            label="Company name"
+            variant="outlined"
+            inputRef={jobCompanyRef}
+            value={jobCompany}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              setJobCompany(event.target.value);
+            }}
+            error={!jobCompanyIsValid && status?.get("jobCompany")?.isTouched}
+            helperText={
+              !jobCompanyIsValid &&
+              (status?.get("jobCompany")?.hasBeenFocused ||
+                status?.get("jobCompany")?.isTouched) &&
+              "Insert two or more characters"
+            }
+          />
+          <TextField
+            id="job-salary"
+            name="job-salary"
+            label="Salary"
+            variant="outlined"
+            inputRef={jobSalaryRef}
+            value={jobSalary}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              setJobSalary(event.target.value);
+            }}
+            error={!jobSalaryIsValid && status?.get("jobSalary")?.isTouched}
+            helperText={
+              !jobSalaryIsValid &&
+              (status?.get("jobSalary")?.hasBeenFocused ||
+                status?.get("jobSalary")?.isTouched) &&
+              "Insert four or more characters"
+            }
+          />
+
           {!isMounted.current ? (
             <Skeleton variant="rectangular" width={"100%"} height={125} />
           ) : (

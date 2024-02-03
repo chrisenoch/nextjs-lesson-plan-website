@@ -6,14 +6,38 @@ import { zodValidator } from "../zod-validator";
 
 export const jobTitleValidator = z.string().min(2);
 export const jobDescriptionValidator = z.string().min(2);
+export const jobLocationValidator = z.string().min(2);
+export const jobCompanyValidator = z.string().min(2);
+export const jobSalaryValidator = z.string().min(4);
 
-export function isAddJobValid(jobTitle: string, jobDescription: string) {
+export function isAddJobValid(
+  jobTitle: string,
+  jobDescription: string,
+  jobLocation: string,
+  jobCompany: string,
+  jobSalary: string
+) {
   const jobTitleIsValid = zodValidator(jobTitle, {
     jobTitle: jobTitleValidator,
   });
   const jobDescriptionIsValid = zodValidator(jobDescription, {
     jobDescription: jobDescriptionValidator,
   });
-  const isValid = jobTitleIsValid && jobDescriptionIsValid;
+  const jobLocationIsValid = zodValidator(jobLocation, {
+    jobLocation: jobLocationValidator,
+  });
+  const jobCompanyIsValid = zodValidator(jobCompany, {
+    jobCompany: jobCompanyValidator,
+  });
+  const jobSalaryIsValid = zodValidator(jobSalary, {
+    jobSalary: jobSalaryValidator,
+  });
+
+  const isValid =
+    jobTitleIsValid &&
+    jobDescriptionIsValid &&
+    jobLocationIsValid &&
+    jobCompanyIsValid &&
+    jobSalaryIsValid;
   return isValid;
 }
