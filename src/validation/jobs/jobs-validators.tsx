@@ -39,5 +39,12 @@ export function isAddJobValid(
     jobLocationIsValid &&
     jobCompanyIsValid &&
     jobSalaryIsValid;
-  return isValid;
+  return {
+    isValid,
+    jobTitleIsValid,
+    jobDescriptionIsValid,
+    jobLocationIsValid,
+    jobCompanyIsValid,
+    jobSalaryIsValid,
+  };
 }

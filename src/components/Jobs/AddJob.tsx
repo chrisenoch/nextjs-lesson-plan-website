@@ -22,6 +22,7 @@ import {
   jobLocationValidator,
   jobCompanyValidator,
   jobSalaryValidator,
+  isAddJobValid,
 } from "@/validation/jobs/jobs-validators";
 import CurvedUnderlineTitle from "../CurvedUnderline";
 import { orange } from "@mui/material/colors";
@@ -89,27 +90,42 @@ export function AddJob() {
   useClearFormOnSuccess(addJobInfo, clearForm);
   const shouldHideMessage = useHideMessageOnNavAway(addJobInfo);
 
-  const jobTitleIsValid = zodValidator(jobTitle, {
-    jobTitle: jobTitleValidator,
-  });
-  const jobDescriptionIsValid = zodValidator(jobDescription, {
-    jobDescription: jobDescriptionValidator,
-  });
-  const jobLocationIsValid = zodValidator(jobLocation, {
-    jobLocation: jobLocationValidator,
-  });
-  const jobCompanyIsValid = zodValidator(jobCompany, {
-    jobCompany: jobCompanyValidator,
-  });
-  const jobSalaryIsValid = zodValidator(jobSalary, {
-    jobSalary: jobSalaryValidator,
-  });
-  const isFormValid =
-    jobTitleIsValid &&
-    jobDescriptionIsValid &&
-    jobLocationIsValid &&
-    jobCompanyIsValid &&
-    jobSalaryIsValid;
+  const {
+    isValid: isFormValid,
+    jobTitleIsValid,
+    jobDescriptionIsValid,
+    jobLocationIsValid,
+    jobCompanyIsValid,
+    jobSalaryIsValid,
+  } = isAddJobValid(
+    jobTitle,
+    jobDescription,
+    jobLocation,
+    jobCompany,
+    jobSalary
+  );
+
+  // const jobTitleIsValid = zodValidator(jobTitle, {
+  //   jobTitle: jobTitleValidator,
+  // });
+  // const jobDescriptionIsValid = zodValidator(jobDescription, {
+  //   jobDescription: jobDescriptionValidator,
+  // });
+  // const jobLocationIsValid = zodValidator(jobLocation, {
+  //   jobLocation: jobLocationValidator,
+  // });
+  // const jobCompanyIsValid = zodValidator(jobCompany, {
+  //   jobCompany: jobCompanyValidator,
+  // });
+  // const jobSalaryIsValid = zodValidator(jobSalary, {
+  //   jobSalary: jobSalaryValidator,
+  // });
+  // const isFormValid =
+  //   jobTitleIsValid &&
+  //   jobDescriptionIsValid &&
+  //   jobLocationIsValid &&
+  //   jobCompanyIsValid &&
+  //   jobSalaryIsValid;
 
   function handleSubmit(e) {
     e.preventDefault();
