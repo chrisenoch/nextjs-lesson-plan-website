@@ -152,78 +152,88 @@ export function AddJob() {
             handleSubmit(e);
           }}
           component="form">
-          <TextField
-            id="job-title"
-            name="job-title"
-            label="Job title"
-            variant="outlined"
-            inputRef={jobTitleRef}
-            value={jobTitle}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              setJobTitle(event.target.value);
-            }}
-            error={!jobTitleIsValid && status?.get("jobTitle")?.isTouched}
-            helperText={
-              !jobTitleIsValid &&
-              (status?.get("jobTitle")?.hasBeenFocused ||
-                status?.get("jobTitle")?.isTouched) &&
-              "Insert two or more characters"
-            }
-          />
-          <TextField
-            id="job-location"
-            name="job-location"
-            label="Job location"
-            variant="outlined"
-            inputRef={jobLocationRef}
-            value={jobLocation}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              setJobLocation(event.target.value);
-            }}
-            error={!jobLocationIsValid && status?.get("jobLocation")?.isTouched}
-            helperText={
-              !jobLocationIsValid &&
-              (status?.get("jobLocation")?.hasBeenFocused ||
-                status?.get("jobLocation")?.isTouched) &&
-              "Insert two or more characters"
-            }
-          />
-          <TextField
-            id="job-company"
-            name="job-company"
-            label="Company name"
-            variant="outlined"
-            inputRef={jobCompanyRef}
-            value={jobCompany}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              setJobCompany(event.target.value);
-            }}
-            error={!jobCompanyIsValid && status?.get("jobCompany")?.isTouched}
-            helperText={
-              !jobCompanyIsValid &&
-              (status?.get("jobCompany")?.hasBeenFocused ||
-                status?.get("jobCompany")?.isTouched) &&
-              "Insert two or more characters"
-            }
-          />
-          <TextField
-            id="job-salary"
-            name="job-salary"
-            label="Salary"
-            variant="outlined"
-            inputRef={jobSalaryRef}
-            value={jobSalary}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              setJobSalary(event.target.value);
-            }}
-            error={!jobSalaryIsValid && status?.get("jobSalary")?.isTouched}
-            helperText={
-              !jobSalaryIsValid &&
-              (status?.get("jobSalary")?.hasBeenFocused ||
-                status?.get("jobSalary")?.isTouched) &&
-              "Insert four or more characters"
-            }
-          />
+          <Stack direction={"row"} gap={2}>
+            <TextField
+              id="job-title"
+              name="job-title"
+              label="Job title"
+              variant="outlined"
+              inputRef={jobTitleRef}
+              value={jobTitle}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setJobTitle(event.target.value);
+              }}
+              error={!jobTitleIsValid && status?.get("jobTitle")?.isTouched}
+              helperText={
+                !jobTitleIsValid &&
+                (status?.get("jobTitle")?.hasBeenFocused ||
+                  status?.get("jobTitle")?.isTouched) &&
+                "Insert two or more characters"
+              }
+              sx={{ flexGrow: 1 }}
+            />
+            <TextField
+              id="job-location"
+              name="job-location"
+              label="Job location"
+              variant="outlined"
+              inputRef={jobLocationRef}
+              value={jobLocation}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setJobLocation(event.target.value);
+              }}
+              error={
+                !jobLocationIsValid && status?.get("jobLocation")?.isTouched
+              }
+              helperText={
+                !jobLocationIsValid &&
+                (status?.get("jobLocation")?.hasBeenFocused ||
+                  status?.get("jobLocation")?.isTouched) &&
+                "Insert two or more characters"
+              }
+              sx={{ flexGrow: 1 }}
+            />
+          </Stack>
+          <Stack direction={"row"} gap={2}>
+            <TextField
+              id="job-company"
+              name="job-company"
+              label="Company name"
+              variant="outlined"
+              inputRef={jobCompanyRef}
+              value={jobCompany}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setJobCompany(event.target.value);
+              }}
+              error={!jobCompanyIsValid && status?.get("jobCompany")?.isTouched}
+              helperText={
+                !jobCompanyIsValid &&
+                (status?.get("jobCompany")?.hasBeenFocused ||
+                  status?.get("jobCompany")?.isTouched) &&
+                "Insert two or more characters"
+              }
+              sx={{ flexGrow: 1 }}
+            />
+            <TextField
+              id="job-salary"
+              name="job-salary"
+              label="Salary"
+              variant="outlined"
+              inputRef={jobSalaryRef}
+              value={jobSalary}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setJobSalary(event.target.value);
+              }}
+              error={!jobSalaryIsValid && status?.get("jobSalary")?.isTouched}
+              helperText={
+                !jobSalaryIsValid &&
+                (status?.get("jobSalary")?.hasBeenFocused ||
+                  status?.get("jobSalary")?.isTouched) &&
+                "Insert four or more characters"
+              }
+              sx={{ flexGrow: 1 }}
+            />
+          </Stack>
 
           {!isMounted.current ? (
             <Skeleton variant="rectangular" width={"100%"} height={125} />

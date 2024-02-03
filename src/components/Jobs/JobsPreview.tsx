@@ -18,6 +18,8 @@ import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import EuroOutlinedIcon from "@mui/icons-material/EuroOutlined";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import { Masonry } from "@mui/lab";
+import { grey, orange } from "@mui/material/colors";
+import ColorFactory from "../Utils/ColorFactory";
 
 export function JobsPreview({
   jobs,
@@ -80,6 +82,12 @@ export function JobsPreview({
                 marginTop: 0.5,
               }}>
               <Stack direction="row">
+                <BusinessOutlinedIcon />
+                <Typography marginLeft={0.5} noWrap>
+                  {job.jobCompany}
+                </Typography>
+              </Stack>
+              <Stack direction="row">
                 <PlaceOutlinedIcon />
                 <Typography marginLeft={0.5} noWrap>
                   {job.jobLocation}
@@ -92,12 +100,18 @@ export function JobsPreview({
                   {job.jobSalary}
                 </Typography>
               </Stack>
-              <Stack direction="row">
+              {/* <Stack
+                direction="row"
+                sx={{
+                  backgroundColor: orange[50],
+                  paddingX: 1,
+                  borderRadius: 1,
+                }}>
                 <BusinessOutlinedIcon />
                 <Typography marginLeft={0.5} noWrap>
                   {job.jobCompany}
                 </Typography>
-              </Stack>
+              </Stack> */}
             </CardContent>
 
             <CardContent>
