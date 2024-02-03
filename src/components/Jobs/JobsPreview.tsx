@@ -99,10 +99,6 @@ export function JobsPreview({
                   marginBottom: 0,
                 }}>
                 {job.jobDescription}
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Mollitia facilis sequi id modi provident ab laboriosam, ea quod
-                voluptatibus reiciendis distinctio, totam vel sint odio
-                blanditiis quae vero impedit omnis!
               </Typography>
             </CardContent>
             <CardActions
@@ -142,7 +138,7 @@ export function JobsPreview({
   ) : isError ? (
     "Error: There was a problem fetching the jobs. Please reload the page and try again."
   ) : (
-    <Stack direction={"row"} flexWrap={"wrap"} gap={2}>
+    <Stack direction={"row"} justifyContent="center" flexWrap={"wrap"} gap={2}>
       {renderedJobs}
     </Stack>
   );

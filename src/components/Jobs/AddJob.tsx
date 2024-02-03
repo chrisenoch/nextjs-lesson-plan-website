@@ -111,15 +111,17 @@ export function AddJob() {
           alignSelf: "center",
         }}
       />
-      <Box
-        onSubmit={(e) => {
-          handleSubmit(e);
-        }}
-        component="form"
-        display={"flex"}
-        flexDirection={"column"}
-        gap={2}>
-        <Stack maxWidth={"900px"} gap={2}>
+      <Stack spacing={2} alignItems="center">
+        <Box
+          display="flex"
+          flexDirection={"column"}
+          maxWidth={"900px"}
+          width="100%"
+          gap={2}
+          onSubmit={(e) => {
+            handleSubmit(e);
+          }}
+          component="form">
           <TextField
             id="job-title"
             name="job-title"
@@ -181,8 +183,8 @@ export function AddJob() {
               {!shouldHideMessage && addJobInfo.message}
             </Box>
           )}
-        </Stack>
-      </Box>
+        </Box>
+      </Stack>
       <JobsPreview
         jobs={jobs}
         isLoading={fetchJobsInfo.isLoading}
