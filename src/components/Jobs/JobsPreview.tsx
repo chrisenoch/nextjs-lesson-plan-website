@@ -17,6 +17,7 @@ import {
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import EuroOutlinedIcon from "@mui/icons-material/EuroOutlined";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
+import { Masonry } from "@mui/lab";
 
 export function JobsPreview({
   jobs,
@@ -44,6 +45,7 @@ export function JobsPreview({
             sx={{
               mb: 1,
               width: "500px",
+              height: "fit-content",
               border: "1px solid #c4ddf0",
               borderRadius: 4,
             }}
@@ -140,7 +142,9 @@ export function JobsPreview({
     <Box display="flex" justifyContent={"center"}>
       {/* width = cardWidth * 2 + gap */}
       <Stack direction={"row"} flexWrap={"wrap"} gap={2} width="1016px">
-        {renderedJobs}
+        <Masonry columns={2} spacing={2}>
+          {renderedJobs}
+        </Masonry>
       </Stack>
     </Box>
   );
