@@ -15,16 +15,7 @@ import { JobsPreview } from "./JobsPreview";
 import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 import useClearFormOnSuccess from "@/customHooks/useClearFormOnSuccess";
 import useHideMessageOnNavAway from "@/customHooks/useHideMessageOnNavAway";
-import { zodValidator } from "@/validation/zod-validator";
-import {
-  jobDescriptionValidator,
-  jobTitleValidator,
-  jobLocationValidator,
-  jobCompanyValidator,
-  jobSalaryValidator,
-  isAddJobValid,
-  isAddJobValidTwo,
-} from "@/validation/jobs/jobs-validators";
+import { isAddJobValid } from "@/validation/jobs/jobs-validators";
 import CurvedUnderlineTitle from "../CurvedUnderline";
 import { orange } from "@mui/material/colors";
 
@@ -91,13 +82,6 @@ export function AddJob() {
   useClearFormOnSuccess(addJobInfo, clearForm);
   const shouldHideMessage = useHideMessageOnNavAway(addJobInfo);
 
-  const addedJobToValidate = {
-    jobTitle,
-    jobDescription,
-    jobLocation,
-    jobCompany,
-    jobSalary,
-  };
   const {
     isValid: isFormValid,
     jobTitle: jobTitleIsValid,
@@ -105,11 +89,13 @@ export function AddJob() {
     jobLocation: jobLocationIsValid,
     jobCompany: jobCompanyIsValid,
     jobSalary: jobSalaryIsValid,
-  } = isAddJobValidTwo(addedJobToValidate);
-
-  const test = isAddJobValidTwo(addedJobToValidate);
-  console.log("test");
-  console.log(test);
+  } = isAddJobValid({
+    jobTitle,
+    jobDescription,
+    jobLocation,
+    jobCompany,
+    jobSalary,
+  });
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -272,7 +258,7 @@ export function AddJob() {
 
           <Button
             type="submit"
-            disabled={addJobInfo.isLoading || !isFormValid}
+            // disabled={addJobInfo.isLoading || !isFormValid}
             variant="contained"
             color="primary">
             Add Job
