@@ -106,7 +106,9 @@ export function AddJob() {
   function handleSubmit(e) {
     e.preventDefault();
     setAllToTouched();
-    dispatch(addJob({ jobTitle, jobDescription }));
+    dispatch(
+      addJob({ jobTitle, jobDescription, jobCompany, jobLocation, jobSalary })
+    );
   }
 
   function handleJobDelete(id: string) {
@@ -116,6 +118,9 @@ export function AddJob() {
   function clearForm() {
     setJobTitle("");
     setJobDescription("");
+    setJobLocation("");
+    setJobCompany("");
+    setJobSalary("");
     resetAll();
   }
 
@@ -249,7 +254,7 @@ export function AddJob() {
 
           <Button
             type="submit"
-            disabled={addJobInfo.isLoading || !isFormValid}
+            // disabled={addJobInfo.isLoading || !isFormValid}
             variant="contained"
             color="primary">
             Add Job

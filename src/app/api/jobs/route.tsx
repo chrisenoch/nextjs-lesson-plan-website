@@ -39,7 +39,16 @@ export async function POST(request: NextRequest) {
   const {
     jobTitle,
     jobDescription,
-  }: { jobTitle: string; jobDescription: string } = await request.json();
+    jobLocation,
+    jobCompany,
+    jobSalary,
+  }: {
+    jobTitle: string;
+    jobDescription: string;
+    jobLocation: string;
+    jobCompany: string;
+    jobSalary: string;
+  } = await request.json();
 
   //check user is logged in
   const userIdOrErrorResponse = await getUserIdOrErrorResponse({
@@ -55,7 +64,13 @@ export async function POST(request: NextRequest) {
     userId = userIdOrErrorResponse;
   }
 
-  const isFormValid = isAddJobValid(jobTitle, jobDescription);
+  const isFormValid = isAddJobValid(
+    jobTitle,
+    jobDescription,
+    jobLocation,
+    jobCompany,
+    jobSalary
+  );
   if (!isFormValid) {
     return NextResponse.json(
       {
@@ -79,6 +94,9 @@ export async function POST(request: NextRequest) {
         userId,
         jobTitle,
         jobDescription,
+        jobLocation,
+        jobCompany,
+        jobSalary,
       }),
     });
     const job = await response.json();

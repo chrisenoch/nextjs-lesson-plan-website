@@ -128,7 +128,13 @@ export const deleteJob = createAsyncThunk(
 export const addJob = createAsyncThunk(
   "jobsSlice/add-job",
   async (
-    data: { jobTitle: string; jobDescription: string },
+    data: {
+      jobTitle: string;
+      jobDescription: string;
+      jobLocation: string;
+      jobCompany: string;
+      jobSalary: string;
+    },
     { rejectWithValue }
   ) => {
     try {
