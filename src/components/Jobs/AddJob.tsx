@@ -185,6 +185,18 @@ export function AddJob() {
           )}
         </Box>
       </Stack>
+      <CurvedUnderlineTitle
+        component={"h2"}
+        variant={"h4"}
+        title={"Jobs you added"}
+        color={orange[300]}
+        sxUnderline={{ left: 2, borderRadius: "30%" }}
+        sxTypography={{
+          marginBottom: "12px !important",
+          alignSelf: "center",
+          paddingTop: 4,
+        }}
+      />
       <JobsPreview
         jobs={jobs}
         isLoading={fetchJobsInfo.isLoading}
