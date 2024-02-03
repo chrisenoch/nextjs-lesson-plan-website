@@ -12,6 +12,7 @@ import {
   Stack,
   CardActions,
   Button,
+  Box,
 } from "@mui/material";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import EuroOutlinedIcon from "@mui/icons-material/EuroOutlined";
@@ -42,9 +43,7 @@ export function JobsPreview({
           <Card
             sx={{
               mb: 1,
-              width: "fit-content",
-              minWidth: 300,
-              maxWidth: "500px",
+              width: "500px",
               border: "1px solid #c4ddf0",
               borderRadius: 4,
             }}
@@ -138,8 +137,11 @@ export function JobsPreview({
   ) : isError ? (
     "Error: There was a problem fetching the jobs. Please reload the page and try again."
   ) : (
-    <Stack direction={"row"} justifyContent="center" flexWrap={"wrap"} gap={2}>
-      {renderedJobs}
-    </Stack>
+    <Box display="flex" justifyContent={"center"}>
+      {/* width = cardWidth * 2 + gap */}
+      <Stack direction={"row"} flexWrap={"wrap"} gap={2} width="1016px">
+        {renderedJobs}
+      </Stack>
+    </Box>
   );
 }
