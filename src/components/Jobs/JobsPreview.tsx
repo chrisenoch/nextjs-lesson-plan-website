@@ -25,7 +25,16 @@ export function JobsPreview({
   isError,
   handleJobDelete,
 }: {
-  jobs: { id: string; jobTitle: string; jobDescription: string }[] | undefined;
+  jobs:
+    | {
+        id: string;
+        jobTitle: string;
+        jobDescription: string;
+        jobLocation: string;
+        jobCompany: string;
+        jobSalary: string;
+      }[]
+    | undefined;
   isLoading: boolean;
   isError: boolean;
   handleJobDelete?: (id: string) => void;
@@ -73,20 +82,20 @@ export function JobsPreview({
               <Stack direction="row">
                 <PlaceOutlinedIcon />
                 <Typography marginLeft={0.5} noWrap>
-                  Madrid
+                  {job.jobLocation}
                 </Typography>
               </Stack>
 
               <Stack direction="row">
                 <EuroOutlinedIcon />
                 <Typography marginLeft={0.5} noWrap>
-                  €20000 - €25000 per annum
+                  {job.jobSalary}
                 </Typography>
               </Stack>
               <Stack direction="row">
                 <BusinessOutlinedIcon />
                 <Typography marginLeft={0.5} noWrap>
-                  Google
+                  {job.jobCompany}
                 </Typography>
               </Stack>
             </CardContent>
