@@ -35,14 +35,22 @@ export function AddJob() {
   const [jobSalary, setJobSalary] = useState<string>("");
   const [jobDescription, setJobDescription] = useState<string>("");
 
+  const fields = {
+    jobTitle: "jobTitle",
+    jobDescription: "jobDescription",
+    jobLocation: "jobLocation",
+    jobCompany: "jobCompany",
+    jobSalary: "jobSalary",
+  };
+
   const inputRefs = useMemo(
     () =>
       new Map([
-        ["jobTitle", jobTitleRef],
-        ["jobDescription", jobDescriptionRef],
-        ["jobLocation", jobLocationRef],
-        ["jobCompany", jobCompanyRef],
-        ["jobSalary", jobSalaryRef],
+        [fields.jobTitle, jobTitleRef],
+        [fields.jobDescription, jobDescriptionRef],
+        [fields.jobLocation, jobLocationRef],
+        [fields.jobCompany, jobCompanyRef],
+        [fields.jobSalary, jobSalaryRef],
       ]),
     []
   );
@@ -157,11 +165,13 @@ export function AddJob() {
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 setJobTitle(event.target.value);
               }}
-              error={!jobTitleIsValid && status?.get("jobTitle")?.isTouched}
+              error={
+                !jobTitleIsValid && status?.get(fields.jobTitle)?.isTouched
+              }
               helperText={
                 !jobTitleIsValid &&
-                (status?.get("jobTitle")?.hasBeenFocused ||
-                  status?.get("jobTitle")?.isTouched) &&
+                (status?.get(fields.jobTitle)?.hasBeenFocused ||
+                  status?.get(fields.jobTitle)?.isTouched) &&
                 "Insert two or more characters"
               }
               sx={{ flexGrow: 1 }}
@@ -177,12 +187,13 @@ export function AddJob() {
                 setJobLocation(event.target.value);
               }}
               error={
-                !jobLocationIsValid && status?.get("jobLocation")?.isTouched
+                !jobLocationIsValid &&
+                status?.get(fields.jobLocation)?.isTouched
               }
               helperText={
                 !jobLocationIsValid &&
-                (status?.get("jobLocation")?.hasBeenFocused ||
-                  status?.get("jobLocation")?.isTouched) &&
+                (status?.get(fields.jobLocation)?.hasBeenFocused ||
+                  status?.get(fields.jobLocation)?.isTouched) &&
                 "Insert two or more characters"
               }
               sx={{ flexGrow: 1 }}
@@ -199,11 +210,13 @@ export function AddJob() {
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 setJobCompany(event.target.value);
               }}
-              error={!jobCompanyIsValid && status?.get("jobCompany")?.isTouched}
+              error={
+                !jobCompanyIsValid && status?.get(fields.jobCompany)?.isTouched
+              }
               helperText={
                 !jobCompanyIsValid &&
-                (status?.get("jobCompany")?.hasBeenFocused ||
-                  status?.get("jobCompany")?.isTouched) &&
+                (status?.get(fields.jobCompany)?.hasBeenFocused ||
+                  status?.get(fields.jobCompany)?.isTouched) &&
                 "Insert two or more characters"
               }
               sx={{ flexGrow: 1 }}
@@ -218,11 +231,13 @@ export function AddJob() {
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 setJobSalary(event.target.value);
               }}
-              error={!jobSalaryIsValid && status?.get("jobSalary")?.isTouched}
+              error={
+                !jobSalaryIsValid && status?.get(fields.jobSalary)?.isTouched
+              }
               helperText={
                 !jobSalaryIsValid &&
-                (status?.get("jobSalary")?.hasBeenFocused ||
-                  status?.get("jobSalary")?.isTouched) &&
+                (status?.get(fields.jobSalary)?.hasBeenFocused ||
+                  status?.get(fields.jobSalary)?.isTouched) &&
                 "Insert four or more characters"
               }
               sx={{ flexGrow: 1 }}
@@ -243,12 +258,12 @@ export function AddJob() {
               }}
               error={
                 !jobDescriptionIsValid &&
-                status?.get("jobDescription")?.isTouched
+                status?.get(fields.jobDescription)?.isTouched
               }
               helperText={
                 !jobDescriptionIsValid &&
-                (status?.get("jobDescription")?.hasBeenFocused ||
-                  status?.get("jobDescription")?.isTouched) &&
+                (status?.get(fields.jobDescription)?.hasBeenFocused ||
+                  status?.get(fields.jobDescription)?.isTouched) &&
                 "Insert two or more characters"
               }
               multiline
@@ -258,7 +273,7 @@ export function AddJob() {
 
           <Button
             type="submit"
-            // disabled={addJobInfo.isLoading || !isFormValid}
+            disabled={addJobInfo.isLoading || !isFormValid}
             variant="contained"
             color="primary">
             Add Job
