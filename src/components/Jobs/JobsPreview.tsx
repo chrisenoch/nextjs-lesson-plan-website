@@ -13,13 +13,15 @@ import {
   CardActions,
   Button,
   Box,
+  Skeleton,
+  CircularProgress,
 } from "@mui/material";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import EuroOutlinedIcon from "@mui/icons-material/EuroOutlined";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
+import { Circles, BallTriangle, TailSpin } from "react-loader-spinner";
 import { Masonry } from "@mui/lab";
-import { grey, orange } from "@mui/material/colors";
-import ColorFactory from "../Utils/ColorFactory";
+import AnimatedLoading from "./AnimatedLoading";
 
 export function JobsPreview({
   jobs,
@@ -44,7 +46,17 @@ export function JobsPreview({
   const isHydrated = useHydrated();
 
   if (!isHydrated) {
-    return "Loading ...";
+    return (
+      <Box display="flex" justifyContent={"center"}>
+        {/* <Skeleton variant="rectangular" width={"80vw"} height={"80vh"} /> */}
+        {/* <CircularProgress
+          thickness={2}
+          size="200px"
+          color="primary"></CircularProgress> */}
+        {/* <Box component="h1">Loading</Box> */}
+        <AnimatedLoading />
+      </Box>
+    );
   }
 
   //To do: Turn the jobs into links
@@ -157,18 +169,34 @@ export function JobsPreview({
           </Card>
         );
       });
-  return isLoading ? (
-    "Loading ..."
-  ) : isError ? (
-    "Error: There was a problem fetching the jobs. Please reload the page and try again."
-  ) : (
+
+  return (
     <Box display="flex" justifyContent={"center"}>
-      {/* width = cardWidth * 2 + gap */}
-      <Stack direction={"row"} flexWrap={"wrap"} gap={2} width="1016px">
-        <Masonry columns={2} spacing={2}>
-          {renderedJobs}
-        </Masonry>
-      </Stack>
+      <AnimatedLoading />
+      {/* <Skeleton variant="rectangular" width={"80vw"} height={"80vh"} /> */}
+      {/* <CircularProgress
+        thickness={2}
+        size="200px"
+        color="primary"></CircularProgress> */}
+      {/* <Box component="h1">Loading</Box> */}
+      {/* <h1>Loading</h1> */}
     </Box>
   );
+
+  // return isLoading ? (
+  //   <Box display="flex" justifyContent={"center"}>
+  //     <AnimatedLoading />
+  //   </Box>
+  // ) : isError ? (
+  //   "Error: There was a problem fetching the jobs. Please reload the page and try again."
+  // ) : (
+  //   <Box display="flex" justifyContent={"center"}>
+  //     {/* width = cardWidth * 2 + gap */}
+  //     <Stack direction={"row"} flexWrap={"wrap"} gap={2} width="1016px">
+  //       <Masonry columns={2} spacing={2}>
+  //         {renderedJobs}
+  //       </Masonry>
+  //     </Stack>
+  //   </Box>
+  // );
 }
