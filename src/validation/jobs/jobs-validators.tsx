@@ -1,16 +1,11 @@
 import { z } from "zod";
 import { getValidationStatuses, zodValidator } from "../zod-validator";
+import { AddedJob } from "@/models/types/Jobs/AddedJob";
 
 // Define validators here and import them into client and server components
 // to ensure client and server validation is always in sync
 
-export function isAddJobValid(addedJob: {
-  jobTitle: string;
-  jobDescription: string;
-  jobLocation: string;
-  jobCompany: string;
-  jobSalary: string;
-}) {
+export function isAddJobValid(addedJob: AddedJob) {
   const addedJobValidator = z.object({
     jobTitle: z.string().min(2),
     jobDescription: z.string().min(2),

@@ -17,7 +17,8 @@ import useClearFormOnSuccess from "@/customHooks/useClearFormOnSuccess";
 import useHideMessageOnNavAway from "@/customHooks/useHideMessageOnNavAway";
 import { isAddJobValid } from "@/validation/jobs/jobs-validators";
 import CurvedUnderlineTitle from "../CurvedUnderline";
-import { orange } from "@mui/material/colors";
+import { orange, red } from "@mui/material/colors";
+import NotificationBox from "../NotificationBox";
 
 export function AddJob() {
   console.log("add job rendered");
@@ -52,8 +53,15 @@ export function AddJob() {
         [fields.jobCompany, jobCompanyRef],
         [fields.jobSalary, jobSalaryRef],
       ]),
-    []
+    [
+      fields.jobCompany,
+      fields.jobDescription,
+      fields.jobLocation,
+      fields.jobSalary,
+      fields.jobTitle,
+    ]
   );
+  //To do Change inputrefs map for an object in useFormClientStatus so as to reduce code.
   const {
     elementsStatus: status,
     resetAll,
@@ -273,19 +281,19 @@ export function AddJob() {
 
           <Button
             type="submit"
-            disabled={addJobInfo.isLoading || !isFormValid}
+            // disabled={addJobInfo.isLoading || !isFormValid}
             variant="contained"
             color="primary">
             Add Job
           </Button>
           {!shouldHideMessage && addJobInfo.message && (
-            <Box
-              component="p"
-              color={addJobInfo.isError ? "error.main" : "success.main"}
-              aria-live="polite"
-              role="status">
-              {!shouldHideMessage && addJobInfo.message}
-            </Box>
+            <NotificationBox
+              message={addJobInfo.message}
+              sxOuterContainer={{
+                marginTop: 2,
+              }}
+              variant={addJobInfo.isError ? "error" : "success"}
+            />
           )}
         </Box>
       </Stack>

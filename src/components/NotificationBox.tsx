@@ -1,5 +1,6 @@
 import { setSXValues } from "@/component-functions/set-sx-values";
 import { Stack, Typography, Box, SxProps, Theme } from "@mui/material";
+import { blue, green, red } from "@mui/material/colors";
 
 export default function NotificationBox({
   title,
@@ -8,6 +9,7 @@ export default function NotificationBox({
   sxInnerContainer,
   sxTitle,
   sxMessage,
+  variant,
 }: {
   title?: string;
   message: string;
@@ -15,6 +17,7 @@ export default function NotificationBox({
   sxInnerContainer?: SxProps<Theme>;
   sxTitle?: SxProps<Theme>;
   sxMessage?: SxProps<Theme>;
+  variant?: "success" | "info" | "error";
 }) {
   const sxOuterContainerDefault: SxProps<Theme> = {
     maxWidth: "900px",
@@ -26,17 +29,53 @@ export default function NotificationBox({
     alignItems: "center",
     borderRadius: 4,
     border: "1px solid",
-    borderColor: "text.secondary",
+    borderColor: `${
+      variant === "error"
+        ? red[100]
+        : variant === "info"
+        ? blue[100]
+        : variant === "success"
+        ? green[100]
+        : "text.secondary"
+    }`,
+    backgroundColor: `${
+      variant === "error"
+        ? "#fff8f9"
+        : variant === "info"
+        ? "#f7fbfe"
+        : variant === "success"
+        ? green[50]
+        : "transparent"
+    }`,
+
     marginX: 2,
   };
 
   const sxTitleDefault: SxProps<Theme> = {
     marginTop: 2,
     marginX: 2,
+    color: `${
+      variant === "error"
+        ? red[800]
+        : variant === "info"
+        ? blue[800]
+        : variant === "success"
+        ? green[900]
+        : "inherit"
+    }`,
   };
 
   const sxMessageDefault: SxProps<Theme> = {
     marginX: 2,
+    color: `${
+      variant === "error"
+        ? red[800]
+        : variant === "info"
+        ? blue[800]
+        : variant === "success"
+        ? green[900]
+        : "inherit"
+    }`,
   };
 
   const {

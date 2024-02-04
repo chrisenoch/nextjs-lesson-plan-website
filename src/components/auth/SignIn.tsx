@@ -64,7 +64,7 @@ export function SignIn() {
   return (
     <>
       {isProtectedPage && (
-        <NotificationBox //To do: put this into Notification component as an option. E.g. error, primary, secondary, info, success.
+        <NotificationBox
           message={
             isMemberPage
               ? "You need to be a gold member and logged-in to view this page."
@@ -76,11 +76,10 @@ export function SignIn() {
             maxWidth: "600px",
           }}
           sxInnerContainer={{
-            borderColor: blue[100],
-            backgroundColor: "#f7fbfe",
             paddingY: 2,
           }}
-          sxMessage={{ color: blue[800], fontSize: "large" }}
+          sxMessage={{ fontSize: "large" }}
+          variant="info"
         />
       )}
 
@@ -145,16 +144,12 @@ export function SignIn() {
             </LoadingButton>
           )}
           {!shouldHideMessage && userLoginInfo.isError && (
-            <NotificationBox //To do: put this into Notification component as an option. E.g. error, primary, secondary, info, success.
+            <NotificationBox
               message={userLoginInfo.message}
               sxOuterContainer={{
                 marginTop: 2,
               }}
-              sxInnerContainer={{
-                borderColor: red[100],
-                backgroundColor: "#fff8f9",
-              }}
-              sxMessage={{ color: red[800] }}
+              variant="error"
             />
           )}
         </Box>
