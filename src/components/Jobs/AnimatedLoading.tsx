@@ -1,29 +1,17 @@
-import { Box } from "@mui/material";
+import { Box, styled } from "@mui/material";
 import ColorFactory from "../Utils/ColorFactory";
-import { purple } from "@mui/material/colors";
+import { orange, pink, purple } from "@mui/material/colors";
+import { FaCog } from "react-icons/fa";
 
 export default function AnimatedLoading() {
+  const FaCogStyled = styled(FaCog, {
+    name: "MuiPath", // The component name
+    slot: "root", // The slot name
+  })({});
+
   return (
     <ColorFactory primary={purple[50]}>
       <Box position="relative" height="400px" width="400px">
-        <Box
-          height="400px"
-          width="400px"
-          sx={{
-            zIndex: 2000,
-            position: "absolute",
-            backgroundColor: "primary.main",
-            borderRadius: "30%",
-            animation: "spin 5s linear infinite",
-            "@keyframes spin": {
-              from: {
-                transform: "rotate(0deg)",
-              },
-              to: {
-                transform: "rotate(360deg)",
-              },
-            },
-          }}></Box>
         <Box
           sx={{
             zIndex: 2001,
@@ -32,12 +20,39 @@ export default function AnimatedLoading() {
             left: "50%",
             transform: "translate(-50%, -50%)",
           }}>
-          <Box
+          <FaCogStyled
             sx={{
-              fontSize: "40px",
-            }}>
-            Loading
-          </Box>
+              height: "400px",
+              width: "400px",
+              animation:
+                "spin 7s linear infinite,change-color 3s linear infinite",
+
+              "@keyframes spin": {
+                from: {
+                  transform: "rotate(0deg)",
+                },
+                to: {
+                  transform: "rotate(360deg)",
+                },
+              },
+              "@keyframes change-color": {
+                "0%": {
+                  color: purple[100],
+                  opacity: "50%",
+                },
+
+                "50%": {
+                  color: pink[100],
+                  opacity: "50%",
+                },
+
+                "100%": {
+                  color: purple[100],
+                  opacity: "50%",
+                },
+              },
+            }}
+          />
         </Box>
       </Box>
     </ColorFactory>
