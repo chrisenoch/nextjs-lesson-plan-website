@@ -1,4 +1,4 @@
-import CurvedUnderlineTitle from "@/components/CurvedUnderline";
+import CurvedUnderlineTitle from "@/components/Presentation/CurvedUnderline";
 import { AllJobs } from "@/components/Jobs/AllJobs";
 import { Stack } from "@mui/material";
 import { orange } from "@mui/material/colors";

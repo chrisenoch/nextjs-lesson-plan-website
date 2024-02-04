@@ -16,7 +16,7 @@ import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 import useClearFormOnSuccess from "@/customHooks/useClearFormOnSuccess";
 import useHideMessageOnNavAway from "@/customHooks/useHideMessageOnNavAway";
 import { isAddJobValid } from "@/validation/jobs/jobs-validators";
-import CurvedUnderlineTitle from "../CurvedUnderline";
+import CurvedUnderlineTitle from "../Presentation/CurvedUnderline";
 import { orange, red } from "@mui/material/colors";
 import NotificationBox from "../NotificationBox";
 

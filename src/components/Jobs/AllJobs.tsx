@@ -15,7 +15,15 @@ export function AllJobs() {
   } = useSelector(selectFetchJobs);
 
   const jobs:
-    | { id: string; jobTitle: string; jobDescription: string; userId: string }[]
+    | {
+        id: string;
+        jobTitle: string;
+        jobDescription: string;
+        jobLocation: string;
+        jobCompany: string;
+        jobSalary: string;
+        userId: string;
+      }[]
     | undefined = useSelector(selectAllJobs);
 
   return (

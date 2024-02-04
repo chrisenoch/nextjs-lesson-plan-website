@@ -14,7 +14,7 @@ import { LoadingButton } from "@mui/lab";
 import { LoginStatus } from "@/models/types/Auth/LoginStatus";
 import NotificationBox from "../NotificationBox";
 import { red } from "@mui/material/colors";
-import CurvedUnderlineTitle from "../CurvedUnderline";
+import CurvedUnderlineTitle from "../Presentation/CurvedUnderline";
 import { orange, blue } from "@mui/material/colors";
 
 export function SignIn() {
