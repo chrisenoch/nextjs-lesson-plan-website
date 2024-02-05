@@ -20,6 +20,7 @@ import { getBookmakedLessonPlanIds } from "@/component-functions/get-bookmarked-
 import NotificationBox from "../NotificationBox";
 import { LessonPlanCategory } from "@/models/types/LessonPlans/LessonPlanCategory";
 import LoadingSpinner from "../Presentation/LoadingSpinner";
+import { StandardResponseInfo } from "@/models/types/DataFetching/StandardResponseInfo";
 
 export default function DisplayLessonPlanBookmarks({
   lessonPlans,
@@ -39,12 +40,8 @@ export default function DisplayLessonPlanBookmarks({
     userId: string;
     lessonPlanId: string;
   }[] = useSelector(selectAllBookmarks);
-  const fetchBookMarks: {
-    isError: boolean;
-    isLoading: boolean;
-    message: string;
-    statusCode: null | number;
-  } = useSelector(selectFetchBookmarks);
+  const fetchBookMarksStatus: StandardResponseInfo =
+    useSelector(selectFetchBookmarks);
 
   const loginStatus: LoginStatus = useSelector(selectLoginStatus);
 
@@ -59,7 +56,7 @@ export default function DisplayLessonPlanBookmarks({
   );
 
   //Set here because bookmarks are not ready until they have both loaded and getBookmakedLessonPlanIds# has run.
-  if (!fetchBookMarks.isLoading) {
+  if (!fetchBookMarksStatus.isLoading) {
     areBookmarksReady = true;
   }
 
@@ -91,7 +88,7 @@ export default function DisplayLessonPlanBookmarks({
       </Grid>
     ));
 
-  if (fetchBookMarks.isLoading) {
+  if (fetchBookMarksStatus.isLoading) {
     return (
       <Box display="flex" justifyContent={"center"}>
         <LoadingSpinner />

@@ -18,6 +18,7 @@ import CurvedUnderlineTitle from "../Presentation/CurvedUnderline";
 import { orange, blue } from "@mui/material/colors";
 import LoadingSpinner from "../Presentation/LoadingSpinner";
 import { useHydrated } from "@/customHooks/useHydrated";
+import { StandardResponseInfo } from "@/models/types/DataFetching/StandardResponseInfo";
 
 export function SignIn() {
   const loginStatus: LoginStatus = useSelector(selectLoginStatus);
@@ -28,12 +29,7 @@ export function SignIn() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const userLoginInfo: {
-    isError: boolean;
-    isLoading: boolean;
-    message: string;
-    statusCode: null | number;
-  } = useSelector(selectUserLogin);
+  const userLoginStatus: StandardResponseInfo = useSelector(selectUserLogin);
 
   let isProtectedPage = false;
   if (searchParams.get("redirect")) {
@@ -44,7 +40,7 @@ export function SignIn() {
     isMemberPage = true;
   }
 
-  const shouldHideMessage = useHideMessageOnNavAway(userLoginInfo);
+  const shouldHideMessage = useHideMessageOnNavAway(userLoginStatus);
 
   const isHydrated = useHydrated();
 
@@ -137,12 +133,12 @@ export function SignIn() {
             }}
           />
 
-          {!userLoginInfo.isLoading && (
+          {!userLoginStatus.isLoading && (
             <Button type="submit" variant="contained">
               Submit
             </Button>
           )}
-          {userLoginInfo.isLoading && (
+          {userLoginStatus.isLoading && (
             <LoadingButton
               key={"loading-placeholder"}
               loading
@@ -151,9 +147,9 @@ export function SignIn() {
               Submit
             </LoadingButton>
           )}
-          {!shouldHideMessage && userLoginInfo.isError && (
+          {!shouldHideMessage && userLoginStatus.isError && (
             <NotificationBox
-              message={userLoginInfo.message}
+              message={userLoginStatus.message}
               sxOuterContainer={{
                 marginTop: 2,
               }}

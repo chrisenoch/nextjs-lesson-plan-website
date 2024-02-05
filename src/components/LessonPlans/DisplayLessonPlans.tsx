@@ -18,6 +18,7 @@ import { LoginStatus } from "@/models/types/Auth/LoginStatus";
 import { getBookmakedLessonPlanIds } from "@/component-functions/get-bookmarked-lessonplan-ids";
 import NotificationBox from "../NotificationBox";
 import { LessonPlanCategory } from "@/models/types/LessonPlans/LessonPlanCategory";
+import { StandardResponseInfo } from "@/models/types/DataFetching/StandardResponseInfo";
 
 export default function DisplayLessonplans({
   lessonPlans,
@@ -37,15 +38,11 @@ export default function DisplayLessonplans({
     userId: string;
     lessonPlanId: string;
   }[] = useSelector(selectAllBookmarks);
-  const fetchBookMarks: {
-    isError: boolean;
-    isLoading: boolean;
-    message: string;
-    statusCode: null | number;
-  } = useSelector(selectFetchBookmarks);
+  const fetchBookMarksStatus: StandardResponseInfo =
+    useSelector(selectFetchBookmarks);
 
   console.log("fetchBookmarks in DisplayLessonPlans ");
-  console.log(fetchBookMarks);
+  console.log(fetchBookMarksStatus);
 
   const loginStatus: LoginStatus = useSelector(selectLoginStatus);
 
@@ -60,7 +57,7 @@ export default function DisplayLessonplans({
   );
 
   //Set here because bookmarks are not ready until they have both loaded and getBookmakedLessonPlanIds# has run.
-  if (!fetchBookMarks.isLoading) {
+  if (!fetchBookMarksStatus.isLoading) {
     areBookmarksReady = true;
   }
 
