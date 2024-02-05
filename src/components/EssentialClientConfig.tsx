@@ -1,10 +1,10 @@
 "use client";
 
 import useAutoLogoutWhenJwtTokenExpires from "@/customHooks/useAutoLogoutWhenJwtTokenExpires";
-import { AppDispatch, getAccessTokenWithRefreshTokenOnAppMount } from "@/store";
+import { getAccessTokenWithRefreshTokenOnAppMount } from "@/store";
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { LogoutWarning } from "./Auth/LogoutWarning";
+import { useAppDispatch } from "@/store/hooks";
 
 export default function EssentialClientConfig({
   children,
@@ -12,7 +12,7 @@ export default function EssentialClientConfig({
   children: React.ReactNode;
 }) {
   console.log("EssentialClientConfig mounts");
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   //useAutoLogout(1_800_000);
   const renderModal = useAutoLogoutWhenJwtTokenExpires(10_000); //240_000 - 4 mins // 30_000 - 30 secs //10_000 - 10 secs
   const [previousRenderModal, setPreviousRenderModal] = useState<{

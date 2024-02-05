@@ -5,19 +5,19 @@ import {
   userLogout,
   selectLoginStatus,
 } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
 
 export default function useAutoLogoutWhenJwtTokenExpires(
   timeBeforeAccessTokenExpiryToSendRefreshToken: number
 ) {
   console.log("useAutoLogoutWhenJwtTokenExpires renders");
-  const loginStatus: LoginStatus = useSelector(selectLoginStatus);
-  const { userInfo, wasLastRefreshSuccessful, wasLastRefresh } = useSelector(
+  const loginStatus: LoginStatus = useAppSelector(selectLoginStatus);
+  const { userInfo, wasLastRefreshSuccessful, wasLastRefresh } = useAppSelector(
     (state) => state.authSlice
   );
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const refreshTokenTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(
     null
   );

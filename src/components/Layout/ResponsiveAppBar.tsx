@@ -22,7 +22,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useState } from "react";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, selectLoginStatus, userLogout } from "@/store";
 import SecureNextLink from "../Utils/SecureNextLink";
 import InSecureNextLink from "next/link";
@@ -32,6 +31,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import LoginIcon from "@mui/icons-material/Login";
 import CloseIcon from "@mui/icons-material/Close";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 export default function ResponsiveAppBar({
   drawerWidth,
@@ -49,8 +49,8 @@ export default function ResponsiveAppBar({
   navBarItems: { title: string; href: string }[];
 }) {
   console.log("Responsive AppBar mounts");
-  const loginStatus: LoginStatus = useSelector(selectLoginStatus);
-  const dispatch = useDispatch<AppDispatch>();
+  const loginStatus: LoginStatus = useAppSelector(selectLoginStatus);
+  const dispatch = useAppDispatch();
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const handleDrawerToggle = () => {
