@@ -66,8 +66,6 @@ export default function LessonPlancardBookmarkButton({
     } else {
       bookmarkButton = null;
     }
-    console.log("value of bookmark button");
-    console.log(bookmarkButton);
     return bookmarkButton;
   }
 }
