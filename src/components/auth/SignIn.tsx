@@ -6,7 +6,7 @@ import {
   userLogin,
 } from "@/store";
 import { Box, TextField, Button, Stack, Alert } from "@mui/material";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { redirect, useSearchParams } from "next/navigation";
 import useHideMessageOnNavAway from "@/customHooks/useHideMessageOnNavAway";
@@ -44,7 +44,7 @@ export function SignIn() {
 
   const isHydrated = useHydrated();
 
-  function handleSubmit(e) {
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     dispatch(userLogin({ email, password }));
   }
