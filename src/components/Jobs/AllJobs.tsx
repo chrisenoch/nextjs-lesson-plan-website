@@ -3,6 +3,7 @@
 import { useSelector } from "react-redux";
 import { selectAllJobs, selectFetchJobs } from "@/store";
 import { JobsPreview } from "./JobsPreview";
+import { Job } from "@/models/types/Jobs/Jobs";
 
 export function AllJobs() {
   console.log("all jobs rendered");
@@ -14,17 +15,7 @@ export function AllJobs() {
     statusCode: null | number;
   } = useSelector(selectFetchJobs);
 
-  const jobs:
-    | {
-        id: string;
-        jobTitle: string;
-        jobDescription: string;
-        jobLocation: string;
-        jobCompany: string;
-        jobSalary: string;
-        userId: string;
-      }[]
-    | undefined = useSelector(selectAllJobs);
+  const jobs: Job[] | undefined = useSelector(selectAllJobs);
 
   return (
     <JobsPreview
