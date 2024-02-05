@@ -6,7 +6,11 @@ import {
   getAccessTokenWithRefreshToken,
   getAccessTokenWithRefreshTokenOnAppMount,
 } from "./auth-thunks";
-import { UserInfo } from "@/models/types/Auth/UserInfo";
+import {
+  UserInfo,
+  UserLoginPayload,
+  UserRefreshPayload,
+} from "@/models/types/Auth/UserInfo";
 import {
   handleFulfilled,
   handlePending,
@@ -179,7 +183,10 @@ const authSlice = createSlice({
   },
 });
 
-function handleRefreshState(action, state: AuthSliceState) {
+function handleRefreshState(
+  action: PayloadAction<UserRefreshPayload>,
+  state: AuthSliceState
+) {
   if (!action.payload.isError) {
     console.log("action.payload in handleRefreshState");
     console.log(action.payload);
@@ -203,7 +210,10 @@ function handleRefreshState(action, state: AuthSliceState) {
   }
 }
 
-function setUserInfoFromLoggedInStatus(action, state: AuthSliceState) {
+function setUserInfoFromLoggedInStatus(
+  action: PayloadAction<UserLoginPayload>,
+  state: AuthSliceState
+) {
   console.log("in setUserInfoFromLoggedInStatus");
   console.log("action.payload in setUserInfoFromLoggedInStatus");
   console.log(action.payload);
