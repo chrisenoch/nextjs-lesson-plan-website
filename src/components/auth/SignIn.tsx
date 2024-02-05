@@ -16,6 +16,7 @@ import NotificationBox from "../NotificationBox";
 import { red } from "@mui/material/colors";
 import CurvedUnderlineTitle from "../Presentation/CurvedUnderline";
 import { orange, blue } from "@mui/material/colors";
+import LoadingSpinner from "../Presentation/LoadingSpinner";
 
 export function SignIn() {
   const loginStatus: LoginStatus = useSelector(selectLoginStatus);
@@ -50,7 +51,11 @@ export function SignIn() {
   }
 
   if (loginStatus === "LOGIN_NOT_PROCESSED") {
-    return <h1>Loading ...</h1>;
+    return (
+      <Box display="flex" justifyContent={"center"}>
+        <LoadingSpinner />
+      </Box>
+    );
   }
 
   if (loginStatus === "LOGGED_IN") {

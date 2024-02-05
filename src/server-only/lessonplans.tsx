@@ -7,7 +7,7 @@ export async function fetchLessonPlans() {
   } catch {
     lessonPlans = [];
   } finally {
-    //await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
   }
   return lessonPlans;
 }
