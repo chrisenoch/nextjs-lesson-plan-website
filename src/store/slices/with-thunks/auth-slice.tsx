@@ -6,11 +6,7 @@ import {
   getAccessTokenWithRefreshToken,
   getAccessTokenWithRefreshTokenOnAppMount,
 } from "./auth-thunks";
-import {
-  UserInfo,
-  UserLoginPayload,
-  UserRefreshPayload,
-} from "@/models/types/Auth/UserInfo";
+import { UserInfo } from "@/models/types/Auth/UserInfo";
 import {
   handleFulfilled,
   handlePending,
@@ -20,6 +16,10 @@ import { LoginStatus } from "@/models/types/Auth/LoginStatus";
 import { StandardResponseInfo } from "@/models/types/DataFetching/StandardResponseInfo";
 import { AuthSliceState } from "@/models/types/Slices/AuthSlice";
 import { RootState } from "@/store";
+import {
+  UserLoginPayload,
+  UserRefreshPayload,
+} from "@/models/types/Auth/AuthPayloads";
 
 const initialState: {
   userInfo: UserInfo | null;
@@ -188,11 +188,7 @@ function handleRefreshState(
   state: AuthSliceState
 ) {
   if (!action.payload.isError) {
-    console.log("action.payload in handleRefreshState");
-    console.log(action.payload);
     const { message, status, isError, ...userInfo } = action.payload;
-    console.log("userInfo in handleRefreshState after props removed");
-    console.log(userInfo);
     state.userInfo = userInfo;
     state.loginStatus = "LOGGED_IN";
     state.wasLastRefreshSuccessful = true;
@@ -214,15 +210,8 @@ function setUserInfoFromLoggedInStatus(
   action: PayloadAction<UserLoginPayload>,
   state: AuthSliceState
 ) {
-  console.log("in setUserInfoFromLoggedInStatus");
-  console.log("action.payload in setUserInfoFromLoggedInStatus");
-  console.log(action.payload);
   if (!action.payload.isError) {
     const { message, status, isError, ...userInfo } = action.payload;
-    console.log(
-      "userInfo in setUserInfoFromLoggedInStatus after props removed"
-    );
-    console.log(userInfo);
     state.userInfo = userInfo;
     state.loginStatus = "LOGGED_IN";
     state.wasLastRefreshSuccessful = null;
