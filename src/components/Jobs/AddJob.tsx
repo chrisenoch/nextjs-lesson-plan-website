@@ -1,10 +1,8 @@
 "use client";
 import { Box, TextField, Button, Stack, Skeleton } from "@mui/material";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import useFormClientStatus from "@/customHooks/useFormClientStatus";
-import { useDispatch, useSelector } from "react-redux";
 import {
-  AppDispatch,
   addJob,
   deleteJob,
   selectAddJob,
@@ -20,6 +18,8 @@ import CurvedUnderlineTitle from "../Presentation/CurvedUnderline";
 import { orange, red } from "@mui/material/colors";
 import NotificationBox from "../NotificationBox";
 import { StandardResponseInfo } from "@/models/types/DataFetching/StandardResponseInfo";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { Job } from "@/models/types/Jobs/Jobs";
 
 export function AddJob() {
   console.log("add job rendered");
@@ -69,21 +69,11 @@ export function AddJob() {
     setAllToTouched,
   } = useFormClientStatus(inputRefs);
 
-  const dispatch = useDispatch<AppDispatch>();
-  const addJobStatus: StandardResponseInfo = useSelector(selectAddJob);
-  const fetchJobsStatus: StandardResponseInfo = useSelector(selectFetchJobs);
+  const dispatch = useAppDispatch();
+  const addJobStatus: StandardResponseInfo = useAppSelector(selectAddJob);
+  const fetchJobsStatus: StandardResponseInfo = useAppSelector(selectFetchJobs);
 
-  const jobs:
-    | {
-        id: string;
-        jobTitle: string;
-        jobDescription: string;
-        jobLocation: string;
-        jobCompany: string;
-        jobSalary: string;
-        userId: string;
-      }[]
-    | undefined = useSelector(selectJobsByUserId);
+  const jobs: Job[] | undefined = useAppSelector(selectJobsByUserId);
 
   useClearFormOnSuccess(addJobStatus, clearForm);
   const shouldHideMessage = useHideMessageOnNavAway(addJobStatus);
@@ -103,7 +93,7 @@ export function AddJob() {
     jobSalary,
   });
 
-  function handleSubmit(e) {
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setAllToTouched();
     dispatch(
@@ -111,7 +101,7 @@ export function AddJob() {
     );
   }
 
-  function handleJobDelete(id: string) {
+  function handleJobDelete(id: number) {
     dispatch(deleteJob(id));
   }
 

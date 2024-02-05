@@ -121,7 +121,7 @@ export const fetchJobs = createAsyncThunk(
 
 export const deleteJob = createAsyncThunk(
   "jobsSlice/delete-job",
-  async (id: string, { rejectWithValue }) => {
+  async (id: number, { rejectWithValue }) => {
     try {
       const response = await fetch(`http://localhost:3000/api/jobs`, {
         method: "DELETE",
