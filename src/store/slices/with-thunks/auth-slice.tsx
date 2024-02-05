@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import {
   userLogin,
   userLogout,
@@ -12,6 +12,8 @@ import {
   handleRejected,
 } from "./thunk-helpers";
 import { LoginStatus } from "@/models/types/Auth/LoginStatus";
+import { StandardResponseInfo } from "@/models/types/DataFetching/StandardResponseInfo";
+import { AuthSliceState } from "@/models/types/Slices/AuthSlice";
 
 const initialState: {
   userInfo: UserInfo | null;
@@ -20,33 +22,10 @@ const initialState: {
   wasLastRefresh: boolean;
   logoutCount: number;
 
-  userLogin: {
-    isError: boolean;
-    isLoading: boolean;
-    message: string;
-    statusCode: null | number;
-  };
-
-  userLogout: {
-    isError: boolean;
-    isLoading: boolean;
-    message: string;
-    statusCode: null | number;
-  };
-
-  getAccessTokenWithRefreshToken: {
-    isError: boolean;
-    isLoading: boolean;
-    message: string;
-    statusCode: null | number;
-  };
-
-  getAccessTokenWithRefreshTokenOnAppMount: {
-    isError: boolean;
-    isLoading: boolean;
-    message: string;
-    statusCode: null | number;
-  };
+  userLogin: StandardResponseInfo;
+  userLogout: StandardResponseInfo;
+  getAccessTokenWithRefreshToken: StandardResponseInfo;
+  getAccessTokenWithRefreshTokenOnAppMount: StandardResponseInfo;
 } = {
   userInfo: null,
   loginStatus: "LOGIN_NOT_PROCESSED",
@@ -199,7 +178,7 @@ const authSlice = createSlice({
   },
 });
 
-function handleRefreshState(action, state) {
+function handleRefreshState(action, state: AuthSliceState) {
   if (!action.payload.isError) {
     const { message, status, isError, ...userInfo } = action.payload;
     state.userInfo = userInfo;
@@ -219,7 +198,7 @@ function handleRefreshState(action, state) {
   }
 }
 
-function setUserInfoFromLoggedInStatus(action, state) {
+function setUserInfoFromLoggedInStatus(action, state: AuthSliceState) {
   console.log("in setUserInfoFromLoggedInStatus");
   if (!action.payload.isError) {
     const { message, status, isError, ...userInfo } = action.payload;

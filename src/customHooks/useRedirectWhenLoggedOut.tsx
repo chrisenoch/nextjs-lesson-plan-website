@@ -1,8 +1,5 @@
 import { LoginStatus } from "@/models/types/Auth/LoginStatus";
-import {
-  selectLoginStatus,
-  selectLogoutCount,
-} from "@/store/slices/with-thunks/auth-slice";
+import { selectLoginStatus } from "@/store/slices/with-thunks/auth-slice";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
