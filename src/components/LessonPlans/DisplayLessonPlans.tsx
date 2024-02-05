@@ -37,12 +37,15 @@ export default function DisplayLessonplans({
     userId: string;
     lessonPlanId: string;
   }[] = useSelector(selectAllBookmarks);
-  const fetchBookMarks: null | {
+  const fetchBookMarks: {
     isError: boolean;
     isLoading: boolean;
     message: string;
     statusCode: null | number;
   } = useSelector(selectFetchBookmarks);
+
+  console.log("fetchBookmarks in DisplayLessonPlans ");
+  console.log(fetchBookMarks);
 
   const loginStatus: LoginStatus = useSelector(selectLoginStatus);
 
@@ -57,7 +60,7 @@ export default function DisplayLessonplans({
   );
 
   //Set here because bookmarks are not ready until they have both loaded and getBookmakedLessonPlanIds# has run.
-  if (!fetchBookMarks?.isLoading) {
+  if (!fetchBookMarks.isLoading) {
     areBookmarksReady = true;
   }
 

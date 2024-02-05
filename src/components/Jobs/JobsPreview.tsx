@@ -1,14 +1,24 @@
 "use client";
 
 import { useHydrated } from "@/customHooks/useHydrated";
-import { Delete } from "@mui/icons-material";
+import InSecureNextLink from "next/link";
+import { ArrowForward, Delete } from "@mui/icons-material";
 import {
   Card,
   CardContent,
   Typography,
   CardHeader,
   IconButton,
+  Stack,
+  CardActions,
+  Button,
+  Box,
 } from "@mui/material";
+import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
+import EuroOutlinedIcon from "@mui/icons-material/EuroOutlined";
+import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
+import { Masonry } from "@mui/lab";
+import LoadingSpinner from "../Presentation/LoadingSpinner";
 
 export function JobsPreview({
   jobs,
@@ -16,7 +26,16 @@ export function JobsPreview({
   isError,
   handleJobDelete,
 }: {
-  jobs: { id: string; jobTitle: string; jobDescription: string }[] | undefined;
+  jobs:
+    | {
+        id: string;
+        jobTitle: string;
+        jobDescription: string;
+        jobLocation: string;
+        jobCompany: string;
+        jobSalary: string;
+      }[]
+    | undefined;
   isLoading: boolean;
   isError: boolean;
   handleJobDelete?: (id: string) => void;
@@ -24,7 +43,11 @@ export function JobsPreview({
   const isHydrated = useHydrated();
 
   if (!isHydrated) {
-    return "Loading ...";
+    return (
+      <Box display="flex" justifyContent={"center"}>
+        <LoadingSpinner />
+      </Box>
+    );
   }
 
   //To do: Turn the jobs into links
@@ -32,37 +55,126 @@ export function JobsPreview({
     ? []
     : jobs.map((job) => {
         return (
-          <Card sx={{ mb: 1, maxWidth: 400, minWidth: 300 }} key={job.id}>
+          <Card
+            sx={{
+              mb: 1,
+              width: "500px",
+              height: "fit-content",
+              border: "1px solid #c4ddf0",
+              borderRadius: 4,
+            }}
+            key={job.id}>
             <CardHeader
-              action={
-                !handleJobDelete ? null : (
-                  <IconButton
-                    onClick={() => handleJobDelete(job.id)}
-                    aria-label="delete-job">
-                    <Delete />
-                  </IconButton>
-                )
-              }
-              // action={
-              //   <IconButton
-              //     onClick={() => handleJobDelete(job.id)}
-              //     aria-label="delete-job">
-              //     <Delete />
-              //   </IconButton>
-              // }
+              color="primary"
+              sx={{
+                "& .MuiCardHeader-title": {
+                  backgroundColor: "#dff3d7",
+                  display: "inline-block",
+                  padding: 1,
+                  borderRadius: 4,
+                },
+              }}
               title={job.jobTitle}
             />
-            <CardContent>
-              <Typography variant="body2">{job.jobDescription}</Typography>
+            <CardContent
+              sx={{
+                display: "flex",
+                gap: 2,
+                paddingTop: 0,
+                flexWrap: "wrap",
+                marginTop: 0.5,
+              }}>
+              <Stack direction="row">
+                <BusinessOutlinedIcon />
+                <Typography marginLeft={0.5} noWrap>
+                  {job.jobCompany}
+                </Typography>
+              </Stack>
+              <Stack direction="row">
+                <PlaceOutlinedIcon />
+                <Typography marginLeft={0.5} noWrap>
+                  {job.jobLocation}
+                </Typography>
+              </Stack>
+
+              <Stack direction="row">
+                <EuroOutlinedIcon />
+                <Typography marginLeft={0.5} noWrap>
+                  {job.jobSalary}
+                </Typography>
+              </Stack>
+              {/* <Stack
+                direction="row"
+                sx={{
+                  backgroundColor: orange[50],
+                  paddingX: 1,
+                  borderRadius: 1,
+                }}>
+                <BusinessOutlinedIcon />
+                <Typography marginLeft={0.5} noWrap>
+                  {job.jobCompany}
+                </Typography>
+              </Stack> */}
             </CardContent>
+
+            <CardContent>
+              <Typography
+                paragraph
+                sx={{
+                  color: "text.secondary",
+                  fontSize: "0.9375rem",
+                  marginBottom: 0,
+                }}>
+                {job.jobDescription}
+              </Typography>
+            </CardContent>
+            <CardActions
+              sx={{
+                paddingX: 2,
+                paddingBottom: 2,
+                justifyContent: "space-between",
+              }}>
+              <Button
+                href={`#`}
+                color="secondary"
+                variant={"text"}
+                size="large"
+                startIcon={<ArrowForward />}
+                component={InSecureNextLink}
+                sx={{
+                  marginRight: 1,
+                }}>
+                View
+              </Button>
+
+              {handleJobDelete && (
+                <IconButton
+                  onClick={() => {
+                    handleJobDelete(job.id);
+                  }}
+                  aria-label="delete">
+                  <Delete />
+                </IconButton>
+              )}
+            </CardActions>
           </Card>
         );
       });
+
   return isLoading ? (
-    "Loading ..."
+    <Box display="flex" justifyContent={"center"}>
+      <LoadingSpinner />
+    </Box>
   ) : isError ? (
     "Error: There was a problem fetching the jobs. Please reload the page and try again."
   ) : (
-    <div>{renderedJobs}</div>
+    <Box display="flex" justifyContent={"center"}>
+      {/* width = cardWidth * 2 + gap */}
+      <Stack direction={"row"} flexWrap={"wrap"} gap={2} width="1016px">
+        <Masonry columns={2} spacing={2}>
+          {renderedJobs}
+        </Masonry>
+      </Stack>
+    </Box>
   );
 }

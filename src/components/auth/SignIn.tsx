@@ -14,7 +14,7 @@ import { LoadingButton } from "@mui/lab";
 import { LoginStatus } from "@/models/types/Auth/LoginStatus";
 import NotificationBox from "../NotificationBox";
 import { red } from "@mui/material/colors";
-import CurvedUnderlineTitle from "../CurvedUnderline";
+import CurvedUnderlineTitle from "../Presentation/CurvedUnderline";
 import { orange, blue } from "@mui/material/colors";
 
 export function SignIn() {
@@ -26,7 +26,7 @@ export function SignIn() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const userLoginInfo: null | {
+  const userLoginInfo: {
     isError: boolean;
     isLoading: boolean;
     message: string;
@@ -64,7 +64,7 @@ export function SignIn() {
   return (
     <>
       {isProtectedPage && (
-        <NotificationBox //To do: put this into Notification component as an option. E.g. error, primary, secondary, info, success.
+        <NotificationBox
           message={
             isMemberPage
               ? "You need to be a gold member and logged-in to view this page."
@@ -76,11 +76,10 @@ export function SignIn() {
             maxWidth: "600px",
           }}
           sxInnerContainer={{
-            borderColor: blue[100],
-            backgroundColor: "#f7fbfe",
             paddingY: 2,
           }}
-          sxMessage={{ color: blue[800], fontSize: "large" }}
+          sxMessage={{ fontSize: "large" }}
+          variant="info"
         />
       )}
 
@@ -130,12 +129,12 @@ export function SignIn() {
             }}
           />
 
-          {!userLoginInfo?.isLoading && (
+          {!userLoginInfo.isLoading && (
             <Button type="submit" variant="contained">
               Submit
             </Button>
           )}
-          {userLoginInfo?.isLoading && (
+          {userLoginInfo.isLoading && (
             <LoadingButton
               key={"loading-placeholder"}
               loading
@@ -144,17 +143,13 @@ export function SignIn() {
               Submit
             </LoadingButton>
           )}
-          {!shouldHideMessage && userLoginInfo?.isError && (
-            <NotificationBox //To do: put this into Notification component as an option. E.g. error, primary, secondary, info, success.
-              message={userLoginInfo?.message}
+          {!shouldHideMessage && userLoginInfo.isError && (
+            <NotificationBox
+              message={userLoginInfo.message}
               sxOuterContainer={{
                 marginTop: 2,
               }}
-              sxInnerContainer={{
-                borderColor: red[100],
-                backgroundColor: "#fff8f9",
-              }}
-              sxMessage={{ color: red[800] }}
+              variant="error"
             />
           )}
         </Box>

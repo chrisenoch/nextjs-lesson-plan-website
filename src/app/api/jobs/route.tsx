@@ -3,6 +3,7 @@ import { checkPermissions } from "@/server-only/auth/check-permissions";
 import { getAccessTokenInfo } from "@/server-only/auth/get-access-token-info";
 import { isAddJobValid } from "@/validation/jobs/jobs-validators";
 import { getUserIdOrErrorResponse } from "@/server-only/auth/get-userId-or-error-response";
+import { AddedJob } from "@/models/types/Jobs/AddedJob";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -39,7 +40,10 @@ export async function POST(request: NextRequest) {
   const {
     jobTitle,
     jobDescription,
-  }: { jobTitle: string; jobDescription: string } = await request.json();
+    jobLocation,
+    jobCompany,
+    jobSalary,
+  }: AddedJob = await request.json();
 
   //check user is logged in
   const userIdOrErrorResponse = await getUserIdOrErrorResponse({
@@ -55,7 +59,13 @@ export async function POST(request: NextRequest) {
     userId = userIdOrErrorResponse;
   }
 
-  const isFormValid = isAddJobValid(jobTitle, jobDescription);
+  const { isValid: isFormValid } = isAddJobValid({
+    jobTitle,
+    jobDescription,
+    jobLocation,
+    jobCompany,
+    jobSalary,
+  });
   if (!isFormValid) {
     return NextResponse.json(
       {
@@ -79,6 +89,9 @@ export async function POST(request: NextRequest) {
         userId,
         jobTitle,
         jobDescription,
+        jobLocation,
+        jobCompany,
+        jobSalary,
       }),
     });
     const job = await response.json();

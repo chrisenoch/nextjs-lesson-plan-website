@@ -16,7 +16,7 @@ import FloatingId from "@/components/Layout/FloatingId";
 import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 import { useMemo } from "react";
 import InsecureNextLink from "next/link";
-import CurvedUnderlineTitle from "../CurvedUnderline";
+import CurvedUnderlineTitle from "../Presentation/CurvedUnderline";
 import { orange } from "@mui/material/colors";
 import CircleIcon from "@mui/icons-material/Circle";
 

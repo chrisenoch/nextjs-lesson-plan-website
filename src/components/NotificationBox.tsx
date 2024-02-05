@@ -1,5 +1,6 @@
 import { setSXValues } from "@/component-functions/set-sx-values";
 import { Stack, Typography, Box, SxProps, Theme } from "@mui/material";
+import { blue, green, red } from "@mui/material/colors";
 
 export default function NotificationBox({
   title,
@@ -8,6 +9,7 @@ export default function NotificationBox({
   sxInnerContainer,
   sxTitle,
   sxMessage,
+  variant,
 }: {
   title?: string;
   message: string;
@@ -15,36 +17,67 @@ export default function NotificationBox({
   sxInnerContainer?: SxProps<Theme>;
   sxTitle?: SxProps<Theme>;
   sxMessage?: SxProps<Theme>;
+  variant?: "success" | "info" | "error";
 }) {
   const sxOuterContainerDefault: SxProps<Theme> = {
-    alignItems: "center",
     maxWidth: "900px",
-    width: "100%",
     mt: 3,
     mx: "auto",
   };
 
   const sxInnerContainerDefault: SxProps<Theme> = {
     alignItems: "center",
-    maxWidth: "90%",
-    width: "100%",
     borderRadius: 4,
     border: "1px solid",
-    borderColor: "text.secondary",
+    borderColor: `${
+      variant === "error"
+        ? red[100]
+        : variant === "info"
+        ? blue[100]
+        : variant === "success"
+        ? green[100]
+        : "text.secondary"
+    }`,
+    backgroundColor: `${
+      variant === "error"
+        ? "#fff8f9"
+        : variant === "info"
+        ? "#f7fbfe"
+        : variant === "success"
+        ? green[50]
+        : "transparent"
+    }`,
+
+    marginX: 2,
   };
 
   const sxTitleDefault: SxProps<Theme> = {
-    maxWidth: "90%",
-    display: "inline-block",
     marginTop: 2,
+    marginX: 2,
+    color: `${
+      variant === "error"
+        ? red[800]
+        : variant === "info"
+        ? blue[800]
+        : variant === "success"
+        ? green[900]
+        : "inherit"
+    }`,
   };
 
   const sxMessageDefault: SxProps<Theme> = {
-    maxWidth: "90%",
-    display: "inline-block",
+    marginX: 2,
+    color: `${
+      variant === "error"
+        ? red[800]
+        : variant === "info"
+        ? blue[800]
+        : variant === "success"
+        ? green[900]
+        : "inherit"
+    }`,
   };
 
-  //To do: Create a reusable function which sets sx props.
   const {
     sxOuterContainerFinal,
     sxInnerContainerFinal,
