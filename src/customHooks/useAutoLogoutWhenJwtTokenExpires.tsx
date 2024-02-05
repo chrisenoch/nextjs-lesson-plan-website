@@ -91,7 +91,7 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   //We cannot just rely on wasLastRefreshSuccessful because if we do this, then for a short time before logout,
   //requests will be sent non-stop to the refresh endpoint.
   useEffect(() => {
-    if (wasLastRefresh && loginStatus === "LOGGED_IN") {
+    if (wasLastRefresh && userInfo && loginStatus === "LOGGED_IN") {
       clearTimers();
       console.log(
         "inside if (wasLastRefresh && userInfo) and about to set timer for autoLogout"
