@@ -91,29 +91,19 @@ export default function DisplayLessonPlanBookmarks({
       </Grid>
     ));
 
-  let renderedContent;
   if (fetchBookMarks.isLoading) {
     return (
       <Box display="flex" justifyContent={"center"}>
         <LoadingSpinner />
       </Box>
     );
-  } else if (lessonPlansToDisplay.length > 0) {
-    renderedContent = lessonPlansToDisplay;
-  } else if (selectedLessonPlanCategories.length > 0 && bookmarks.length > 0) {
-    renderedContent = (
-      <NotificationBox
-        title="Too many filters"
-        message=" No lesson plans are available that match all the filters you selected. Please try removing some filters from the search box to find more lesson plans."
-      />
-    );
-  } else if (bookmarks.length < 1) {
-    renderedContent = (
-      <Typography component="h1" variant="h5">
-        You have not saved any lesson plans.
-      </Typography>
-    );
   }
+
+  const renderedContent = getRenderedContent(
+    lessonPlansToDisplay,
+    selectedLessonPlanCategories,
+    bookmarks
+  );
 
   return (
     <Box
@@ -127,4 +117,30 @@ export default function DisplayLessonPlanBookmarks({
       </Grid>
     </Box>
   );
+}
+function getRenderedContent(
+  lessonPlansToDisplay: any,
+  selectedLessonPlanCategories: {
+    title: string;
+    category: LessonPlanCategory;
+  }[],
+  bookmarks: { userId: string; lessonPlanId: string }[]
+) {
+  if (lessonPlansToDisplay.length > 0) {
+    return lessonPlansToDisplay;
+  } else if (selectedLessonPlanCategories.length > 0 && bookmarks.length > 0) {
+    return (
+      <NotificationBox
+        title="Too many filters"
+        message=" No lesson plans are available that match all the filters you selected. Please try removing some filters from the search box to find more lesson plans."
+      />
+    );
+  } else if (bookmarks.length < 1) {
+    return (
+      <Typography component="h1" variant="h5">
+        You have not saved any lesson plans.
+      </Typography>
+    );
+  }
+  return null;
 }
