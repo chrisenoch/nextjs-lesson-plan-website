@@ -19,6 +19,7 @@ import { isAddJobValid } from "@/validation/jobs/jobs-validators";
 import CurvedUnderlineTitle from "../Presentation/CurvedUnderline";
 import { orange, red } from "@mui/material/colors";
 import NotificationBox from "../NotificationBox";
+import { StandardResponseInfo } from "@/models/types/DataFetching/StandardResponseInfo";
 
 export function AddJob() {
   console.log("add job rendered");
@@ -69,19 +70,8 @@ export function AddJob() {
   } = useFormClientStatus(inputRefs);
 
   const dispatch = useDispatch<AppDispatch>();
-  const addJobInfo: {
-    isError: boolean;
-    isLoading: boolean;
-    message: string;
-    statusCode: null | number;
-  } = useSelector(selectAddJob);
-
-  const fetchJobsInfo: {
-    isError: boolean;
-    isLoading: boolean;
-    message: string;
-    statusCode: null | number;
-  } = useSelector(selectFetchJobs);
+  const addJobStatus: StandardResponseInfo = useSelector(selectAddJob);
+  const fetchJobsStatus: StandardResponseInfo = useSelector(selectFetchJobs);
 
   const jobs:
     | {
@@ -95,8 +85,8 @@ export function AddJob() {
       }[]
     | undefined = useSelector(selectJobsByUserId);
 
-  useClearFormOnSuccess(addJobInfo, clearForm);
-  const shouldHideMessage = useHideMessageOnNavAway(addJobInfo);
+  useClearFormOnSuccess(addJobStatus, clearForm);
+  const shouldHideMessage = useHideMessageOnNavAway(addJobStatus);
 
   const {
     isValid: isFormValid,
@@ -281,18 +271,18 @@ export function AddJob() {
 
           <Button
             type="submit"
-            // disabled={addJobInfo.isLoading || !isFormValid}
+            // disabled={addJobStatus.isLoading || !isFormValid}
             variant="contained"
             color="primary">
             Add Job
           </Button>
-          {!shouldHideMessage && addJobInfo.message && (
+          {!shouldHideMessage && addJobStatus.message && (
             <NotificationBox
-              message={addJobInfo.message}
+              message={addJobStatus.message}
               sxOuterContainer={{
                 marginTop: 2,
               }}
-              variant={addJobInfo.isError ? "error" : "success"}
+              variant={addJobStatus.isError ? "error" : "success"}
             />
           )}
         </Box>
@@ -311,8 +301,8 @@ export function AddJob() {
       />
       <JobsPreview
         jobs={jobs}
-        isLoading={fetchJobsInfo.isLoading}
-        isError={fetchJobsInfo.isError}
+        isLoading={fetchJobsStatus.isLoading}
+        isError={fetchJobsStatus.isError}
         handleJobDelete={handleJobDelete}></JobsPreview>
     </>
   );
