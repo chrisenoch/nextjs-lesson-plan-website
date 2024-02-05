@@ -92,7 +92,7 @@ export default function DisplayLessonPlanBookmarks({
 
   let renderedContent;
   if (fetchBookMarks.isLoading) {
-    return <h1>Loading</h1>;
+    return <h1>Loading from DisplayBookmarkedLessonPlans</h1>;
   } else if (lessonPlansToDisplay.length > 0) {
     renderedContent = lessonPlansToDisplay;
   } else if (selectedLessonPlanCategories.length > 0 && bookmarks.length > 0) {
