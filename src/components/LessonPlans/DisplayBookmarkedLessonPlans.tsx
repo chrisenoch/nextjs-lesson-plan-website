@@ -19,6 +19,7 @@ import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 import { getBookmakedLessonPlanIds } from "@/component-functions/get-bookmarked-lessonplan-ids";
 import NotificationBox from "../NotificationBox";
 import { LessonPlanCategory } from "@/models/types/LessonPlans/LessonPlanCategory";
+import LoadingSpinner from "../Presentation/LoadingSpinner";
 
 export default function DisplayLessonPlanBookmarks({
   lessonPlans,
@@ -92,7 +93,11 @@ export default function DisplayLessonPlanBookmarks({
 
   let renderedContent;
   if (fetchBookMarks.isLoading) {
-    return <h1>Loading from DisplayBookmarkedLessonPlans</h1>;
+    return (
+      <Box display="flex" justifyContent={"center"}>
+        <LoadingSpinner />
+      </Box>
+    );
   } else if (lessonPlansToDisplay.length > 0) {
     renderedContent = lessonPlansToDisplay;
   } else if (selectedLessonPlanCategories.length > 0 && bookmarks.length > 0) {
