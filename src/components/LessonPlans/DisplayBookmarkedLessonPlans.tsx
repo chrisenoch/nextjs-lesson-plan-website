@@ -2,9 +2,7 @@
 import { Box, Grid, Typography } from "@mui/material";
 import LessonPlanCard from "./LessonPlanCard";
 import { LessonPlan } from "../../models/types/LessonPlans/LessonPlan";
-import { useDispatch, useSelector } from "react-redux";
 import {
-  AppDispatch,
   selectAllBookmarks,
   selectFetchBookmarks,
   selectLoginStatus,
@@ -21,6 +19,7 @@ import NotificationBox from "../NotificationBox";
 import { LessonPlanCategory } from "@/models/types/LessonPlans/LessonPlanCategory";
 import LoadingSpinner from "../Presentation/LoadingSpinner";
 import { StandardResponseInfo } from "@/models/types/DataFetching/StandardResponseInfo";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 export default function DisplayLessonPlanBookmarks({
   lessonPlans,
@@ -33,17 +32,17 @@ export default function DisplayLessonPlanBookmarks({
   }[];
 }) {
   console.log("LessonPlanBookmarks rendered");
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   useRedirectWhenLoggedOut("/auth/signin");
 
   const bookmarks: {
     userId: string;
     lessonPlanId: string;
-  }[] = useSelector(selectAllBookmarks);
+  }[] = useAppSelector(selectAllBookmarks);
   const fetchBookMarksStatus: StandardResponseInfo =
-    useSelector(selectFetchBookmarks);
+    useAppSelector(selectFetchBookmarks);
 
-  const loginStatus: LoginStatus = useSelector(selectLoginStatus);
+  const loginStatus: LoginStatus = useAppSelector(selectLoginStatus);
 
   useEffect(() => {
     dispatch(fetchBookmarks());

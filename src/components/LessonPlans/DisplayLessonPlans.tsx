@@ -2,7 +2,6 @@
 import { Box, Grid, Stack, Typography } from "@mui/material";
 import LessonPlanCard from "./LessonPlanCard";
 import { LessonPlan } from "../../models/types/LessonPlans/LessonPlan";
-import { useDispatch, useSelector } from "react-redux";
 import {
   AppDispatch,
   selectAllBookmarks,
@@ -19,6 +18,7 @@ import { getBookmakedLessonPlanIds } from "@/component-functions/get-bookmarked-
 import NotificationBox from "../NotificationBox";
 import { LessonPlanCategory } from "@/models/types/LessonPlans/LessonPlanCategory";
 import { StandardResponseInfo } from "@/models/types/DataFetching/StandardResponseInfo";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 export default function DisplayLessonplans({
   lessonPlans,
@@ -31,20 +31,20 @@ export default function DisplayLessonplans({
   }[];
 }) {
   //To do: Move this to route component?
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   console.log("display lesson plans rendered");
 
   const bookmarks: {
     userId: string;
     lessonPlanId: string;
-  }[] = useSelector(selectAllBookmarks);
+  }[] = useAppSelector(selectAllBookmarks);
   const fetchBookMarksStatus: StandardResponseInfo =
-    useSelector(selectFetchBookmarks);
+    useAppSelector(selectFetchBookmarks);
 
   console.log("fetchBookmarks in DisplayLessonPlans ");
   console.log(fetchBookMarksStatus);
 
-  const loginStatus: LoginStatus = useSelector(selectLoginStatus);
+  const loginStatus: LoginStatus = useAppSelector(selectLoginStatus);
 
   useEffect(() => {
     dispatch(fetchBookmarks());
