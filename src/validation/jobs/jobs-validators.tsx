@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { getValidationStatuses, zodValidator } from "../zod-validator";
-import { AddedJob } from "@/models/types/Jobs/AddedJob";
+import { AddedJob } from "@/models/types/Jobs/Jobs";
 
 // Define validators here and import them into client and server components
 // to ensure client and server validation is always in sync

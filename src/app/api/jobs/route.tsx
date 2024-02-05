@@ -3,7 +3,7 @@ import { checkPermissions } from "@/server-only/auth/check-permissions";
 import { getAccessTokenInfo } from "@/server-only/auth/get-access-token-info";
 import { isAddJobValid } from "@/validation/jobs/jobs-validators";
 import { getUserIdOrErrorResponse } from "@/server-only/auth/get-userId-or-error-response";
-import { AddedJob } from "@/models/types/Jobs/AddedJob";
+import { AddedJob } from "@/models/types/Jobs/Jobs";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;

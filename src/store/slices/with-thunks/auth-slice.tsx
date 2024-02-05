@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+
 import {
   userLogin,
   userLogout,
@@ -14,6 +15,7 @@ import {
 import { LoginStatus } from "@/models/types/Auth/LoginStatus";
 import { StandardResponseInfo } from "@/models/types/DataFetching/StandardResponseInfo";
 import { AuthSliceState } from "@/models/types/Slices/AuthSlice";
+import { RootState } from "@/store";
 
 const initialState: {
   userInfo: UserInfo | null;
@@ -21,7 +23,6 @@ const initialState: {
   wasLastRefreshSuccessful: boolean | null;
   wasLastRefresh: boolean;
   logoutCount: number;
-
   userLogin: StandardResponseInfo;
   userLogout: StandardResponseInfo;
   getAccessTokenWithRefreshToken: StandardResponseInfo;
@@ -180,7 +181,11 @@ const authSlice = createSlice({
 
 function handleRefreshState(action, state: AuthSliceState) {
   if (!action.payload.isError) {
+    console.log("action.payload in handleRefreshState");
+    console.log(action.payload);
     const { message, status, isError, ...userInfo } = action.payload;
+    console.log("userInfo in handleRefreshState after props removed");
+    console.log(userInfo);
     state.userInfo = userInfo;
     state.loginStatus = "LOGGED_IN";
     state.wasLastRefreshSuccessful = true;
@@ -200,8 +205,14 @@ function handleRefreshState(action, state: AuthSliceState) {
 
 function setUserInfoFromLoggedInStatus(action, state: AuthSliceState) {
   console.log("in setUserInfoFromLoggedInStatus");
+  console.log("action.payload in setUserInfoFromLoggedInStatus");
+  console.log(action.payload);
   if (!action.payload.isError) {
     const { message, status, isError, ...userInfo } = action.payload;
+    console.log(
+      "userInfo in setUserInfoFromLoggedInStatus after props removed"
+    );
+    console.log(userInfo);
     state.userInfo = userInfo;
     state.loginStatus = "LOGGED_IN";
     state.wasLastRefreshSuccessful = null;
@@ -213,9 +224,12 @@ function setUserInfoFromLoggedInStatus(action, state: AuthSliceState) {
 
 export const { increaseLogoutCount } = authSlice.actions;
 export const authReducer = authSlice.reducer;
-export const selectUserInfo = (state) => state.authSlice.userInfo;
-export const selectLoginStatus = (state) => state.authSlice.loginStatus;
-export const selectLogoutCount = (state) => state.authSlice.logoutCount;
-export const selectUserLogin = (state) => state.authSlice.userLogin;
-export const selectGetAccessTokenWithRefreshTokenOnAppMount = (state) =>
-  state.authSlice.getAccessTokenWithRefreshTokenOnAppMount;
+export const selectUserInfo = (state: RootState) => state.authSlice.userInfo;
+export const selectLoginStatus = (state: RootState) =>
+  state.authSlice.loginStatus;
+export const selectLogoutCount = (state: RootState) =>
+  state.authSlice.logoutCount;
+export const selectUserLogin = (state: RootState) => state.authSlice.userLogin;
+export const selectGetAccessTokenWithRefreshTokenOnAppMount = (
+  state: RootState
+) => state.authSlice.getAccessTokenWithRefreshTokenOnAppMount;
