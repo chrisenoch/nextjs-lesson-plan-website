@@ -1,3 +1,12 @@
+"use client";
+
+import LoadingSpinner from "@/components/Presentation/LoadingSpinner";
+import { Box } from "@mui/material";
+
 export default function Loading() {
-  return <h1>Loading test in progress!</h1>;
+  return (
+    <Box display="flex" justifyContent={"center"}>
+      <LoadingSpinner />
+    </Box>
+  );
 }
