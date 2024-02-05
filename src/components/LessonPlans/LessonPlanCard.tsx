@@ -138,7 +138,6 @@ export default function LessonPlanCard({
         {isHydrated && (
           <LessonPlancardBookmarkButton
             loginStatus={loginStatus}
-            isHydrated={isHydrated}
             id={id}
             isBookmarked={isBookmarked}
             handleToggleBookmark={handleToggleBookmark}
@@ -148,74 +147,3 @@ export default function LessonPlanCard({
     </Card>
   );
 }
-
-function hydrateAndSelectBookmarkButton(
-  isHydrated: boolean,
-  loginStatus: string,
-  isBookmarked: string,
-  handleToggleBookmark: (lessonPlanId: string) => void,
-  id: string
-) {
-  let bookmarkButton;
-  if (!isHydrated) {
-    bookmarkButton = null;
-  } else if (loginStatus === "LOGGED_IN" && isBookmarked === "IS_BOOKMARKED") {
-    bookmarkButton = (
-      <Button
-        onClick={() => handleToggleBookmark(id)}
-        variant="outlined"
-        size="small"
-        startIcon={<Done />}>
-        Saved
-      </Button>
-    );
-  } else if (
-    loginStatus === "LOGGED_IN" &&
-    isBookmarked === "IS_NOT_BOOKMARKED"
-  ) {
-    bookmarkButton = (
-      <Button
-        onClick={() => handleToggleBookmark(id)}
-        variant="outlined"
-        size="small"
-        startIcon={<RocketLaunch />}>
-        Save
-      </Button>
-    );
-  } else if (
-    loginStatus === "LOGGED_IN" &&
-    isBookmarked === "BOOKMARKS_NOT_READY"
-  ) {
-    bookmarkButton = (
-      <LoadingButton sx={{ px: 0 }} loading disabled variant="outlined">
-        {/* value here affects the button size */}Save
-      </LoadingButton>
-    );
-  }
-  return bookmarkButton;
-}
-// {loginStatus === "LOGGED_IN" && isBookmarked === "IS_BOOKMARKED" && (
-//   <Button
-//     onClick={() => handleToggleBookmark(id)}
-//     variant="outlined"
-//     size="small"
-//     startIcon={<Done />}>
-//     Saved
-//   </Button>
-// )}
-// {loginStatus === "LOGGED_IN" &&
-//   isBookmarked === "IS_NOT_BOOKMARKED" && (
-//     <Button
-//       onClick={() => handleToggleBookmark(id)}
-//       variant="outlined"
-//       size="small"
-//       startIcon={<RocketLaunch />}>
-//       Save
-//     </Button>
-//   )}
-// {loginStatus === "LOGGED_IN" &&
-//   isBookmarked === "BOOKMARKS_NOT_READY" && (
-//     <LoadingButton sx={{ px: 0 }} loading disabled variant="outlined">
-//       {/* value here affects the button size */}Save
-//     </LoadingButton>
-//   )}
