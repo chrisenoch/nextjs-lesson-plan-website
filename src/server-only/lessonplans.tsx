@@ -6,8 +6,10 @@ export async function fetchLessonPlans() {
     lessonPlans = await response.json();
   } catch {
     lessonPlans = [];
-  } finally {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
   }
+  // finally {
+  //   await new Promise((resolve) => setTimeout(resolve, 1000));
+  // }
+
   return lessonPlans;
 }

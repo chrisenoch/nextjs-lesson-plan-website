@@ -11,8 +11,8 @@ import WorkIcon from "@mui/icons-material/Work";
 import BadgeIcon from "@mui/icons-material/Badge";
 
 export const metadata = {
-  title: "Next.js App Router + Material UI v5",
-  description: "Next.js App Router + Material UI v5",
+  title: "Lesson Planz",
+  description: "Get fun and creative lesson plans for all levels.",
 };
 
 export default function RootLayout({
