@@ -1,4 +1,3 @@
-"use client";
 import * as React from "react";
 import Image from "next/image";
 import Card from "@mui/material/Card";
@@ -14,6 +13,8 @@ import { LoadingButton } from "@mui/lab";
 import { LessonPlanCard } from "@/models/types/LessonPlans/LessonPlanCard";
 import { ArrowForward, Done, RocketLaunch } from "@mui/icons-material";
 import { useHydrated } from "@/customHooks/useHydrated";
+import LessonPlancardBookmarkButton from "./LessonPlanCardBookmarkButton";
+import { log } from "util";
 
 export default function LessonPlanCard({
   id,
@@ -40,13 +41,13 @@ export default function LessonPlanCard({
     />
   ));
 
-  let bookmarkButton = hydrateAndSelectBookmarkButton(
-    isHydrated,
-    loginStatus,
-    isBookmarked,
-    handleToggleBookmark,
-    id
-  );
+  // let bookmarkButton = hydrateAndSelectBookmarkButton(
+  //   isHydrated,
+  //   loginStatus,
+  //   isBookmarked,
+  //   handleToggleBookmark,
+  //   id
+  // );
 
   return (
     <Card
@@ -134,7 +135,15 @@ export default function LessonPlanCard({
           }}>
           View
         </Button>
-        {bookmarkButton && bookmarkButton}
+        {isHydrated && (
+          <LessonPlancardBookmarkButton
+            loginStatus={loginStatus}
+            isHydrated={isHydrated}
+            id={id}
+            isBookmarked={isBookmarked}
+            handleToggleBookmark={handleToggleBookmark}
+          />
+        )}
       </CardActions>
     </Card>
   );
