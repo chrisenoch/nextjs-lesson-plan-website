@@ -103,7 +103,7 @@ export default function ResponsiveAppBar({
                 underline="none"
                 component={SecureNextLink}
                 sx={{ fontWeight: "medium" }}>
-                Lesson planz
+                Lesson Planz
               </Link>
             </Box>
             <Box
