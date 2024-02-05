@@ -13,7 +13,7 @@ import { LoadingButton } from "@mui/lab";
 import { LessonPlanCard } from "@/models/types/LessonPlans/LessonPlanCard";
 import { ArrowForward, Done, RocketLaunch } from "@mui/icons-material";
 import { useHydrated } from "@/customHooks/useHydrated";
-import LessonPlancardBookmarkButton from "./LessonPlanCardBookmarkButton";
+import LessonPlanCardBookmarkButton from "./LessonPlanCardBookmarkButton";
 import { log } from "util";
 
 export default function LessonPlanCard({
@@ -136,7 +136,7 @@ export default function LessonPlanCard({
           View
         </Button>
         {isHydrated && (
-          <LessonPlancardBookmarkButton
+          <LessonPlanCardBookmarkButton
             loginStatus={loginStatus}
             id={id}
             isBookmarked={isBookmarked}
