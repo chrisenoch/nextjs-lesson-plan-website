@@ -12,6 +12,9 @@ import SecureNextLink from "../Utils/SecureNextLink";
 import { LoadingButton } from "@mui/lab";
 import { LessonPlanCard } from "@/models/types/LessonPlans/LessonPlanCard";
 import { ArrowForward, Done, RocketLaunch } from "@mui/icons-material";
+import { useHydrated } from "@/customHooks/useHydrated";
+import LessonPlanCardBookmarkButton from "./LessonPlanCardBookmarkButton";
+import { log } from "util";
 
 export default function LessonPlanCard({
   id,
@@ -28,6 +31,7 @@ export default function LessonPlanCard({
   handleToggleBookmark,
   loginStatus,
 }: LessonPlanCard) {
+  const isHydrated = useHydrated();
   const lessonChips = chips!.map((lessonChip) => (
     <Chip
       key={lessonChip.title}
@@ -36,6 +40,14 @@ export default function LessonPlanCard({
       label={lessonChip.title}
     />
   ));
+
+  // let bookmarkButton = hydrateAndSelectBookmarkButton(
+  //   isHydrated,
+  //   loginStatus,
+  //   isBookmarked,
+  //   handleToggleBookmark,
+  //   id
+  // );
 
   return (
     <Card
@@ -123,32 +135,14 @@ export default function LessonPlanCard({
           }}>
           View
         </Button>
-
-        {loginStatus === "LOGGED_IN" && isBookmarked === "IS_BOOKMARKED" && (
-          <Button
-            onClick={() => handleToggleBookmark(id)}
-            variant="outlined"
-            size="small"
-            startIcon={<Done />}>
-            Saved
-          </Button>
+        {isHydrated && (
+          <LessonPlanCardBookmarkButton
+            loginStatus={loginStatus}
+            id={id}
+            isBookmarked={isBookmarked}
+            handleToggleBookmark={handleToggleBookmark}
+          />
         )}
-        {loginStatus === "LOGGED_IN" &&
-          isBookmarked === "IS_NOT_BOOKMARKED" && (
-            <Button
-              onClick={() => handleToggleBookmark(id)}
-              variant="outlined"
-              size="small"
-              startIcon={<RocketLaunch />}>
-              Save
-            </Button>
-          )}
-        {loginStatus === "LOGGED_IN" &&
-          isBookmarked === "BOOKMARKS_NOT_READY" && (
-            <LoadingButton sx={{ px: 0 }} loading disabled variant="outlined">
-              {/* value here affects the button size */}Save
-            </LoadingButton>
-          )}
       </CardActions>
     </Card>
   );

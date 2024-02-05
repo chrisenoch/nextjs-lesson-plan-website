@@ -1,6 +1,7 @@
 import { setSXValues } from "@/component-functions/set-sx-values";
 import { Stack, Typography, Box, SxProps, Theme } from "@mui/material";
 import { blue, green, red } from "@mui/material/colors";
+import { ReactElement } from "react";
 
 export default function NotificationBox({
   title,
@@ -9,16 +10,36 @@ export default function NotificationBox({
   sxInnerContainer,
   sxTitle,
   sxMessage,
+  titleComponent,
+  titleVariant,
   variant,
+  children,
 }: {
   title?: string;
+  titleComponent?: any;
+  titleVariant?: any;
   message: string;
   sxOuterContainer?: SxProps<Theme>;
   sxInnerContainer?: SxProps<Theme>;
   sxTitle?: SxProps<Theme>;
   sxMessage?: SxProps<Theme>;
   variant?: "success" | "info" | "error";
+  children?: ReactElement;
 }) {
+  let titleComponentFinal;
+  if (!titleComponent) {
+    titleComponentFinal = "p";
+  } else {
+    titleComponentFinal = titleComponent;
+  }
+
+  let titleVariantFinal;
+  if (!titleVariant) {
+    titleVariantFinal = "h4";
+  } else {
+    titleVariantFinal = titleVariant;
+  }
+
   const sxOuterContainerDefault: SxProps<Theme> = {
     maxWidth: "900px",
     mt: 3,
@@ -110,13 +131,17 @@ export default function NotificationBox({
     <Stack sx={sxOuterContainerFinal}>
       <Stack sx={sxInnerContainerFinal}>
         {title && (
-          <Typography component="p" variant="h4" sx={sxTitleFinal}>
+          <Typography
+            component={titleComponentFinal}
+            variant={titleVariantFinal}
+            sx={sxTitleFinal}>
             {title}{" "}
           </Typography>
         )}
         <Box component="p" sx={sxMessageFinal}>
           {message}
         </Box>
+        {children}
       </Stack>
     </Stack>
   );
