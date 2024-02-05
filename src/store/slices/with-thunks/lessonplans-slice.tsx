@@ -68,7 +68,6 @@ const lessonPlansSlice = createSlice({
 export const fetchBookmarks = createAsyncThunk(
   "lessonPlansSlice/fetchBookmarks",
   async (_, { rejectWithValue }) => {
-    console.log("in fetchBookmarks");
     try {
       const response = await fetch(
         `http://localhost:3000/api/lesson-plan-bookmarks`
