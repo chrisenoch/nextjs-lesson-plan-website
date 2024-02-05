@@ -17,6 +17,7 @@ import { red } from "@mui/material/colors";
 import CurvedUnderlineTitle from "../Presentation/CurvedUnderline";
 import { orange, blue } from "@mui/material/colors";
 import LoadingSpinner from "../Presentation/LoadingSpinner";
+import { useHydrated } from "@/customHooks/useHydrated";
 
 export function SignIn() {
   const loginStatus: LoginStatus = useSelector(selectLoginStatus);
@@ -45,12 +46,14 @@ export function SignIn() {
 
   const shouldHideMessage = useHideMessageOnNavAway(userLoginInfo);
 
+  const isHydrated = useHydrated();
+
   function handleSubmit(e) {
     e.preventDefault();
     dispatch(userLogin({ email, password }));
   }
 
-  if (loginStatus === "LOGIN_NOT_PROCESSED") {
+  if (loginStatus === "LOGIN_NOT_PROCESSED" || !isHydrated) {
     return (
       <Box display="flex" justifyContent={"center"}>
         <LoadingSpinner />
