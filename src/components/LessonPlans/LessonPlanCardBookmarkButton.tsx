@@ -4,7 +4,7 @@ import { Done, RocketLaunch } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import { Button } from "@mui/material";
 
-export default function LessonPlancardBookmarkButton({
+export default function LessonPlanCardBookmarkButton({
   loginStatus,
   isBookmarked,
   handleToggleBookmark,
