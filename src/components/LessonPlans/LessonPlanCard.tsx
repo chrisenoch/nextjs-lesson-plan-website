@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import Image from "next/image";
 import Card from "@mui/material/Card";
@@ -12,6 +13,7 @@ import SecureNextLink from "../Utils/SecureNextLink";
 import { LoadingButton } from "@mui/lab";
 import { LessonPlanCard } from "@/models/types/LessonPlans/LessonPlanCard";
 import { ArrowForward, Done, RocketLaunch } from "@mui/icons-material";
+import { useHydrated } from "@/customHooks/useHydrated";
 
 export default function LessonPlanCard({
   id,
@@ -28,6 +30,7 @@ export default function LessonPlanCard({
   handleToggleBookmark,
   loginStatus,
 }: LessonPlanCard) {
+  const isHydrated = useHydrated();
   const lessonChips = chips!.map((lessonChip) => (
     <Chip
       key={lessonChip.title}
@@ -36,6 +39,14 @@ export default function LessonPlanCard({
       label={lessonChip.title}
     />
   ));
+
+  let bookmarkButton = hydrateAndSelectBookmarkButton(
+    isHydrated,
+    loginStatus,
+    isBookmarked,
+    handleToggleBookmark,
+    id
+  );
 
   return (
     <Card
@@ -123,33 +134,79 @@ export default function LessonPlanCard({
           }}>
           View
         </Button>
-
-        {loginStatus === "LOGGED_IN" && isBookmarked === "IS_BOOKMARKED" && (
-          <Button
-            onClick={() => handleToggleBookmark(id)}
-            variant="outlined"
-            size="small"
-            startIcon={<Done />}>
-            Saved
-          </Button>
-        )}
-        {loginStatus === "LOGGED_IN" &&
-          isBookmarked === "IS_NOT_BOOKMARKED" && (
-            <Button
-              onClick={() => handleToggleBookmark(id)}
-              variant="outlined"
-              size="small"
-              startIcon={<RocketLaunch />}>
-              Save
-            </Button>
-          )}
-        {loginStatus === "LOGGED_IN" &&
-          isBookmarked === "BOOKMARKS_NOT_READY" && (
-            <LoadingButton sx={{ px: 0 }} loading disabled variant="outlined">
-              {/* value here affects the button size */}Save
-            </LoadingButton>
-          )}
+        {bookmarkButton && bookmarkButton}
       </CardActions>
     </Card>
   );
 }
+
+function hydrateAndSelectBookmarkButton(
+  isHydrated: boolean,
+  loginStatus: string,
+  isBookmarked: string,
+  handleToggleBookmark: (lessonPlanId: string) => void,
+  id: string
+) {
+  let bookmarkButton;
+  if (!isHydrated) {
+    bookmarkButton = null;
+  } else if (loginStatus === "LOGGED_IN" && isBookmarked === "IS_BOOKMARKED") {
+    bookmarkButton = (
+      <Button
+        onClick={() => handleToggleBookmark(id)}
+        variant="outlined"
+        size="small"
+        startIcon={<Done />}>
+        Saved
+      </Button>
+    );
+  } else if (
+    loginStatus === "LOGGED_IN" &&
+    isBookmarked === "IS_NOT_BOOKMARKED"
+  ) {
+    bookmarkButton = (
+      <Button
+        onClick={() => handleToggleBookmark(id)}
+        variant="outlined"
+        size="small"
+        startIcon={<RocketLaunch />}>
+        Save
+      </Button>
+    );
+  } else if (
+    loginStatus === "LOGGED_IN" &&
+    isBookmarked === "BOOKMARKS_NOT_READY"
+  ) {
+    bookmarkButton = (
+      <LoadingButton sx={{ px: 0 }} loading disabled variant="outlined">
+        {/* value here affects the button size */}Save
+      </LoadingButton>
+    );
+  }
+  return bookmarkButton;
+}
+// {loginStatus === "LOGGED_IN" && isBookmarked === "IS_BOOKMARKED" && (
+//   <Button
+//     onClick={() => handleToggleBookmark(id)}
+//     variant="outlined"
+//     size="small"
+//     startIcon={<Done />}>
+//     Saved
+//   </Button>
+// )}
+// {loginStatus === "LOGGED_IN" &&
+//   isBookmarked === "IS_NOT_BOOKMARKED" && (
+//     <Button
+//       onClick={() => handleToggleBookmark(id)}
+//       variant="outlined"
+//       size="small"
+//       startIcon={<RocketLaunch />}>
+//       Save
+//     </Button>
+//   )}
+// {loginStatus === "LOGGED_IN" &&
+//   isBookmarked === "BOOKMARKS_NOT_READY" && (
+//     <LoadingButton sx={{ px: 0 }} loading disabled variant="outlined">
+//       {/* value here affects the button size */}Save
+//     </LoadingButton>
+//   )}
