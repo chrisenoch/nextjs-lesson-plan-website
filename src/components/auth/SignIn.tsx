@@ -7,21 +7,21 @@ import {
 } from "@/store";
 import { Box, TextField, Button, Stack, Alert } from "@mui/material";
 import { FormEvent, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { redirect, useSearchParams } from "next/navigation";
 import useHideMessageOnNavAway from "@/customHooks/useHideMessageOnNavAway";
 import { LoadingButton } from "@mui/lab";
 import { LoginStatus } from "@/models/types/Auth/LoginStatus";
 import NotificationBox from "../NotificationBox";
-import { red } from "@mui/material/colors";
 import CurvedUnderlineTitle from "../Presentation/CurvedUnderline";
 import { orange, blue } from "@mui/material/colors";
 import LoadingSpinner from "../Presentation/LoadingSpinner";
 import { useHydrated } from "@/customHooks/useHydrated";
 import { StandardResponseInfo } from "@/models/types/DataFetching/StandardResponseInfo";
+import { useAppSelector } from "@/store/hooks";
 
 export function SignIn() {
-  const loginStatus: LoginStatus = useSelector(selectLoginStatus);
+  const loginStatus: LoginStatus = useAppSelector(selectLoginStatus);
   const dispatch = useDispatch<AppDispatch>();
   const searchParams = useSearchParams();
   const redirectPath = searchParams.get("redirect");
@@ -29,7 +29,7 @@ export function SignIn() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const userLoginStatus: StandardResponseInfo = useSelector(selectUserLogin);
+  const userLoginStatus: StandardResponseInfo = useAppSelector(selectUserLogin);
 
   let isProtectedPage = false;
   if (searchParams.get("redirect")) {
