@@ -171,7 +171,7 @@ export const selectAllJobs = (state: RootState) => state.jobsSlice.jobs;
 export const selectJobsByUserId = createSelector(
   [
     (state: RootState) => state.jobsSlice.jobs,
-    (state: RootState) => state.authSlice.userInfo?.id,
+    (state: RootState) => state.authSlice.userSession?.id,
   ],
   (jobs, userId) => {
     if (userId === null || userId === undefined) {

@@ -1,9 +1,9 @@
 import { LoginStatus } from "../Auth/LoginStatus";
-import { UserInfo } from "../Auth/UserInfo";
+import { UserSession } from "../Auth/UserSession";
 import { StandardResponseInfo } from "../DataFetching/StandardResponseInfo";
 
 export type AuthSliceState = {
-  userInfo: UserInfo | null;
+  userSession: UserSession | null;
   loginStatus: LoginStatus;
   wasLastRefreshSuccessful: boolean | null;
   wasLastRefresh: boolean;
