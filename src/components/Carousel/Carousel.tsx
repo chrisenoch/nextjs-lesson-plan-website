@@ -23,12 +23,17 @@ import {
 } from "@/services/my-custom-event-emitter/SubscriberService";
 import { ImageDisplayBox, ImageRow } from "@/models/types/Carousel/Styles";
 
+type Image = {
+  alt: string;
+  imagePath: string;
+  renderedWidth: number;
+  renderedHeight: number;
+};
+
 //Transition duration must be less than autoplayDelay
 export function Carousel({
   images: unPreparedImages,
   styles,
-  renderedImageWidth,
-  renderedImageHeight,
   imageDisplayWidth: IMG_DISPLAY_WIDTH,
   imageDisplayHeight: IMG_DISPLAY_HEIGHT,
   imageDisplayWidthUnit: IMG_DISPLAY_WIDTH_UNIT,
@@ -39,13 +44,11 @@ export function Carousel({
   carouselMoveRight,
   children,
 }: {
-  images: { alt: string; imagePath: string }[];
+  images: Image[];
   styles?: {
     imageDisplayBox?: ImageDisplayBox;
     imageRow?: ImageRow;
   };
-  renderedImageWidth: number;
-  renderedImageHeight: number;
   imageDisplayWidth: number;
   imageDisplayHeight: number;
   imageDisplayWidthUnit: string;
@@ -80,10 +83,8 @@ export function Carousel({
   console.log("firstImageIndex " + firstImageIndex);
 
   const [isOverFlowShown, setIsOverflowShown] = useState<boolean>(false); //isOverFlowShown is for dveelopment
-  const [imagesOne, setImagesOne] =
-    useState<{ alt: string; imagePath: string }[]>(images);
-  const [imagesTwo, setImagesTwo] =
-    useState<{ alt: string; imagePath: string }[]>(images);
+  const [imagesOne, setImagesOne] = useState<Image[]>(images);
+  const [imagesTwo, setImagesTwo] = useState<Image[]>(images);
   const [imageOneRowRight, setImageOneRowRight] =
     useState<number>(maxImageRowRight);
   const [imageTwoRowRight, setImageTwoRowRight] =
@@ -446,8 +447,8 @@ export function Carousel({
             <Image
               alt={image.alt}
               src={image.imagePath}
-              width={renderedImageWidth}
-              height={renderedImageHeight}
+              width={image.renderedWidth}
+              height={image.renderedHeight}
               style={{
                 width: "100%",
                 height: "100%",
@@ -470,8 +471,6 @@ export function Carousel({
       IMG_DISPLAY_WIDTH_UNIT,
       IMG_DISPLAY_HEIGHT,
       IMG_DISPLAY_HEIGHT_UNIT,
-      renderedImageWidth,
-      renderedImageHeight,
       firstImageIndex,
     ]
   );
@@ -489,8 +488,8 @@ export function Carousel({
             <Image
               alt={image.alt}
               src={image.imagePath}
-              width={renderedImageWidth}
-              height={renderedImageHeight}
+              width={image.renderedWidth}
+              height={image.renderedHeight}
               style={{
                 width: "100%",
                 height: "100%",
@@ -506,8 +505,6 @@ export function Carousel({
       IMG_DISPLAY_WIDTH,
       IMG_DISPLAY_WIDTH_UNIT,
       imagesTwo,
-      renderedImageHeight,
-      renderedImageWidth,
     ]
   );
 
@@ -630,9 +627,7 @@ export function Carousel({
   );
 }
 
-function increaseArrayIfTooSmall(
-  imagesArr: { alt: string; imagePath: string }[]
-) {
+function increaseArrayIfTooSmall(imagesArr: Image[]) {
   let multiplier = 0;
   if (imagesArr.length === 2 || imagesArr.length === 3) {
     multiplier = 3;

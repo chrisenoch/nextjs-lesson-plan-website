@@ -6,29 +6,17 @@ import {
   IconButton,
   Stack,
   Typography,
-  duration,
 } from "@mui/material";
-import Image from "next/image";
 import { Carousel } from "./Carousel/Carousel";
-import { useMemo, useRef, useState } from "react";
-import {
-  AutoPlay,
-  AutoPlayDirection,
-  Transitions,
-} from "@/models/types/Carousel/AutoPlay";
+import { useMemo, useState } from "react";
+import { AutoPlay, Transitions } from "@/models/types/Carousel/AutoPlay";
 import { carouselStore } from "@/services/my-custom-event-emitter/SubscriberConfigObjectStore";
 import {
   SubscriberConfigObject,
   emit,
 } from "@/services/my-custom-event-emitter/SubscriberService";
-import { useIsFirstRender } from "@/customHooks/useIsFirstRender";
 import ColorFactory from "./Utils/ColorFactory";
-import {
-  ArrowBackIos,
-  ArrowForward,
-  ArrowForwardIos,
-} from "@mui/icons-material";
-import SecureNextLink from "./Utils/SecureNextLink";
+import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
 
 export default function Hero() {
   const carouselMoveLeft: SubscriberConfigObject = useMemo(() => {
@@ -46,197 +34,43 @@ export default function Hero() {
   carouselStore.set("moveLeft", carouselMoveLeft);
   carouselStore.set("moveRight", carouselMoveRight);
 
-  const [autoPlay, setAutoPlay] = useState<AutoPlay>({
+  const [autoPlay] = useState<AutoPlay>({
     enableAutoPlay: false,
     direction: "RIGHT",
     delay: 4500,
   });
 
   const transitions: Transitions = {
-    durationMs: 2000,
+    durationMs: 1500,
     easingFunction: "ease-out",
   };
 
   const images = useMemo(
     () => [
-      // {
-      //   alt: "Giraffes",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/giraffes_south_africa.jpg",
-      // },
-
       {
-        alt: "Fortress",
-        imagePath:
-          "https://raw.githubusercontent.com/chrisenoch/assets/main/Narilka%20fortress%20Tbilisi.jpg",
+        alt: "Woman relaxing on hammock",
+        imagePath: "/images/woman-on-hammock-2400-1600.jpg",
+        renderedWidth: 2400,
+        renderedHeight: 1600,
       },
       {
-        alt: "Virgin",
-        imagePath:
-          "https://raw.githubusercontent.com/chrisenoch/assets/main/virgin_cruises.jpg",
+        alt: "Backpackers with a mountain in the background",
+        imagePath: "/images/backpackers-by-mountain-2400-1600.jpg",
+        renderedWidth: 2400,
+        renderedHeight: 1600,
       },
       {
-        alt: "Salad",
-        imagePath:
-          "https://raw.githubusercontent.com/chrisenoch/assets/main/salad.jpg",
+        alt: "Four women drinking and smiling",
+        imagePath: "/images/four-women-with-drinks-2400-1709.jpg",
+        renderedWidth: 2400,
+        renderedHeight: 1709,
       },
       {
-        alt: "Swimming",
-        imagePath:
-          "https://raw.githubusercontent.com/chrisenoch/assets/main/swimming.jpg",
+        alt: "Man in the sea reading a book",
+        imagePath: "/images/man-in-water-reading-book-2400-1600.jpg",
+        renderedWidth: 2400,
+        renderedHeight: 1600,
       },
-
-      // {
-      //   alt: "Laptop",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/laptop.jpg",
-      // },
-      // {
-      //   alt: "Beach-1",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-      // },
-      // {
-      //   alt: "Driverless-1",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-      // },
-      // {
-      //   alt: "Shopping-1",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-      // },
-      // {
-      //   alt: "Fuerteventura",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/fuerteventura-shutterstock.jpg",
-      // },
-
-      // {
-      //   alt: "Antalya",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/antalya-shutterstock.jpg",
-      // },
-      // {
-      //   alt: "Beach-2",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-      // },
-      // {
-      //   alt: "Driverless cars-2",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-      // },
-      // {
-      //   alt: "Shopping-2",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-      // },
-      // {
-      //   alt: "Beach-3",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-      // },
-      // {
-      //   alt: "Driverless cars-3",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-      // },
-      // {
-      //   alt: "Shopping-3",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-      // },
-      // {
-      //   alt: "Beach-4",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-      // },
-      // {
-      //   alt: "Driverless cars-4",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-      // },
-      // {
-      //   alt: "Shopping-4",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-      // },
-      // {
-      //   alt: "Beach-5",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-      // },
-      // {
-      //   alt: "Driverless cars-5",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-      // },
-      // {
-      //   alt: "Shopping-5",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-      // },
-      // {
-      //   alt: "Beach-6",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-      // },
-      // {
-      //   alt: "Driverless cars-6",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-      // },
-      // {
-      //   alt: "Shopping-6",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-      // },
-      // {
-      //   alt: "Beach-7",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-      // },
-      // {
-      //   alt: "Driverless cars-7",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-      // },
-      // {
-      //   alt: "Shopping-7",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-      // },
-      // {
-      //   alt: "Beach-8",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-      // },
-      // {
-      //   alt: "Driverless cars-8",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-      // },
-      // {
-      //   alt: "Shopping-8",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-      // },
-      // {
-      //   alt: "Beach-9",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/beach.jpg",
-      // },
-      // {
-      //   alt: "Driverless cars-9",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg",
-      // },
-      // {
-      //   alt: "Shopping-9",
-      //   imagePath:
-      //     "https://raw.githubusercontent.com/chrisenoch/assets/main/shopping.jpg",
-      // },
     ],
     []
   );
@@ -309,8 +143,6 @@ export default function Hero() {
               imageDisplayHeight={50}
               imageDisplayWidthUnit={"vw"}
               imageDisplayHeightUnit={"vh"}
-              renderedImageWidth={1000}
-              renderedImageHeight={1000}
               autoPlay={autoPlay}
               transitions={transitions}
               images={images}
