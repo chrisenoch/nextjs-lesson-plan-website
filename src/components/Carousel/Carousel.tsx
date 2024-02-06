@@ -1,15 +1,13 @@
 "use client";
+import { Box, Stack, SxProps, Theme } from "@mui/material";
 import {
-  Box,
-  Button,
-  Paper,
-  Stack,
-  SxProps,
-  Theme,
-  Typography,
-} from "@mui/material";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
+  ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import useTriggerRerender from "@/customHooks/useTriggerRerender";
 import {
   AutoPlay,
@@ -23,12 +21,7 @@ import {
 } from "@/services/my-custom-event-emitter/SubscriberService";
 import { ImageDisplayBox, ImageRow } from "@/models/types/Carousel/Styles";
 
-type Image = {
-  alt: string;
-  imagePath: string;
-  renderedWidth: number;
-  renderedHeight: number;
-};
+type CarouselElement = { key: any; element: ReactElement };
 
 //Transition duration must be less than autoplayDelay
 export function Carousel({
@@ -44,7 +37,7 @@ export function Carousel({
   carouselMoveRight,
   children,
 }: {
-  images: Image[];
+  images: CarouselElement[];
   styles?: {
     imageDisplayBox?: ImageDisplayBox;
     imageRow?: ImageRow;
@@ -83,8 +76,8 @@ export function Carousel({
   console.log("firstImageIndex " + firstImageIndex);
 
   const [isOverFlowShown, setIsOverflowShown] = useState<boolean>(false); //isOverFlowShown is for dveelopment
-  const [imagesOne, setImagesOne] = useState<Image[]>(images);
-  const [imagesTwo, setImagesTwo] = useState<Image[]>(images);
+  const [imagesOne, setImagesOne] = useState<CarouselElement[]>(images);
+  const [imagesTwo, setImagesTwo] = useState<CarouselElement[]>(images);
   const [imageOneRowRight, setImageOneRowRight] =
     useState<number>(maxImageRowRight);
   const [imageTwoRowRight, setImageTwoRowRight] =
@@ -439,29 +432,12 @@ export function Carousel({
       imagesOne.map((image, index) => {
         return (
           <Box
-            key={image.alt + "-1-" + index + 1}
+            key={image.key + "-1-" + index + 1}
             width={`${IMG_DISPLAY_WIDTH}${IMG_DISPLAY_WIDTH_UNIT}`}
             height={`${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`}
             flexShrink={0}
             flexGrow={0}>
-            <Image
-              alt={image.alt}
-              src={image.imagePath}
-              width={image.renderedWidth}
-              height={image.renderedHeight}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-              }}
-              priority={
-                index === firstImageIndex ||
-                index === firstImageIndex + 1 ||
-                index === firstImageIndex - 1
-                  ? true
-                  : false
-              }
-            />
+            {image.element}
           </Box>
         );
       }),
@@ -471,7 +447,6 @@ export function Carousel({
       IMG_DISPLAY_WIDTH_UNIT,
       IMG_DISPLAY_HEIGHT,
       IMG_DISPLAY_HEIGHT_UNIT,
-      firstImageIndex,
     ]
   );
 
@@ -480,22 +455,12 @@ export function Carousel({
       imagesTwo.map((image, index) => {
         return (
           <Box
-            key={image.alt + "-2-" + index + 1}
+            key={image.key + "-2-" + index + 1}
             width={`${IMG_DISPLAY_WIDTH}${IMG_DISPLAY_WIDTH_UNIT}`}
             height={`${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`}
             flexShrink={0}
             flexGrow={0}>
-            <Image
-              alt={image.alt}
-              src={image.imagePath}
-              width={image.renderedWidth}
-              height={image.renderedHeight}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-              }}
-            />
+            {image.element}
           </Box>
         );
       }),
@@ -627,7 +592,7 @@ export function Carousel({
   );
 }
 
-function increaseArrayIfTooSmall(imagesArr: Image[]) {
+function increaseArrayIfTooSmall(imagesArr: CarouselElement[]) {
   let multiplier = 0;
   if (imagesArr.length === 2 || imagesArr.length === 3) {
     multiplier = 3;

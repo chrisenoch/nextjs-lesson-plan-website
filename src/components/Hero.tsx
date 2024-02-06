@@ -17,6 +17,7 @@ import {
 } from "@/services/my-custom-event-emitter/SubscriberService";
 import ColorFactory from "./Utils/ColorFactory";
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
+import Image from "next/image";
 
 export default function Hero() {
   const carouselMoveLeft: SubscriberConfigObject = useMemo(() => {
@@ -35,7 +36,7 @@ export default function Hero() {
   carouselStore.set("moveRight", carouselMoveRight);
 
   const [autoPlay] = useState<AutoPlay>({
-    enableAutoPlay: false,
+    enableAutoPlay: true,
     direction: "RIGHT",
     delay: 4500,
   });
@@ -48,28 +49,70 @@ export default function Hero() {
   const images = useMemo(
     () => [
       {
-        alt: "Woman relaxing on hammock",
-        imagePath: "/images/woman-on-hammock-2400-1600.jpg",
-        renderedWidth: 2400,
-        renderedHeight: 1600,
+        key: 1,
+        element: (
+          <Image
+            key={1}
+            alt="Woman relaxing on hammock"
+            src={"/images/woman-on-hammock-2400-1600.jpg"}
+            priority
+            width={2400}
+            height={1600}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
+        ),
       },
       {
-        alt: "Backpackers with a mountain in the background",
-        imagePath: "/images/backpackers-by-mountain-2400-1600.jpg",
-        renderedWidth: 2400,
-        renderedHeight: 1600,
+        key: 2,
+        element: (
+          <Image
+            alt="Backpackers with a mountain in the background"
+            src={"/images/backpackers-by-mountain-2400-1600.jpg"}
+            width={2400}
+            height={1600}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
+        ),
       },
       {
-        alt: "Four women drinking and smiling",
-        imagePath: "/images/four-women-with-drinks-2400-1709.jpg",
-        renderedWidth: 2400,
-        renderedHeight: 1709,
+        key: 3,
+        element: (
+          <Image
+            alt="Four women drinking and smilingk"
+            src={"/images/four-women-with-drinks-2400-1709.jpg"}
+            width={2400}
+            height={1709}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
+        ),
       },
       {
-        alt: "Man in the sea reading a book",
-        imagePath: "/images/man-in-water-reading-book-2400-1600.jpg",
-        renderedWidth: 2400,
-        renderedHeight: 1600,
+        key: 4,
+        element: (
+          <Image
+            alt="Man in the sea reading a book"
+            src={"/images/man-in-water-reading-book-2400-1600.jpg"}
+            width={2400}
+            height={1600}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
+        ),
       },
     ],
     []
