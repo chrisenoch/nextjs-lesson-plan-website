@@ -1,54 +1,38 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+
 import {
   userLogin,
   userLogout,
   getAccessTokenWithRefreshToken,
   getAccessTokenWithRefreshTokenOnAppMount,
 } from "./auth-thunks";
-import { UserInfo } from "@/models/types/Auth/UserInfo";
+import { UserSession } from "@/models/types/Auth/UserSession";
 import {
   handleFulfilled,
   handlePending,
   handleRejected,
 } from "./thunk-helpers";
 import { LoginStatus } from "@/models/types/Auth/LoginStatus";
+import { StandardResponseInfo } from "@/models/types/DataFetching/StandardResponseInfo";
+import { AuthSliceState } from "@/models/types/Slices/AuthSlice";
+import { RootState } from "@/store";
+import {
+  UserLoginPayload,
+  UserRefreshPayload,
+} from "@/models/types/Auth/AuthPayloads";
 
 const initialState: {
-  userInfo: UserInfo | null;
+  userSession: UserSession | null;
   loginStatus: LoginStatus;
   wasLastRefreshSuccessful: boolean | null;
   wasLastRefresh: boolean;
   logoutCount: number;
-
-  userLogin: {
-    isError: boolean;
-    isLoading: boolean;
-    message: string;
-    statusCode: null | number;
-  };
-
-  userLogout: {
-    isError: boolean;
-    isLoading: boolean;
-    message: string;
-    statusCode: null | number;
-  };
-
-  getAccessTokenWithRefreshToken: {
-    isError: boolean;
-    isLoading: boolean;
-    message: string;
-    statusCode: null | number;
-  };
-
-  getAccessTokenWithRefreshTokenOnAppMount: {
-    isError: boolean;
-    isLoading: boolean;
-    message: string;
-    statusCode: null | number;
-  };
+  userLogin: StandardResponseInfo;
+  userLogout: StandardResponseInfo;
+  getAccessTokenWithRefreshToken: StandardResponseInfo;
+  getAccessTokenWithRefreshTokenOnAppMount: StandardResponseInfo;
 } = {
-  userInfo: null,
+  userSession: null,
   loginStatus: "LOGIN_NOT_PROCESSED",
   wasLastRefreshSuccessful: null,
   wasLastRefresh: false,
@@ -98,7 +82,7 @@ const authSlice = createSlice({
     });
     builder.addCase(userLogin.fulfilled, (state, action) => {
       handleFulfilled("userLogin", state, action);
-      setUserInfoFromLoggedInStatus(action, state);
+      setUserSessionFromLoggedInStatus(action, state);
 
       if (action.payload.isError) {
         state.userLogin.isError = action.payload.message;
@@ -118,14 +102,13 @@ const authSlice = createSlice({
       handleFulfilled("userLogout", state, action);
       if (!action.payload.isError) {
         state.loginStatus = "LOGGED_OUT";
-        state.userInfo = null;
+        state.userSession = null;
         state.wasLastRefresh = false;
       }
     });
     builder.addCase(userLogout.rejected, (state, action) => {
       state.wasLastRefreshSuccessful = null;
-      handleRejected("userLogout", state, action);
-      //state.loginStatus = "LOGGED_OUT";
+      handleRejected("userLogout", state, action); //Don't set userSession to null here and don't set loginStatus to LOGGED_OUT. If the logout fails, the UI should not tell the user that he has logged-out.
     });
     //Get access token with refresh token in the background.
     //Do not change isLoading for any getAccessTokenWithRefreshToken case. The access token being updated should happen
@@ -199,10 +182,21 @@ const authSlice = createSlice({
   },
 });
 
-function handleRefreshState(action, state) {
+function handleRefreshState(
+  action: PayloadAction<UserRefreshPayload>,
+  state: AuthSliceState
+) {
   if (!action.payload.isError) {
-    const { message, status, isError, ...userInfo } = action.payload;
-    state.userInfo = userInfo;
+    const { id, email, firstName, iat, exp, role } = action.payload;
+    state.userSession = {
+      id,
+      email,
+      firstName,
+      iat,
+      exp,
+      role,
+    };
+
     state.loginStatus = "LOGGED_IN";
     state.wasLastRefreshSuccessful = true;
 
@@ -212,18 +206,27 @@ function handleRefreshState(action, state) {
       state.wasLastRefresh = false;
     }
   } else {
-    state.userInfo = null;
+    state.userSession = null;
     state.loginStatus = "LOGGED_OUT";
     state.wasLastRefreshSuccessful = false;
     state.wasLastRefresh = false;
   }
 }
 
-function setUserInfoFromLoggedInStatus(action, state) {
-  console.log("in setUserInfoFromLoggedInStatus");
+function setUserSessionFromLoggedInStatus(
+  action: PayloadAction<UserLoginPayload>,
+  state: AuthSliceState
+) {
   if (!action.payload.isError) {
-    const { message, status, isError, ...userInfo } = action.payload;
-    state.userInfo = userInfo;
+    const { id, email, firstName, iat, exp, role } = action.payload;
+    state.userSession = {
+      id,
+      email,
+      firstName,
+      iat,
+      exp,
+      role,
+    };
     state.loginStatus = "LOGGED_IN";
     state.wasLastRefreshSuccessful = null;
     state.wasLastRefresh = false;
@@ -234,9 +237,13 @@ function setUserInfoFromLoggedInStatus(action, state) {
 
 export const { increaseLogoutCount } = authSlice.actions;
 export const authReducer = authSlice.reducer;
-export const selectUserInfo = (state) => state.authSlice.userInfo;
-export const selectLoginStatus = (state) => state.authSlice.loginStatus;
-export const selectLogoutCount = (state) => state.authSlice.logoutCount;
-export const selectUserLogin = (state) => state.authSlice.userLogin;
-export const selectGetAccessTokenWithRefreshTokenOnAppMount = (state) =>
-  state.authSlice.getAccessTokenWithRefreshTokenOnAppMount;
+export const selectUserSession = (state: RootState) =>
+  state.authSlice.userSession;
+export const selectLoginStatus = (state: RootState) =>
+  state.authSlice.loginStatus;
+export const selectLogoutCount = (state: RootState) =>
+  state.authSlice.logoutCount;
+export const selectUserLogin = (state: RootState) => state.authSlice.userLogin;
+export const selectGetAccessTokenWithRefreshTokenOnAppMount = (
+  state: RootState
+) => state.authSlice.getAccessTokenWithRefreshTokenOnAppMount;

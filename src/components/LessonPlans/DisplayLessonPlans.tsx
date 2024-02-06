@@ -2,9 +2,7 @@
 import { Box, Grid, Stack, Typography } from "@mui/material";
 import LessonPlanCard from "./LessonPlanCard";
 import { LessonPlan } from "../../models/types/LessonPlans/LessonPlan";
-import { useDispatch, useSelector } from "react-redux";
 import {
-  AppDispatch,
   selectAllBookmarks,
   selectFetchBookmarks,
   selectLoginStatus,
@@ -18,6 +16,8 @@ import { LoginStatus } from "@/models/types/Auth/LoginStatus";
 import { getBookmakedLessonPlanIds } from "@/component-functions/get-bookmarked-lessonplan-ids";
 import NotificationBox from "../NotificationBox";
 import { LessonPlanCategory } from "@/models/types/LessonPlans/LessonPlanCategory";
+import { StandardResponseInfo } from "@/models/types/DataFetching/StandardResponseInfo";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 export default function DisplayLessonplans({
   lessonPlans,
@@ -30,24 +30,17 @@ export default function DisplayLessonplans({
   }[];
 }) {
   //To do: Move this to route component?
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   console.log("display lesson plans rendered");
 
   const bookmarks: {
     userId: string;
     lessonPlanId: string;
-  }[] = useSelector(selectAllBookmarks);
-  const fetchBookMarks: {
-    isError: boolean;
-    isLoading: boolean;
-    message: string;
-    statusCode: null | number;
-  } = useSelector(selectFetchBookmarks);
+  }[] = useAppSelector(selectAllBookmarks);
+  const fetchBookMarksInfo: StandardResponseInfo =
+    useAppSelector(selectFetchBookmarks);
 
-  console.log("fetchBookmarks in DisplayLessonPlans ");
-  console.log(fetchBookMarks);
-
-  const loginStatus: LoginStatus = useSelector(selectLoginStatus);
+  const loginStatus: LoginStatus = useAppSelector(selectLoginStatus);
 
   useEffect(() => {
     dispatch(fetchBookmarks());
@@ -60,7 +53,7 @@ export default function DisplayLessonplans({
   );
 
   //Set here because bookmarks are not ready until they have both loaded and getBookmakedLessonPlanIds# has run.
-  if (!fetchBookMarks.isLoading) {
+  if (!fetchBookMarksInfo.isLoading) {
     areBookmarksReady = true;
   }
 

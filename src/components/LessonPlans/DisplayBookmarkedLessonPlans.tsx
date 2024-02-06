@@ -2,9 +2,7 @@
 import { Box, Grid, Typography } from "@mui/material";
 import LessonPlanCard from "./LessonPlanCard";
 import { LessonPlan } from "../../models/types/LessonPlans/LessonPlan";
-import { useDispatch, useSelector } from "react-redux";
 import {
-  AppDispatch,
   selectAllBookmarks,
   selectFetchBookmarks,
   selectLoginStatus,
@@ -20,6 +18,8 @@ import { getBookmakedLessonPlanIds } from "@/component-functions/get-bookmarked-
 import NotificationBox from "../NotificationBox";
 import { LessonPlanCategory } from "@/models/types/LessonPlans/LessonPlanCategory";
 import LoadingSpinner from "../Presentation/LoadingSpinner";
+import { StandardResponseInfo } from "@/models/types/DataFetching/StandardResponseInfo";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 export default function DisplayLessonPlanBookmarks({
   lessonPlans,
@@ -32,21 +32,17 @@ export default function DisplayLessonPlanBookmarks({
   }[];
 }) {
   console.log("LessonPlanBookmarks rendered");
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   useRedirectWhenLoggedOut("/auth/signin");
 
   const bookmarks: {
     userId: string;
     lessonPlanId: string;
-  }[] = useSelector(selectAllBookmarks);
-  const fetchBookMarks: {
-    isError: boolean;
-    isLoading: boolean;
-    message: string;
-    statusCode: null | number;
-  } = useSelector(selectFetchBookmarks);
+  }[] = useAppSelector(selectAllBookmarks);
+  const fetchBookMarksInfo: StandardResponseInfo =
+    useAppSelector(selectFetchBookmarks);
 
-  const loginStatus: LoginStatus = useSelector(selectLoginStatus);
+  const loginStatus: LoginStatus = useAppSelector(selectLoginStatus);
 
   useEffect(() => {
     dispatch(fetchBookmarks());
@@ -59,7 +55,7 @@ export default function DisplayLessonPlanBookmarks({
   );
 
   //Set here because bookmarks are not ready until they have both loaded and getBookmakedLessonPlanIds# has run.
-  if (!fetchBookMarks.isLoading) {
+  if (!fetchBookMarksInfo.isLoading) {
     areBookmarksReady = true;
   }
 
@@ -91,7 +87,7 @@ export default function DisplayLessonPlanBookmarks({
       </Grid>
     ));
 
-  if (fetchBookMarks.isLoading) {
+  if (fetchBookMarksInfo.isLoading) {
     return (
       <Box display="flex" justifyContent={"center"}>
         <LoadingSpinner />

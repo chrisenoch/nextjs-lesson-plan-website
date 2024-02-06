@@ -5,32 +5,42 @@ import {
   handlePending,
   handleRejected,
 } from "./thunk-helpers";
+import { RootState } from "@/store";
+import { StandardResponseInfo } from "@/models/types/DataFetching/StandardResponseInfo";
+import { Job } from "@/models/types/Jobs/Jobs";
+
+const initialState: {
+  jobs: Job[];
+  addJob: StandardResponseInfo;
+  fetchJobs: StandardResponseInfo;
+  deleteJob: StandardResponseInfo;
+} = {
+  jobs: [],
+
+  addJob: {
+    isError: false,
+    isLoading: false,
+    message: "",
+    statusCode: null,
+  },
+
+  fetchJobs: {
+    isError: false,
+    isLoading: true,
+    message: "",
+    statusCode: null,
+  },
+  deleteJob: {
+    isError: false,
+    isLoading: true,
+    message: "",
+    statusCode: null,
+  },
+};
 
 const jobsSlice = createSlice({
   name: "jobsSlice",
-  initialState: {
-    jobs: [],
-
-    addJob: {
-      isError: false,
-      isLoading: false,
-      message: "",
-      statusCode: null,
-    },
-
-    fetchJobs: {
-      isError: false,
-      isLoading: true,
-      message: "",
-      statusCode: null,
-    },
-    deleteJob: {
-      isError: false,
-      isLoading: true,
-      message: "",
-      statusCode: null,
-    },
-  },
+  initialState,
   reducers: {},
   extraReducers(builder) {
     //addJob
@@ -41,6 +51,9 @@ const jobsSlice = createSlice({
       handleFulfilled("addJob", state, action);
 
       if (!action.payload.isError) {
+        console.log("action.payload.job");
+        console.log(action.payload.job);
+
         state.jobs.push(action.payload.job);
         state.addJob.isError = false;
       } else {
@@ -108,7 +121,7 @@ export const fetchJobs = createAsyncThunk(
 
 export const deleteJob = createAsyncThunk(
   "jobsSlice/delete-job",
-  async (id: string, { rejectWithValue }) => {
+  async (id: number, { rejectWithValue }) => {
     try {
       const response = await fetch(`http://localhost:3000/api/jobs`, {
         method: "DELETE",
@@ -154,9 +167,12 @@ export const addJob = createAsyncThunk(
 );
 
 export const jobsReducer = jobsSlice.reducer;
-export const selectAllJobs = (state) => state.jobsSlice.jobs;
+export const selectAllJobs = (state: RootState) => state.jobsSlice.jobs;
 export const selectJobsByUserId = createSelector(
-  [(state) => state.jobsSlice.jobs, (state) => state.authSlice.userInfo?.id],
+  [
+    (state: RootState) => state.jobsSlice.jobs,
+    (state: RootState) => state.authSlice.userSession?.id,
+  ],
   (jobs, userId) => {
     if (userId === null || userId === undefined) {
       return [];
@@ -165,5 +181,5 @@ export const selectJobsByUserId = createSelector(
   }
 );
 
-export const selectFetchJobs = (state) => state.jobsSlice.fetchJobs;
-export const selectAddJob = (state) => state.jobsSlice.addJob;
+export const selectFetchJobs = (state: RootState) => state.jobsSlice.fetchJobs;
+export const selectAddJob = (state: RootState) => state.jobsSlice.addJob;

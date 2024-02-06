@@ -19,6 +19,7 @@ import EuroOutlinedIcon from "@mui/icons-material/EuroOutlined";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import { Masonry } from "@mui/lab";
 import LoadingSpinner from "../Presentation/LoadingSpinner";
+import { Job } from "@/models/types/Jobs/Jobs";
 
 export function JobsPreview({
   jobs,
@@ -26,19 +27,10 @@ export function JobsPreview({
   isError,
   handleJobDelete,
 }: {
-  jobs:
-    | {
-        id: string;
-        jobTitle: string;
-        jobDescription: string;
-        jobLocation: string;
-        jobCompany: string;
-        jobSalary: string;
-      }[]
-    | undefined;
+  jobs: Job[] | undefined;
   isLoading: boolean;
   isError: boolean;
-  handleJobDelete?: (id: string) => void;
+  handleJobDelete?: (id: number) => void;
 }) {
   const isHydrated = useHydrated();
 

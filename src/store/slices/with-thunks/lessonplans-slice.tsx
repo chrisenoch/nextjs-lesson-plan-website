@@ -5,26 +5,35 @@ import {
   handlePending,
   handleRejected,
 } from "./thunk-helpers";
+import { RootState } from "@/store";
+import { StandardResponseInfo } from "@/models/types/DataFetching/StandardResponseInfo";
+import { LessonPlanBoomark } from "@/models/types/LessonPlans/LessonPlanBookmark";
+
+const initialState: {
+  bookmarks: LessonPlanBoomark[];
+  toggleBookmark: StandardResponseInfo;
+  fetchBookmarks: StandardResponseInfo;
+} = {
+  bookmarks: [],
+
+  toggleBookmark: {
+    isError: false,
+    isLoading: false,
+    message: "",
+    statusCode: null,
+  },
+
+  fetchBookmarks: {
+    isError: false,
+    isLoading: true,
+    message: "",
+    statusCode: null,
+  },
+};
 
 const lessonPlansSlice = createSlice({
   name: "lessonPlansSlice",
-  initialState: {
-    bookmarks: [],
-
-    toggleBookmark: {
-      isError: false,
-      isLoading: false,
-      message: "",
-      statusCode: null,
-    },
-
-    fetchBookmarks: {
-      isError: false,
-      isLoading: true,
-      message: "",
-      statusCode: null,
-    },
-  },
+  initialState,
   reducers: {},
   extraReducers(builder) {
     //toggle bookmark
@@ -53,6 +62,8 @@ const lessonPlansSlice = createSlice({
       handleFulfilled("fetchBookmarks", state, action);
 
       if (!action.payload.isError) {
+        console.log("action.paylaod in fetchBookmarks");
+        console.log(action.payload);
         state.bookmarks = action.payload.bookmarks;
         state.fetchBookmarks.isError = false;
       } else {
@@ -103,8 +114,9 @@ export const toggleBookmark = createAsyncThunk(
 );
 
 export const lessonPlansReducer = lessonPlansSlice.reducer;
-export const selectAllBookmarks = (state) => state.lessonPlansSlice.bookmarks;
-export const selectFetchBookmarks = (state) =>
+export const selectAllBookmarks = (state: RootState) =>
+  state.lessonPlansSlice.bookmarks;
+export const selectFetchBookmarks = (state: RootState) =>
   state.lessonPlansSlice.fetchBookmarks;
-export const selectToggleBookmark = (state) =>
+export const selectToggleBookmark = (state: RootState) =>
   state.lessonPlansSlice.toggleBookmark;

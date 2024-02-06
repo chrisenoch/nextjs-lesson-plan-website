@@ -1,23 +1,21 @@
 import { LoginStatus } from "@/models/types/Auth/LoginStatus";
 import {
-  AppDispatch,
   getAccessTokenWithRefreshToken,
   userLogout,
   selectLoginStatus,
 } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
 
 export default function useAutoLogoutWhenJwtTokenExpires(
   timeBeforeAccessTokenExpiryToSendRefreshToken: number
 ) {
   console.log("useAutoLogoutWhenJwtTokenExpires renders");
-  const loginStatus: LoginStatus = useSelector(selectLoginStatus);
-  const { userInfo, wasLastRefreshSuccessful, wasLastRefresh } = useSelector(
-    (state) => state.authSlice
-  );
-  const dispatch = useDispatch<AppDispatch>();
+  const loginStatus: LoginStatus = useAppSelector(selectLoginStatus);
+  const { userSession, wasLastRefreshSuccessful, wasLastRefresh } =
+    useAppSelector((state) => state.authSlice);
+  const dispatch = useAppDispatch();
   const refreshTokenTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(
     null
   );
@@ -29,8 +27,8 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   }>({ hasAutoLoggedOut: false });
 
   const sendRefreshToken = useCallback(() => {
-    if (userInfo && loginStatus === "LOGGED_IN") {
-      const tokenExpiry = new Date(userInfo.exp * 1000); //userInfo.exp is in seconds, new Date(value) is in milliseconds.
+    if (userSession && loginStatus === "LOGGED_IN") {
+      const tokenExpiry = new Date(userSession.exp * 1000); //userSession.exp is in seconds, new Date(value) is in milliseconds.
 
       //Start the timer to send the refresh token and get a new access token
       const timeUntilAutoLogout = tokenExpiry.valueOf() - Date.now();
@@ -55,7 +53,7 @@ export default function useAutoLogoutWhenJwtTokenExpires(
     dispatch,
     loginStatus,
     timeBeforeAccessTokenExpiryToSendRefreshToken,
-    userInfo,
+    userSession,
   ]);
 
   //Check the access token expiry date periodically and send refresh token just before the token expires.
@@ -91,12 +89,10 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   //We cannot just rely on wasLastRefreshSuccessful because if we do this, then for a short time before logout,
   //requests will be sent non-stop to the refresh endpoint.
   useEffect(() => {
-    if (wasLastRefresh && loginStatus === "LOGGED_IN") {
+    if (wasLastRefresh && userSession && loginStatus === "LOGGED_IN") {
       clearTimers();
-      console.log(
-        "inside if (wasLastRefresh && userInfo) and about to set timer for autoLogout"
-      );
-      const tokenExpiry = new Date(userInfo.exp * 1000);
+      console.log("About to set timer for autoLogout");
+      const tokenExpiry = new Date(userSession.exp * 1000);
       const millisecondsUntilTokenExpiry = tokenExpiry.valueOf() - Date.now();
 
       autoLogoutTimeoutId.current = setTimeout(() => {
@@ -108,7 +104,7 @@ export default function useAutoLogoutWhenJwtTokenExpires(
     return () => {
       clearTimers();
     };
-  }, [wasLastRefresh, dispatch, userInfo, loginStatus]);
+  }, [wasLastRefresh, dispatch, userSession, loginStatus]);
 
   function clearTimers() {
     refreshTokenTimeoutId.current &&

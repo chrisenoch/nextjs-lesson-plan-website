@@ -14,7 +14,7 @@ import {
   increaseLogoutCount,
   selectGetAccessTokenWithRefreshTokenOnAppMount,
   selectLoginStatus,
-  selectUserInfo,
+  selectUserSession,
   selectUserLogin,
 } from "./slices/with-thunks/auth-slice";
 import {
@@ -23,7 +23,6 @@ import {
   userLogout,
   getAccessTokenWithRefreshTokenOnAppMount,
 } from "./slices/with-thunks/auth-thunks";
-import { dbAPISlice } from "./slices/with-rtk-query/api/db-api-slice";
 import {
   lessonPlansReducer,
   selectAllBookmarks,
@@ -36,10 +35,7 @@ const store = configureStore({
     jobsSlice: jobsReducer,
     authSlice: authReducer,
     lessonPlansSlice: lessonPlansReducer,
-    [dbAPISlice.reducerPath]: dbAPISlice.reducer,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(dbAPISlice.middleware),
 });
 
 export { store };
@@ -60,7 +56,7 @@ export {
   increaseLogoutCount,
   getAccessTokenWithRefreshToken,
   getAccessTokenWithRefreshTokenOnAppMount,
-  selectUserInfo,
+  selectUserSession,
   selectLoginStatus,
   selectUserLogin,
   selectGetAccessTokenWithRefreshTokenOnAppMount,
@@ -68,4 +64,5 @@ export {
 
 export { selectAllBookmarks, selectFetchBookmarks, selectToggleBookmark };
 
+export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
