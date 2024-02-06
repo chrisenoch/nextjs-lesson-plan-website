@@ -28,7 +28,7 @@ export function SignIn() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const userLoginStatus: StandardResponseInfo = useAppSelector(selectUserLogin);
+  const userLoginInfo: StandardResponseInfo = useAppSelector(selectUserLogin);
 
   let isProtectedPage = false;
   if (searchParams.get("redirect")) {
@@ -39,7 +39,7 @@ export function SignIn() {
     isMemberPage = true;
   }
 
-  const shouldHideMessage = useHideMessageOnNavAway(userLoginStatus);
+  const shouldHideMessage = useHideMessageOnNavAway(userLoginInfo);
 
   const isHydrated = useHydrated();
 
@@ -132,12 +132,12 @@ export function SignIn() {
             }}
           />
 
-          {!userLoginStatus.isLoading && (
+          {!userLoginInfo.isLoading && (
             <Button type="submit" variant="contained">
               Submit
             </Button>
           )}
-          {userLoginStatus.isLoading && (
+          {userLoginInfo.isLoading && (
             <LoadingButton
               key={"loading-placeholder"}
               loading
@@ -146,9 +146,9 @@ export function SignIn() {
               Submit
             </LoadingButton>
           )}
-          {!shouldHideMessage && userLoginStatus.isError && (
+          {!shouldHideMessage && userLoginInfo.isError && (
             <NotificationBox
-              message={userLoginStatus.message}
+              message={userLoginInfo.message}
               sxOuterContainer={{
                 marginTop: 2,
               }}

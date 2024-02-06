@@ -3,7 +3,6 @@ import { Box, Grid, Stack, Typography } from "@mui/material";
 import LessonPlanCard from "./LessonPlanCard";
 import { LessonPlan } from "../../models/types/LessonPlans/LessonPlan";
 import {
-  AppDispatch,
   selectAllBookmarks,
   selectFetchBookmarks,
   selectLoginStatus,
@@ -38,11 +37,8 @@ export default function DisplayLessonplans({
     userId: string;
     lessonPlanId: string;
   }[] = useAppSelector(selectAllBookmarks);
-  const fetchBookMarksStatus: StandardResponseInfo =
+  const fetchBookMarksInfo: StandardResponseInfo =
     useAppSelector(selectFetchBookmarks);
-
-  console.log("fetchBookmarks in DisplayLessonPlans ");
-  console.log(fetchBookMarksStatus);
 
   const loginStatus: LoginStatus = useAppSelector(selectLoginStatus);
 
@@ -57,7 +53,7 @@ export default function DisplayLessonplans({
   );
 
   //Set here because bookmarks are not ready until they have both loaded and getBookmakedLessonPlanIds# has run.
-  if (!fetchBookMarksStatus.isLoading) {
+  if (!fetchBookMarksInfo.isLoading) {
     areBookmarksReady = true;
   }
 

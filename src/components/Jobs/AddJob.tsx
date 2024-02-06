@@ -70,13 +70,13 @@ export function AddJob() {
   } = useFormClientStatus(inputRefs);
 
   const dispatch = useAppDispatch();
-  const addJobStatus: StandardResponseInfo = useAppSelector(selectAddJob);
-  const fetchJobsStatus: StandardResponseInfo = useAppSelector(selectFetchJobs);
+  const addJobInfo: StandardResponseInfo = useAppSelector(selectAddJob);
+  const fetchJobsInfo: StandardResponseInfo = useAppSelector(selectFetchJobs);
 
   const jobs: Job[] | undefined = useAppSelector(selectJobsByUserId);
 
-  useClearFormOnSuccess(addJobStatus, clearForm);
-  const shouldHideMessage = useHideMessageOnNavAway(addJobStatus);
+  useClearFormOnSuccess(addJobInfo, clearForm);
+  const shouldHideMessage = useHideMessageOnNavAway(addJobInfo);
 
   const {
     isValid: isFormValid,
@@ -263,18 +263,18 @@ export function AddJob() {
 
           <Button
             type="submit"
-            disabled={addJobStatus.isLoading || !isFormValid}
+            disabled={addJobInfo.isLoading || !isFormValid}
             variant="contained"
             color="primary">
             Add Job
           </Button>
-          {!shouldHideMessage && addJobStatus.message && (
+          {!shouldHideMessage && addJobInfo.message && (
             <NotificationBox
-              message={addJobStatus.message}
+              message={addJobInfo.message}
               sxOuterContainer={{
                 marginTop: 2,
               }}
-              variant={addJobStatus.isError ? "error" : "success"}
+              variant={addJobInfo.isError ? "error" : "success"}
             />
           )}
         </Box>
@@ -293,8 +293,8 @@ export function AddJob() {
       />
       <JobsPreview
         jobs={jobs}
-        isLoading={fetchJobsStatus.isLoading}
-        isError={fetchJobsStatus.isError}
+        isLoading={fetchJobsInfo.isLoading}
+        isError={fetchJobsInfo.isError}
         handleJobDelete={handleJobDelete}></JobsPreview>
     </>
   );
