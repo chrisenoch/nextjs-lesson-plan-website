@@ -188,8 +188,16 @@ function handleRefreshState(
   state: AuthSliceState
 ) {
   if (!action.payload.isError) {
-    const { message, status, isError, ...userInfo } = action.payload;
-    state.userInfo = userInfo;
+    const { id, email, firstName, iat, exp, role } = action.payload;
+    state.userInfo = {
+      id,
+      email,
+      firstName,
+      iat,
+      exp,
+      role,
+    };
+
     state.loginStatus = "LOGGED_IN";
     state.wasLastRefreshSuccessful = true;
 
@@ -211,8 +219,15 @@ function setUserInfoFromLoggedInStatus(
   state: AuthSliceState
 ) {
   if (!action.payload.isError) {
-    const { message, status, isError, ...userInfo } = action.payload;
-    state.userInfo = userInfo;
+    const { id, email, firstName, iat, exp, role } = action.payload;
+    state.userInfo = {
+      id,
+      email,
+      firstName,
+      iat,
+      exp,
+      role,
+    };
     state.loginStatus = "LOGGED_IN";
     state.wasLastRefreshSuccessful = null;
     state.wasLastRefresh = false;
