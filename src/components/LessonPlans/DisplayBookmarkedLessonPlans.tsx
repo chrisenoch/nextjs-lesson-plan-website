@@ -39,7 +39,7 @@ export default function DisplayLessonPlanBookmarks({
     userId: string;
     lessonPlanId: string;
   }[] = useAppSelector(selectAllBookmarks);
-  const fetchBookMarksStatus: StandardResponseInfo =
+  const fetchBookMarksInfo: StandardResponseInfo =
     useAppSelector(selectFetchBookmarks);
 
   const loginStatus: LoginStatus = useAppSelector(selectLoginStatus);
@@ -55,7 +55,7 @@ export default function DisplayLessonPlanBookmarks({
   );
 
   //Set here because bookmarks are not ready until they have both loaded and getBookmakedLessonPlanIds# has run.
-  if (!fetchBookMarksStatus.isLoading) {
+  if (!fetchBookMarksInfo.isLoading) {
     areBookmarksReady = true;
   }
 
@@ -87,7 +87,7 @@ export default function DisplayLessonPlanBookmarks({
       </Grid>
     ));
 
-  if (fetchBookMarksStatus.isLoading) {
+  if (fetchBookMarksInfo.isLoading) {
     return (
       <Box display="flex" justifyContent={"center"}>
         <LoadingSpinner />
