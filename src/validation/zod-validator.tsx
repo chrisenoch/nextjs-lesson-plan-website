@@ -50,7 +50,11 @@ export function getValidationStatuses(
   return validationResult;
 }
 
-export function checkFormValue(zodObject, validatorName, valueToValidate) {
+export function checkFormValue(
+  zodObject: z.ZodObject<any>,
+  validatorName: string,
+  valueToValidate: string
+) {
   const pickedZodObjectSchema = zodObject.pick({ [validatorName]: true });
   return pickedZodObjectSchema.safeParse({ [validatorName]: valueToValidate })
     .success;
