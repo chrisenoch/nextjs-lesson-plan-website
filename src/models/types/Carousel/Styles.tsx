@@ -1,18 +1,18 @@
 import { SxProps, Theme } from "@mui/material";
 
-export type ImageDisplayBoxExcludedKeys = "width" | "height";
-export type ImageDisplayBox =
+export type CarouselItemDisplayBoxExcludedKeys = "width" | "height";
+export type CarouselItemDisplayBox =
   | SxProps<Theme> & {
-      [K in ImageDisplayBoxExcludedKeys]?: never;
+      [K in CarouselItemDisplayBoxExcludedKeys]?: never;
     };
 
-export type ImageRowExcludedKeys =
+export type CarouselItemRowExcludedKeys =
   | "width"
   | "height"
   | "display"
   | "transition"
   | "right";
-export type ImageRow =
+export type CarouselItemRow =
   | SxProps<Theme> & {
-      [K in ImageRowExcludedKeys]?: never;
+      [K in CarouselItemRowExcludedKeys]?: never;
     };
