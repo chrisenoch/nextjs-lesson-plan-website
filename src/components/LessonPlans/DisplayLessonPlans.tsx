@@ -105,7 +105,7 @@ export default function DisplayLessonplans({
           />
         ) : (
           <NotificationBox
-            title="No lesson plans to display."
+            title="No lesson plans to display"
             message=" This may be due to an error. Please try refreshing the page."
             variant="error"
           />
