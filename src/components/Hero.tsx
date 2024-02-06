@@ -178,17 +178,17 @@ export default function Hero() {
           <Grid item xs={6} height="100%">
             <Carousel
               styles={{
-                imageDisplayBox: {
+                itemDisplayBox: {
                   borderRadius: 4,
                 },
               }}
-              imageDisplayWidth={30}
-              imageDisplayHeight={50}
-              imageDisplayWidthUnit={"vw"}
-              imageDisplayHeightUnit={"vh"}
+              itemDisplayWidth={30}
+              itemDisplayHeight={50}
+              itemDisplayWidthUnit={"vw"}
+              itemDisplayHeightUnit={"vh"}
               autoPlay={autoPlay}
               transitions={transitions}
-              images={images}
+              items={images}
               carouselMoveLeft={carouselMoveLeft}
               carouselMoveRight={carouselMoveRight}>
               <Stack
