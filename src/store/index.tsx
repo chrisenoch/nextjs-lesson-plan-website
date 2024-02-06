@@ -14,7 +14,7 @@ import {
   increaseLogoutCount,
   selectGetAccessTokenWithRefreshTokenOnAppMount,
   selectLoginStatus,
-  selectUserInfo,
+  selectUserSession,
   selectUserLogin,
 } from "./slices/with-thunks/auth-slice";
 import {
@@ -60,7 +60,7 @@ export {
   increaseLogoutCount,
   getAccessTokenWithRefreshToken,
   getAccessTokenWithRefreshTokenOnAppMount,
-  selectUserInfo,
+  selectUserSession,
   selectLoginStatus,
   selectUserLogin,
   selectGetAccessTokenWithRefreshTokenOnAppMount,
