@@ -1,15 +1,13 @@
 "use client";
+import { Box, Stack, SxProps, Theme } from "@mui/material";
 import {
-  Box,
-  Button,
-  Paper,
-  Stack,
-  SxProps,
-  Theme,
-  Typography,
-} from "@mui/material";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
+  ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import useTriggerRerender from "@/customHooks/useTriggerRerender";
 import {
   AutoPlay,
@@ -21,74 +19,73 @@ import {
   subscribe,
   unsubscribe,
 } from "@/services/my-custom-event-emitter/SubscriberService";
-import { ImageDisplayBox, ImageRow } from "@/models/types/Carousel/Styles";
+import {
+  CarouselItemDisplayBox,
+  CarouselItemRow,
+} from "@/models/types/Carousel/Styles";
+
+type CarouselElement = { key: any; element: ReactElement };
 
 //Transition duration must be less than autoplayDelay
 export function Carousel({
-  images: unPreparedImages,
+  items: unPreparedItems,
   styles,
-  renderedImageWidth,
-  renderedImageHeight,
-  imageDisplayWidth: IMG_DISPLAY_WIDTH,
-  imageDisplayHeight: IMG_DISPLAY_HEIGHT,
-  imageDisplayWidthUnit: IMG_DISPLAY_WIDTH_UNIT,
-  imageDisplayHeightUnit: IMG_DISPLAY_HEIGHT_UNIT,
+  itemDisplayWidth: ITEM_DISPLAY_WIDTH,
+  itemDisplayHeight: ITEM_DISPLAY_HEIGHT,
+  itemDisplayWidthUnit: ITEM_DISPLAY_WIDTH_UNIT,
+  itemDisplayHeightUnit: ITEM_DISPLAY_HEIGHT_UNIT,
   autoPlay,
   transitions,
   carouselMoveLeft,
   carouselMoveRight,
   children,
 }: {
-  images: { alt: string; imagePath: string }[];
+  items: CarouselElement[];
   styles?: {
-    imageDisplayBox?: ImageDisplayBox;
-    imageRow?: ImageRow;
+    itemDisplayBox?: CarouselItemDisplayBox;
+    itemRow?: CarouselItemRow;
   };
-  renderedImageWidth: number;
-  renderedImageHeight: number;
-  imageDisplayWidth: number;
-  imageDisplayHeight: number;
-  imageDisplayWidthUnit: string;
-  imageDisplayHeightUnit: string;
+  itemDisplayWidth: number;
+  itemDisplayHeight: number;
+  itemDisplayWidthUnit: string;
+  itemDisplayHeightUnit: string;
   autoPlay?: AutoPlay;
   transitions?: Transitions;
   carouselMoveLeft: SubscriberConfigObject;
   carouselMoveRight: SubscriberConfigObject;
   children: React.ReactNode;
 }) {
-  const images = increaseArrayIfTooSmall(unPreparedImages);
+  const items = increaseArrayIfTooSmall(unPreparedItems);
   const DEFAULT_TRANSITION_DURATION = 1000;
-  const TOTAL_IMGS = images.length;
-  const MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG =
-    TOTAL_IMGS * IMG_DISPLAY_WIDTH - IMG_DISPLAY_WIDTH;
+  const TOTAL_ITEMS = items.length;
+  const MAX_WIDTH_TO_RIGHT_OF_DISPLAY_ITEM =
+    TOTAL_ITEMS * ITEM_DISPLAY_WIDTH - ITEM_DISPLAY_WIDTH;
   const RESTART_AUTOPLAY_DELAY = autoPlay?.restartDelayAfterLastUserInteraction
     ? autoPlay?.restartDelayAfterLastUserInteraction
     : 3000;
-  let maxImageRowRight: number;
-  const isOdd = TOTAL_IMGS % 2 === 0 ? false : true;
+  let maxItemRowRight: number;
+  const isOdd = TOTAL_ITEMS % 2 === 0 ? false : true;
   if (isOdd) {
-    maxImageRowRight = Math.floor(TOTAL_IMGS / 2) * IMG_DISPLAY_WIDTH;
+    maxItemRowRight = Math.floor(TOTAL_ITEMS / 2) * ITEM_DISPLAY_WIDTH;
   } else {
-    maxImageRowRight = (TOTAL_IMGS / 2) * IMG_DISPLAY_WIDTH;
+    maxItemRowRight = (TOTAL_ITEMS / 2) * ITEM_DISPLAY_WIDTH;
   }
-  const LEFT_ODD_IMAGES_TO_MOVE = Math.floor(TOTAL_IMGS / 2);
-  const LEFT_EVEN_IMAGES_TO_MOVE = Math.floor(TOTAL_IMGS / 2) - 1;
-  const RIGHT_ODD_IMAGES_TO_MOVE = Math.floor(TOTAL_IMGS / 2) * -1;
-  const RIGHT_EVEN_IMAGES_TO_MOVE = (TOTAL_IMGS / 2) * -1;
+  const LEFT_ODD_ITEMS_TO_MOVE = Math.floor(TOTAL_ITEMS / 2);
+  const LEFT_EVEN_ITEMS_TO_MOVE = Math.floor(TOTAL_ITEMS / 2) - 1;
+  const RIGHT_ODD_ITEMS_TO_MOVE = Math.floor(TOTAL_ITEMS / 2) * -1;
+  const RIGHT_EVEN_ITEMS_TO_MOVE = (TOTAL_ITEMS / 2) * -1;
 
-  const firstImageIndex = isOdd ? Math.floor(TOTAL_IMGS / 2) : TOTAL_IMGS / 2;
-  console.log("firstImageIndex " + firstImageIndex);
+  const firstItemIndex = isOdd ? Math.floor(TOTAL_ITEMS / 2) : TOTAL_ITEMS / 2;
+  console.log("firstItemIndex " + firstItemIndex);
 
   const [isOverFlowShown, setIsOverflowShown] = useState<boolean>(false); //isOverFlowShown is for dveelopment
-  const [imagesOne, setImagesOne] =
-    useState<{ alt: string; imagePath: string }[]>(images);
-  const [imagesTwo, setImagesTwo] =
-    useState<{ alt: string; imagePath: string }[]>(images);
-  const [imageOneRowRight, setImageOneRowRight] =
-    useState<number>(maxImageRowRight);
-  const [imageTwoRowRight, setImageTwoRowRight] =
-    useState<number>(maxImageRowRight);
-  const [activeImageRow, setActiveImageRow] = useState<1 | 2>(1);
+  const [itemsOne, setItemsOne] = useState<CarouselElement[]>(items);
+  const [itemsTwo, setItemsTwo] = useState<CarouselElement[]>(items);
+  const [itemOneRowRight, setItemOneRowRight] =
+    useState<number>(maxItemRowRight);
+  const [itemTwoRowRight, setItemTwoRowRight] =
+    useState<number>(maxItemRowRight);
+  const [activeItemsRow, setActiveItemsRow] = useState<1 | 2>(1);
   const disableControls = useRef<boolean>(false);
   const autoPlayIntervalIds = useRef<ReturnType<typeof setInterval>[]>([]);
   const restartAutoPlayUponIdleTimeoutId = useRef<ReturnType<
@@ -104,178 +101,178 @@ export function Carousel({
   checkForPropsErrors();
 
   const {
-    imageDisplayBoxStyles,
-    overRiddableImageRowStyles,
+    itemDisplayBoxStyles,
+    overRiddableItemRowStyles,
   }: {
-    imageDisplayBoxStyles: SxProps<Theme>;
-    overRiddableImageRowStyles: SxProps<Theme>;
+    itemDisplayBoxStyles: SxProps<Theme>;
+    overRiddableItemRowStyles: SxProps<Theme>;
   } = initSXProps();
 
-  const updateImagesOne = useCallback(() => {
-    console.log("Transition ended imageOneRow");
-    console.log("starting updateImagesOne");
-    //Move images left
-    if (imageOneRowRight === MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG) {
-      let newImagesRowTwo = imagesTwo.slice();
+  const updateItemsOne = useCallback(() => {
+    console.log("Transition ended itemOneRow");
+    console.log("starting updateItemssOne");
+    //Move items left
+    if (itemOneRowRight === MAX_WIDTH_TO_RIGHT_OF_DISPLAY_ITEM) {
+      let newItemsRowTwo = itemsTwo.slice();
       //move first entry to end
-      const firstImgsRowTwo = isOdd
-        ? newImagesRowTwo.slice(0, LEFT_ODD_IMAGES_TO_MOVE)
-        : newImagesRowTwo.slice(0, LEFT_EVEN_IMAGES_TO_MOVE);
-      newImagesRowTwo.push(...firstImgsRowTwo);
-      newImagesRowTwo = isOdd
-        ? newImagesRowTwo.slice(LEFT_ODD_IMAGES_TO_MOVE)
-        : newImagesRowTwo.slice(LEFT_EVEN_IMAGES_TO_MOVE);
+      const firstItemsRowTwo = isOdd
+        ? newItemsRowTwo.slice(0, LEFT_ODD_ITEMS_TO_MOVE)
+        : newItemsRowTwo.slice(0, LEFT_EVEN_ITEMS_TO_MOVE);
+      newItemsRowTwo.push(...firstItemsRowTwo);
+      newItemsRowTwo = isOdd
+        ? newItemsRowTwo.slice(LEFT_ODD_ITEMS_TO_MOVE)
+        : newItemsRowTwo.slice(LEFT_EVEN_ITEMS_TO_MOVE);
 
-      setImagesTwo(newImagesRowTwo);
-      setImageTwoRowRight(maxImageRowRight);
-      setActiveImageRow(2);
+      setItemsTwo(newItemsRowTwo);
+      setItemTwoRowRight(maxItemRowRight);
+      setActiveItemsRow(2);
 
       //Above needs to be completed before the below runs
-      setImageOneRowRight(maxImageRowRight);
-      let newImagesRowOne = imagesOne.slice();
+      setItemOneRowRight(maxItemRowRight);
+      let newItemsRowOne = itemsOne.slice();
       //move first entry to end
-      const firstImgsRowOne = isOdd
-        ? newImagesRowOne.slice(0, LEFT_ODD_IMAGES_TO_MOVE)
-        : newImagesRowOne.slice(0, LEFT_EVEN_IMAGES_TO_MOVE);
-      newImagesRowOne.push(...firstImgsRowOne);
-      newImagesRowOne = isOdd
-        ? newImagesRowOne.slice(LEFT_ODD_IMAGES_TO_MOVE)
-        : newImagesRowOne.slice(LEFT_EVEN_IMAGES_TO_MOVE);
-      setImagesOne(newImagesRowOne);
+      const firstItemsRowOne = isOdd
+        ? newItemsRowOne.slice(0, LEFT_ODD_ITEMS_TO_MOVE)
+        : newItemsRowOne.slice(0, LEFT_EVEN_ITEMS_TO_MOVE);
+      newItemsRowOne.push(...firstItemsRowOne);
+      newItemsRowOne = isOdd
+        ? newItemsRowOne.slice(LEFT_ODD_ITEMS_TO_MOVE)
+        : newItemsRowOne.slice(LEFT_EVEN_ITEMS_TO_MOVE);
+      setItemsOne(newItemsRowOne);
     }
 
-    //Move images right
-    if (imageOneRowRight === 0) {
-      let newImagesRowTwo = imagesTwo.slice();
+    //Move items right
+    if (itemOneRowRight === 0) {
+      let newItemsRowTwo = itemsTwo.slice();
 
       //remove the last entry and add it to the start
-      const lastImgsRowTwo = isOdd
-        ? newImagesRowTwo.slice(RIGHT_ODD_IMAGES_TO_MOVE)
-        : newImagesRowTwo.slice(RIGHT_EVEN_IMAGES_TO_MOVE);
-      newImagesRowTwo.unshift(...lastImgsRowTwo);
-      newImagesRowTwo = isOdd
-        ? newImagesRowTwo.slice(0, RIGHT_ODD_IMAGES_TO_MOVE)
-        : newImagesRowTwo.slice(0, RIGHT_EVEN_IMAGES_TO_MOVE);
+      const lastItemsRowTwo = isOdd
+        ? newItemsRowTwo.slice(RIGHT_ODD_ITEMS_TO_MOVE)
+        : newItemsRowTwo.slice(RIGHT_EVEN_ITEMS_TO_MOVE);
+      newItemsRowTwo.unshift(...lastItemsRowTwo);
+      newItemsRowTwo = isOdd
+        ? newItemsRowTwo.slice(0, RIGHT_ODD_ITEMS_TO_MOVE)
+        : newItemsRowTwo.slice(0, RIGHT_EVEN_ITEMS_TO_MOVE);
 
-      setImagesTwo(newImagesRowTwo);
-      setImageTwoRowRight(maxImageRowRight);
-      setActiveImageRow(2);
+      setItemsTwo(newItemsRowTwo);
+      setItemTwoRowRight(maxItemRowRight);
+      setActiveItemsRow(2);
 
       //Above needs to be completed before the below runs
-      setImageOneRowRight(maxImageRowRight);
-      let newImagesRowOne = imagesOne.slice();
+      setItemOneRowRight(maxItemRowRight);
+      let newItemsRowOne = itemsOne.slice();
       //remove the last entry and add it to the start
-      const lastImgsRowOne = isOdd
-        ? newImagesRowOne.slice(RIGHT_ODD_IMAGES_TO_MOVE)
-        : newImagesRowOne.slice(RIGHT_EVEN_IMAGES_TO_MOVE);
-      newImagesRowOne.unshift(...lastImgsRowOne);
-      newImagesRowOne = isOdd
-        ? newImagesRowOne.slice(0, RIGHT_ODD_IMAGES_TO_MOVE)
-        : newImagesRowOne.slice(0, RIGHT_EVEN_IMAGES_TO_MOVE);
-      setImagesOne(newImagesRowOne);
+      const lastItemsRowOne = isOdd
+        ? newItemsRowOne.slice(RIGHT_ODD_ITEMS_TO_MOVE)
+        : newItemsRowOne.slice(RIGHT_EVEN_ITEMS_TO_MOVE);
+      newItemsRowOne.unshift(...lastItemsRowOne);
+      newItemsRowOne = isOdd
+        ? newItemsRowOne.slice(0, RIGHT_ODD_ITEMS_TO_MOVE)
+        : newItemsRowOne.slice(0, RIGHT_EVEN_ITEMS_TO_MOVE);
+      setItemsOne(newItemsRowOne);
     }
-    console.log("finished updateImagesOne");
+    console.log("finished updateItemsOne");
   }, [
-    LEFT_EVEN_IMAGES_TO_MOVE,
-    LEFT_ODD_IMAGES_TO_MOVE,
-    MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG,
-    RIGHT_EVEN_IMAGES_TO_MOVE,
-    RIGHT_ODD_IMAGES_TO_MOVE,
-    imageOneRowRight,
-    imagesOne,
-    imagesTwo,
+    LEFT_EVEN_ITEMS_TO_MOVE,
+    LEFT_ODD_ITEMS_TO_MOVE,
+    MAX_WIDTH_TO_RIGHT_OF_DISPLAY_ITEM,
+    RIGHT_EVEN_ITEMS_TO_MOVE,
+    RIGHT_ODD_ITEMS_TO_MOVE,
+    itemOneRowRight,
+    itemsOne,
+    itemsTwo,
     isOdd,
-    maxImageRowRight,
+    maxItemRowRight,
   ]);
 
-  const updateImagesTwo = useCallback(() => {
-    console.log("starting updateImagesTwo");
-    console.log("Transition ended imageTwoRow");
-    //Move images left
-    if (imageTwoRowRight === MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG) {
-      let newImagesRowOne = imagesOne.slice();
+  const updateItemsTwo = useCallback(() => {
+    console.log("starting updateItemsTwo");
+    console.log("Transition ended itemTwoRow");
+    //Move items left
+    if (itemTwoRowRight === MAX_WIDTH_TO_RIGHT_OF_DISPLAY_ITEM) {
+      let newItemsRowOne = itemsOne.slice();
       //move first entry to end
-      const firstImgsRowOne = isOdd
-        ? newImagesRowOne.slice(0, LEFT_ODD_IMAGES_TO_MOVE)
-        : newImagesRowOne.slice(0, LEFT_EVEN_IMAGES_TO_MOVE);
-      newImagesRowOne.push(...firstImgsRowOne);
-      newImagesRowOne = isOdd
-        ? newImagesRowOne.slice(LEFT_ODD_IMAGES_TO_MOVE)
-        : newImagesRowOne.slice(LEFT_EVEN_IMAGES_TO_MOVE);
-      setImagesOne(newImagesRowOne);
-      setImageOneRowRight(maxImageRowRight);
-      setActiveImageRow(1);
+      const firstItemsRowOne = isOdd
+        ? newItemsRowOne.slice(0, LEFT_ODD_ITEMS_TO_MOVE)
+        : newItemsRowOne.slice(0, LEFT_EVEN_ITEMS_TO_MOVE);
+      newItemsRowOne.push(...firstItemsRowOne);
+      newItemsRowOne = isOdd
+        ? newItemsRowOne.slice(LEFT_ODD_ITEMS_TO_MOVE)
+        : newItemsRowOne.slice(LEFT_EVEN_ITEMS_TO_MOVE);
+      setItemsOne(newItemsRowOne);
+      setItemOneRowRight(maxItemRowRight);
+      setActiveItemsRow(1);
 
       //Above needs to be completed before the below runs
-      setImageTwoRowRight(maxImageRowRight);
-      let newImagesRowTwo = imagesTwo.slice();
+      setItemTwoRowRight(maxItemRowRight);
+      let newItemsRowTwo = itemsTwo.slice();
       //move first entry to end
-      const firstImgsRowTwo = isOdd
-        ? newImagesRowTwo.slice(0, LEFT_ODD_IMAGES_TO_MOVE)
-        : newImagesRowTwo.slice(0, LEFT_EVEN_IMAGES_TO_MOVE);
-      newImagesRowTwo.push(...firstImgsRowTwo);
-      newImagesRowTwo = isOdd
-        ? newImagesRowTwo.slice(LEFT_ODD_IMAGES_TO_MOVE)
-        : newImagesRowTwo.slice(LEFT_EVEN_IMAGES_TO_MOVE);
-      setImagesTwo(newImagesRowTwo);
+      const firstItemsRowTwo = isOdd
+        ? newItemsRowTwo.slice(0, LEFT_ODD_ITEMS_TO_MOVE)
+        : newItemsRowTwo.slice(0, LEFT_EVEN_ITEMS_TO_MOVE);
+      newItemsRowTwo.push(...firstItemsRowTwo);
+      newItemsRowTwo = isOdd
+        ? newItemsRowTwo.slice(LEFT_ODD_ITEMS_TO_MOVE)
+        : newItemsRowTwo.slice(LEFT_EVEN_ITEMS_TO_MOVE);
+      setItemsTwo(newItemsRowTwo);
     }
 
-    //Move images right
-    if (imageTwoRowRight === 0) {
-      let newImagesRowOne = imagesOne.slice();
+    //Move items right
+    if (itemTwoRowRight === 0) {
+      let newItemsRowOne = itemsOne.slice();
       //remove the last entry and add it to the start
-      const lastImgsRowOne = isOdd
-        ? newImagesRowOne.slice(RIGHT_ODD_IMAGES_TO_MOVE)
-        : newImagesRowOne.slice(RIGHT_EVEN_IMAGES_TO_MOVE);
-      newImagesRowOne.unshift(...lastImgsRowOne);
-      newImagesRowOne = isOdd
-        ? newImagesRowOne.slice(0, RIGHT_ODD_IMAGES_TO_MOVE)
-        : newImagesRowOne.slice(0, RIGHT_EVEN_IMAGES_TO_MOVE);
+      const lastItemsRowOne = isOdd
+        ? newItemsRowOne.slice(RIGHT_ODD_ITEMS_TO_MOVE)
+        : newItemsRowOne.slice(RIGHT_EVEN_ITEMS_TO_MOVE);
+      newItemsRowOne.unshift(...lastItemsRowOne);
+      newItemsRowOne = isOdd
+        ? newItemsRowOne.slice(0, RIGHT_ODD_ITEMS_TO_MOVE)
+        : newItemsRowOne.slice(0, RIGHT_EVEN_ITEMS_TO_MOVE);
 
-      setImagesOne(newImagesRowOne);
-      setImageOneRowRight(maxImageRowRight);
-      setActiveImageRow(1);
+      setItemsOne(newItemsRowOne);
+      setItemOneRowRight(maxItemRowRight);
+      setActiveItemsRow(1);
 
       //Above needs to be completed before the below runs
-      setImageTwoRowRight(maxImageRowRight);
-      let newImagesRowTwo = imagesTwo.slice();
+      setItemTwoRowRight(maxItemRowRight);
+      let newItemsRowTwo = itemsTwo.slice();
       //remove the last entry and add it to the start
-      const lastImgsRowTwo = isOdd
-        ? newImagesRowTwo.slice(RIGHT_ODD_IMAGES_TO_MOVE)
-        : newImagesRowTwo.slice(RIGHT_EVEN_IMAGES_TO_MOVE);
-      newImagesRowTwo.unshift(...lastImgsRowTwo);
-      newImagesRowTwo = isOdd
-        ? newImagesRowTwo.slice(0, RIGHT_ODD_IMAGES_TO_MOVE)
-        : newImagesRowTwo.slice(0, RIGHT_EVEN_IMAGES_TO_MOVE);
-      setImagesTwo(newImagesRowTwo);
+      const lastItemsRowTwo = isOdd
+        ? newItemsRowTwo.slice(RIGHT_ODD_ITEMS_TO_MOVE)
+        : newItemsRowTwo.slice(RIGHT_EVEN_ITEMS_TO_MOVE);
+      newItemsRowTwo.unshift(...lastItemsRowTwo);
+      newItemsRowTwo = isOdd
+        ? newItemsRowTwo.slice(0, RIGHT_ODD_ITEMS_TO_MOVE)
+        : newItemsRowTwo.slice(0, RIGHT_EVEN_ITEMS_TO_MOVE);
+      setItemsTwo(newItemsRowTwo);
     }
-    console.log("finished updateImagesTwo");
+    console.log("finished updateItemsTwo");
   }, [
-    LEFT_EVEN_IMAGES_TO_MOVE,
-    LEFT_ODD_IMAGES_TO_MOVE,
-    MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG,
-    RIGHT_EVEN_IMAGES_TO_MOVE,
-    RIGHT_ODD_IMAGES_TO_MOVE,
-    imageTwoRowRight,
-    imagesOne,
-    imagesTwo,
+    LEFT_EVEN_ITEMS_TO_MOVE,
+    LEFT_ODD_ITEMS_TO_MOVE,
+    MAX_WIDTH_TO_RIGHT_OF_DISPLAY_ITEM,
+    RIGHT_EVEN_ITEMS_TO_MOVE,
+    RIGHT_ODD_ITEMS_TO_MOVE,
+    itemTwoRowRight,
+    itemsOne,
+    itemsTwo,
     isOdd,
-    maxImageRowRight,
+    maxItemRowRight,
   ]);
 
   const moveRightWithAutoPlay = useCallback(() => {
     if (!disableControls.current) {
-      setImageOneRowRight((width) => width - IMG_DISPLAY_WIDTH);
-      setImageTwoRowRight((width) => width - IMG_DISPLAY_WIDTH);
+      setItemOneRowRight((width) => width - ITEM_DISPLAY_WIDTH);
+      setItemTwoRowRight((width) => width - ITEM_DISPLAY_WIDTH);
     }
-  }, [IMG_DISPLAY_WIDTH]);
+  }, [ITEM_DISPLAY_WIDTH]);
 
   const moveLeftWithAutoPlay = useCallback(() => {
     if (!disableControls.current) {
-      setImageOneRowRight((width) => width + IMG_DISPLAY_WIDTH);
-      setImageTwoRowRight((width) => width + IMG_DISPLAY_WIDTH);
+      setItemOneRowRight((width) => width + ITEM_DISPLAY_WIDTH);
+      setItemTwoRowRight((width) => width + ITEM_DISPLAY_WIDTH);
     }
-  }, [IMG_DISPLAY_WIDTH]);
+  }, [ITEM_DISPLAY_WIDTH]);
 
   const startAutoPlay = useCallback(
     (delay: number, direction: AutoPlayDirection) => {
@@ -346,30 +343,30 @@ export function Carousel({
   );
 
   function initSXProps() {
-    let imageDisplayBoxStyles: SxProps<Theme> = {
+    let itemDisplayBoxStyles: SxProps<Theme> = {
       maxWidth: "100%",
       position: "relative",
       overflow: "hidden",
     };
-    let overRiddableImageRowStyles: SxProps<Theme> = {
+    let overRiddableItemRowStyles: SxProps<Theme> = {
       position: "absolute",
-      backgroundColor: "gray",
+      backgroundColor: "transparent",
     };
 
-    if (styles?.imageDisplayBox) {
-      imageDisplayBoxStyles = {
-        ...imageDisplayBoxStyles,
-        ...styles.imageDisplayBox,
+    if (styles?.itemDisplayBox) {
+      itemDisplayBoxStyles = {
+        ...itemDisplayBoxStyles,
+        ...styles.itemDisplayBox,
       };
     }
 
-    if (styles?.imageDisplayBox) {
-      overRiddableImageRowStyles = {
-        ...overRiddableImageRowStyles,
-        ...styles.imageRow,
+    if (styles?.itemDisplayBox) {
+      overRiddableItemRowStyles = {
+        ...overRiddableItemRowStyles,
+        ...styles.itemRow,
       };
     }
-    return { imageDisplayBoxStyles, overRiddableImageRowStyles };
+    return { itemDisplayBoxStyles, overRiddableItemRowStyles };
   }
 
   function stopAutoPlay() {
@@ -380,134 +377,100 @@ export function Carousel({
   }
 
   useEffect(() => {
-    const imageRowEle = document.querySelector("#image-row-1");
-    imageRowEle &&
-      imageRowEle.addEventListener("transitionend", updateImagesOne);
-    imageRowEle &&
-      imageRowEle.addEventListener("transitionend", activateControls);
+    const itemRowEle = document.querySelector("#item-row-1");
+    itemRowEle && itemRowEle.addEventListener("transitionend", updateItemsOne);
+    itemRowEle &&
+      itemRowEle.addEventListener("transitionend", activateControls);
 
-    imageRowEle &&
-      imageRowEle.addEventListener("transitionstart", deactivateControls);
+    itemRowEle &&
+      itemRowEle.addEventListener("transitionstart", deactivateControls);
 
     return () => {
-      imageRowEle?.removeEventListener("transitionend", updateImagesOne);
-      imageRowEle?.removeEventListener("transitionend", activateControls);
-      imageRowEle?.removeEventListener("transitionstart", deactivateControls);
+      itemRowEle?.removeEventListener("transitionend", updateItemsOne);
+      itemRowEle?.removeEventListener("transitionend", activateControls);
+      itemRowEle?.removeEventListener("transitionstart", deactivateControls);
     };
   }, [
-    MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG,
+    MAX_WIDTH_TO_RIGHT_OF_DISPLAY_ITEM,
     activateControls,
     deactivateControls,
-    imageOneRowRight,
-    imagesOne,
-    imagesTwo,
+    itemOneRowRight,
+    itemsOne,
+    itemsTwo,
     isOdd,
-    maxImageRowRight,
-    updateImagesOne,
+    maxItemRowRight,
+    updateItemsOne,
   ]);
 
   useEffect(() => {
-    const imageRowEle = document.querySelector("#image-row-2");
-    imageRowEle &&
-      imageRowEle.addEventListener("transitionend", updateImagesTwo);
-    imageRowEle &&
-      imageRowEle.addEventListener("transitionend", activateControls);
+    const itemRowEle = document.querySelector("#item-row-2");
+    itemRowEle && itemRowEle.addEventListener("transitionend", updateItemsTwo);
+    itemRowEle &&
+      itemRowEle.addEventListener("transitionend", activateControls);
 
-    imageRowEle &&
-      imageRowEle.addEventListener("transitionstart", deactivateControls);
+    itemRowEle &&
+      itemRowEle.addEventListener("transitionstart", deactivateControls);
 
     return () => {
-      imageRowEle?.removeEventListener("transitionend", updateImagesTwo);
-      imageRowEle?.removeEventListener("transitionend", activateControls);
-      imageRowEle?.removeEventListener("transitionstart", deactivateControls);
+      itemRowEle?.removeEventListener("transitionend", updateItemsTwo);
+      itemRowEle?.removeEventListener("transitionend", activateControls);
+      itemRowEle?.removeEventListener("transitionstart", deactivateControls);
     };
   }, [
-    MAX_WIDTH_TO_RIGHT_OF_DISPLAY_IMG,
+    MAX_WIDTH_TO_RIGHT_OF_DISPLAY_ITEM,
     activateControls,
     deactivateControls,
-    imageTwoRowRight,
-    imagesOne,
-    imagesTwo,
+    itemTwoRowRight,
+    itemsOne,
+    itemsTwo,
     isOdd,
-    maxImageRowRight,
-    updateImagesTwo,
+    maxItemRowRight,
+    updateItemsTwo,
   ]);
 
-  const renderedImagesOne = useMemo(
+  const renderedItemsOne = useMemo(
     () =>
-      imagesOne.map((image, index) => {
+      itemsOne.map((item, index) => {
         return (
           <Box
-            key={image.alt + "-1-" + index + 1}
-            width={`${IMG_DISPLAY_WIDTH}${IMG_DISPLAY_WIDTH_UNIT}`}
-            height={`${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`}
+            key={item.key + "-1-" + index + 1}
+            width={`${ITEM_DISPLAY_WIDTH}${ITEM_DISPLAY_WIDTH_UNIT}`}
+            height={`${ITEM_DISPLAY_HEIGHT}${ITEM_DISPLAY_HEIGHT_UNIT}`}
             flexShrink={0}
             flexGrow={0}>
-            <Image
-              alt={image.alt}
-              src={image.imagePath}
-              width={renderedImageWidth}
-              height={renderedImageHeight}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-              }}
-              priority={
-                index === firstImageIndex ||
-                index === firstImageIndex + 1 ||
-                index === firstImageIndex - 1
-                  ? true
-                  : false
-              }
-            />
+            {item.element}
           </Box>
         );
       }),
     [
-      imagesOne,
-      IMG_DISPLAY_WIDTH,
-      IMG_DISPLAY_WIDTH_UNIT,
-      IMG_DISPLAY_HEIGHT,
-      IMG_DISPLAY_HEIGHT_UNIT,
-      renderedImageWidth,
-      renderedImageHeight,
-      firstImageIndex,
+      itemsOne,
+      ITEM_DISPLAY_WIDTH,
+      ITEM_DISPLAY_WIDTH_UNIT,
+      ITEM_DISPLAY_HEIGHT,
+      ITEM_DISPLAY_HEIGHT_UNIT,
     ]
   );
 
-  const renderedImagesTwo = useMemo(
+  const renderedItemsTwo = useMemo(
     () =>
-      imagesTwo.map((image, index) => {
+      itemsTwo.map((item, index) => {
         return (
           <Box
-            key={image.alt + "-2-" + index + 1}
-            width={`${IMG_DISPLAY_WIDTH}${IMG_DISPLAY_WIDTH_UNIT}`}
-            height={`${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`}
+            key={item.key + "-2-" + index + 1}
+            width={`${ITEM_DISPLAY_WIDTH}${ITEM_DISPLAY_WIDTH_UNIT}`}
+            height={`${ITEM_DISPLAY_HEIGHT}${ITEM_DISPLAY_HEIGHT_UNIT}`}
             flexShrink={0}
             flexGrow={0}>
-            <Image
-              alt={image.alt}
-              src={image.imagePath}
-              width={renderedImageWidth}
-              height={renderedImageHeight}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-              }}
-            />
+            {item.element}
           </Box>
         );
       }),
     [
-      IMG_DISPLAY_HEIGHT,
-      IMG_DISPLAY_HEIGHT_UNIT,
-      IMG_DISPLAY_WIDTH,
-      IMG_DISPLAY_WIDTH_UNIT,
-      imagesTwo,
-      renderedImageHeight,
-      renderedImageWidth,
+      ITEM_DISPLAY_HEIGHT,
+      ITEM_DISPLAY_HEIGHT_UNIT,
+      ITEM_DISPLAY_WIDTH,
+      ITEM_DISPLAY_WIDTH_UNIT,
+      itemsTwo,
     ]
   );
 
@@ -519,8 +482,8 @@ export function Carousel({
   }, [triggerRerender]);
 
   function checkForPropsErrors() {
-    if (images.length < 2) {
-      throw new Error("You must include at least two images.");
+    if (items.length < 2) {
+      throw new Error("You must include at least two carousel items.");
     }
     if (transitions && autoPlay && autoPlay.delay < transitions.durationMs) {
       console.warn(
@@ -546,14 +509,14 @@ export function Carousel({
       restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
       if (!disableControls.current) {
         // restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
-        setImageOneRowRight((width) => width + IMG_DISPLAY_WIDTH);
-        setImageTwoRowRight((width) => width + IMG_DISPLAY_WIDTH);
+        setItemOneRowRight((width) => width + ITEM_DISPLAY_WIDTH);
+        setItemTwoRowRight((width) => width + ITEM_DISPLAY_WIDTH);
       }
     }
     return {
       subscribe: moveLeftManualControls,
     };
-  }, [IMG_DISPLAY_WIDTH, RESTART_AUTOPLAY_DELAY, restartAutoPlayUponIdle]);
+  }, [ITEM_DISPLAY_WIDTH, RESTART_AUTOPLAY_DELAY, restartAutoPlayUponIdle]);
   const moveRightSubscription = useMemo(() => {
     function moveRightManualControls() {
       console.log("in moveRightManualControls");
@@ -561,14 +524,14 @@ export function Carousel({
       restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
       if (!disableControls.current) {
         // restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
-        setImageOneRowRight((width) => width - IMG_DISPLAY_WIDTH);
-        setImageTwoRowRight((width) => width - IMG_DISPLAY_WIDTH);
+        setItemOneRowRight((width) => width - ITEM_DISPLAY_WIDTH);
+        setItemTwoRowRight((width) => width - ITEM_DISPLAY_WIDTH);
       }
     }
     return {
       subscribe: moveRightManualControls,
     };
-  }, [IMG_DISPLAY_WIDTH, RESTART_AUTOPLAY_DELAY, restartAutoPlayUponIdle]);
+  }, [ITEM_DISPLAY_WIDTH, RESTART_AUTOPLAY_DELAY, restartAutoPlayUponIdle]);
 
   useEffect(() => {
     carouselMoveLeft && subscribe(carouselMoveLeft, moveLeftSubscription);
@@ -587,64 +550,62 @@ export function Carousel({
 
   return (
     <Box
-      id="image-display-box"
-      width={`${IMG_DISPLAY_WIDTH}${IMG_DISPLAY_WIDTH_UNIT}`}
-      height={`${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`}
-      sx={imageDisplayBoxStyles}>
+      id="item-display-box"
+      width={`${ITEM_DISPLAY_WIDTH}${ITEM_DISPLAY_WIDTH_UNIT}`}
+      height={`${ITEM_DISPLAY_HEIGHT}${ITEM_DISPLAY_HEIGHT_UNIT}`}
+      sx={itemDisplayBoxStyles}>
       <Stack
         direction="row"
-        id="image-row-1"
+        id="item-row-1"
         sx={{
-          width: `${IMG_DISPLAY_WIDTH}${IMG_DISPLAY_WIDTH_UNIT}`,
-          height: `${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`,
-          display: `${activeImageRow === 1 ? "flex" : "none"}`,
+          width: `${ITEM_DISPLAY_WIDTH}${ITEM_DISPLAY_WIDTH_UNIT}`,
+          height: `${ITEM_DISPLAY_HEIGHT}${ITEM_DISPLAY_HEIGHT_UNIT}`,
+          display: `${activeItemsRow === 1 ? "flex" : "none"}`,
           transition: `right ${
             transitions
               ? transitions.durationMs + "ms"
               : DEFAULT_TRANSITION_DURATION + "ms"
           } ${transitions ? transitions.easingFunction : "ease-out"} `,
-          right: `${imageOneRowRight}${IMG_DISPLAY_WIDTH_UNIT}`,
-          ...overRiddableImageRowStyles,
+          right: `${itemOneRowRight}${ITEM_DISPLAY_WIDTH_UNIT}`,
+          ...overRiddableItemRowStyles,
         }}>
-        {renderedImagesOne}
+        {renderedItemsOne}
       </Stack>
       <Stack
         direction="row"
-        id="image-row-2"
+        id="item-row-2"
         sx={{
-          width: `${IMG_DISPLAY_WIDTH}${IMG_DISPLAY_WIDTH_UNIT}`,
-          height: `${IMG_DISPLAY_HEIGHT}${IMG_DISPLAY_HEIGHT_UNIT}`,
-          display: `${activeImageRow === 2 ? "flex" : "none"}`,
+          width: `${ITEM_DISPLAY_WIDTH}${ITEM_DISPLAY_WIDTH_UNIT}`,
+          height: `${ITEM_DISPLAY_HEIGHT}${ITEM_DISPLAY_HEIGHT_UNIT}`,
+          display: `${activeItemsRow === 2 ? "flex" : "none"}`,
           transition: `right ${
             transitions
               ? transitions.durationMs + "ms"
               : DEFAULT_TRANSITION_DURATION + "ms"
           } ${transitions ? transitions.easingFunction : "ease-out"} `,
-          right: `${imageTwoRowRight}${IMG_DISPLAY_WIDTH_UNIT}`, //decreasing the value 'right' moves the Images from left to right
-          ...overRiddableImageRowStyles,
+          right: `${itemTwoRowRight}${ITEM_DISPLAY_WIDTH_UNIT}`, //decreasing the value 'right' moves the items from left to right
+          ...overRiddableItemRowStyles,
         }}>
-        {renderedImagesTwo}
+        {renderedItemsTwo}
       </Stack>
       {children}
     </Box>
   );
 }
 
-function increaseArrayIfTooSmall(
-  imagesArr: { alt: string; imagePath: string }[]
-) {
+function increaseArrayIfTooSmall(itemsArr: CarouselElement[]) {
   let multiplier = 0;
-  if (imagesArr.length === 2 || imagesArr.length === 3) {
+  if (itemsArr.length === 2 || itemsArr.length === 3) {
     multiplier = 3;
-  } else if (imagesArr.length === 4) {
+  } else if (itemsArr.length === 4) {
     multiplier = 2;
   }
   if (multiplier !== 0) {
-    const newImagesArr = [];
+    const newItemsArr = [];
     for (let i = 0; i < multiplier; i++) {
-      newImagesArr.push(...imagesArr);
+      newItemsArr.push(...itemsArr);
     }
-    imagesArr = newImagesArr;
+    itemsArr = newItemsArr;
   }
-  return imagesArr;
+  return itemsArr;
 }

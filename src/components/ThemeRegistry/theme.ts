@@ -29,9 +29,27 @@ const theme = createTheme({
       },
     },
   },
+  breakpoints: {
+    values: {
+      xs: 0,
+      "3sm": 350,
+      "2sm": 430,
+      sm: 600,
+      md: 900,
+      lg: 1200,
+      xl: 1536,
+    },
+  },
   typography: {
     fontFamily: roboto.style.fontFamily,
   },
 });
+
+declare module "@mui/material/styles" {
+  interface BreakpointOverrides {
+    "2sm": true;
+    "3sm": true;
+  }
+}
 
 export default theme;

@@ -104,7 +104,11 @@ export default function DisplayLessonplans({
             message=" No lesson plans are available that match all the filters you selected. Please try removing some filters from the search box to find more lesson plans."
           />
         ) : (
-          <h1>No lesson plans to display</h1>
+          <NotificationBox
+            title="No lesson plans to display"
+            message=" This may be due to an error. Please try refreshing the page."
+            variant="error"
+          />
         )}
       </Grid>
     </Box>
