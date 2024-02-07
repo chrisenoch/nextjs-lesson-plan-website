@@ -35,11 +35,12 @@ export default function useMediaQueryhelper(valueObjectsByPropertyName: {
   return returnObject;
 }
 
-// const valueObjectsByPropertyName = {
-//   titleVariant: [
-//     { h4: matches0Up },
-//     { h3: matches630Up },
-//     { h2: matches1200Up },
-//   ],
-//   titleTextVariant: [{ body1: matches0Up }, { h6: matches900Up }],
-// };
+//Example argument of valueObjectsByPropertyName
+// const { titleVariant, titleTextVariant } = useMediaQueryhelper({
+//     titleVariant: [
+//       { h4: "matches0Up" },
+//       { h3: "matches630Up" },
+//       { h2: "matches1200Up" },
+//     ],
+//     titleTextVariant: [{ body1: "matches0Up" }, { h6: "matches900Up" }],
+//   });
