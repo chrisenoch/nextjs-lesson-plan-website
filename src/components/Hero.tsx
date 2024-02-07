@@ -6,6 +6,7 @@ import {
   IconButton,
   Stack,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { Carousel } from "./Carousel/Carousel";
 import { useMemo, useState } from "react";
@@ -20,6 +21,23 @@ import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
 import Image from "next/image";
 
 export default function Hero() {
+  const matches630 = useMediaQuery("(min-width:630px)");
+  const matches900 = useMediaQuery("(min-width:900px)");
+  const matches1200 = useMediaQuery("(min-width:1200px)");
+
+  let titleVariant: "h2" | "h3" | "h4" = "h3" as const;
+  if (matches630) {
+    titleVariant = "h3";
+  }
+  if (matches1200) {
+    titleVariant = "h2";
+  }
+
+  let titleTextVariant: "h6" | "body1" = "body1" as const;
+  if (matches900) {
+    titleTextVariant = "h6";
+  }
+
   const carouselMoveLeft: SubscriberConfigObject = useMemo(() => {
     return {
       subscribers: new Set(),
@@ -140,7 +158,7 @@ export default function Hero() {
             display={"flex"}
             alignItems={"center"}>
             <Stack alignItems={"start"}>
-              <Typography gutterBottom variant="h2" component="h1">
+              <Typography gutterBottom variant={titleVariant} component="h1">
                 Get{" "}
                 <Box
                   component="span"
@@ -158,7 +176,7 @@ export default function Hero() {
                 lesson plans
               </Typography>
               <Typography
-                variant="h6"
+                variant={titleTextVariant}
                 fontWeight={"regular"}
                 component="p"
                 mb={3}>
@@ -182,9 +200,9 @@ export default function Hero() {
                   borderRadius: 4,
                 },
               }}
-              itemDisplayWidth={30}
+              itemDisplayWidth={100}
               itemDisplayHeight={50}
-              itemDisplayWidthUnit={"vw"}
+              itemDisplayWidthUnit={"%"}
               itemDisplayHeightUnit={"vh"}
               autoPlay={autoPlay}
               transitions={transitions}
