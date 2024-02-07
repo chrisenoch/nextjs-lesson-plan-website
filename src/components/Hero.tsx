@@ -20,7 +20,13 @@ import ColorFactory from "./Utils/ColorFactory";
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
 import Image from "next/image";
 import useMediaQueryhelper from "@/customHooks/useMediaQueryHelper";
-import { h2, h3, h4 } from "./ThemeRegistry/typography-vaues";
+import {
+  TypographyKeys,
+  getTypographyVariantSX,
+  h2,
+  h3,
+  h4,
+} from "./ThemeRegistry/typography-vaues";
 
 export default function Hero() {
   const { titleVariant, titleTextVariant } = useMediaQueryhelper({
@@ -130,6 +136,13 @@ export default function Hero() {
     []
   );
 
+  const title: { [key: string]: TypographyKeys } = {
+    xs: "h4",
+    "630c": "h3",
+    lg: "h2",
+  };
+  const titleSX = getTypographyVariantSX(title);
+
   return (
     <>
       <Stack
@@ -155,14 +168,7 @@ export default function Hero() {
               <Typography
                 gutterBottom
                 variant={"h2"}
-                sx={{
-                  fontSize: {
-                    xs: "10px",
-                    "630c": h2.fontSize,
-
-                    // lg: h2.fontSize,
-                  },
-                }}
+                sx={titleSX}
                 component="h1">
                 {/* <Typography gutterBottom variant={titleVariant} component="h1"> */}
                 Get{" "}
@@ -183,13 +189,6 @@ export default function Hero() {
               </Typography>
               <Typography
                 variant={"h6"}
-                sx={(theme) => ({
-                  fontSize: {
-                    xs: "2.125rem",
-                    lg: "3.75rem",
-                    sm: theme.breakpoints.up("md"),
-                  },
-                })}
                 fontWeight={"regular"}
                 component="p"
                 mb={3}>

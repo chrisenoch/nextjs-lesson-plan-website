@@ -1,11 +1,11 @@
 // I want to use custom breakpoints and reference the theme values with the sx prop. I can't
-// figure out how to do both.
+// figure out how to do this.
 // E.g. The below does not work:
 // sx={(theme) => ({
 //     [theme.breakpoints.up(630)]: { //custom breakpoint
 //       fontSize: theme.typography.h4
 //     },
-//     [theme.breakpoints.up(900)]: { //Does not work if I change 900 to 'md'
+//     [theme.breakpoints.up(900)]: { //Also, does not work if I change 900 to 'md'
 //       // fontSize: theme.typography.h2,
 //       fontSize: theme.typography.h3
 //     },
@@ -16,11 +16,44 @@
 //     //   lg: theme.typography.h2,
 //     // },
 
+//Example argument:
+// const responsiveVariants = {
+//   xs: "h4",
+//   "630c": "h2",
+//   lg: "h1",
+// };
+export function getTypographyVariantSX(
+  responsiveVariants: ResponsiveTypographyVariants
+) {
+  type cssPropsObj = Record<TypographyCSSProp, any>;
+
+  const typographySX: cssPropsObj = {
+    fontWeight: undefined,
+    fontSize: undefined,
+    lineHeight: undefined,
+    letterSpacing: undefined,
+  };
+
+  Object.keys(typographySX).forEach((starterCssProp) => {
+    const breakPointsByTypography: any = {};
+    Object.entries(responsiveVariants).forEach(
+      ([breakpoint, typographyValue]) => {
+        breakPointsByTypography[breakpoint] =
+          typography[typographyValue][starterCssProp];
+      }
+    );
+    const starterCssPropFinal = starterCssProp as TypographyCSSProp;
+    typographySX[starterCssPropFinal] = breakPointsByTypography;
+  });
+
+  return typographySX;
+}
+
 export const h1 = {
   fontWeight: 300,
   fontSize: "6rem",
   lineHeight: 1.167,
-  letterSpacing: "-0.1562em",
+  letterSpacing: "-0.01562em",
 };
 export const h2 = {
   fontWeight: 300,
@@ -71,7 +104,17 @@ export const body2 = {
   letterSpacing: "0.01071em",
 };
 
-type Typography = "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "body1" | "body2";
+export type ResponsiveTypographyVariants = { [key: string]: TypographyKeys };
+
+export type TypographyKeys =
+  | "h1"
+  | "h2"
+  | "h3"
+  | "h4"
+  | "h5"
+  | "h6"
+  | "body1"
+  | "body2";
 
 const typography: { [key: string]: any } = {
   h1,
@@ -89,36 +132,3 @@ type TypographyCSSProp =
   | "fontSize"
   | "lineHeight"
   | "letterSpacing";
-
-//Example argument:
-// const input = {
-//   xs: "h4",
-//   "630c": "h2",
-//   lg: "h1",
-// };
-export function getTypography(responsiveVariants: {
-  [key: string]: Typography;
-}) {
-  type cssPropsObj = Record<TypographyCSSProp, any>;
-
-  const typographySX: cssPropsObj = {
-    fontWeight: undefined,
-    fontSize: undefined,
-    lineHeight: undefined,
-    letterSpacing: undefined,
-  };
-
-  Object.keys(typographySX).forEach((starterCssProp) => {
-    const breakPointsByTypography: any = {};
-    Object.entries(responsiveVariants).forEach(
-      ([breakpoint, typographyValue]) => {
-        breakPointsByTypography[breakpoint] =
-          typography[typographyValue][starterCssProp];
-      }
-    );
-    const starterCssPropFinal = starterCssProp as TypographyCSSProp;
-    typographySX[starterCssPropFinal] = breakPointsByTypography;
-  });
-
-  return typographySX;
-}
