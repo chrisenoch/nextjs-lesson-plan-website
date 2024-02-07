@@ -36,7 +36,7 @@ const theme = createTheme({
   breakpoints: {
     values: {
       xs: 0,
-      "350c": 350, //Using 350 does not work.
+      "350c": 350, //Using 350 as a key does not work.
       "430c": 430,
       sm: 600,
       "630c": 630,
