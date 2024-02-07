@@ -19,24 +19,34 @@ import {
 import ColorFactory from "./Utils/ColorFactory";
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
 import Image from "next/image";
+import useMediaQueryhelper from "@/customHooks/useMediaQueryHelper";
 
 export default function Hero() {
-  const matches630 = useMediaQuery("(min-width:630px)");
-  const matches900 = useMediaQuery("(min-width:900px)");
-  const matches1200 = useMediaQuery("(min-width:1200px)");
+  const { titleVariant, titleTextVariant } = useMediaQueryhelper({
+    titleVariant: [
+      { h4: "matches0Up" },
+      { h3: "matches630Up" },
+      { h2: "matches1200Up" },
+    ],
+    titleTextVariant: [{ body1: "matches0Up" }, { h6: "matches900Up" }],
+  });
 
-  let titleVariant: "h2" | "h3" | "h4" = "h3" as const;
-  if (matches630) {
-    titleVariant = "h3";
-  }
-  if (matches1200) {
-    titleVariant = "h2";
-  }
+  // const matches630 = useMediaQuery("(min-width:630px)");
+  // const matches900 = useMediaQuery("(min-width:900px)");
+  // const matches1200 = useMediaQuery("(min-width:1200px)");
 
-  let titleTextVariant: "h6" | "body1" = "body1" as const;
-  if (matches900) {
-    titleTextVariant = "h6";
-  }
+  // let titleVariant: "h2" | "h3" | "h4" = "h3" as const;
+  // if (matches630) {
+  //   titleVariant = "h3";
+  // }
+  // if (matches1200) {
+  //   titleVariant = "h2";
+  // }
+
+  // let titleTextVariant: "h6" | "body1" = "body1" as const;
+  // if (matches900) {
+  //   titleTextVariant = "h6";
+  // }
 
   const carouselMoveLeft: SubscriberConfigObject = useMemo(() => {
     return {
@@ -159,6 +169,7 @@ export default function Hero() {
             alignItems={"center"}>
             <Stack alignItems={"start"}>
               <Typography gutterBottom variant={titleVariant} component="h1">
+                {/* <Typography gutterBottom variant={titleVariant} component="h1"> */}
                 Get{" "}
                 <Box
                   component="span"
