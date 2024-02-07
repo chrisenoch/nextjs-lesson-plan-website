@@ -36,7 +36,7 @@ export default function Hero() {
   carouselStore.set("moveRight", carouselMoveRight);
 
   const [autoPlay] = useState<AutoPlay>({
-    enableAutoPlay: true,
+    enableAutoPlay: false,
     direction: "RIGHT",
     delay: 4500,
   });
