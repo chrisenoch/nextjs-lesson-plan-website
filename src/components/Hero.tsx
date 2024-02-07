@@ -20,6 +20,7 @@ import ColorFactory from "./Utils/ColorFactory";
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
 import Image from "next/image";
 import useMediaQueryhelper from "@/customHooks/useMediaQueryHelper";
+import { h2, h3, h4 } from "./ThemeRegistry/typography-vaues";
 
 export default function Hero() {
   const { titleVariant, titleTextVariant } = useMediaQueryhelper({
@@ -30,23 +31,6 @@ export default function Hero() {
     ],
     titleTextVariant: [{ body1: "matches0Up" }, { h6: "matches900Up" }],
   });
-
-  // const matches630 = useMediaQuery("(min-width:630px)");
-  // const matches900 = useMediaQuery("(min-width:900px)");
-  // const matches1200 = useMediaQuery("(min-width:1200px)");
-
-  // let titleVariant: "h2" | "h3" | "h4" = "h3" as const;
-  // if (matches630) {
-  //   titleVariant = "h3";
-  // }
-  // if (matches1200) {
-  //   titleVariant = "h2";
-  // }
-
-  // let titleTextVariant: "h6" | "body1" = "body1" as const;
-  // if (matches900) {
-  //   titleTextVariant = "h6";
-  // }
 
   const carouselMoveLeft: SubscriberConfigObject = useMemo(() => {
     return {
@@ -168,7 +152,18 @@ export default function Hero() {
             display={"flex"}
             alignItems={"center"}>
             <Stack alignItems={"start"}>
-              <Typography gutterBottom variant={titleVariant} component="h1">
+              <Typography
+                gutterBottom
+                variant={"h2"}
+                sx={{
+                  fontSize: {
+                    xs: "10px",
+                    "630c": h2.fontSize,
+
+                    // lg: h2.fontSize,
+                  },
+                }}
+                component="h1">
                 {/* <Typography gutterBottom variant={titleVariant} component="h1"> */}
                 Get{" "}
                 <Box
@@ -187,7 +182,14 @@ export default function Hero() {
                 lesson plans
               </Typography>
               <Typography
-                variant={titleTextVariant}
+                variant={"h6"}
+                sx={(theme) => ({
+                  fontSize: {
+                    xs: "2.125rem",
+                    lg: "3.75rem",
+                    sm: theme.breakpoints.up("md"),
+                  },
+                })}
                 fontWeight={"regular"}
                 component="p"
                 mb={3}>

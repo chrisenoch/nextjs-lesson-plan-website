@@ -29,12 +29,17 @@ const theme = createTheme({
       },
     },
   },
+  // I want to use custom breakpoints with sx. This is the easiest way. See "my-custom-breakoint below"
+  // sx={{
+  //   display: 'flex',
+  //   flexDirection: { xs: 'column', <my-custom-breakpint>: 'row' },
   breakpoints: {
     values: {
       xs: 0,
-      "3sm": 350,
-      "2sm": 430,
+      "350c": 350, //Using 350 does not work.
+      "430c": 430,
       sm: 600,
+      "630c": 630,
       md: 900,
       lg: 1200,
       xl: 1536,
@@ -47,8 +52,9 @@ const theme = createTheme({
 
 declare module "@mui/material/styles" {
   interface BreakpointOverrides {
-    "2sm": true;
-    "3sm": true;
+    "350c": true;
+    "430c": true;
+    "630c": true;
   }
 }
 
