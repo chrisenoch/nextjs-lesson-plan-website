@@ -7,6 +7,7 @@ import {
   Stack,
   Typography,
   useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { Carousel } from "./Carousel/Carousel";
 import { useMemo, useState } from "react";
@@ -19,24 +20,22 @@ import {
 import ColorFactory from "./Utils/ColorFactory";
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
 import Image from "next/image";
-import useMediaQueryhelper from "@/customHooks/useMediaQueryHelper";
 import {
-  TypographyKeys,
+  ResponsiveTypographyVariants,
   getTypographyVariantSX,
-  h2,
-  h3,
-  h4,
-} from "./ThemeRegistry/typography-vaues";
+} from "./ThemeRegistry/responsive-typography-sx";
 
 export default function Hero() {
-  const { titleVariant, titleTextVariant } = useMediaQueryhelper({
-    titleVariant: [
-      { h4: "matches0Up" },
-      { h3: "matches630Up" },
-      { h2: "matches1200Up" },
-    ],
-    titleTextVariant: [{ body1: "matches0Up" }, { h6: "matches900Up" }],
-  });
+  const theme = useTheme();
+
+  const title: ResponsiveTypographyVariants = {
+    xs: "h4",
+    "630c": "h3",
+    lg: "h2",
+  };
+  const titleSX = getTypographyVariantSX(title, theme);
+  console.log("titleSX");
+  console.log(titleSX);
 
   const carouselMoveLeft: SubscriberConfigObject = useMemo(() => {
     return {
@@ -52,7 +51,6 @@ export default function Hero() {
 
   carouselStore.set("moveLeft", carouselMoveLeft);
   carouselStore.set("moveRight", carouselMoveRight);
-
   const [autoPlay] = useState<AutoPlay>({
     enableAutoPlay: false,
     direction: "RIGHT",
@@ -135,13 +133,6 @@ export default function Hero() {
     ],
     []
   );
-
-  const title: { [key: string]: TypographyKeys } = {
-    xs: "h4",
-    "630c": "h3",
-    lg: "h2",
-  };
-  const titleSX = getTypographyVariantSX(title);
 
   return (
     <>
