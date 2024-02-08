@@ -156,12 +156,16 @@ export default function Hero() {
           //height="50vh"
 
           gap={4}
+          sx={{
+            flexWrap: { xs: "wrap", "630c": "nowrap" },
+          }}
           flexWrap={"wrap"}>
           <Grid
             item
-            xs={5}
-            minWidth={460}
+            // xs={5.8}
+            // minWidth={300}
             // height="100%"
+            maxWidth="40%"
             display={"flex"}
             alignItems={"center"}>
             <Stack alignItems={"start"}>
@@ -208,9 +212,10 @@ export default function Hero() {
           </Grid>
           <Grid
             item
-            xs={5}
-            minWidth={460}
+            // xs={5.8}
+            // minWidth={300}
             // height="100%"
+            maxWidth="40%"
             display={"flex"}
             alignItems={"center"}>
             <Stack alignItems={"start"}>
