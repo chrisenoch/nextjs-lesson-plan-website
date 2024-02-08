@@ -34,8 +34,15 @@ export default function Hero() {
     lg: "h2",
   };
   const titleSX = getTypographyVariantSX(title, theme);
-  console.log("titleSX");
-  console.log(titleSX);
+
+  const titleText: ResponsiveTypographyVariants = {
+    xs: "body1",
+    "630c": "h6",
+  };
+  const { fontWeight: doNotUse, ...titleTextSX } = getTypographyVariantSX(
+    titleText,
+    theme
+  );
 
   const carouselMoveLeft: SubscriberConfigObject = useMemo(() => {
     return {
@@ -180,6 +187,7 @@ export default function Hero() {
               </Typography>
               <Typography
                 variant={"h6"}
+                sx={titleTextSX}
                 fontWeight={"regular"}
                 component="p"
                 mb={3}>
