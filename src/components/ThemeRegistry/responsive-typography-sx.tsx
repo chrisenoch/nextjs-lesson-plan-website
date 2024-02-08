@@ -45,6 +45,8 @@ export function getTypographyVariantSX(
     h6: theme.typography.h6,
     body1: theme.typography.body1,
     body2: theme.typography.body2,
+    body15: { ...theme.typography.body2, fontSize: "0.9375rem" },
+    body18: { ...theme.typography.body2, fontSize: "1.125rem" },
   };
   const typographySX: cssPropsObj = {
     fontWeight: undefined,
@@ -79,7 +81,9 @@ export type TypographyKeys =
   | "h5"
   | "h6"
   | "body1"
-  | "body2";
+  | "body2"
+  | "body15"
+  | "body18";
 
 type TypographyCSSProp =
   | "fontWeight"

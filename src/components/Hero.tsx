@@ -30,18 +30,23 @@ export default function Hero() {
 
   const title: ResponsiveTypographyVariants = {
     xs: "h4",
-    "630c": "h3",
+    "430c": "h3",
     lg: "h2",
   };
   const titleText: ResponsiveTypographyVariants = {
-    xs: "body1",
-    "630c": "h6",
+    xs: "body2",
+    "430c": "body1",
+    sm: "body18",
+    md: "h6",
   };
   const titleSX = getTypographyVariantSX(title, theme);
   const { fontWeight: doNotUse, ...titleTextSX } = getTypographyVariantSX(
     titleText,
     theme
   );
+
+  console.log("titleText");
+  console.log(titleTextSX);
 
   const carouselMoveLeft: SubscriberConfigObject = useMemo(() => {
     return {
@@ -195,13 +200,38 @@ export default function Hero() {
                 href={"http://localhost:3000/lessonplans/free-lesson-plans.txt"}
                 component="a"
                 variant={"contained"}
-                size="large">
+                size="large"
+                sx={{
+                  fontSize: {
+                    xs: "0.8125rem",
+                    sm: "0.875rem",
+                    md: "0.9375rem",
+                  },
+                  padding: {
+                    xs: "4px 10px",
+                    sm: "6px 16px",
+                    md: "8px 22px",
+                  },
+                }}>
                 Get 60 free lesson plans
               </Button>
             </Stack>
           </Grid>
 
-          <Grid item width={"100%"} minWidth={"40%"} height="450px">
+          <Grid
+            item
+            width={"100%"}
+            minWidth={"40%"}
+            //height="450px"
+
+            sx={{
+              height: {
+                xs: "200px",
+                "430c": "270px",
+                "630c": "400px",
+                md: "450px",
+              },
+            }}>
             <Carousel
               styles={{
                 itemDisplayBox: {
