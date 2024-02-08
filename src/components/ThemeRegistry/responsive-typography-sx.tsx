@@ -61,8 +61,8 @@ export function getTypographyVariantSX(
           typography[typographyValue][typographySXCssProp];
       }
     );
-    const starterCssPropFinal = typographySXCssProp as TypographyCSSProp;
-    typographySX[starterCssPropFinal] = breakPointsByTypography;
+    const typographySXCssPropFinal = typographySXCssProp as TypographyCSSProp;
+    typographySX[typographySXCssPropFinal] = breakPointsByTypography;
   });
 
   return typographySX;
