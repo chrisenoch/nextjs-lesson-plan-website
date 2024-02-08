@@ -6,6 +6,7 @@ export default function PremiumPage() {
   const [num, setNum] = useState<number>(0);
 
   console.log("premium renders");
+  //Some content added
   return (
     <Stack
       spacing={2}
