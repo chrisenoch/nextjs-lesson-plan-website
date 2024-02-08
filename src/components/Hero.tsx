@@ -152,13 +152,16 @@ export default function Hero() {
           container
           alignItems="center"
           justifyContent="center"
-          height="50vh"
+          //flexDirection={"column"}
+          //height="50vh"
+
           gap={4}
-          flexWrap={"nowrap"}>
+          flexWrap={"wrap"}>
           <Grid
             item
-            xs={6}
-            height="100%"
+            xs={5}
+            minWidth={460}
+            // height="100%"
             display={"flex"}
             alignItems={"center"}>
             <Stack alignItems={"start"}>
@@ -203,7 +206,56 @@ export default function Hero() {
               </Button>
             </Stack>
           </Grid>
-          <Grid item xs={6} height="100%">
+          <Grid
+            item
+            xs={5}
+            minWidth={460}
+            // height="100%"
+            display={"flex"}
+            alignItems={"center"}>
+            <Stack alignItems={"start"}>
+              <Typography
+                gutterBottom
+                variant={"h2"}
+                sx={titleSX}
+                component="h1">
+                {/* <Typography gutterBottom variant={titleVariant} component="h1"> */}
+                Get{" "}
+                <Box
+                  component="span"
+                  fontWeight="medium"
+                  color="secondary.light">
+                  fun{" "}
+                </Box>
+                and{" "}
+                <Box
+                  component="span"
+                  fontWeight="medium"
+                  color="secondary.light">
+                  creative{" "}
+                </Box>
+                lesson plans
+              </Typography>
+              <Typography
+                variant={"h6"}
+                sx={titleTextSX}
+                fontWeight={"regular"}
+                component="p"
+                mb={3}>
+                Spend less time lesson planning and more time making money or
+                doing the things you love.{" "}
+              </Typography>
+              <Button
+                download="Free lesson plans"
+                href={"http://localhost:3000/lessonplans/free-lesson-plans.txt"}
+                component="a"
+                variant={"contained"}
+                size="large">
+                Get 60 free lesson plans
+              </Button>
+            </Stack>
+          </Grid>
+          {/* <Grid item xs={6} height="100%">
             <Carousel
               styles={{
                 itemDisplayBox: {
@@ -211,9 +263,9 @@ export default function Hero() {
                 },
               }}
               itemDisplayWidth={100}
-              itemDisplayHeight={50}
+              itemDisplayHeight={300}
               itemDisplayWidthUnit={"%"}
-              itemDisplayHeightUnit={"vh"}
+              itemDisplayHeightUnit={"px"}
               autoPlay={autoPlay}
               transitions={transitions}
               items={images}
@@ -246,7 +298,7 @@ export default function Hero() {
                 </ColorFactory>
               </Stack>{" "}
             </Carousel>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Stack>
     </>
