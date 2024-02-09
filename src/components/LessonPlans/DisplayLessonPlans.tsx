@@ -62,7 +62,17 @@ export default function DisplayLessonplans({
   }
 
   const lessonPlansToDisplay = lessonPlans.map((lessonPlan) => (
-    <Grid item xs={12} sm={6} md={4} key={lessonPlan.title}>
+    // <Grid item xs={12} sm={6} md={4} key={lessonPlan.title}>
+    <Stack
+      direction="row"
+      //item
+      sx={{
+        minWidth: "265px",
+        maxWidth: { xs: "80%", sm: "390px", lg: "438px" }, //sm: "438px"
+        //maxWidth: "48%",
+        //marginLeft: 0,
+      }}
+      key={lessonPlan.title}>
       <LessonPlanCard
         id={lessonPlan.id}
         title={lessonPlan.title}
@@ -84,7 +94,7 @@ export default function DisplayLessonplans({
         handleToggleBookmark={handleToggleBookmark}
         loginStatus={loginStatus}
       />
-    </Grid>
+    </Stack>
   ));
 
   return (
@@ -95,7 +105,13 @@ export default function DisplayLessonplans({
         minHeight: "600px",
         margin: "0 auto",
       }}>
-      <Grid container rowSpacing={3} columnSpacing={3}>
+      <Stack
+        direction="row"
+        sx={{
+          justifyContent: "center",
+          gap: 3,
+          flexWrap: "wrap",
+        }}>
         {lessonPlansToDisplay.length > 0 ? (
           lessonPlansToDisplay
         ) : selectedLessonPlanCategories.length > 0 ? (
@@ -110,7 +126,7 @@ export default function DisplayLessonplans({
             variant="error"
           />
         )}
-      </Grid>
+      </Stack>
     </Box>
   );
 }
