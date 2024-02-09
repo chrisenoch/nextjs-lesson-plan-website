@@ -11,7 +11,9 @@ export default async function SavedLessonPlans() {
       searchTitle="Search saved plans"
       displayLessonPlansComponent="DisplayBookmarkedLessonPlans"
       lessonPlans={lessonPlans}
-      //sxSearchLessonPlansOuterContainer={{ mt: 0 }}
+      sxSearchLessonPlansTitle={{
+        fontSize: { xs: "1.5rem", "350c": "2.125rem" },
+      }}
     />
   );
 }

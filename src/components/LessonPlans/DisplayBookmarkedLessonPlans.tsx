@@ -1,5 +1,5 @@
 "use client";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Stack, Typography } from "@mui/material";
 import LessonPlanCard from "./LessonPlanCard";
 import { LessonPlan } from "../../models/types/LessonPlans/LessonPlan";
 import {
@@ -66,8 +66,22 @@ export default function DisplayLessonPlanBookmarks({
   const lessonPlansToDisplay = lessonPlans
     .filter((lessonPlan) => bookmarkedLessonPlanIds.has(lessonPlan.id))
     .map((lessonPlan) => (
-      <Grid item xs={4} key={lessonPlan.title}>
+      <Stack
+        direction="row"
+        sx={{
+          minWidth: "265px",
+          maxWidth: { xs: "80%", "430c": "320px", sm: "390px", lg: "438px" }, //sm: "438px"
+          height: "fit-content",
+          maxHeight: "fit-content",
+        }}
+        key={lessonPlan.title}>
         <LessonPlanCard
+          sxImage={{
+            height: { xs: "120px", "430c": "180px", sm: "200px" },
+          }}
+          sxDescription={{
+            display: { xs: "none", sm: "block" },
+          }}
           id={lessonPlan.id}
           title={lessonPlan.title}
           duration={lessonPlan.duration}
@@ -84,7 +98,7 @@ export default function DisplayLessonPlanBookmarks({
           handleToggleBookmark={handleToggleBookmark}
           loginStatus={loginStatus}
         />
-      </Grid>
+      </Stack>
     ));
 
   if (fetchBookMarksInfo.isLoading) {
@@ -106,11 +120,19 @@ export default function DisplayLessonPlanBookmarks({
       sx={{
         display: "flex",
         maxWidth: "1200px",
+        minHeight: "600px",
         margin: "0 auto",
+        justifyContent: "center",
       }}>
-      <Grid container rowSpacing={3} columnSpacing={3}>
+      <Stack
+        direction="row"
+        sx={{
+          justifyContent: "center",
+          gap: 3,
+          flexWrap: "wrap",
+        }}>
         {renderedContent}
-      </Grid>
+      </Stack>
     </Box>
   );
 }
