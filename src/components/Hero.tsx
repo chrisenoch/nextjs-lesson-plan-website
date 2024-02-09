@@ -33,13 +33,14 @@ export default function Hero() {
     "430c": "h3",
     lg: "h2",
   };
+  const titleSX = getTypographyVariantSX(title, theme);
+
   const titleText: ResponsiveTypographyVariants = {
     xs: "body2",
     "430c": "body1",
     sm: "body18",
     md: "h6",
   };
-  const titleSX = getTypographyVariantSX(title, theme);
   const { fontWeight: doNotUse, ...titleTextSX } = getTypographyVariantSX(
     titleText,
     theme
