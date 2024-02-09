@@ -54,7 +54,14 @@ export default function RootLayout({
                   flexGrow: 1,
                   px: 3,
                   pb: 3,
-                  pt: 16,
+                  pt: {
+                    xs: 10,
+                    "430c": 10.5,
+                    sm: 11.5,
+                    md: 13,
+                    lg: 13.5,
+                    xl: 16,
+                  },
                 }}>
                 {children}
               </Box>
