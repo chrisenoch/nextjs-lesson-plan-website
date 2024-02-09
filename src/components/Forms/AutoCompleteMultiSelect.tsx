@@ -42,7 +42,7 @@ const AutoCompleteMultiSelect = memo(function AutoCompleteMultiSelect({
   return (
     <Autocomplete
       sx={{
-        marginTop: "24px !important",
+        marginTop: "32px !important",
       }}
       clearOnBlur={false}
       autoHighlight={true}

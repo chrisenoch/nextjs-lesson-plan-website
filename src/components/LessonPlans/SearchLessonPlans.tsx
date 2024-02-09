@@ -4,6 +4,8 @@ import SVG from "../SVGs/SVG";
 import { underline } from "../SVGs/Paths";
 import { SVGPath } from "../SVGs/StyledSVGPath";
 import { setSXValues } from "@/component-functions/set-sx-values";
+import CurvedUnderlineTitle from "../Presentation/CurvedUnderline";
+import { orange } from "@mui/material/colors";
 
 export default function SearchLessonPlans({
   searchTitle,
@@ -49,7 +51,15 @@ export default function SearchLessonPlans({
   return (
     <Stack spacing={4} sx={sxOuterContainerFinal}>
       <Stack sx={sxInnerContainerFinal}>
-        <Typography variant="h4" component="h3" sx={sxTitleFinal}>
+        <CurvedUnderlineTitle
+          component={"h3"}
+          variant="h4"
+          title={searchTitle}
+          color={orange[300]}
+          sxUnderline={{ left: 2 }}
+          sxTypography={sxTitleFinal}
+        />
+        {/* <Typography variant="h4" component="h3" sx={sxTitleFinal}>
           {searchTitle}
         </Typography>
         <SVG
@@ -57,7 +67,7 @@ export default function SearchLessonPlans({
           height="21.5px"
           viewBox={{ minY: 0, minX: 0, height: 21.5, width: 445.5 }}>
           <SVGPath d={underline} sx={{ fill: "orange" }} />
-        </SVG>
+        </SVG> */}
       </Stack>
 
       {children}

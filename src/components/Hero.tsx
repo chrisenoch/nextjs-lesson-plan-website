@@ -6,6 +6,8 @@ import {
   IconButton,
   Stack,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { Carousel } from "./Carousel/Carousel";
 import { useMemo, useState } from "react";
@@ -18,8 +20,35 @@ import {
 import ColorFactory from "./Utils/ColorFactory";
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
 import Image from "next/image";
+import {
+  ResponsiveTypographyVariants,
+  getTypographyVariantSX,
+} from "./ThemeRegistry/responsive-typography-sx";
 
 export default function Hero() {
+  const theme = useTheme();
+
+  const title: ResponsiveTypographyVariants = {
+    xs: "h4",
+    "430c": "h3",
+    lg: "h2",
+  };
+  const titleSX = getTypographyVariantSX(title, theme);
+
+  const titleText: ResponsiveTypographyVariants = {
+    xs: "body2",
+    "430c": "body1",
+    sm: "body18",
+    md: "h6",
+  };
+  const { fontWeight: doNotUse, ...titleTextSX } = getTypographyVariantSX(
+    titleText,
+    theme
+  );
+
+  console.log("titleText");
+  console.log(titleTextSX);
+
   const carouselMoveLeft: SubscriberConfigObject = useMemo(() => {
     return {
       subscribers: new Set(),
@@ -34,7 +63,6 @@ export default function Hero() {
 
   carouselStore.set("moveLeft", carouselMoveLeft);
   carouselStore.set("moveRight", carouselMoveRight);
-
   const [autoPlay] = useState<AutoPlay>({
     enableAutoPlay: false,
     direction: "RIGHT",
@@ -130,17 +158,19 @@ export default function Hero() {
           container
           alignItems="center"
           justifyContent="center"
-          height="50vh"
           gap={4}
-          flexWrap={"nowrap"}>
-          <Grid
-            item
-            xs={6}
-            height="100%"
-            display={"flex"}
-            alignItems={"center"}>
+          sx={{
+            flexWrap: { xs: "wrap", "630c": "nowrap" },
+          }}
+          flexWrap={"wrap"}>
+          <Grid item display={"flex"} alignItems={"center"} width={"100%"}>
             <Stack alignItems={"start"}>
-              <Typography gutterBottom variant="h2" component="h1">
+              <Typography
+                gutterBottom
+                variant={"h2"}
+                sx={titleSX}
+                component="h1">
+                {/* <Typography gutterBottom variant={titleVariant} component="h1"> */}
                 Get{" "}
                 <Box
                   component="span"
@@ -158,7 +188,8 @@ export default function Hero() {
                 lesson plans
               </Typography>
               <Typography
-                variant="h6"
+                variant={"h6"}
+                sx={titleTextSX}
                 fontWeight={"regular"}
                 component="p"
                 mb={3}>
@@ -170,22 +201,48 @@ export default function Hero() {
                 href={"http://localhost:3000/lessonplans/free-lesson-plans.txt"}
                 component="a"
                 variant={"contained"}
-                size="large">
+                size="large"
+                sx={{
+                  fontSize: {
+                    xs: "0.8125rem",
+                    sm: "0.875rem",
+                    md: "0.9375rem",
+                  },
+                  padding: {
+                    xs: "4px 10px",
+                    sm: "6px 16px",
+                    md: "8px 22px",
+                  },
+                }}>
                 Get 60 free lesson plans
               </Button>
             </Stack>
           </Grid>
-          <Grid item xs={6} height="100%">
+
+          <Grid
+            item
+            width={"100%"}
+            minWidth={"40%"}
+            //height="450px"
+
+            sx={{
+              height: {
+                xs: "200px",
+                "430c": "270px",
+                "630c": "400px",
+                md: "450px",
+              },
+            }}>
             <Carousel
               styles={{
                 itemDisplayBox: {
                   borderRadius: 4,
                 },
               }}
-              itemDisplayWidth={30}
-              itemDisplayHeight={50}
-              itemDisplayWidthUnit={"vw"}
-              itemDisplayHeightUnit={"vh"}
+              itemDisplayWidth={100}
+              itemDisplayHeight={100}
+              itemDisplayWidthUnit={"%"}
+              itemDisplayHeightUnit={"%"}
               autoPlay={autoPlay}
               transitions={transitions}
               items={images}
