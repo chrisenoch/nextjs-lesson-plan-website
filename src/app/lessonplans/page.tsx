@@ -8,6 +8,9 @@ export default async function LessonPlansPage() {
       searchTitle="Search lesson plans"
       displayLessonPlansComponent="DisplayLessonPlans"
       lessonPlans={lessonPlans}
+      sxSearchLessonPlansTitle={{
+        fontSize: { xs: "1.5rem", "430c": "2.125rem" },
+      }}
     />
   );
 }
