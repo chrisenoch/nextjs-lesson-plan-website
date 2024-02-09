@@ -13,6 +13,8 @@ import {
   CardActions,
   Button,
   Box,
+  SxProps,
+  Theme,
 } from "@mui/material";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import EuroOutlinedIcon from "@mui/icons-material/EuroOutlined";
@@ -20,17 +22,26 @@ import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import { Masonry } from "@mui/lab";
 import LoadingSpinner from "../Presentation/LoadingSpinner";
 import { Job } from "@/models/types/Jobs/Jobs";
+import { setSXValues } from "@/component-functions/set-sx-values";
 
 export function JobsPreview({
   jobs,
   isLoading,
   isError,
   handleJobDelete,
+  sxTitle,
+  sxDescription,
+  sxDescriptionContainer,
+  sxInfoBar,
 }: {
   jobs: Job[] | undefined;
   isLoading: boolean;
   isError: boolean;
   handleJobDelete?: (id: number) => void;
+  sxTitle?: SxProps<Theme>;
+  sxDescription?: SxProps<Theme>;
+  sxDescriptionContainer?: SxProps<Theme>;
+  sxInfoBar?: SxProps<Theme>;
 }) {
   const isHydrated = useHydrated();
 
@@ -41,6 +52,61 @@ export function JobsPreview({
       </Box>
     );
   }
+
+  const sxTitleDefault: SxProps<Theme> = {
+    "& .MuiCardHeader-title": {
+      backgroundColor: "#dff3d7",
+      display: "inline-block",
+      padding: 1,
+      borderRadius: 4,
+    },
+  };
+
+  const sxDescriptionContainerDefault: SxProps<Theme> = {
+    display: { xs: "none", md: "block" },
+  };
+
+  const sxDescriptionDefault: SxProps<Theme> = {
+    color: "text.secondary",
+    fontSize: "0.9375rem",
+    marginBottom: 0,
+  };
+
+  const sxInfoBarDefault: SxProps<Theme> = {
+    display: "flex",
+    gap: 2,
+    paddingTop: 0,
+    flexWrap: "wrap",
+    marginTop: 0.5,
+  };
+
+  const {
+    sxTitleFinal,
+    sxInfoBarFinal,
+    sxDescriptionFinal,
+    sxDescriptionContainerFinal,
+  } = setSXValues([
+    {
+      userValues: sxTitle,
+      defaultValues: sxTitleDefault,
+      sxName: "Title",
+    },
+    {
+      userValues: sxInfoBar,
+      defaultValues: sxInfoBarDefault,
+      sxName: "InfoBar",
+    },
+    {
+      userValues: sxDescription,
+      defaultValues: sxDescriptionDefault,
+      sxName: "Description",
+    },
+    {
+      userValues: sxDescriptionContainer,
+      defaultValues: sxDescriptionContainerDefault,
+      sxName: "DescriptionContainer",
+    },
+  ]);
 
   //To do: Turn the jobs into links
   const renderedJobs = !jobs
@@ -58,24 +124,10 @@ export function JobsPreview({
             key={job.id}>
             <CardHeader
               color="primary"
-              sx={{
-                "& .MuiCardHeader-title": {
-                  backgroundColor: "#dff3d7",
-                  display: "inline-block",
-                  padding: 1,
-                  borderRadius: 4,
-                },
-              }}
+              sx={sxTitleFinal}
               title={job.jobTitle}
             />
-            <CardContent
-              sx={{
-                display: "flex",
-                gap: 2,
-                paddingTop: 0,
-                flexWrap: "wrap",
-                marginTop: 0.5,
-              }}>
+            <CardContent sx={sxInfoBarFinal}>
               <Stack direction="row">
                 <BusinessOutlinedIcon />
                 <Typography marginLeft={0.5} noWrap>
@@ -95,28 +147,10 @@ export function JobsPreview({
                   {job.jobSalary}
                 </Typography>
               </Stack>
-              {/* <Stack
-                direction="row"
-                sx={{
-                  backgroundColor: orange[50],
-                  paddingX: 1,
-                  borderRadius: 1,
-                }}>
-                <BusinessOutlinedIcon />
-                <Typography marginLeft={0.5} noWrap>
-                  {job.jobCompany}
-                </Typography>
-              </Stack> */}
             </CardContent>
 
-            <CardContent>
-              <Typography
-                paragraph
-                sx={{
-                  color: "text.secondary",
-                  fontSize: "0.9375rem",
-                  marginBottom: 0,
-                }}>
+            <CardContent sx={sxDescriptionContainerFinal}>
+              <Typography paragraph sx={sxDescriptionFinal}>
                 {job.jobDescription}
               </Typography>
             </CardContent>
@@ -162,8 +196,13 @@ export function JobsPreview({
   ) : (
     <Box display="flex" justifyContent={"center"}>
       {/* width = cardWidth * 2 + gap */}
-      <Stack direction={"row"} flexWrap={"wrap"} gap={2} width="1016px">
-        <Masonry columns={2} spacing={2}>
+      <Stack
+        direction={"row"}
+        flexWrap={"wrap"}
+        gap={2}
+        width="1016px"
+        justifyContent={"center"}>
+        <Masonry columns={{ xs: 1, sm: 2 }} spacing={2}>
           {renderedJobs}
         </Masonry>
       </Stack>
