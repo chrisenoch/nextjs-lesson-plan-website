@@ -15,6 +15,7 @@ import {
   Box,
   SxProps,
   Theme,
+  Divider,
 } from "@mui/material";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import EuroOutlinedIcon from "@mui/icons-material/EuroOutlined";
@@ -64,6 +65,7 @@ export function JobsPreview({
 
   const sxDescriptionContainerDefault: SxProps<Theme> = {
     display: { xs: "none", md: "block" },
+    paddingTop: 1,
   };
 
   const sxDescriptionDefault: SxProps<Theme> = {
@@ -74,10 +76,12 @@ export function JobsPreview({
 
   const sxInfoBarDefault: SxProps<Theme> = {
     display: "flex",
-    gap: 2,
+    columnGap: 2,
+    rowGap: 1.5,
     paddingTop: 0,
     flexWrap: "wrap",
     marginTop: 0.5,
+    fontSize: "1rem",
   };
 
   const {
@@ -128,42 +132,48 @@ export function JobsPreview({
               title={job.jobTitle}
             />
             <CardContent sx={sxInfoBarFinal}>
-              <Stack direction="row">
-                <BusinessOutlinedIcon />
-                <Typography marginLeft={0.5} noWrap>
+              <Stack direction="row" alignItems={"center"}>
+                <BusinessOutlinedIcon fontSize="inherit" />
+                <Typography marginLeft={0.5} fontSize="inherit" noWrap>
                   {job.jobCompany}
                 </Typography>
               </Stack>
-              <Stack direction="row">
-                <PlaceOutlinedIcon />
-                <Typography marginLeft={0.5} noWrap>
+              <Stack direction="row" alignItems={"center"}>
+                <PlaceOutlinedIcon fontSize="inherit" />
+                <Typography marginLeft={0.5} fontSize="inherit" noWrap>
                   {job.jobLocation}
                 </Typography>
               </Stack>
 
-              <Stack direction="row">
-                <EuroOutlinedIcon />
-                <Typography marginLeft={0.5} noWrap>
+              <Stack direction="row" alignItems={"center"}>
+                <EuroOutlinedIcon fontSize="inherit" />
+                <Typography marginLeft={0.5} fontSize="inherit" noWrap>
                   {job.jobSalary}
                 </Typography>
               </Stack>
             </CardContent>
-
+            <Divider
+              sx={{
+                marginX: 2,
+                marginBottom: 1,
+                display: { xs: "none", md: "block" },
+              }}
+            />
             <CardContent sx={sxDescriptionContainerFinal}>
               <Typography paragraph sx={sxDescriptionFinal}>
                 {job.jobDescription}
               </Typography>
             </CardContent>
+            <Divider sx={{ marginX: 2 }} />
             <CardActions
               sx={{
                 paddingX: 2,
-                paddingBottom: 2,
+                paddingBottom: 1,
                 justifyContent: "space-between",
               }}>
               <Button
                 href={`#`}
                 color="secondary"
-                variant={"text"}
                 size="large"
                 startIcon={<ArrowForward />}
                 component={InSecureNextLink}

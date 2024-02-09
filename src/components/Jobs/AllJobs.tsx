@@ -16,6 +16,7 @@ export function AllJobs() {
     <JobsPreview
       jobs={jobs}
       isLoading={fetchJobsInfo?.isLoading}
-      isError={fetchJobsInfo.isError}></JobsPreview>
+      isError={fetchJobsInfo.isError}
+      sxInfoBar={{ fontSize: { xs: "0.9375rem", md: "1rem" } }}></JobsPreview>
   );
 }
