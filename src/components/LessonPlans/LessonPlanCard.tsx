@@ -97,16 +97,6 @@ export default function LessonPlanCard({
           <Typography variant="body2" component="div">
             {level}
           </Typography>
-
-          {isPremium && (
-            <Circle
-              sx={{
-                fontSize: "4px",
-                verticalAlign: "middle",
-              }}
-            />
-          )}
-          {isPremium && <Diamond color="secondary" />}
         </Stack>
         <Divider sx={{ borderBottomWidth: 1, mb: 1 }} />
         <Stack
@@ -141,6 +131,14 @@ export default function LessonPlanCard({
             id={id}
             isBookmarked={isBookmarked}
             handleToggleBookmark={handleToggleBookmark}
+          />
+        )}
+        {isPremium && (
+          <Diamond
+            sx={{
+              marginLeft: "auto",
+            }}
+            color="secondary"
           />
         )}
       </CardActions>
