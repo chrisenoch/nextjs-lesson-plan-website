@@ -71,8 +71,6 @@ export default function DisplayLessonplans({
         maxWidth: { xs: "80%", "430c": "320px", sm: "390px", lg: "438px" }, //sm: "438px"
         height: "fit-content",
         maxHeight: "fit-content",
-        //maxWidth: "48%",
-        //marginLeft: 0,
       }}
       key={lessonPlan.title}>
       <LessonPlanCard
