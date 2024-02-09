@@ -68,12 +68,20 @@ export default function DisplayLessonplans({
       //item
       sx={{
         minWidth: "265px",
-        maxWidth: { xs: "80%", sm: "390px", lg: "438px" }, //sm: "438px"
+        maxWidth: { xs: "80%", "430c": "320px", sm: "390px", lg: "438px" }, //sm: "438px"
+        height: "fit-content",
+        maxHeight: "fit-content",
         //maxWidth: "48%",
         //marginLeft: 0,
       }}
       key={lessonPlan.title}>
       <LessonPlanCard
+        sxImage={{
+          height: { xs: "120px", "430c": "180px", sm: "200px" },
+        }}
+        sxDescription={{
+          display: { xs: "none", sm: "block" },
+        }}
         id={lessonPlan.id}
         title={lessonPlan.title}
         duration={lessonPlan.duration}

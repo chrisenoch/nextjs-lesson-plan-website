@@ -5,7 +5,16 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { Avatar, IconButton, Divider, Stack, Chip } from "@mui/material";
+import {
+  Avatar,
+  IconButton,
+  Divider,
+  Stack,
+  Chip,
+  SxProps,
+  Theme,
+  CardMedia,
+} from "@mui/material";
 import Circle from "@mui/icons-material/Circle";
 import Diamond from "@mui/icons-material/Diamond";
 import SecureNextLink from "../Utils/SecureNextLink";
@@ -15,6 +24,7 @@ import { ArrowForward, Done, RocketLaunch } from "@mui/icons-material";
 import { useHydrated } from "@/customHooks/useHydrated";
 import LessonPlanCardBookmarkButton from "./LessonPlanCardBookmarkButton";
 import { log } from "util";
+import { setSXValues } from "@/component-functions/set-sx-values";
 
 export default function LessonPlanCard({
   id,
@@ -29,9 +39,35 @@ export default function LessonPlanCard({
   chips,
   isBookmarked,
   handleToggleBookmark,
+  sxImage,
+  sxDescription,
   loginStatus,
 }: LessonPlanCard) {
   const isHydrated = useHydrated();
+
+  const sxImageDefault: SxProps<Theme> = {
+    height: "200px",
+  };
+  const sxDescriptionDefault: SxProps<Theme> = {
+    mt: 1,
+  };
+
+  const { sxImageFinal, sxDescriptionFinal } = setSXValues([
+    {
+      userValues: sxImage,
+      defaultValues: sxImageDefault,
+      sxName: "Image",
+    },
+    {
+      userValues: sxDescription,
+      defaultValues: sxDescriptionDefault,
+      sxName: "Description",
+    },
+  ]);
+
+  console.log("sxImageFinal");
+  console.log(sxImageFinal);
+
   const lessonChips = chips!.map((lessonChip) => (
     <Chip
       key={lessonChip.title}
@@ -41,30 +77,25 @@ export default function LessonPlanCard({
     />
   ));
 
-  // let bookmarkButton = hydrateAndSelectBookmarkButton(
-  //   isHydrated,
-  //   loginStatus,
-  //   isBookmarked,
-  //   handleToggleBookmark,
-  //   id
-  // );
-
   return (
     <Card
       sx={{
         borderRadius: 4,
       }}>
-      <Image
-        alt={imageAlt}
-        src={imageURL}
-        width={640}
-        height={480}
-        style={{
-          maxWidth: "100%",
-          height: "200px",
-          objectFit: "cover",
-        }}
-      />
+      <CardMedia sx={sxImageFinal}>
+        <Image
+          alt={imageAlt}
+          src={imageURL}
+          width={640}
+          height={480}
+          style={{
+            height: "100%",
+            width: "100%",
+            objectFit: "cover",
+          }}
+        />
+      </CardMedia>
+
       <CardContent>
         <Typography variant="h5" component="div">
           {title}
@@ -109,7 +140,10 @@ export default function LessonPlanCard({
         </Stack>
         <Divider sx={{ borderBottomWidth: 1, mt: 1 }} />
 
-        <Typography variant="body2" sx={{ mt: 1 }} color="text.secondary">
+        <Typography
+          variant="body2"
+          sx={sxDescriptionFinal}
+          color="text.secondary">
           {description}
         </Typography>
       </CardContent>
