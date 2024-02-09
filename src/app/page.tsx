@@ -15,7 +15,12 @@ export default async function HomePage() {
         searchTitle="Search lesson plans"
         displayLessonPlansComponent="DisplayLessonPlans"
         lessonPlans={lessonPlans}
-        sxSearchLessonPlansOuterContainer={{ mt: 12 }}
+        sxSearchLessonPlansTitle={{
+          fontSize: { xs: "1.5rem", "430c": "2.125rem" },
+        }}
+        sxSearchLessonPlansOuterContainer={{
+          mt: { xs: 6, md: 12 },
+        }}
       />
     </>
   );

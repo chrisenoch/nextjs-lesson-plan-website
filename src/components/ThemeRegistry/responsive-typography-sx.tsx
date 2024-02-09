@@ -1,4 +1,5 @@
 import { Theme } from "@mui/material";
+import muiTheme from "./theme";
 
 // I want to use custom breakpoints and change the Typography variant with the sx prop according to screen width.
 // The UI jumps if I use useMediaQuery
@@ -34,19 +35,26 @@ import { Theme } from "@mui/material";
 // }
 export function getTypographyVariantSX(
   responsiveVariants: ResponsiveTypographyVariants,
-  theme: Theme
+  theme?: Theme
 ) {
+  let finalTheme;
+  if (theme) {
+    finalTheme = theme;
+  } else {
+    finalTheme = muiTheme;
+  }
+
   const typography: { [key: string]: any } = {
-    h1: theme.typography.h1,
-    h2: theme.typography.h2,
-    h3: theme.typography.h3,
-    h4: theme.typography.h4,
-    h5: theme.typography.h5,
-    h6: theme.typography.h6,
-    body1: theme.typography.body1,
-    body2: theme.typography.body2,
-    body15: { ...theme.typography.body2, fontSize: "0.9375rem" },
-    body18: { ...theme.typography.body2, fontSize: "1.125rem" },
+    h1: finalTheme.typography.h1,
+    h2: finalTheme.typography.h2,
+    h3: finalTheme.typography.h3,
+    h4: finalTheme.typography.h4,
+    h5: finalTheme.typography.h5,
+    h6: finalTheme.typography.h6,
+    body1: finalTheme.typography.body1,
+    body2: finalTheme.typography.body2,
+    body15: { ...finalTheme.typography.body2, fontSize: "0.9375rem" },
+    body18: { ...finalTheme.typography.body2, fontSize: "1.125rem" },
   };
   const typographySX: cssPropsObj = {
     fontWeight: undefined,
