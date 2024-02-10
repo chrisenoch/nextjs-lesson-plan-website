@@ -295,7 +295,9 @@ export function AddJob() {
         jobs={jobs}
         isLoading={fetchJobsInfo.isLoading}
         isError={fetchJobsInfo.isError}
-        handleJobDelete={handleJobDelete}></JobsPreview>
+        handleJobDelete={handleJobDelete}
+        sxInfoBar={{ fontSize: { xs: "0.9375rem", md: "1rem" } }}
+      />
     </>
   );
 }
