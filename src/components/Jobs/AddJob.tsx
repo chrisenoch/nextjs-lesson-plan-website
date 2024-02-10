@@ -18,8 +18,8 @@ import CurvedUnderlineTitle from "../Presentation/CurvedUnderline";
 import { orange, red } from "@mui/material/colors";
 import NotificationBox from "../NotificationBox";
 import { StandardResponseInfo } from "@/models/types/DataFetching/StandardResponseInfo";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { Job } from "@/models/types/Jobs/Jobs";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 export function AddJob() {
   console.log("add job rendered");
@@ -295,7 +295,9 @@ export function AddJob() {
         jobs={jobs}
         isLoading={fetchJobsInfo.isLoading}
         isError={fetchJobsInfo.isError}
-        handleJobDelete={handleJobDelete}></JobsPreview>
+        handleJobDelete={handleJobDelete}
+        sxInfoBar={{ fontSize: { xs: "0.9375rem", md: "1rem" } }}
+      />
     </>
   );
 }
