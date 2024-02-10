@@ -151,6 +151,7 @@ function getRenderedContent(
       <NotificationBox
         title="Too many filters"
         message=" No lesson plans are available that match all the filters you selected. Please try removing some filters from the search box to find more lesson plans."
+        sxOuterContainer={{ maxWidth: "700px" }}
       />
     );
   } else if (bookmarks.length < 1) {

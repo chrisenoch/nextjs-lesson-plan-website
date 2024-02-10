@@ -110,6 +110,7 @@ export default function DisplayLessonplans({
         maxWidth: "1200px",
         minHeight: "600px",
         margin: "0 auto",
+        justifyContent: "center",
       }}>
       <Stack
         direction="row"
@@ -124,6 +125,7 @@ export default function DisplayLessonplans({
           <NotificationBox
             title="Too many filters"
             message=" No lesson plans are available that match all the filters you selected. Please try removing some filters from the search box to find more lesson plans."
+            sxOuterContainer={{ maxWidth: "700px" }}
           />
         ) : (
           <NotificationBox
