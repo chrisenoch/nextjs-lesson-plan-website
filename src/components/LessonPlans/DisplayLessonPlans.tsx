@@ -110,7 +110,8 @@ export default function DisplayLessonplans({
         maxWidth: "1200px",
         minHeight: "600px",
         margin: "0 auto",
-        justifyContent: "center",
+        //justifyContent: "center",
+        width: "100%",
       }}>
       <Stack
         direction="row"
@@ -118,6 +119,7 @@ export default function DisplayLessonplans({
           justifyContent: "center",
           gap: 3,
           flexWrap: "wrap",
+          width: "100%",
         }}>
         {lessonPlansToDisplay.length > 0 ? (
           lessonPlansToDisplay
@@ -125,13 +127,26 @@ export default function DisplayLessonplans({
           <NotificationBox
             title="Too many filters"
             message=" No lesson plans are available that match all the filters you selected. Please try removing some filters from the search box to find more lesson plans."
-            sxOuterContainer={{ maxWidth: "700px" }}
+            sxOuterContainer={{
+              maxWidth: "700px",
+              mt: { xs: 0, md: 4 },
+              mx: "auto",
+            }}
+            sxMessage={{ fontSize: { xs: "0.875rem", "430c": "1rem" } }}
+            sxTitle={{ fontSize: { xs: "1.5rem", "430c": "2.125rem" } }}
           />
         ) : (
           <NotificationBox
             title="No lesson plans to display"
             message=" This may be due to an error. Please try refreshing the page."
             variant="error"
+            sxOuterContainer={{
+              maxWidth: "700px",
+              mt: { xs: 0, md: 4 },
+              mx: "auto",
+            }}
+            sxMessage={{ fontSize: { xs: "0.875rem", "430c": "1rem" } }}
+            sxTitle={{ fontSize: { xs: "1.5rem", "430c": "2.125rem" } }}
           />
         )}
       </Stack>

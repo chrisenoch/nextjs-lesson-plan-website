@@ -122,7 +122,8 @@ export default function DisplayLessonPlanBookmarks({
         maxWidth: "1200px",
         minHeight: "600px",
         margin: "0 auto",
-        justifyContent: "center",
+        // justifyContent: "center",
+        width: "100%",
       }}>
       <Stack
         direction="row"
@@ -130,6 +131,7 @@ export default function DisplayLessonPlanBookmarks({
           justifyContent: "center",
           gap: 3,
           flexWrap: "wrap",
+          width: "100%",
         }}>
         {renderedContent}
       </Stack>
@@ -151,7 +153,13 @@ function getRenderedContent(
       <NotificationBox
         title="Too many filters"
         message=" No lesson plans are available that match all the filters you selected. Please try removing some filters from the search box to find more lesson plans."
-        sxOuterContainer={{ maxWidth: "700px" }}
+        sxOuterContainer={{
+          maxWidth: "700px",
+          mt: { xs: 0, md: 4 },
+          mx: "auto",
+        }}
+        sxMessage={{ fontSize: { xs: "0.875rem", "430c": "1rem" } }}
+        sxTitle={{ fontSize: { xs: "1.5rem", "430c": "2.125rem" } }}
       />
     );
   } else if (bookmarks.length < 1) {

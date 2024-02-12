@@ -20,6 +20,7 @@ export default async function HomePage() {
         }}
         sxSearchLessonPlansOuterContainer={{
           mt: { xs: 6, md: 12 },
+          // mb: { xs: 2, md: 4 },
         }}
       />
     </>
