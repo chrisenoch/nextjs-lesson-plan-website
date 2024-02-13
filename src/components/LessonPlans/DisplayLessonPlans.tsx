@@ -96,7 +96,7 @@ export default function DisplayLessonPlans({
         key={lessonPlan.title}>
         <LessonPlanCard
           sxImage={{
-            height: { xs: "120px", "430c": "180px", sm: "200px" },
+            height: { xs: "130px", "430c": "160px", md: "200px" },
           }}
           sxDescription={{
             display: { xs: "none", md: "block" },
