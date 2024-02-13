@@ -32,6 +32,8 @@ export default function DisplayLessonPlanBookmarks({
   }[];
 }) {
   console.log("LessonPlanBookmarks rendered");
+  console.log(lessonPlans);
+
   const dispatch = useAppDispatch();
   useRedirectWhenLoggedOut("/auth/signin");
 
@@ -66,15 +68,11 @@ export default function DisplayLessonPlanBookmarks({
   const lessonPlansToDisplay = lessonPlans
     .filter((lessonPlan) => bookmarkedLessonPlanIds.has(lessonPlan.id))
     .map((lessonPlan) => (
-      // equivalent of inner-2
       <Stack
         direction="row"
         sx={{
-          // minWidth: "265px",
-          // maxWidth: { xs: "80%", "430c": "320px", sm: "390px", lg: "438px" }, //sm: "438px"
           height: "fit-content",
           maxHeight: "fit-content",
-          //width: "clamp(180px, 400px, 400px)",
         }}
         key={lessonPlan.title}>
         <LessonPlanCard
@@ -112,37 +110,10 @@ export default function DisplayLessonPlanBookmarks({
   }
 
   const renderedContent = getRenderedContent(
+    lessonPlans,
     lessonPlansToDisplay,
     selectedLessonPlanCategories,
     bookmarks
-  );
-
-  const r = (
-    <Box
-      sx={{
-        display: "flex",
-        maxWidth: "1200px",
-        minHeight: "600px",
-        margin: "0 auto",
-        justifyContent: "center",
-        width: "100%",
-      }}>
-      <Box
-        sx={{
-          display: "grid",
-          justifyContent: "center",
-          gridTemplateColumns: {
-            xs: "repeat(1,minmax(265px, 80%))",
-            "430c": "repeat(1,minmax(265px, 320px))",
-            "715c": "repeat(2,minmax(265px, 320px))",
-            md: "repeat(2,minmax(265px, 390px))",
-            lg: "repeat(2,minmax(265px, 438px))",
-          },
-          gap: 3,
-        }}>
-        {lessonPlansToDisplay}
-      </Box>
-    </Box>
   );
 
   return (
@@ -160,6 +131,7 @@ export default function DisplayLessonPlanBookmarks({
   );
 }
 function getRenderedContent(
+  lessonPlans: LessonPlan[],
   lessonPlansToDisplay: any,
   selectedLessonPlanCategories: {
     title: string;
@@ -167,6 +139,23 @@ function getRenderedContent(
   }[],
   bookmarks: { userId: string; lessonPlanId: string }[]
 ) {
+  if (lessonPlans.length < 1) {
+    return (
+      <NotificationBox
+        title="No lesson plans to display"
+        message=" This may be due to an error. Please try refreshing the page."
+        variant="error"
+        sxOuterContainer={{
+          maxWidth: "700px",
+          mt: { xs: 0, md: 4 },
+          mx: "auto",
+        }}
+        sxMessage={{ fontSize: { xs: "0.875rem", "430c": "1rem" } }}
+        sxTitle={{ fontSize: { xs: "1.5rem", "430c": "2.125rem" } }}
+      />
+    );
+  }
+
   if (lessonPlansToDisplay.length > 0) {
     return (
       <Box
@@ -185,7 +174,9 @@ function getRenderedContent(
         {lessonPlansToDisplay}
       </Box>
     );
-  } else if (selectedLessonPlanCategories.length > 0 && bookmarks.length > 0) {
+  }
+
+  if (selectedLessonPlanCategories.length > 0 && bookmarks.length > 0) {
     return (
       <NotificationBox
         title="Too many filters"
@@ -199,7 +190,9 @@ function getRenderedContent(
         sxTitle={{ fontSize: { xs: "1.5rem", "430c": "2.125rem" } }}
       />
     );
-  } else if (bookmarks.length < 1) {
+  }
+
+  if (bookmarks.length < 1) {
     return (
       <NotificationBox
         message="You have not saved any lesson plans."
