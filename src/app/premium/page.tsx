@@ -15,6 +15,16 @@ export default function PremiumPage() {
       marginTop={2}
       marginBottom={2}>
       <p>This is the premium area!</p>
+      <Box
+        component="p"
+        sx={(theme) => ({ fontSize: theme.typography.body15 })}>
+        Body 15 size
+      </Box>
+      <Box
+        component="p"
+        sx={(theme) => ({ fontSize: theme.typography.body18 })}>
+        Body 18 size
+      </Box>
       <button onClick={() => setNum((c) => c + 1)}>Set Num</button>
       {/* <Box // test custom breakpoints
         sx={{

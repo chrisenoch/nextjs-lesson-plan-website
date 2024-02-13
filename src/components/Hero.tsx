@@ -21,21 +21,24 @@ import ColorFactory from "./Utils/ColorFactory";
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
 import Image from "next/image";
 import {
-  ResponsiveTypographyVariants,
+  MediaQueryByTypographyVariant,
   getTypographyVariantSX,
 } from "./ThemeRegistry/responsive-typography-sx";
 
 export default function Hero() {
   const theme = useTheme();
 
-  const title: ResponsiveTypographyVariants = {
+  const title: MediaQueryByTypographyVariant = {
     xs: "h4",
     "430c": "h3",
     lg: "h2",
   };
   const titleSX = getTypographyVariantSX(title, theme);
 
-  const titleText: ResponsiveTypographyVariants = {
+  console.log("body 2 theme");
+  console.log(theme.typography.body2);
+
+  const titleText: MediaQueryByTypographyVariant = {
     xs: "body2",
     "430c": "body1",
     sm: "body18",

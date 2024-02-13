@@ -48,6 +48,16 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: roboto.style.fontFamily,
+    body15: {
+      fontSize: "0.9375rem",
+      fontWeight: 400,
+      lineHeight: 1.43,
+    },
+    body18: {
+      fontSize: "1.125rem",
+      fontWeight: 400,
+      lineHeight: 1.43,
+    },
   },
 });
 
@@ -57,6 +67,27 @@ declare module "@mui/material/styles" {
     "430c": true;
     "630c": true;
     "715c": true;
+  }
+}
+
+declare module "@mui/material/styles" {
+  interface TypographyVariants {
+    body15: React.CSSProperties;
+    body18: React.CSSProperties;
+  }
+
+  // allow configuration using `createTheme`
+  interface TypographyVariantsOptions {
+    body15?: React.CSSProperties;
+    body18?: React.CSSProperties;
+  }
+}
+
+// Update the Typography's variant prop options
+declare module "@mui/material/Typography" {
+  interface TypographyPropsVariantOverrides {
+    body15: true;
+    body18: true;
   }
 }
 

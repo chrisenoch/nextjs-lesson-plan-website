@@ -1,5 +1,5 @@
 "use client";
-import { Box, Grid, Stack, Typography } from "@mui/material";
+import { Box, Grid, Stack, Theme, Typography, useTheme } from "@mui/material";
 import LessonPlanCard from "./LessonPlanCard";
 import { LessonPlan } from "../../models/types/LessonPlans/LessonPlan";
 import {
@@ -41,8 +41,8 @@ export default function DisplayLessonPlans({
 }) {
   const dispatch = useAppDispatch();
   console.log("LessonPlansCombined rendered");
-  console.log(filteredLessonPlans);
   useRedirectWhenLoggedOut("/auth/signin", shouldRedirectWhenLogout);
+  const muiTheme = useTheme();
 
   const bookmarks: {
     userId: string;
@@ -132,7 +132,8 @@ export default function DisplayLessonPlans({
     lessonPlansToDisplay,
     selectedLessonPlanCategories,
     bookmarks,
-    showOnlyBookmarkedLessonPlans
+    showOnlyBookmarkedLessonPlans,
+    muiTheme
   );
 
   return (
@@ -157,7 +158,8 @@ function getRenderedContent(
     category: LessonPlanCategory;
   }[],
   bookmarks: { userId: string; lessonPlanId: string }[],
-  showOnlyBookmarkedLessonPlans: boolean
+  showOnlyBookmarkedLessonPlans: boolean,
+  theme: Theme
 ) {
   if (totalLessonPlansBeforeFiltered < 1) {
     return (
@@ -170,7 +172,9 @@ function getRenderedContent(
           mt: { xs: 0, md: 4 },
           mx: "auto",
         }}
-        sxMessage={{ fontSize: { xs: "0.875rem", "430c": "1rem" } }}
+        sxMessage={{
+          fontSize: { xs: theme.typography.body2.fontSize, "430c": "1rem" },
+        }}
         sxTitle={{ fontSize: { xs: "1.5rem", "430c": "2.125rem" } }}
       />
     );
@@ -212,7 +216,9 @@ function getRenderedContent(
           mt: { xs: 0, md: 4 },
           mx: "auto",
         }}
-        sxMessage={{ fontSize: { xs: "0.875rem", "430c": "1rem" } }}
+        sxMessage={{
+          fontSize: { xs: theme.typography.body2.fontSize, "430c": "1rem" },
+        }}
         sxTitle={{ fontSize: { xs: "1.5rem", "430c": "2.125rem" } }}
       />
     );
