@@ -21,14 +21,16 @@ import LoadingSpinner from "../Presentation/LoadingSpinner";
 import { StandardResponseInfo } from "@/models/types/DataFetching/StandardResponseInfo";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
-export default function DisplayLessonPlanBookmarks({
-  lessonPlans,
+export default function DisplayLessonPlanBookmarksCombined({
+  totalLessonPlansBeforeFiltered,
+  possiblyFilteredLessonPlans,
   selectedLessonPlanCategories,
   showLoadingSpinner,
   showOnlyBookmarkedLessonPlans,
   shouldRedirectWhenLogout,
 }: {
-  lessonPlans: LessonPlan[];
+  totalLessonPlansBeforeFiltered: number;
+  possiblyFilteredLessonPlans: LessonPlan[];
   selectedLessonPlanCategories: {
     title: string;
     category: LessonPlanCategory;
@@ -38,7 +40,8 @@ export default function DisplayLessonPlanBookmarks({
   showOnlyBookmarkedLessonPlans: boolean;
 }) {
   const dispatch = useAppDispatch();
-  console.log("LessonPlanBookmarks rendered");
+  console.log("LessonPlansCombined rendered");
+  console.log(possiblyFilteredLessonPlans);
   useRedirectWhenLoggedOut("/auth/signin", shouldRedirectWhenLogout);
 
   const bookmarks: {
@@ -56,7 +59,7 @@ export default function DisplayLessonPlanBookmarks({
 
   let areBookmarksReady = false;
   const bookmarkedLessonPlanIds = getBookmakedLessonPlanIds(
-    lessonPlans,
+    possiblyFilteredLessonPlans,
     bookmarks
   );
 
@@ -75,7 +78,7 @@ export default function DisplayLessonPlanBookmarks({
     dispatch(toggleBookmark(lessonPlanId));
   }
 
-  const lessonPlansToDisplay = lessonPlans
+  const lessonPlansToDisplay = possiblyFilteredLessonPlans
     .filter((lessonPlan) => {
       if (showOnlyBookmarkedLessonPlans) {
         return bookmarkedLessonPlanIds.has(lessonPlan.id);
@@ -118,7 +121,7 @@ export default function DisplayLessonPlanBookmarks({
     ));
 
   const renderedContent = getRenderedContent(
-    lessonPlans,
+    totalLessonPlansBeforeFiltered,
     lessonPlansToDisplay,
     selectedLessonPlanCategories,
     bookmarks,
@@ -140,7 +143,7 @@ export default function DisplayLessonPlanBookmarks({
   );
 }
 function getRenderedContent(
-  lessonPlans: LessonPlan[],
+  totalLessonPlansBeforeFiltered: number,
   lessonPlansToDisplay: any,
   selectedLessonPlanCategories: {
     title: string;
@@ -149,7 +152,7 @@ function getRenderedContent(
   bookmarks: { userId: string; lessonPlanId: string }[],
   showOnlyBookmarkedLessonPlans: boolean
 ) {
-  if (lessonPlans.length < 1) {
+  if (totalLessonPlansBeforeFiltered < 1) {
     return (
       <NotificationBox
         title="No lesson plans to display"

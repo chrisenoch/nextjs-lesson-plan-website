@@ -9,6 +9,7 @@ import { LessonPlanCategory } from "@/models/types/LessonPlans/LessonPlanCategor
 import { LessonPlanSubCategory } from "@/models/types/LessonPlans/LessonPlanSubCategory";
 import DisplayLessonPlansFactory from "./DisplayLessonPlansFactory";
 import { SxProps, Theme } from "@mui/material";
+import DisplayLessonPlansCombined from "./DisplayLessonPlansCombined";
 
 export default function SearchAndDisplayLessonPlans({
   lessonPlans,
@@ -87,11 +88,19 @@ export default function SearchAndDisplayLessonPlans({
           updateSelectedLessonPlans={updateSelectedLessonPlans}
         />
       </SearchLessonPlans>
-      <DisplayLessonPlansFactory
+      <DisplayLessonPlansCombined
+        totalLessonPlansBeforeFiltered={lessonPlans.length}
+        possiblyFilteredLessonPlans={lessonPlansToDisplay}
+        selectedLessonPlanCategories={selectedLessonPlanCategories}
+        showLoadingSpinner={true}
+        showOnlyBookmarkedLessonPlans={true}
+        shouldRedirectWhenLogout={true}
+      />
+      {/* <DisplayLessonPlansFactory
         displayLessonPlansComponent={displayLessonPlansComponent}
         lessonPlans={lessonPlansToDisplay}
         selectedLessonPlanCategories={selectedLessonPlanCategories}
-      />
+      /> */}
     </>
   );
 }

@@ -5,6 +5,7 @@ import SearchAndDisplayLessonPlans from "@/components/LessonPlans/SearchAndDispl
 
 export default async function SavedLessonPlans() {
   const lessonPlans = await fetchLessonPlans();
+  //const lessonPlans: any = [];
 
   return (
     <SearchAndDisplayLessonPlans
