@@ -6,7 +6,6 @@ import {
   IconButton,
   Stack,
   Typography,
-  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import { Carousel } from "./Carousel/Carousel";
@@ -24,6 +23,12 @@ import {
   MediaQueryByTypographyVariant,
   getTypographyVariantSX,
 } from "./ThemeRegistry/responsive-typography-sx";
+import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PauseIcon from "@mui/icons-material/Pause";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 export default function Hero() {
   const theme = useTheme();
@@ -35,9 +40,6 @@ export default function Hero() {
   };
   const titleSX = getTypographyVariantSX(title, theme);
 
-  console.log("body 2 theme");
-  console.log(theme.typography.body2);
-
   const titleText: MediaQueryByTypographyVariant = {
     xs: "body2",
     "430c": "body1",
@@ -48,9 +50,6 @@ export default function Hero() {
     titleText,
     theme
   );
-
-  console.log("titleText");
-  console.log(titleTextSX);
 
   const carouselMoveLeft: SubscriberConfigObject = useMemo(() => {
     return {
@@ -66,16 +65,25 @@ export default function Hero() {
 
   carouselStore.set("moveLeft", carouselMoveLeft);
   carouselStore.set("moveRight", carouselMoveRight);
-  const [autoPlay] = useState<AutoPlay>({
-    enableAutoPlay: false,
+  const [autoPlay, setAutoPlay] = useState<AutoPlay>({
+    enableAutoPlay: true,
     direction: "RIGHT",
     delay: 4500,
   });
+
+  const [areControlsVisible, setAreControlsVisible] = useState<boolean>(false);
 
   const transitions: Transitions = {
     durationMs: 1500,
     easingFunction: "ease-out",
   };
+
+  function toggleAutoPlayDirection() {
+    setAutoPlay({
+      ...autoPlay,
+      direction: autoPlay.direction === "RIGHT" ? "LEFT" : "RIGHT",
+    });
+  }
 
   const images = useMemo(
     () => [
@@ -251,32 +259,155 @@ export default function Hero() {
               items={images}
               carouselMoveLeft={carouselMoveLeft}
               carouselMoveRight={carouselMoveRight}>
-              <Stack
-                direction={"row"}
-                sx={{
-                  position: "absolute",
-                  transform: "translatey(-50%)",
-                  justifyContent: "space-between",
-                  width: "100%",
-                  top: "50%",
-                }}>
-                <ColorFactory primary="#FFFFFF">
-                  <IconButton
-                    color="primary"
-                    size="large"
-                    onClick={() => emit(carouselMoveLeft)}>
-                    <ArrowBackIos />
-                  </IconButton>
-                </ColorFactory>
-                <ColorFactory primary="#FFFFFF">
-                  <IconButton
-                    size="small"
-                    color="primary"
-                    onClick={() => emit(carouselMoveRight)}>
-                    <ArrowForwardIos />
-                  </IconButton>
-                </ColorFactory>
-              </Stack>{" "}
+              <>
+                <Stack
+                  direction={"row"}
+                  sx={{
+                    position: "absolute",
+                    transform: "translatey(-50%)",
+                    justifyContent: "space-between",
+                    width: "100%",
+                    top: "50%",
+                  }}>
+                  <ColorFactory primary="#FFFFFF">
+                    <IconButton
+                      color="primary"
+                      size="large"
+                      onClick={() => emit(carouselMoveLeft)}>
+                      <ArrowBackIos />
+                    </IconButton>
+                  </ColorFactory>
+                  <ColorFactory primary="#FFFFFF">
+                    <IconButton
+                      size="small"
+                      color="primary"
+                      onClick={() => emit(carouselMoveRight)}>
+                      <ArrowForwardIos />
+                    </IconButton>
+                  </ColorFactory>
+                </Stack>
+                <Stack
+                  direction={"row"}
+                  sx={{
+                    position: "absolute",
+                    transform: "translatey(-10%)",
+                    justifyContent: "space-between",
+                    width: "100%",
+                    top: "90%",
+                    paddingX: 1,
+                  }}>
+                  <Stack direction={"row"}>
+                    <ColorFactory primary="#b2b2b2">
+                      <Button
+                        variant="contained"
+                        sx={{
+                          padding: 0,
+                          borderRadius: "9999px",
+                          minWidth: "40px",
+                          minHeight: "40px",
+                          visibility: "hidden",
+                        }}>
+                        <MoreVertIcon />
+                      </Button>
+                    </ColorFactory>
+                  </Stack>
+                  <Stack
+                    direction={"row"}
+                    gap={1}
+                    sx={{
+                      transform: areControlsVisible
+                        ? "translateY(0px)"
+                        : "translateY(50px)",
+                      transition: "500ms transform ease-out",
+                    }}>
+                    <ColorFactory primary="#b2b2b2">
+                      <Button
+                        variant="contained"
+                        onClick={toggleAutoPlayDirection}
+                        sx={{
+                          padding: 0,
+                          borderRadius: "9999px",
+                          minWidth: "40px",
+                          minHeight: "40px",
+                        }}>
+                        <CompareArrowsIcon />
+                      </Button>
+                    </ColorFactory>
+                    {!autoPlay.enableAutoPlay && (
+                      <ColorFactory primary="#b2b2b2">
+                        <Button
+                          variant="contained"
+                          onClick={() =>
+                            setAutoPlay({
+                              ...autoPlay,
+                              enableAutoPlay: true,
+                            })
+                          }
+                          sx={{
+                            padding: 0,
+                            borderRadius: "9999px",
+                            minWidth: "40px",
+                            minHeight: "40px",
+                          }}>
+                          <PlayArrowIcon />
+                        </Button>
+                      </ColorFactory>
+                    )}
+                    {autoPlay.enableAutoPlay && (
+                      <ColorFactory primary="#b2b2b2">
+                        <Button
+                          variant="contained"
+                          onClick={() =>
+                            setAutoPlay({
+                              ...autoPlay,
+                              enableAutoPlay: false,
+                            })
+                          }
+                          sx={{
+                            padding: 0,
+                            borderRadius: "9999px",
+                            minWidth: "40px",
+                            minHeight: "40px",
+                          }}>
+                          <PauseIcon />
+                        </Button>
+                      </ColorFactory>
+                    )}
+                  </Stack>
+                  <Stack direction={"row"}>
+                    {areControlsVisible && (
+                      <ColorFactory primary="#b2b2b2">
+                        <Button
+                          variant="contained"
+                          onClick={() => setAreControlsVisible(false)}
+                          sx={{
+                            padding: 0,
+                            borderRadius: "9999px",
+                            minWidth: "40px",
+                            minHeight: "40px",
+                          }}>
+                          <VisibilityOffIcon />
+                        </Button>
+                      </ColorFactory>
+                    )}
+                    {!areControlsVisible && (
+                      <ColorFactory primary="#b2b2b2">
+                        <Button
+                          variant="contained"
+                          onClick={() => setAreControlsVisible(true)}
+                          sx={{
+                            padding: 0,
+                            borderRadius: "9999px",
+                            minWidth: "40px",
+                            minHeight: "40px",
+                          }}>
+                          <VisibilityIcon />
+                        </Button>
+                      </ColorFactory>
+                    )}
+                  </Stack>
+                </Stack>
+              </>
             </Carousel>
           </Grid>
         </Grid>
