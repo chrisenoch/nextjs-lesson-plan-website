@@ -5,12 +5,15 @@ import SearchAndDisplayLessonPlans from "@/components/LessonPlans/SearchAndDispl
 
 export default async function SavedLessonPlans() {
   const lessonPlans = await fetchLessonPlans();
+  //const lessonPlans: any = [];
 
   return (
     <SearchAndDisplayLessonPlans
       searchTitle="Search saved plans"
-      displayLessonPlansComponent="DisplayBookmarkedLessonPlans"
       lessonPlans={lessonPlans}
+      showLoadingSpinner={true}
+      showOnlyBookmarkedLessonPlans={true}
+      shouldRedirectWhenLogout={true}
       sxSearchLessonPlansTitle={{
         fontSize: { xs: "1.5rem", "350c": "2.125rem" },
       }}

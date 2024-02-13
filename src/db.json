@@ -89,6 +89,15 @@
       "jobCompany": "Bupa",
       "jobSalary": "€38,000 - €38,000 per annum",
       "id": 13
+    },
+    {
+      "userId": "1",
+      "jobTitle": "aa",
+      "jobDescription": "aa",
+      "jobLocation": "aa",
+      "jobCompany": "aa",
+      "jobSalary": "aaaa",
+      "id": 14
     }
   ],
   "lesson-plans": [
@@ -260,21 +269,6 @@
       "userId": "2",
       "lessonPlanId": "3",
       "id": 3
-    },
-    {
-      "userId": "1",
-      "lessonPlanId": "2",
-      "id": 8
-    },
-    {
-      "userId": "1",
-      "lessonPlanId": "3",
-      "id": 10
-    },
-    {
-      "userId": "1",
-      "lessonPlanId": "1",
-      "id": 11
     }
   ]
 }

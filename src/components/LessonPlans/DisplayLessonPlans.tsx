@@ -13,25 +13,36 @@ import {
   toggleBookmark,
 } from "@/store/slices/with-thunks/lessonplans-slice";
 import { LoginStatus } from "@/models/types/Auth/LoginStatus";
+import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 import { getBookmakedLessonPlanIds } from "@/component-functions/get-bookmarked-lessonplan-ids";
 import NotificationBox from "../NotificationBox";
 import { LessonPlanCategory } from "@/models/types/LessonPlans/LessonPlanCategory";
+import LoadingSpinner from "../Presentation/LoadingSpinner";
 import { StandardResponseInfo } from "@/models/types/DataFetching/StandardResponseInfo";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
-export default function DisplayLessonplans({
-  lessonPlans,
+export default function DisplayLessonPlans({
+  totalLessonPlansBeforeFiltered,
+  filteredLessonPlans,
   selectedLessonPlanCategories,
+  showLoadingSpinner,
+  showOnlyBookmarkedLessonPlans,
+  shouldRedirectWhenLogout,
 }: {
-  lessonPlans: LessonPlan[];
+  totalLessonPlansBeforeFiltered: number;
+  filteredLessonPlans: LessonPlan[];
   selectedLessonPlanCategories: {
     title: string;
     category: LessonPlanCategory;
   }[];
+  showLoadingSpinner: boolean;
+  shouldRedirectWhenLogout: boolean;
+  showOnlyBookmarkedLessonPlans: boolean;
 }) {
-  //To do: Move this to route component?
   const dispatch = useAppDispatch();
-  console.log("display lesson plans rendered");
+  console.log("LessonPlansCombined rendered");
+  console.log(filteredLessonPlans);
+  useRedirectWhenLoggedOut("/auth/signin", shouldRedirectWhenLogout);
 
   const bookmarks: {
     userId: string;
@@ -48,60 +59,81 @@ export default function DisplayLessonplans({
 
   let areBookmarksReady = false;
   const bookmarkedLessonPlanIds = getBookmakedLessonPlanIds(
-    lessonPlans,
+    filteredLessonPlans,
     bookmarks
   );
 
   //Set here because bookmarks are not ready until they have both loaded and getBookmakedLessonPlanIds# has run.
   if (!fetchBookMarksInfo.isLoading) {
     areBookmarksReady = true;
+  } else if (showLoadingSpinner) {
+    return (
+      <Box display="flex" justifyContent={"center"}>
+        <LoadingSpinner />
+      </Box>
+    );
   }
 
   function handleToggleBookmark(lessonPlanId: string) {
     dispatch(toggleBookmark(lessonPlanId));
   }
 
-  const lessonPlansToDisplay = lessonPlans.map((lessonPlan) => (
-    // <Grid item xs={12} sm={6} md={4} key={lessonPlan.title}>
-    <Stack
-      direction="row"
-      //item
-      sx={{
-        minWidth: "265px",
-        maxWidth: { xs: "80%", "430c": "320px", sm: "390px", lg: "438px" }, //sm: "438px"
-        height: "fit-content",
-        maxHeight: "fit-content",
-      }}
-      key={lessonPlan.title}>
-      <LessonPlanCard
-        sxImage={{
-          height: { xs: "120px", "430c": "180px", sm: "200px" },
+  const lessonPlansToDisplay = filteredLessonPlans
+    .filter((lessonPlan) => {
+      if (showOnlyBookmarkedLessonPlans) {
+        return bookmarkedLessonPlanIds.has(lessonPlan.id);
+      } else {
+        return lessonPlan;
+      }
+    })
+    .map((lessonPlan) => (
+      <Stack
+        direction="row"
+        sx={{
+          height: "fit-content",
+          maxHeight: "fit-content",
         }}
-        sxDescription={{
-          display: { xs: "none", sm: "block" },
-        }}
-        id={lessonPlan.id}
-        title={lessonPlan.title}
-        duration={lessonPlan.duration}
-        prepTime={lessonPlan.prepTime}
-        level={lessonPlan.level}
-        description={lessonPlan.description}
-        isPremium={lessonPlan.isPremium}
-        imageURL={lessonPlan.imageURL}
-        imageAlt={lessonPlan.imageAlt}
-        chips={lessonPlan.chips}
-        isBookmarked={
-          !areBookmarksReady
-            ? "BOOKMARKS_NOT_READY"
-            : bookmarkedLessonPlanIds.has(lessonPlan.id)
-            ? "IS_BOOKMARKED"
-            : "IS_NOT_BOOKMARKED"
-        }
-        handleToggleBookmark={handleToggleBookmark}
-        loginStatus={loginStatus}
-      />
-    </Stack>
-  ));
+        key={lessonPlan.title}>
+        <LessonPlanCard
+          sxImage={{
+            height: { xs: "130px", "430c": "160px", md: "200px" },
+          }}
+          sxDescription={{
+            display: { xs: "none", md: "block" },
+          }}
+          id={lessonPlan.id}
+          title={lessonPlan.title}
+          duration={lessonPlan.duration}
+          prepTime={lessonPlan.prepTime}
+          level={lessonPlan.level}
+          description={lessonPlan.description}
+          isPremium={lessonPlan.isPremium}
+          imageURL={lessonPlan.imageURL}
+          imageAlt={lessonPlan.imageAlt}
+          chips={lessonPlan.chips}
+          //   isBookmarked={
+          //     !areBookmarksReady ? "BOOKMARKS_NOT_READY" : "IS_BOOKMARKED"
+          //   }
+          isBookmarked={
+            !areBookmarksReady
+              ? "BOOKMARKS_NOT_READY"
+              : bookmarkedLessonPlanIds.has(lessonPlan.id)
+              ? "IS_BOOKMARKED"
+              : "IS_NOT_BOOKMARKED"
+          }
+          handleToggleBookmark={handleToggleBookmark}
+          loginStatus={loginStatus}
+        />
+      </Stack>
+    ));
+
+  const renderedContent = getRenderedContent(
+    totalLessonPlansBeforeFiltered,
+    lessonPlansToDisplay,
+    selectedLessonPlanCategories,
+    bookmarks,
+    showOnlyBookmarkedLessonPlans
+  );
 
   return (
     <Box
@@ -110,29 +142,92 @@ export default function DisplayLessonplans({
         maxWidth: "1200px",
         minHeight: "600px",
         margin: "0 auto",
+        justifyContent: "center",
+        width: "100%",
       }}>
-      <Stack
-        direction="row"
-        sx={{
-          justifyContent: "center",
-          gap: 3,
-          flexWrap: "wrap",
-        }}>
-        {lessonPlansToDisplay.length > 0 ? (
-          lessonPlansToDisplay
-        ) : selectedLessonPlanCategories.length > 0 ? (
-          <NotificationBox
-            title="Too many filters"
-            message=" No lesson plans are available that match all the filters you selected. Please try removing some filters from the search box to find more lesson plans."
-          />
-        ) : (
-          <NotificationBox
-            title="No lesson plans to display"
-            message=" This may be due to an error. Please try refreshing the page."
-            variant="error"
-          />
-        )}
-      </Stack>
+      {renderedContent}
     </Box>
   );
+}
+function getRenderedContent(
+  totalLessonPlansBeforeFiltered: number,
+  lessonPlansToDisplay: any,
+  selectedLessonPlanCategories: {
+    title: string;
+    category: LessonPlanCategory;
+  }[],
+  bookmarks: { userId: string; lessonPlanId: string }[],
+  showOnlyBookmarkedLessonPlans: boolean
+) {
+  if (totalLessonPlansBeforeFiltered < 1) {
+    return (
+      <NotificationBox
+        title="No lesson plans to display"
+        message=" This may be due to an error. Please try refreshing the page."
+        variant="error"
+        sxOuterContainer={{
+          maxWidth: "700px",
+          mt: { xs: 0, md: 4 },
+          mx: "auto",
+        }}
+        sxMessage={{ fontSize: { xs: "0.875rem", "430c": "1rem" } }}
+        sxTitle={{ fontSize: { xs: "1.5rem", "430c": "2.125rem" } }}
+      />
+    );
+  }
+
+  if (lessonPlansToDisplay.length > 0) {
+    return (
+      <Box
+        sx={{
+          display: "grid",
+          justifyContent: "center",
+          gridTemplateColumns: {
+            xs: "repeat(1,minmax(265px, 80%))",
+            "430c": "repeat(1,minmax(265px, 320px))",
+            "715c": "repeat(2,minmax(265px, 320px))",
+            md: "repeat(2,minmax(265px, 390px))",
+            lg: "repeat(2,minmax(265px, 438px))",
+          },
+          gap: 3,
+        }}>
+        {lessonPlansToDisplay}
+      </Box>
+    );
+  }
+
+  if (
+    (selectedLessonPlanCategories.length > 0 &&
+      !showOnlyBookmarkedLessonPlans) ||
+    (selectedLessonPlanCategories.length > 0 &&
+      showOnlyBookmarkedLessonPlans &&
+      bookmarks.length > 0)
+  ) {
+    return (
+      <NotificationBox
+        title="Too many filters"
+        message=" No lesson plans are available that match all the filters you selected. Please try removing some filters from the search box to find more lesson plans."
+        sxOuterContainer={{
+          maxWidth: "700px",
+          mt: { xs: 0, md: 4 },
+          mx: "auto",
+        }}
+        sxMessage={{ fontSize: { xs: "0.875rem", "430c": "1rem" } }}
+        sxTitle={{ fontSize: { xs: "1.5rem", "430c": "2.125rem" } }}
+      />
+    );
+  }
+
+  if (showOnlyBookmarkedLessonPlans && bookmarks.length < 1) {
+    return (
+      <NotificationBox
+        message="You have not saved any lesson plans."
+        sxOuterContainer={{
+          marginTop: 2,
+        }}
+        sxMessage={{ fontSize: { xs: "1rem", md: "1.125rem" } }}
+      />
+    );
+  }
+  return null;
 }

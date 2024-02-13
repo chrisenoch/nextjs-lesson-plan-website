@@ -1,5 +1,6 @@
 import { setSXValues } from "@/component-functions/set-sx-values";
 import { Box, Stack, SxProps, Theme, Typography } from "@mui/material";
+import { ReactNode } from "react";
 
 export default function CurvedUnderlineTitle({
   component,
@@ -7,7 +8,9 @@ export default function CurvedUnderlineTitle({
   title,
   sxUnderline,
   sxTypography,
+  typographyId,
   color = "primary.main",
+  children,
 }: {
   component: any;
   variant: any;
@@ -15,6 +18,8 @@ export default function CurvedUnderlineTitle({
   sxUnderline?: SxProps<Theme>;
   sxTypography?: SxProps<Theme>;
   color?: string;
+  children?: ReactNode;
+  typographyId?: string;
 }) {
   const sxUnderlineDefault: SxProps<Theme> = {
     position: "absolute",
@@ -49,12 +54,14 @@ export default function CurvedUnderlineTitle({
 
   return (
     <Typography
+      id={typographyId ? typographyId : ""}
       component={component}
       variant={variant}
       position={"relative"}
       sx={sxTypographyFinal}>
       {title}
       <Box component="span" sx={sxUnderlineFinal}></Box>
+      {children}
     </Typography>
   );
 }

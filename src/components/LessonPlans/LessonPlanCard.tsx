@@ -129,7 +129,7 @@ export default function LessonPlanCard({
             {level}
           </Typography>
         </Stack>
-        <Divider sx={{ borderBottomWidth: 1, mb: 1 }} />
+        <Divider sx={{ borderBottomWidth: 1, mb: 1.5, mt: 0.5 }} />
         <Stack
           direction="row"
           spacing={0.5}
@@ -138,7 +138,7 @@ export default function LessonPlanCard({
           alignItems="center">
           {lessonChips}
         </Stack>
-        <Divider sx={{ borderBottomWidth: 1, mt: 1 }} />
+        <Divider sx={{ borderBottomWidth: 1, mt: 1.5 }} />
 
         <Typography
           variant="body2"
@@ -147,7 +147,7 @@ export default function LessonPlanCard({
           {description}
         </Typography>
       </CardContent>
-      <CardActions sx={{ padding: 2 }}>
+      <CardActions sx={{ padding: 2, pt: { xs: 0, md: 2 } }}>
         <Button
           href={`/lessonplans/${id}`}
           variant={"contained"}
