@@ -1,30 +1,29 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import DisplayLessonPlans from "./DisplayLessonPlans";
 import SearchLessonPlans from "./SearchLessonPlans";
 import AutoCompleteMultiSelect from "../Forms/AutoCompleteMultiSelect";
 import { LessonPlan } from "@/models/types/LessonPlans/LessonPlan";
 import { LessonPlanCategory } from "@/models/types/LessonPlans/LessonPlanCategory";
 import { LessonPlanSubCategory } from "@/models/types/LessonPlans/LessonPlanSubCategory";
-import DisplayLessonPlansFactory from "./DisplayLessonPlansFactory";
 import { SxProps, Theme } from "@mui/material";
-import DisplayLessonPlansCombined from "./DisplayLessonPlansCombined";
+import DisplayLessonPlans from "./DisplayLessonPlans";
 
 export default function SearchAndDisplayLessonPlans({
   lessonPlans,
   searchTitle,
-  displayLessonPlansComponent,
+  showLoadingSpinner,
+  showOnlyBookmarkedLessonPlans,
+  shouldRedirectWhenLogout,
   sxSearchLessonPlansOuterContainer,
   sxSearchLessonPlansInnerContainer,
   sxSearchLessonPlansTitle,
 }: {
   lessonPlans: LessonPlan[];
   searchTitle: string;
-  displayLessonPlansComponent:
-    | "DisplayLessonPlans"
-    | "DisplayBookmarkedLessonPlans";
-
+  showLoadingSpinner: boolean;
+  showOnlyBookmarkedLessonPlans: boolean;
+  shouldRedirectWhenLogout: boolean;
   sxSearchLessonPlansOuterContainer?: SxProps<Theme>;
   sxSearchLessonPlansInnerContainer?: SxProps<Theme>;
   sxSearchLessonPlansTitle?: SxProps<Theme>;
@@ -62,7 +61,7 @@ export default function SearchAndDisplayLessonPlans({
     []
   );
 
-  const lessonPlansToDisplay = filterLessonPlans(
+  const filteredLessonPlans = filterLessonPlans(
     lessonPlans,
     selectedLessonPlanCategories
   );
@@ -88,19 +87,14 @@ export default function SearchAndDisplayLessonPlans({
           updateSelectedLessonPlans={updateSelectedLessonPlans}
         />
       </SearchLessonPlans>
-      <DisplayLessonPlansCombined
+      <DisplayLessonPlans
         totalLessonPlansBeforeFiltered={lessonPlans.length}
-        possiblyFilteredLessonPlans={lessonPlansToDisplay}
+        filteredLessonPlans={filteredLessonPlans}
         selectedLessonPlanCategories={selectedLessonPlanCategories}
-        showLoadingSpinner={true}
-        showOnlyBookmarkedLessonPlans={true}
-        shouldRedirectWhenLogout={true}
+        showLoadingSpinner={showLoadingSpinner}
+        showOnlyBookmarkedLessonPlans={showOnlyBookmarkedLessonPlans}
+        shouldRedirectWhenLogout={shouldRedirectWhenLogout}
       />
-      {/* <DisplayLessonPlansFactory
-        displayLessonPlansComponent={displayLessonPlansComponent}
-        lessonPlans={lessonPlansToDisplay}
-        selectedLessonPlanCategories={selectedLessonPlanCategories}
-      /> */}
     </>
   );
 }

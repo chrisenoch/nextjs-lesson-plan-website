@@ -6,6 +6,8 @@ import { fetchLessonPlans } from "../server-only/lessonplans";
 
 export default async function HomePage() {
   const lessonPlans = await fetchLessonPlans();
+  // const lessonPlans: any = [];
+
   console.log("lessonPlans in page");
 
   return (
@@ -13,8 +15,10 @@ export default async function HomePage() {
       <Hero />
       <SearchAndDisplayLessonPlans
         searchTitle="Search lesson plans"
-        displayLessonPlansComponent="DisplayLessonPlans"
         lessonPlans={lessonPlans}
+        showLoadingSpinner={false}
+        showOnlyBookmarkedLessonPlans={false}
+        shouldRedirectWhenLogout={false}
         sxSearchLessonPlansTitle={{
           fontSize: { xs: "1.5rem", "430c": "2.125rem" },
         }}

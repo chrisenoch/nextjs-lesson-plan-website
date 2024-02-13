@@ -10,8 +10,10 @@ export default async function SavedLessonPlans() {
   return (
     <SearchAndDisplayLessonPlans
       searchTitle="Search saved plans"
-      displayLessonPlansComponent="DisplayBookmarkedLessonPlans"
       lessonPlans={lessonPlans}
+      showLoadingSpinner={true}
+      showOnlyBookmarkedLessonPlans={true}
+      shouldRedirectWhenLogout={true}
       sxSearchLessonPlansTitle={{
         fontSize: { xs: "1.5rem", "350c": "2.125rem" },
       }}
