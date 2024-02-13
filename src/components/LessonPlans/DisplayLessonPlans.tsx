@@ -64,7 +64,6 @@ export default function DisplayLessonplans({
   const lessonPlansToDisplay = lessonPlans.map((lessonPlan) => (
     <Stack
       direction="row"
-      //item
       sx={{
         minWidth: "265px",
         maxWidth: { xs: "80%", "430c": "320px", md: "390px", lg: "438px" }, //sm: "438px"

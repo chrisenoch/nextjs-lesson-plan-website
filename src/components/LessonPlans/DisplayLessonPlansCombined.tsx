@@ -24,16 +24,22 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 export default function DisplayLessonPlanBookmarks({
   lessonPlans,
   selectedLessonPlanCategories,
+  showLoadingSpinner,
+  showOnlyBookmarkedLessonPlans,
+  shouldRedirectWhenLogout,
 }: {
   lessonPlans: LessonPlan[];
   selectedLessonPlanCategories: {
     title: string;
     category: LessonPlanCategory;
   }[];
+  showLoadingSpinner: boolean;
+  shouldRedirectWhenLogout: boolean;
+  showOnlyBookmarkedLessonPlans: boolean;
 }) {
   const dispatch = useAppDispatch();
   console.log("LessonPlanBookmarks rendered");
-  useRedirectWhenLoggedOut("/auth/signin");
+  useRedirectWhenLoggedOut("/auth/signin", shouldRedirectWhenLogout);
 
   const bookmarks: {
     userId: string;
@@ -57,6 +63,12 @@ export default function DisplayLessonPlanBookmarks({
   //Set here because bookmarks are not ready until they have both loaded and getBookmakedLessonPlanIds# has run.
   if (!fetchBookMarksInfo.isLoading) {
     areBookmarksReady = true;
+  } else if (showLoadingSpinner) {
+    return (
+      <Box display="flex" justifyContent={"center"}>
+        <LoadingSpinner />
+      </Box>
+    );
   }
 
   function handleToggleBookmark(lessonPlanId: string) {
@@ -64,7 +76,13 @@ export default function DisplayLessonPlanBookmarks({
   }
 
   const lessonPlansToDisplay = lessonPlans
-    .filter((lessonPlan) => bookmarkedLessonPlanIds.has(lessonPlan.id))
+    .filter((lessonPlan) => {
+      if (showOnlyBookmarkedLessonPlans) {
+        return bookmarkedLessonPlanIds.has(lessonPlan.id);
+      } else {
+        return lessonPlan;
+      }
+    })
     .map((lessonPlan) => (
       <Stack
         direction="row"
@@ -99,19 +117,12 @@ export default function DisplayLessonPlanBookmarks({
       </Stack>
     ));
 
-  if (fetchBookMarksInfo.isLoading) {
-    return (
-      <Box display="flex" justifyContent={"center"}>
-        <LoadingSpinner />
-      </Box>
-    );
-  }
-
   const renderedContent = getRenderedContent(
     lessonPlans,
     lessonPlansToDisplay,
     selectedLessonPlanCategories,
-    bookmarks
+    bookmarks,
+    showOnlyBookmarkedLessonPlans
   );
 
   return (
@@ -135,7 +146,8 @@ function getRenderedContent(
     title: string;
     category: LessonPlanCategory;
   }[],
-  bookmarks: { userId: string; lessonPlanId: string }[]
+  bookmarks: { userId: string; lessonPlanId: string }[],
+  showOnlyBookmarkedLessonPlans: boolean
 ) {
   if (lessonPlans.length < 1) {
     return (
@@ -174,7 +186,13 @@ function getRenderedContent(
     );
   }
 
-  if (selectedLessonPlanCategories.length > 0 && bookmarks.length > 0) {
+  if (
+    (selectedLessonPlanCategories.length > 0 &&
+      !showOnlyBookmarkedLessonPlans) ||
+    (selectedLessonPlanCategories.length > 0 &&
+      showOnlyBookmarkedLessonPlans &&
+      bookmarks.length > 0)
+  ) {
     return (
       <NotificationBox
         title="Too many filters"
@@ -190,7 +208,7 @@ function getRenderedContent(
     );
   }
 
-  if (bookmarks.length < 1) {
+  if (showOnlyBookmarkedLessonPlans && bookmarks.length < 1) {
     return (
       <NotificationBox
         message="You have not saved any lesson plans."
