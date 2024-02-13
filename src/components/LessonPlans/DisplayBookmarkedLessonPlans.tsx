@@ -117,7 +117,7 @@ export default function DisplayLessonPlanBookmarks({
     bookmarks
   );
 
-  return (
+  const r = (
     <Box
       sx={{
         display: "flex",
@@ -130,6 +130,7 @@ export default function DisplayLessonPlanBookmarks({
       <Box
         sx={{
           display: "grid",
+          justifyContent: "center",
           gridTemplateColumns: {
             xs: "repeat(1,minmax(265px, 80%))",
             "430c": "repeat(1,minmax(265px, 320px))",
@@ -144,38 +145,19 @@ export default function DisplayLessonPlanBookmarks({
     </Box>
   );
 
-  // return (
-  //   <Box
-  //     // equivalent of grid
-  //     sx={{
-  //       // display: "flex",
-  //       maxWidth: "1200px",
-  //       minHeight: "600px",
-  //       margin: "0 auto",
-  //       // justifyContent: "center",
-  //       // width: "100%",
-
-  //       display: "grid",
-  //       columnGap: "4px",
-  //       rowGap: "10px",
-  //       gridTemplate: "1fr / repeat(auto-fit, minmax(270px, 1fr))",
-  //       gridAutoFlow: "row",
-  //     }}>
-  //     {/* equivalent of item-1 */}
-  //     <Stack
-  //       direction="row"
-  //       sx={
-  //         {
-  //           // justifyContent: "center",
-  //           // gap: 3,
-  //           // flexWrap: "wrap",
-  //           // width: "100%",
-  //         }
-  //       }>
-  //       {renderedContent}
-  //     </Stack>
-  //   </Box>
-  // );
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        maxWidth: "1200px",
+        minHeight: "600px",
+        margin: "0 auto",
+        justifyContent: "center",
+        width: "100%",
+      }}>
+      {renderedContent}
+    </Box>
+  );
 }
 function getRenderedContent(
   lessonPlansToDisplay: any,
@@ -186,7 +168,23 @@ function getRenderedContent(
   bookmarks: { userId: string; lessonPlanId: string }[]
 ) {
   if (lessonPlansToDisplay.length > 0) {
-    return lessonPlansToDisplay;
+    return (
+      <Box
+        sx={{
+          display: "grid",
+          justifyContent: "center",
+          gridTemplateColumns: {
+            xs: "repeat(1,minmax(265px, 80%))",
+            "430c": "repeat(1,minmax(265px, 320px))",
+            "715c": "repeat(2,minmax(265px, 320px))",
+            md: "repeat(2,minmax(265px, 390px))",
+            lg: "repeat(2,minmax(265px, 438px))",
+          },
+          gap: 3,
+        }}>
+        {lessonPlansToDisplay}
+      </Box>
+    );
   } else if (selectedLessonPlanCategories.length > 0 && bookmarks.length > 0) {
     return (
       <NotificationBox
@@ -203,9 +201,13 @@ function getRenderedContent(
     );
   } else if (bookmarks.length < 1) {
     return (
-      <Typography component="h1" variant="h5">
-        You have not saved any lesson plans.
-      </Typography>
+      <NotificationBox
+        message="You have not saved any lesson plans."
+        sxOuterContainer={{
+          marginTop: 2,
+        }}
+        sxMessage={{ fontSize: { xs: "1rem", md: "1.125rem" } }}
+      />
     );
   }
   return null;
