@@ -74,7 +74,7 @@ export default function DisplayLessonPlanBookmarks({
           // maxWidth: { xs: "80%", "430c": "320px", sm: "390px", lg: "438px" }, //sm: "438px"
           height: "fit-content",
           maxHeight: "fit-content",
-          width: "clamp(180px, 400px, 400px)",
+          //width: "clamp(180px, 400px, 400px)",
         }}
         key={lessonPlan.title}>
         <LessonPlanCard
@@ -124,66 +124,35 @@ export default function DisplayLessonPlanBookmarks({
         maxWidth: "1200px",
         minHeight: "600px",
         margin: "0 auto",
-        // justifyContent: "center",
+        justifyContent: "center",
         width: "100%",
       }}>
-      {/* rendering of lesson plan stuff would start here and not include noifications */}
       <Box
         sx={{
-          width: "100%",
-          display: "grid",
-          columnGap: "4px",
-          rowGap: "10px",
-          /* grid-template: repeat(4, 1fr) / repeat(auto-fit, minmax(270px, 1fr)),  */
-          gridTemplate: "1fr / repeat(auto-fit, minmax(370px, 1fr))",
-          gridAutoFlow: "row",
-          backgroundColor: "grey",
-          // Change height - just for testing
-          height: "200px",
-        }}>
-        <Stack
-          direction="row"
-          sx={{
-            backgroundColor: "warning.light",
-            // Change height - just for testing
-            height: "200px",
-          }}>
-          <Box
-            sx={{
-              width: "clamp(370px, 420px, 420px)",
-              backgroundColor: "success.light",
-            }}></Box>
-        </Stack>
-        <Stack
-          direction="row"
-          sx={{
-            backgroundColor: "warning.light",
+          width: "90%",
 
-            height: "200px",
-          }}>
-          <Box
-            sx={{
-              width: "clamp(370px, 420px, 420px)",
-              backgroundColor: "success.light",
-              // Change height - just for testing
-              height: "200px",
-            }}></Box>
-        </Stack>
-        <Stack
-          direction="row"
+          display: "grid",
+          gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr)",
+          //gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
+          gap: "8px",
+          backgroundColor: "grey",
+        }}>
+        {lessonPlansToDisplay}
+        {/* <Box
           sx={{
-            backgroundColor: "warning.light",
-            // Change height - just for testing
-            height: "200px",
-          }}>
-          <Box
-            sx={{
-              width: "clamp(370px, 420px, 420px)",
-              backgroundColor: "success.light",
-              // Change height - just for testing
-              height: "200px",
-            }}></Box>
-        </Stack>
+            border: "2px solid black",
+            backgroundColor: "success.light",
+          }}></Box>
+        <Box
+          sx={{
+            border: "2px solid black",
+            backgroundColor: "success.light",
+          }}></Box>
+        <Box
+          sx={{
+            border: "2px solid black",
+            backgroundColor: "success.light",
+          }}></Box> */}
       </Box>
     </Box>
   );
