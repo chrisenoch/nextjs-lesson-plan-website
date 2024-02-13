@@ -82,7 +82,7 @@ export default function DisplayLessonPlanBookmarks({
             height: { xs: "120px", "430c": "180px", sm: "200px" },
           }}
           sxDescription={{
-            display: { xs: "none", sm: "block" },
+            display: { xs: "none", md: "block" },
           }}
           id={lessonPlan.id}
           title={lessonPlan.title}
@@ -129,29 +129,17 @@ export default function DisplayLessonPlanBookmarks({
       }}>
       <Box
         sx={{
-          width: "90%",
           display: "grid",
-          gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr)",
-          //gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
-          gap: "8px",
-          backgroundColor: "grey",
+          gridTemplateColumns: {
+            xs: "repeat(1,minmax(265px, 80%))",
+            "430c": "repeat(1,minmax(265px, 320px))",
+            "715c": "repeat(2,minmax(265px, 320px))",
+            md: "repeat(2,minmax(265px, 390px))",
+            lg: "repeat(2,minmax(265px, 438px))",
+          },
+          gap: 3,
         }}>
         {lessonPlansToDisplay}
-        {/* <Box
-          sx={{
-            border: "2px solid black",
-            backgroundColor: "success.light",
-          }}></Box>
-        <Box
-          sx={{
-            border: "2px solid black",
-            backgroundColor: "success.light",
-          }}></Box>
-        <Box
-          sx={{
-            border: "2px solid black",
-            backgroundColor: "success.light",
-          }}></Box> */}
       </Box>
     </Box>
   );

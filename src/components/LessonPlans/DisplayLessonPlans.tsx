@@ -62,7 +62,6 @@ export default function DisplayLessonplans({
   }
 
   const lessonPlansToDisplay = lessonPlans.map((lessonPlan) => (
-    // <Grid item xs={12} sm={6} md={4} key={lessonPlan.title}>
     <Stack
       direction="row"
       //item
