@@ -68,7 +68,7 @@ export default function DisplayLessonplans({
       //item
       sx={{
         minWidth: "265px",
-        maxWidth: { xs: "80%", "430c": "320px", sm: "390px", lg: "438px" }, //sm: "438px"
+        maxWidth: { xs: "80%", "430c": "320px", md: "390px", lg: "438px" }, //sm: "438px"
         height: "fit-content",
         maxHeight: "fit-content",
       }}
@@ -78,7 +78,7 @@ export default function DisplayLessonplans({
           height: { xs: "120px", "430c": "180px", sm: "200px" },
         }}
         sxDescription={{
-          display: { xs: "none", sm: "block" },
+          display: { xs: "none", md: "block" },
         }}
         id={lessonPlan.id}
         title={lessonPlan.title}

@@ -130,7 +130,6 @@ export default function DisplayLessonPlanBookmarks({
       <Box
         sx={{
           width: "90%",
-
           display: "grid",
           gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr)",
           //gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
