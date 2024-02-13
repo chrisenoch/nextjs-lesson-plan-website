@@ -66,13 +66,15 @@ export default function DisplayLessonPlanBookmarks({
   const lessonPlansToDisplay = lessonPlans
     .filter((lessonPlan) => bookmarkedLessonPlanIds.has(lessonPlan.id))
     .map((lessonPlan) => (
+      // equivalent of inner-2
       <Stack
         direction="row"
         sx={{
-          minWidth: "265px",
-          maxWidth: { xs: "80%", "430c": "320px", sm: "390px", lg: "438px" }, //sm: "438px"
+          // minWidth: "265px",
+          // maxWidth: { xs: "80%", "430c": "320px", sm: "390px", lg: "438px" }, //sm: "438px"
           height: "fit-content",
           maxHeight: "fit-content",
+          width: "clamp(180px, 400px, 400px)",
         }}
         key={lessonPlan.title}>
         <LessonPlanCard
@@ -125,18 +127,99 @@ export default function DisplayLessonPlanBookmarks({
         // justifyContent: "center",
         width: "100%",
       }}>
-      <Stack
-        direction="row"
+      {/* rendering of lesson plan stuff would start here and not include noifications */}
+      <Box
         sx={{
-          justifyContent: "center",
-          gap: 3,
-          flexWrap: "wrap",
           width: "100%",
+          display: "grid",
+          columnGap: "4px",
+          rowGap: "10px",
+          /* grid-template: repeat(4, 1fr) / repeat(auto-fit, minmax(270px, 1fr)),  */
+          gridTemplate: "1fr / repeat(auto-fit, minmax(370px, 1fr))",
+          gridAutoFlow: "row",
+          backgroundColor: "grey",
+          // Change height - just for testing
+          height: "200px",
         }}>
-        {renderedContent}
-      </Stack>
+        <Stack
+          direction="row"
+          sx={{
+            backgroundColor: "warning.light",
+            // Change height - just for testing
+            height: "200px",
+          }}>
+          <Box
+            sx={{
+              width: "clamp(370px, 420px, 420px)",
+              backgroundColor: "success.light",
+            }}></Box>
+        </Stack>
+        <Stack
+          direction="row"
+          sx={{
+            backgroundColor: "warning.light",
+
+            height: "200px",
+          }}>
+          <Box
+            sx={{
+              width: "clamp(370px, 420px, 420px)",
+              backgroundColor: "success.light",
+              // Change height - just for testing
+              height: "200px",
+            }}></Box>
+        </Stack>
+        <Stack
+          direction="row"
+          sx={{
+            backgroundColor: "warning.light",
+            // Change height - just for testing
+            height: "200px",
+          }}>
+          <Box
+            sx={{
+              width: "clamp(370px, 420px, 420px)",
+              backgroundColor: "success.light",
+              // Change height - just for testing
+              height: "200px",
+            }}></Box>
+        </Stack>
+      </Box>
     </Box>
   );
+
+  // return (
+  //   <Box
+  //     // equivalent of grid
+  //     sx={{
+  //       // display: "flex",
+  //       maxWidth: "1200px",
+  //       minHeight: "600px",
+  //       margin: "0 auto",
+  //       // justifyContent: "center",
+  //       // width: "100%",
+
+  //       display: "grid",
+  //       columnGap: "4px",
+  //       rowGap: "10px",
+  //       gridTemplate: "1fr / repeat(auto-fit, minmax(270px, 1fr))",
+  //       gridAutoFlow: "row",
+  //     }}>
+  //     {/* equivalent of item-1 */}
+  //     <Stack
+  //       direction="row"
+  //       sx={
+  //         {
+  //           // justifyContent: "center",
+  //           // gap: 3,
+  //           // flexWrap: "wrap",
+  //           // width: "100%",
+  //         }
+  //       }>
+  //       {renderedContent}
+  //     </Stack>
+  //   </Box>
+  // );
 }
 function getRenderedContent(
   lessonPlansToDisplay: any,
