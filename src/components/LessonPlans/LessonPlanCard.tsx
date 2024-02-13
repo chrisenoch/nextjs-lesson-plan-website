@@ -65,9 +65,6 @@ export default function LessonPlanCard({
     },
   ]);
 
-  console.log("sxImageFinal");
-  console.log(sxImageFinal);
-
   const lessonChips = chips!.map((lessonChip) => (
     <Chip
       key={lessonChip.title}

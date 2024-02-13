@@ -2,8 +2,6 @@
 
 import useScrollSpy from "@/customHooks/useScrollSpy";
 import {
-  Box,
-  Divider,
   Grid,
   List,
   ListItem,
@@ -11,6 +9,7 @@ import {
   ListItemText,
   Stack,
   Typography,
+  useTheme,
 } from "@mui/material";
 import FloatingId from "@/components/Layout/FloatingId";
 import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
@@ -18,8 +17,6 @@ import { Fragment, useMemo } from "react";
 import InsecureNextLink from "next/link";
 import CurvedUnderlineTitle from "../Presentation/CurvedUnderline";
 import { orange } from "@mui/material/colors";
-import CircleIcon from "@mui/icons-material/Circle";
-import { ResponsiveTypographyVariants } from "../ThemeRegistry/responsive-typography-sx";
 
 export default function LessonPlan({
   isPremium,
@@ -46,6 +43,7 @@ export default function LessonPlan({
 }) {
   console.log("LessonPlan rendered");
   useRedirectWhenLoggedOut("/auth/signin", isPremium);
+  const theme = useTheme();
 
   const memoizedTargetElementIds = useMemo(
     () => [
@@ -174,7 +172,7 @@ export default function LessonPlan({
       <Typography
         variant="body1"
         marginBottom={5}
-        sx={{ fontSize: { xs: "0.9375rem", sm: "1rem" } }}>
+        sx={{ fontSize: { xs: theme.typography.body15.fontSize, sm: "1rem" } }}>
         {s.content}
       </Typography>
     </Fragment>

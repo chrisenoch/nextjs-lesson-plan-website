@@ -16,6 +16,7 @@ import {
   SxProps,
   Theme,
   Divider,
+  useTheme,
 } from "@mui/material";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import EuroOutlinedIcon from "@mui/icons-material/EuroOutlined";
@@ -45,6 +46,7 @@ export function JobsPreview({
   sxInfoBar?: SxProps<Theme>;
 }) {
   const isHydrated = useHydrated();
+  const theme = useTheme();
 
   if (!isHydrated) {
     return (
@@ -70,7 +72,7 @@ export function JobsPreview({
 
   const sxDescriptionDefault: SxProps<Theme> = {
     color: "text.secondary",
-    fontSize: "0.9375rem",
+    fontSize: theme.typography.body15.fontSize,
     marginBottom: 0,
   };
 

@@ -1,5 +1,12 @@
 "use client";
-import { Box, TextField, Button, Stack, Skeleton } from "@mui/material";
+import {
+  Box,
+  TextField,
+  Button,
+  Stack,
+  Skeleton,
+  useTheme,
+} from "@mui/material";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import useFormClientStatus from "@/customHooks/useFormClientStatus";
 import {
@@ -25,6 +32,8 @@ export function AddJob() {
   console.log("add job rendered");
   useRedirectWhenLoggedOut("/auth/signin");
   const isMounted = useRef<boolean>(false);
+
+  const theme = useTheme();
 
   const jobTitleRef = useRef<null | HTMLInputElement>(null);
   const jobLocationRef = useRef<null | HTMLInputElement>(null);
@@ -296,7 +305,9 @@ export function AddJob() {
         isLoading={fetchJobsInfo.isLoading}
         isError={fetchJobsInfo.isError}
         handleJobDelete={handleJobDelete}
-        sxInfoBar={{ fontSize: { xs: "0.9375rem", md: "1rem" } }}
+        sxInfoBar={{
+          fontSize: { xs: theme.typography.body15.fontSize, md: "1rem" },
+        }}
       />
     </>
   );
