@@ -29,7 +29,10 @@ const theme = createTheme({
       },
     },
   },
-  // I want to use custom breakpoints with sx. This is the easiest way. See "my-custom-breakoint below"
+  /*
+   *** Motivation***: MUI theme is not available in server components. So theme.breakpoints... will not work.
+   */
+  // This allows us to use custom breakpoints with sx. See "my-custom-breakoint below"
   // sx={{
   //   display: 'flex',
   //   flexDirection: { xs: 'column', <my-custom-breakpint>: 'row' },
