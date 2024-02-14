@@ -29,6 +29,7 @@ import PauseIcon from "@mui/icons-material/Pause";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { grey } from "@mui/material/colors";
 
 export default function Hero() {
   const theme = useTheme();
@@ -51,6 +52,7 @@ export default function Hero() {
     theme
   );
 
+  //This is my alternative to using useContext. I think it works very well for activating callbacks in response to events.
   const carouselMoveLeft: SubscriberConfigObject = useMemo(() => {
     return {
       subscribers: new Set(),
@@ -296,19 +298,14 @@ export default function Hero() {
                     paddingX: 1,
                   }}>
                   <Stack direction={"row"}>
-                    <ColorFactory primary="#b2b2b2">
-                      <Button
-                        variant="contained"
-                        sx={{
-                          padding: 0,
-                          borderRadius: "9999px",
-                          minWidth: { xs: "30px", md: "40px" },
-                          minHeight: { xs: "30px", md: "40px" },
-                          visibility: "hidden",
-                        }}>
-                        <MoreVertIcon />
-                      </Button>
-                    </ColorFactory>
+                    <Box
+                      sx={{
+                        padding: 0,
+                        borderRadius: "9999px",
+                        minWidth: { xs: "30px", md: "40px" },
+                        minHeight: { xs: "30px", md: "40px" },
+                        visibility: "hidden",
+                      }}></Box>
                   </Stack>
                   <Stack
                     direction={"row"}
@@ -319,7 +316,7 @@ export default function Hero() {
                         : "translateY(50px)",
                       transition: "500ms transform ease-out",
                     }}>
-                    <ColorFactory primary="#b2b2b2">
+                    <ColorFactory primary={grey[400]}>
                       <Button
                         variant="contained"
                         onClick={toggleAutoPlayDirection}
@@ -333,7 +330,7 @@ export default function Hero() {
                       </Button>
                     </ColorFactory>
                     {!autoPlay.enableAutoPlay && (
-                      <ColorFactory primary="#b2b2b2">
+                      <ColorFactory primary={grey[400]}>
                         <Button
                           variant="contained"
                           onClick={() =>
@@ -353,7 +350,7 @@ export default function Hero() {
                       </ColorFactory>
                     )}
                     {autoPlay.enableAutoPlay && (
-                      <ColorFactory primary="#b2b2b2">
+                      <ColorFactory primary={grey[400]}>
                         <Button
                           variant="contained"
                           onClick={() =>
@@ -375,7 +372,7 @@ export default function Hero() {
                   </Stack>
                   <Stack direction={"row"}>
                     {areControlsVisible && (
-                      <ColorFactory primary="#b2b2b2">
+                      <ColorFactory primary={grey[400]}>
                         <Button
                           variant="contained"
                           onClick={() => setAreControlsVisible(false)}
@@ -390,7 +387,7 @@ export default function Hero() {
                       </ColorFactory>
                     )}
                     {!areControlsVisible && (
-                      <ColorFactory primary="#b2b2b2">
+                      <ColorFactory primary={grey[400]}>
                         <Button
                           variant="contained"
                           onClick={() => setAreControlsVisible(true)}
