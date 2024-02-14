@@ -290,10 +290,9 @@ export default function Hero() {
                   direction={"row"}
                   sx={{
                     position: "absolute",
-                    transform: "translatey(-10%)",
                     justifyContent: "space-between",
                     width: "100%",
-                    top: "90%",
+                    bottom: "8px",
                     paddingX: 1,
                   }}>
                   <Stack direction={"row"}>
@@ -303,8 +302,8 @@ export default function Hero() {
                         sx={{
                           padding: 0,
                           borderRadius: "9999px",
-                          minWidth: "40px",
-                          minHeight: "40px",
+                          minWidth: { xs: "30px", md: "40px" },
+                          minHeight: { xs: "30px", md: "40px" },
                           visibility: "hidden",
                         }}>
                         <MoreVertIcon />
@@ -327,8 +326,8 @@ export default function Hero() {
                         sx={{
                           padding: 0,
                           borderRadius: "9999px",
-                          minWidth: "40px",
-                          minHeight: "40px",
+                          minWidth: { xs: "30px", md: "40px" },
+                          minHeight: { xs: "30px", md: "40px" },
                         }}>
                         <CompareArrowsIcon />
                       </Button>
@@ -346,8 +345,8 @@ export default function Hero() {
                           sx={{
                             padding: 0,
                             borderRadius: "9999px",
-                            minWidth: "40px",
-                            minHeight: "40px",
+                            minWidth: { xs: "30px", md: "40px" },
+                            minHeight: { xs: "30px", md: "40px" },
                           }}>
                           <PlayArrowIcon />
                         </Button>
@@ -366,8 +365,8 @@ export default function Hero() {
                           sx={{
                             padding: 0,
                             borderRadius: "9999px",
-                            minWidth: "40px",
-                            minHeight: "40px",
+                            minWidth: { xs: "30px", md: "40px" },
+                            minHeight: { xs: "30px", md: "40px" },
                           }}>
                           <PauseIcon />
                         </Button>
@@ -383,8 +382,8 @@ export default function Hero() {
                           sx={{
                             padding: 0,
                             borderRadius: "9999px",
-                            minWidth: "40px",
-                            minHeight: "40px",
+                            minWidth: { xs: "30px", md: "40px" },
+                            minHeight: { xs: "30px", md: "40px" },
                           }}>
                           <VisibilityOffIcon />
                         </Button>
@@ -398,8 +397,8 @@ export default function Hero() {
                           sx={{
                             padding: 0,
                             borderRadius: "9999px",
-                            minWidth: "40px",
-                            minHeight: "40px",
+                            minWidth: { xs: "30px", md: "40px" },
+                            minHeight: { xs: "30px", md: "40px" },
                           }}>
                           <VisibilityIcon />
                         </Button>
