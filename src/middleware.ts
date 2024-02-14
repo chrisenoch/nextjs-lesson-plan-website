@@ -81,10 +81,6 @@ export async function middleware(request: NextRequest) {
 //and do not include any children routes, then 'lessonPlans/1' will not be protected. //To do: Change this
 const SIGNIN_REDIRECT_START = "/auth/signin?redirect=/";
 const protectedRoutes: ProtectedRoutes = {
-  "my-jobs": {
-    roles: ["USER"],
-    notLoggedInRedirectUrlPath: SIGNIN_REDIRECT_START + "my-jobs",
-  },
   lessonplans: {
     roles: ["EVERYBODY"],
     children: [
@@ -122,6 +118,10 @@ const protectedRoutes: ProtectedRoutes = {
         },
       },
     ],
+  },
+  "my-jobs": {
+    roles: ["USER"],
+    notLoggedInRedirectUrlPath: SIGNIN_REDIRECT_START + "my-jobs",
   },
   user: {
     roles: ["ADMIN"],
