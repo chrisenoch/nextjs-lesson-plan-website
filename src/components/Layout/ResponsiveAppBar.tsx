@@ -22,10 +22,9 @@ import MenuIcon from "@mui/icons-material/Menu";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useState } from "react";
 import React from "react";
-import { AppDispatch, selectLoginStatus, userLogout } from "@/store";
+import { selectUserSessionStatus, userLogout } from "@/store";
 import SecureNextLink from "../Utils/SecureNextLink";
 import InSecureNextLink from "next/link";
-import { LoginStatus } from "@/models/types/Auth/LoginStatus";
 import MenuButton from "../MenuButton";
 import LogoutIcon from "@mui/icons-material/Logout";
 import LoginIcon from "@mui/icons-material/Login";
@@ -49,7 +48,7 @@ export default function ResponsiveAppBar({
   navBarItems: { title: string; href: string }[];
 }) {
   console.log("Responsive AppBar mounts");
-  const loginStatus: LoginStatus = useAppSelector(selectLoginStatus);
+  const userSessionStatus = useAppSelector(selectUserSessionStatus);
   const dispatch = useAppDispatch();
 
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -130,7 +129,7 @@ export default function ResponsiveAppBar({
                 );
               })}
               {/* show login, logout or loading button depending on the status */}
-              {loginStatus === "LOGGED_IN" && (
+              {userSessionStatus === "ACTIVE" && (
                 <Button
                   key="Logout"
                   onClick={() => {
@@ -140,7 +139,7 @@ export default function ResponsiveAppBar({
                   Logout
                 </Button>
               )}
-              {loginStatus === "LOGGED_OUT" && (
+              {userSessionStatus === "INACTIVE" && (
                 <Button
                   key="Login"
                   href={"/auth/signin"}
@@ -150,7 +149,7 @@ export default function ResponsiveAppBar({
                   Login
                 </Button>
               )}
-              {loginStatus === "LOGIN_NOT_PROCESSED" && (
+              {userSessionStatus === "PROCESSING" && (
                 <LoadingButton
                   key={"loading-placeholder"}
                   loading
@@ -217,7 +216,7 @@ export default function ResponsiveAppBar({
           </List>
           <Divider sx={{ mt: "auto" }} />
           <List>
-            {loginStatus === "LOGGED_IN" && (
+            {userSessionStatus === "ACTIVE" && (
               <ListItem
                 key="Logout"
                 disablePadding
@@ -233,7 +232,7 @@ export default function ResponsiveAppBar({
                 </ListItemButton>
               </ListItem>
             )}
-            {loginStatus === "LOGGED_OUT" && (
+            {userSessionStatus === "INACTIVE" && (
               <ListItem
                 key="Login"
                 disablePadding

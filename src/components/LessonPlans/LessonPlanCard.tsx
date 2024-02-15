@@ -41,7 +41,7 @@ export default function LessonPlanCard({
   handleToggleBookmark,
   sxImage,
   sxDescription,
-  loginStatus,
+  userSessionStatus,
 }: LessonPlanCard) {
   const isHydrated = useHydrated();
 
@@ -158,7 +158,7 @@ export default function LessonPlanCard({
         </Button>
         {isHydrated && (
           <LessonPlanCardBookmarkButton
-            loginStatus={loginStatus}
+            userSessionStatus={userSessionStatus}
             id={id}
             isBookmarked={isBookmarked}
             handleToggleBookmark={handleToggleBookmark}

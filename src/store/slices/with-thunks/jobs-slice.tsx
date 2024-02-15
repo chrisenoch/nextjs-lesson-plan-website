@@ -172,7 +172,7 @@ export const selectJobsByUserId = createSelector(
   [
     (state: RootState) => state.jobsSlice.jobs,
     (state: RootState) => {
-      if (state.authSlice.userSession.isActive) {
+      if (state.authSlice.userSession.status) {
         return state.authSlice.userSession.id;
       } else {
         return null;

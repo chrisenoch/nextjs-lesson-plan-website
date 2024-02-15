@@ -5,14 +5,13 @@ import { LessonPlan } from "../../models/types/LessonPlans/LessonPlan";
 import {
   selectAllBookmarks,
   selectFetchBookmarks,
-  selectLoginStatus,
+  selectUserSessionStatus,
 } from "@/store";
 import { useEffect } from "react";
 import {
   fetchBookmarks,
   toggleBookmark,
 } from "@/store/slices/with-thunks/lessonplans-slice";
-import { LoginStatus } from "@/models/types/Auth/LoginStatus";
 import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 import { getBookmakedLessonPlanIds } from "@/component-functions/get-bookmarked-lessonplan-ids";
 import NotificationBox from "../NotificationBox";
@@ -51,7 +50,7 @@ export default function DisplayLessonPlans({
   const fetchBookMarksInfo: StandardResponseInfo =
     useAppSelector(selectFetchBookmarks);
 
-  const loginStatus: LoginStatus = useAppSelector(selectLoginStatus);
+  const userSessionStatus = useAppSelector(selectUserSessionStatus);
 
   useEffect(() => {
     dispatch(fetchBookmarks());
@@ -122,7 +121,7 @@ export default function DisplayLessonPlans({
               : "IS_NOT_BOOKMARKED"
           }
           handleToggleBookmark={handleToggleBookmark}
-          loginStatus={loginStatus}
+          userSessionStatus={userSessionStatus}
         />
       </Stack>
     ));
