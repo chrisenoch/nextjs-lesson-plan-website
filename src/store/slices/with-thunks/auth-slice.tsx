@@ -162,9 +162,9 @@ const authSlice = createSlice({
         );
         handleRefreshState(action, state);
         if (action.payload.isError) {
-          state.getAccessTokenWithRefreshToken.isError = true;
+          state.getAccessTokenWithRefreshTokenOnAppMount.isError = true;
         } else {
-          state.getAccessTokenWithRefreshToken.isError = false;
+          state.getAccessTokenWithRefreshTokenOnAppMount.isError = false;
         }
       }
     );
