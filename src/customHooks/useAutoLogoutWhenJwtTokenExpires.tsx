@@ -51,9 +51,10 @@ export default function useAutoLogoutWhenJwtTokenExpires(
     }
 
     if (
-      loginStatus === "LOGGED_IN" &&
-      !wasLastRefresh &&
-      wasLastRefreshSuccessful !== false
+      (loginStatus === "LOGGED_IN" &&
+        !wasLastRefresh &&
+        wasLastRefreshSuccessful === "SUCCESS") ||
+      wasLastRefreshSuccessful === "CLEAN"
     ) {
       //Clear any past timers to ensure multiple timers do not get triggered on re-render of useEffect. (Return useEffect clean-up fn is not called on
       //re-render of useEffect.)
@@ -77,7 +78,7 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   //This is for when the refresh token has been revoked, changed or is no longer present when it
   //is expected to be.
   useEffect(() => {
-    if (wasLastRefreshSuccessful === false) {
+    if (wasLastRefreshSuccessful === "FAILURE") {
       clearTimers();
       dispatch(userLogout());
     }
