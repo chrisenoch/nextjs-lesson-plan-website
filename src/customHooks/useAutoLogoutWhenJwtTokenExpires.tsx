@@ -75,7 +75,7 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   //This is for when the refresh token has been revoked, changed or is no longer present when it
   //is expected to be.
   useEffect(() => {
-    if (refreshSuccessStatus === "FAILURE") {
+    if (refreshSuccessStatus === "DENIED") {
       clearTimers();
       dispatch(userLogout());
     }

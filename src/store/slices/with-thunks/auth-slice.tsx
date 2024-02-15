@@ -22,7 +22,7 @@ import {
 
 const initialState: {
   userSession: UserSession;
-  refreshSuccessStatus: "SUCCESS" | "FAILURE" | "CLEAN"; //Clean is for when there hasn't been a refresh yet in the current user session.
+  refreshSuccessStatus: "SUCCESS" | "DENIED" | "CLEAN"; //Clean is for when there hasn't been a refresh yet in the current user session.
   wasLastRefresh: boolean;
   logoutCount: number;
   userLogin: StandardResponseInfo;
@@ -206,7 +206,7 @@ function handleRefreshState(
     }
   } else {
     state.userSession = { status: "INACTIVE" };
-    state.refreshSuccessStatus = "FAILURE";
+    state.refreshSuccessStatus = "DENIED";
     state.wasLastRefresh = false;
   }
 }
