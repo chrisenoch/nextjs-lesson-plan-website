@@ -22,7 +22,7 @@ import {
 
 const initialState: {
   userSession: UserSession;
-  wasLastRefreshSuccessful: "SUCCESS" | "FAILURE" | "CLEAN"; //Clean is for when there hasn't been a refresh yet in the current user session.
+  refreshSuccessStatus: "SUCCESS" | "FAILURE" | "CLEAN"; //Clean is for when there hasn't been a refresh yet in the current user session.
   wasLastRefresh: boolean;
   logoutCount: number;
   userLogin: StandardResponseInfo;
@@ -31,7 +31,7 @@ const initialState: {
   getAccessTokenWithRefreshTokenOnAppMount: StandardResponseInfo;
 } = {
   userSession: { status: "PROCESSING" },
-  wasLastRefreshSuccessful: "CLEAN",
+  refreshSuccessStatus: "CLEAN",
   wasLastRefresh: false,
   logoutCount: 0,
 
@@ -95,11 +95,11 @@ const authSlice = createSlice({
     });
     //Logout user
     builder.addCase(userLogout.pending, (state) => {
-      state.wasLastRefreshSuccessful = "CLEAN";
+      state.refreshSuccessStatus = "CLEAN";
       handlePending("userLogout", state);
     });
     builder.addCase(userLogout.fulfilled, (state, action) => {
-      state.wasLastRefreshSuccessful = "CLEAN";
+      state.refreshSuccessStatus = "CLEAN";
       handleFulfilled("userLogout", state, action);
       if (!action.payload.isError) {
         state.userSession = { status: "INACTIVE" };
@@ -107,7 +107,7 @@ const authSlice = createSlice({
       }
     });
     builder.addCase(userLogout.rejected, (state, action) => {
-      state.wasLastRefreshSuccessful = "CLEAN";
+      state.refreshSuccessStatus = "CLEAN";
       handleRejected("userLogout", state, action); //Don't set userSession to null here and don't set loginStatus to LOGGED_OUT. If the logout fails, the UI should not tell the user that he has logged-out.
     });
     //Get access token with refresh token in the background.
@@ -118,7 +118,7 @@ const authSlice = createSlice({
       state.getAccessTokenWithRefreshToken.isError = false;
       state.getAccessTokenWithRefreshToken.message = "";
       state.getAccessTokenWithRefreshToken.statusCode = null;
-      state.wasLastRefreshSuccessful = "CLEAN";
+      state.refreshSuccessStatus = "CLEAN";
       state.wasLastRefresh = false;
     });
     builder.addCase(
@@ -148,7 +148,7 @@ const authSlice = createSlice({
       getAccessTokenWithRefreshTokenOnAppMount.pending,
       (state) => {
         handlePending("getAccessTokenWithRefreshTokenOnAppMount", state);
-        state.wasLastRefreshSuccessful = "CLEAN";
+        state.refreshSuccessStatus = "CLEAN";
         state.wasLastRefresh = false;
       }
     );
@@ -197,7 +197,7 @@ function handleRefreshState(
       role,
       status: "ACTIVE",
     };
-    state.wasLastRefreshSuccessful = "SUCCESS";
+    state.refreshSuccessStatus = "SUCCESS";
 
     if (action.payload.wasLastRefresh) {
       state.wasLastRefresh = true;
@@ -206,7 +206,7 @@ function handleRefreshState(
     }
   } else {
     state.userSession = { status: "INACTIVE" };
-    state.wasLastRefreshSuccessful = "FAILURE";
+    state.refreshSuccessStatus = "FAILURE";
     state.wasLastRefresh = false;
   }
 }
@@ -226,7 +226,7 @@ function setUserSessionFromLoggedInStatus(
       role,
       status: "ACTIVE",
     };
-    state.wasLastRefreshSuccessful = "CLEAN";
+    state.refreshSuccessStatus = "CLEAN";
     state.wasLastRefresh = false;
   } else {
     state.userSession = { status: "INACTIVE" };
