@@ -1,4 +1,4 @@
-import { AuthPayloadOnError, UserRefreshPayload } from "./AuthPayloads";
+import { ValueOf } from "../TypeScriptHelpers/ValueOf";
 
 export type UserSession =
   | {
@@ -8,8 +8,14 @@ export type UserSession =
       iat: number;
       id: string;
       role: "EVERYBODY" | "USER" | "ADMIN";
-      isActive: true;
+      status: "ACTIVE";
     }
   | {
-      isActive: false;
+      status: "INACTIVE";
+    }
+  | {
+      status: "PROCESSING";
     };
+
+type UserSessionStatusHelper = Pick<UserSession, "status">;
+export type UserSessionStatus = ValueOf<UserSessionStatusHelper>;
