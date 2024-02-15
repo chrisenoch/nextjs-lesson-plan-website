@@ -7,8 +7,9 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   timeBeforeAccessTokenExpiryToSendRefreshToken: number
 ) {
   console.log("useAutoLogoutWhenJwtTokenExpires renders");
-  const { userSession, wasLastRefreshSuccessful, wasLastRefresh } =
-    useAppSelector((state) => state.authSlice);
+  const { userSession, refreshSuccessStatus, wasLastRefresh } = useAppSelector(
+    (state) => state.authSlice
+  );
   const dispatch = useAppDispatch();
   const refreshTokenTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(
     null
@@ -50,8 +51,8 @@ export default function useAutoLogoutWhenJwtTokenExpires(
     if (
       (userSession.status === "ACTIVE" &&
         !wasLastRefresh &&
-        wasLastRefreshSuccessful === "SUCCESS") ||
-      wasLastRefreshSuccessful === "CLEAN"
+        refreshSuccessStatus === "SUCCESS") ||
+      refreshSuccessStatus === "CLEAN"
     ) {
       //Clear any past timers to ensure multiple timers do not get triggered on re-render of useEffect. (Return useEffect clean-up fn is not called on
       //re-render of useEffect.)
@@ -66,7 +67,7 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   }, [
     dispatch,
     wasLastRefresh,
-    wasLastRefreshSuccessful,
+    refreshSuccessStatus,
     userSession,
     timeBeforeAccessTokenExpiryToSendRefreshToken,
   ]);
@@ -74,18 +75,18 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   //This is for when the refresh token has been revoked, changed or is no longer present when it
   //is expected to be.
   useEffect(() => {
-    if (wasLastRefreshSuccessful === "FAILURE") {
+    if (refreshSuccessStatus === "FAILURE") {
       clearTimers();
       dispatch(userLogout());
     }
     return () => {
       clearTimers();
     };
-  }, [wasLastRefreshSuccessful, dispatch]);
+  }, [refreshSuccessStatus, dispatch]);
 
   //Show a warning and then right after log the user out.
   //This is for when the refresh token has expired.
-  //We cannot just rely on wasLastRefreshSuccessful because if we do this, then for a short time before logout,
+  //We cannot just rely on "refreshSuccessStatus === 'SUCCESS'"" because if we do this, then for a short time before logout,
   //requests will be sent non-stop to the refresh endpoint.
   useEffect(() => {
     if (wasLastRefresh && userSession.status === "ACTIVE") {
