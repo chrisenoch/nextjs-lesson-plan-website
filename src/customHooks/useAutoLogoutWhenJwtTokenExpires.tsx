@@ -6,7 +6,7 @@ import {
 } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function useAutoLogoutWhenJwtTokenExpires(
   timeBeforeAccessTokenExpiryToSendRefreshToken: number
@@ -26,22 +26,22 @@ export default function useAutoLogoutWhenJwtTokenExpires(
     hasAutoLoggedOut: boolean;
   }>({ hasAutoLoggedOut: false });
 
-  const sendRefreshToken = useCallback(() => {
-    if (userSession && loginStatus === "LOGGED_IN") {
-      const tokenExpiry = new Date(userSession.exp * 1000); //userSession.exp is in seconds, new Date(value) is in milliseconds.
+  useEffect(() => {
+    console.log(
+      "inside sendRefreshTokenJustBeforeAccessTokenExpires# useEffect"
+    );
+    //Check the access token expiry date periodically and send refresh token just before the token expires.
+    function sendRefreshTokenJustBeforeAccessTokenExpires() {
+      if (userSession && loginStatus === "LOGGED_IN") {
+        const tokenExpiry = new Date(userSession.exp * 1000); //userSession.exp is in seconds, new Date(value) is in milliseconds.
 
-      //Start the timer to send the refresh token and get a new access token
-      const timeUntilAutoLogout = tokenExpiry.valueOf() - Date.now();
-      if (
-        timeUntilAutoLogout - Date.now() <=
-        timeBeforeAccessTokenExpiryToSendRefreshToken
-      ) {
+        //Start the timer to send the refresh token and get a new access token
+        const timeUntilAutoLogout = tokenExpiry.valueOf() - Date.now();
         console.log(
           "getAccessTokenWithRefreshToken will run in: " +
             (timeUntilAutoLogout -
               timeBeforeAccessTokenExpiryToSendRefreshToken)
         );
-
         refreshTokenTimeoutId.current = setTimeout(() => {
           console.log("getAccessTokenWithRefreshToken about to run");
           dispatch(getAccessTokenWithRefreshToken());
@@ -49,28 +49,30 @@ export default function useAutoLogoutWhenJwtTokenExpires(
         }, timeUntilAutoLogout - timeBeforeAccessTokenExpiryToSendRefreshToken);
       }
     }
-  }, [
-    dispatch,
-    loginStatus,
-    timeBeforeAccessTokenExpiryToSendRefreshToken,
-    userSession,
-  ]);
 
-  //Check the access token expiry date periodically and send refresh token just before the token expires.
-  useEffect(() => {
-    console.log("inside polling useEffect");
-    if (loginStatus === "LOGGED_IN" && !wasLastRefresh) {
+    if (
+      loginStatus === "LOGGED_IN" &&
+      !wasLastRefresh &&
+      wasLastRefreshSuccessful !== false
+    ) {
       //Clear any past timers to ensure multiple timers do not get triggered on re-render of useEffect. (Return useEffect clean-up fn is not called on
       //re-render of useEffect.)
       clearTimers();
       console.log("sending first refresh token in useEffect");
-      sendRefreshToken();
+      sendRefreshTokenJustBeforeAccessTokenExpires();
     }
 
     return () => {
       clearTimers();
     };
-  }, [dispatch, sendRefreshToken, wasLastRefresh, loginStatus]);
+  }, [
+    dispatch,
+    wasLastRefresh,
+    loginStatus,
+    wasLastRefreshSuccessful,
+    userSession,
+    timeBeforeAccessTokenExpiryToSendRefreshToken,
+  ]);
 
   //This is for when the refresh token has been revoked, changed or is no longer present when it
   //is expected to be.
