@@ -22,7 +22,7 @@ import {
 } from "@/models/types/Auth/AuthPayloads";
 
 const initialState: {
-  userSession: UserSession | null;
+  userSession: UserSession;
   loginStatus: LoginStatus;
   wasLastRefreshSuccessful: "SUCCESS" | "FAILURE" | "CLEAN";
   wasLastRefresh: boolean;
@@ -32,7 +32,7 @@ const initialState: {
   getAccessTokenWithRefreshToken: StandardResponseInfo;
   getAccessTokenWithRefreshTokenOnAppMount: StandardResponseInfo;
 } = {
-  userSession: null,
+  userSession: { isActive: false },
   loginStatus: "LOGIN_NOT_PROCESSED",
   wasLastRefreshSuccessful: "CLEAN",
   wasLastRefresh: false,
@@ -102,7 +102,7 @@ const authSlice = createSlice({
       handleFulfilled("userLogout", state, action);
       if (!action.payload.isError) {
         state.loginStatus = "LOGGED_OUT";
-        state.userSession = null;
+        state.userSession = { isActive: false };
         state.wasLastRefresh = false;
       }
     });
@@ -195,6 +195,7 @@ function handleRefreshState(
       iat,
       exp,
       role,
+      isActive: true,
     };
 
     state.loginStatus = "LOGGED_IN";
@@ -206,7 +207,7 @@ function handleRefreshState(
       state.wasLastRefresh = false;
     }
   } else {
-    state.userSession = null;
+    state.userSession = { isActive: false };
     state.loginStatus = "LOGGED_OUT";
     state.wasLastRefreshSuccessful = "FAILURE";
     state.wasLastRefresh = false;
@@ -226,6 +227,7 @@ function setUserSessionFromLoggedInStatus(
       iat,
       exp,
       role,
+      isActive: true,
     };
     state.loginStatus = "LOGGED_IN";
     state.wasLastRefreshSuccessful = "CLEAN";

@@ -1,6 +1,15 @@
 import { AuthPayloadOnError, UserRefreshPayload } from "./AuthPayloads";
 
-export type UserSession = Pick<
-  Exclude<UserRefreshPayload, AuthPayloadOnError>,
-  "email" | "exp" | "firstName" | "iat" | "id" | "role"
->;
+export type UserSession =
+  | {
+      email: string;
+      exp: number;
+      firstName: string;
+      iat: number;
+      id: string;
+      role: "EVERYBODY" | "USER" | "ADMIN";
+      isActive: true;
+    }
+  | {
+      isActive: false;
+    };
