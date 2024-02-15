@@ -1,6 +1,6 @@
 "use client";
 
-import useAutoLogoutWhenJwtTokenExpires from "@/customHooks/useAutoLogoutWhenJwtTokenExpires";
+import useHandleLoginStatus from "@/customHooks/useHandleLoginStatus";
 import { getAccessTokenWithRefreshTokenOnAppMount } from "@/store";
 import { useState, useEffect } from "react";
 import { LogoutWarning } from "./Auth/LogoutWarning";
@@ -13,8 +13,7 @@ export default function EssentialClientConfig({
 }) {
   console.log("EssentialClientConfig mounts");
   const dispatch = useAppDispatch();
-  //useAutoLogout(1_800_000);
-  const renderModal = useAutoLogoutWhenJwtTokenExpires(10_000); //240_000 - 4 mins // 30_000 - 30 secs //10_000 - 10 secs
+  const renderModal = useHandleLoginStatus(10_000); //10_000 - 10 secs
   const [previousRenderModal, setPreviousRenderModal] = useState<{
     hasAutoLoggedOut: boolean;
   }>(renderModal);

@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 import { useEffect, useRef, useState } from "react";
 
-export default function useAutoLogoutWhenJwtTokenExpires(
+export default function useHandleLoginStatus(
   timeBeforeAccessTokenExpiryToSendRefreshToken: number
 ) {
   console.log("useAutoLogoutWhenJwtTokenExpires renders");
@@ -23,7 +23,7 @@ export default function useAutoLogoutWhenJwtTokenExpires(
 
   useEffect(() => {
     console.log(
-      "inside sendRefreshTokenJustBeforeAccessTokenExpires# useEffect"
+      "Inside sendRefreshTokenJustBeforeAccessTokenExpires# useEffect"
     );
     //Check the access token expiry date periodically and send refresh token just before the token expires.
     function sendRefreshTokenJustBeforeAccessTokenExpires() {
@@ -57,7 +57,9 @@ export default function useAutoLogoutWhenJwtTokenExpires(
       //Clear any past timers to ensure multiple timers do not get triggered on re-render of useEffect. (Return useEffect clean-up fn is not called on
       //re-render of useEffect.)
       clearTimers();
-      console.log("sending first refresh token in useEffect");
+      console.log(
+        "Calling sendRefreshTokenJustBeforeAccessTokenExpires# in useEffect"
+      );
       sendRefreshTokenJustBeforeAccessTokenExpires();
     }
 
@@ -109,7 +111,7 @@ export default function useAutoLogoutWhenJwtTokenExpires(
   function clearTimers() {
     refreshTokenTimeoutId.current &&
       clearTimeout(refreshTokenTimeoutId.current);
-    autoLogoutTimeoutId.current && clearInterval(autoLogoutTimeoutId.current);
+    autoLogoutTimeoutId.current && clearTimeout(autoLogoutTimeoutId.current);
   }
 
   return renderLogoutWarning;
