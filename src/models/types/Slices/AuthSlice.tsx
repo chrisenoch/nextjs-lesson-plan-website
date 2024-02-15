@@ -3,7 +3,7 @@ import { StandardResponseInfo } from "../DataFetching/StandardResponseInfo";
 
 export type AuthSliceState = {
   userSession: UserSession;
-  refreshSuccessStatus: "SUCCESS" | "FAILURE" | "CLEAN";
+  refreshSuccessStatus: "SUCCESS" | "DENIED" | "CLEAN";
   wasLastRefresh: boolean;
   logoutCount: number;
   userLogin: StandardResponseInfo;
