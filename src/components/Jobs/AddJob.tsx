@@ -27,6 +27,9 @@ import NotificationBox from "../NotificationBox";
 import { StandardResponseInfo } from "@/models/types/DataFetching/StandardResponseInfo";
 import { Job } from "@/models/types/Jobs/Jobs";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { ValueOf } from "next/dist/shared/lib/constants";
+import { PropertyNamesAsStrings } from "@/models/types/TypeScriptHelpers/PropertyNamesAsStrings";
+import { getKeysAsValues } from "@/utils/object-functions";
 
 export function AddJob() {
   console.log("add job rendered");
@@ -46,42 +49,26 @@ export function AddJob() {
   const [jobSalary, setJobSalary] = useState<string>("");
   const [jobDescription, setJobDescription] = useState<string>("");
 
-  const fields = {
-    jobTitle: "jobTitle",
-    jobDescription: "jobDescription",
-    jobLocation: "jobLocation",
-    jobCompany: "jobCompany",
-    jobSalary: "jobSalary",
-  };
-
-  const inputRefs = useMemo(
-    () =>
-      new Map([
-        [fields.jobTitle, jobTitleRef],
-        [fields.jobDescription, jobDescriptionRef],
-        [fields.jobLocation, jobLocationRef],
-        [fields.jobCompany, jobCompanyRef],
-        [fields.jobSalary, jobSalaryRef],
-      ]),
-    [
-      fields.jobCompany,
-      fields.jobDescription,
-      fields.jobLocation,
-      fields.jobSalary,
-      fields.jobTitle,
-    ]
-  );
-  //To do Change inputRefs map for an object in useFormClientStatus so as to reduce code.
+  const inputRefs = useMemo(() => {
+    return {
+      jobTitle: jobTitleRef,
+      jobDescription: jobDescriptionRef,
+      jobLocation: jobLocationRef,
+      jobCompany: jobCompanyRef,
+      jobSalary: jobSalaryRef,
+    };
+  }, []);
   const {
     elementsStatus: formStatus,
     resetAll,
     setAllToTouched,
+    getFieldNames,
   } = useFormClientStatus(inputRefs);
+  const fields = getFieldNames() as PropertyNamesAsStrings<typeof inputRefs>;
 
   const dispatch = useAppDispatch();
   const addJobInfo: StandardResponseInfo = useAppSelector(selectAddJob);
   const fetchJobsInfo: StandardResponseInfo = useAppSelector(selectFetchJobs);
-
   const jobs: Job[] | undefined = useAppSelector(selectJobsByUserId);
 
   useClearFormOnSuccess(addJobInfo, clearForm);
