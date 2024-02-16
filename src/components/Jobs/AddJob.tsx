@@ -49,7 +49,7 @@ export function AddJob() {
   const [jobSalary, setJobSalary] = useState<string>("");
   const [jobDescription, setJobDescription] = useState<string>("");
 
-  const inputRefs = useMemo(() => {
+  const formFieldRefs = useMemo(() => {
     return {
       jobTitle: jobTitleRef,
       jobDescription: jobDescriptionRef,
@@ -58,13 +58,11 @@ export function AddJob() {
       jobSalary: jobSalaryRef,
     };
   }, []);
-  const {
-    elementsStatus: formStatus,
-    resetAll,
-    setAllToTouched,
-    getFieldNames,
-  } = useFormClientStatus(inputRefs);
-  const fields = getFieldNames() as PropertyNamesAsStrings<typeof inputRefs>;
+  const { formFieldsStatus, resetAllFields, setAllToTouched, getFieldNames } =
+    useFormClientStatus(formFieldRefs);
+  const fields = getFieldNames() as PropertyNamesAsStrings<
+    typeof formFieldRefs
+  >;
 
   const dispatch = useAppDispatch();
   const addJobInfo: StandardResponseInfo = useAppSelector(selectAddJob);
@@ -107,7 +105,7 @@ export function AddJob() {
     setJobLocation("");
     setJobCompany("");
     setJobSalary("");
-    resetAll();
+    resetAllFields();
   }
 
   useEffect(() => {
@@ -150,12 +148,13 @@ export function AddJob() {
                 setJobTitle(event.target.value);
               }}
               error={
-                !isJobTitleValid && formStatus?.get(fields.jobTitle)?.isTouched
+                !isJobTitleValid &&
+                formFieldsStatus?.get(fields.jobTitle)?.isTouched
               }
               helperText={
                 !isJobTitleValid &&
-                (formStatus?.get(fields.jobTitle)?.hasBeenFocused ||
-                  formStatus?.get(fields.jobTitle)?.isTouched) &&
+                (formFieldsStatus?.get(fields.jobTitle)?.hasBeenFocused ||
+                  formFieldsStatus?.get(fields.jobTitle)?.isTouched) &&
                 "Insert two or more characters"
               }
               sx={{ flexGrow: 1 }}
@@ -172,12 +171,12 @@ export function AddJob() {
               }}
               error={
                 !isJobLocationValid &&
-                formStatus?.get(fields.jobLocation)?.isTouched
+                formFieldsStatus?.get(fields.jobLocation)?.isTouched
               }
               helperText={
                 !isJobLocationValid &&
-                (formStatus?.get(fields.jobLocation)?.hasBeenFocused ||
-                  formStatus?.get(fields.jobLocation)?.isTouched) &&
+                (formFieldsStatus?.get(fields.jobLocation)?.hasBeenFocused ||
+                  formFieldsStatus?.get(fields.jobLocation)?.isTouched) &&
                 "Insert two or more characters"
               }
               sx={{ flexGrow: 1 }}
@@ -196,12 +195,12 @@ export function AddJob() {
               }}
               error={
                 !isJobCompanyValid &&
-                formStatus?.get(fields.jobCompany)?.isTouched
+                formFieldsStatus?.get(fields.jobCompany)?.isTouched
               }
               helperText={
                 !isJobCompanyValid &&
-                (formStatus?.get(fields.jobCompany)?.hasBeenFocused ||
-                  formStatus?.get(fields.jobCompany)?.isTouched) &&
+                (formFieldsStatus?.get(fields.jobCompany)?.hasBeenFocused ||
+                  formFieldsStatus?.get(fields.jobCompany)?.isTouched) &&
                 "Insert two or more characters"
               }
               sx={{ flexGrow: 1 }}
@@ -218,12 +217,12 @@ export function AddJob() {
               }}
               error={
                 !isJobSalaryValid &&
-                formStatus?.get(fields.jobSalary)?.isTouched
+                formFieldsStatus?.get(fields.jobSalary)?.isTouched
               }
               helperText={
                 !isJobSalaryValid &&
-                (formStatus?.get(fields.jobSalary)?.hasBeenFocused ||
-                  formStatus?.get(fields.jobSalary)?.isTouched) &&
+                (formFieldsStatus?.get(fields.jobSalary)?.hasBeenFocused ||
+                  formFieldsStatus?.get(fields.jobSalary)?.isTouched) &&
                 "Insert four or more characters"
               }
               sx={{ flexGrow: 1 }}
@@ -244,12 +243,12 @@ export function AddJob() {
               }}
               error={
                 !isJobDescriptionValid &&
-                formStatus?.get(fields.jobDescription)?.isTouched
+                formFieldsStatus?.get(fields.jobDescription)?.isTouched
               }
               helperText={
                 !isJobDescriptionValid &&
-                (formStatus?.get(fields.jobDescription)?.hasBeenFocused ||
-                  formStatus?.get(fields.jobDescription)?.isTouched) &&
+                (formFieldsStatus?.get(fields.jobDescription)?.hasBeenFocused ||
+                  formFieldsStatus?.get(fields.jobDescription)?.isTouched) &&
                 "Insert two or more characters"
               }
               multiline
