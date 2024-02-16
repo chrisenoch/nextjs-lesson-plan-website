@@ -1,5 +1,7 @@
 "use client";
 
+import { PropertyNamesAsStrings } from "@/models/types/TypeScriptHelpers/PropertyNamesAsStrings";
+import { getKeysAsValues } from "@/utils/object-functions";
 import {
   Dispatch,
   MutableRefObject,
@@ -10,7 +12,8 @@ import {
 } from "react";
 
 export default function useFormClientStatus(
-  inputRefsToTrack: Map<string, MutableRefObject<HTMLInputElement | null>>
+  // inputRefsToTrack: Map<string, MutableRefObject<HTMLInputElement | null>>,
+  inputRefsToTrack: { [key: string]: MutableRefObject<HTMLInputElement | null> }
 ) {
   const [elementsStatus, setElementsStatus] = useState<null | Map<
     string,
@@ -104,11 +107,16 @@ export default function useFormClientStatus(
     resetElement,
     resetAll,
     setAllToTouched,
+    getFieldNames,
   };
 
   /*
   Hook utility functions
    */
+
+  function getFieldNames() {
+    return getKeysAsValues(inputRefsToTrack);
+  }
 
   function resetElement(id: string) {
     const status = elementsStatus?.get(id);
@@ -150,7 +158,10 @@ export default function useFormClientStatus(
 }
 
 function initAllElements(
-  inputRefsToTrack: Map<string, MutableRefObject<HTMLInputElement | null>>,
+  //inputRefsToTrack: Map<string, MutableRefObject<HTMLInputElement | null>>,
+  inputRefsToTrack: {
+    [key: string]: MutableRefObject<HTMLInputElement | null>;
+  },
   setElementsStatus: Dispatch<
     SetStateAction<Map<
       string,
@@ -165,7 +176,7 @@ function initAllElements(
   >
 ) {
   const nextElementsStatus = new Map();
-  inputRefsToTrack.forEach((ref, id) => {
+  Object.entries(inputRefsToTrack).forEach(([id, ref]) => {
     //To do: add options for form as a whole and for dirty, pristine, etc.
     const status: {
       isTouched: boolean;

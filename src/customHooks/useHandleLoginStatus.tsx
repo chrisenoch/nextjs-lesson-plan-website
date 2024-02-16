@@ -25,7 +25,6 @@ export default function useHandleLoginStatus(
     console.log(
       "Inside sendRefreshTokenJustBeforeAccessTokenExpires# useEffect"
     );
-    //Check the access token expiry date periodically and send refresh token just before the token expires.
     function sendRefreshTokenJustBeforeAccessTokenExpires() {
       console.log(userSession);
       console.log("session status " + userSession.status);
