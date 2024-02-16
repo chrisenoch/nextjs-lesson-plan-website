@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
     userId = userIdOrErrorResponse;
   }
 
-  const { isValid: isFormValid } = isAddJobValid({
+  const { isFormValid } = isAddJobValid({
     jobTitle,
     jobDescription,
     jobLocation,
