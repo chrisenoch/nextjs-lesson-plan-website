@@ -18,7 +18,7 @@ import {
 } from "@/store";
 import { JobsPreview } from "./JobsPreview";
 import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
-import useClearFormOnSuccess from "@/customHooks/useClearFormOnSuccess";
+import useOnSuccessfulHttpResponse from "@/customHooks/useOnSuccessfulHttpResponse";
 import useHideMessageOnNavAway from "@/customHooks/useHideMessageOnNavAway";
 import { isAddJobValid } from "@/validation/jobs/jobs-validators";
 import CurvedUnderlineTitle from "../Presentation/CurvedUnderline";
@@ -69,7 +69,7 @@ export function AddJob() {
   const fetchJobsInfo: StandardResponseInfo = useAppSelector(selectFetchJobs);
   const jobs: Job[] | undefined = useAppSelector(selectJobsByUserId);
 
-  useClearFormOnSuccess(addJobInfo, clearForm);
+  useOnSuccessfulHttpResponse(addJobInfo, clearForm);
   const shouldHideMessage = useHideMessageOnNavAway(addJobInfo);
 
   const {
