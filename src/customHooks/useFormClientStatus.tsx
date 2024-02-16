@@ -11,10 +11,9 @@ import {
   useState,
 } from "react";
 
-export default function useFormClientStatus(
-  // inputRefsToTrack: Map<string, MutableRefObject<HTMLInputElement | null>>,
-  inputRefsToTrack: { [key: string]: MutableRefObject<HTMLInputElement | null> }
-) {
+export default function useFormClientStatus(inputRefsToTrack: {
+  [key: string]: MutableRefObject<HTMLInputElement | null>;
+}) {
   const [elementsStatus, setElementsStatus] = useState<null | Map<
     string,
     {
@@ -33,27 +32,29 @@ export default function useFormClientStatus(
     >
   >(new Map());
 
-  //create the elementStatusObjects. Run useeffect once to init the objects for each ref.
+  //create the elementStatusObjects. Run useEffect once to init the objects for each ref.
   useEffect(() => {
     initAllElements(inputRefsToTrack, setElementsStatus, refsListeners);
   }, [inputRefsToTrack]);
 
-  //manage event listeners. Should run every render.
+  //Manage event listeners.
   useEffect(() => {
+    console.log("useEffect in form hook rendered");
     const refsListenersToCleanUp = refsListeners.current; //As far as I understand, if we use
     //refsListeners.current in the return cleanup function, the return function will close over
-    //refsListeners.current and then it could become stale.
+    //refsListeners.current and then it could become stale. See the ESLint warnign if you replace refsListenersToCleanUp with
+    //refsListeners.current in the dependencies of this useEffect.
 
     //ensures only starts to run after the second render as during
     //the first render elementsStatus should be equal to null.
     if (elementsStatus !== null) {
-      elementsStatus.forEach((status, id) => {
-        //init event listeners if not already initialised
+      elementsStatus.forEach((_, id) => {
+        //init event listeners for the element (e.g. form field) if not already initialised
         if (
           refsListeners.current.get(id)?.ref.current !== null &&
           refsListeners.current.get(id)!.eventListeners.length < 1
         ) {
-          //create event listener function
+          //create event listener functions
           const updateTouched = function updateTouch() {
             const nextElementsStatus = new Map(elementsStatus);
             const currentStatus = nextElementsStatus.get(id);
@@ -64,7 +65,6 @@ export default function useFormClientStatus(
               setElementsStatus(nextElementsStatus);
             }
           };
-
           const updateFocused = function updateFocus() {
             const nextElementsStatus = new Map(elementsStatus);
             const currentStatus = nextElementsStatus.get(id);
@@ -76,31 +76,18 @@ export default function useFormClientStatus(
             }
           };
 
-          refsListeners.current
-            .get(id)
-            ?.eventListeners.push({ event: "blur", fn: updateTouched });
-          refsListeners.current
-            .get(id)
-            ?.eventListeners.push({ event: "focus", fn: updateFocused });
-          refsListeners.current
-            .get(id)
-            ?.ref.current?.addEventListener("blur", updateTouched);
-          refsListeners.current
-            .get(id)
-            ?.ref.current?.addEventListener("focus", updateFocused);
+          setEventListener(id, refsListeners, updateTouched, "blur");
+          setEventListener(id, refsListeners, updateFocused, "focus");
         }
       });
     }
 
     return () => {
-      // if (elementsStatus) {
-      //   removeEventListeners(refsListeners.current);
-      // } //Changed due to ESLint warning.
       if (elementsStatus) {
-        removeEventListeners(refsListenersToCleanUp);
+        removeEventListeners(refsListenersToCleanUp); //removeEventListeners(refsListeners.current)- Changed due to ESLint warning.
       }
     };
-  });
+  }, [elementsStatus]);
 
   return {
     elementsStatus,
@@ -155,6 +142,25 @@ export default function useFormClientStatus(
       setElementsStatus(nextElementsStatus);
     }
   }
+}
+
+function setEventListener(
+  id: string,
+  refsListeners: MutableRefObject<
+    Map<
+      string,
+      { eventListeners: any[]; ref: MutableRefObject<HTMLInputElement | null> }
+    >
+  >,
+  callback: () => void,
+  eventName: string
+) {
+  refsListeners.current
+    .get(id)
+    ?.eventListeners.push({ event: eventName, fn: callback });
+  refsListeners.current
+    .get(id)
+    ?.ref.current?.addEventListener(eventName, callback);
 }
 
 function initAllElements(
