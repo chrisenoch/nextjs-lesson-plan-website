@@ -1,3 +1,4 @@
+import { capitalizeFirstLetter } from "@/utils/string-functions";
 import { ZodEffects, ZodString, z } from "zod";
 
 export function zodValidator(
@@ -34,12 +35,13 @@ export function getValidationStatuses(
     }
   );
 
-  const isValid = validator.safeParse(valuesToValidate).success;
-  const validationResult: any = { isValid: isValid };
+  const isFormValid = validator.safeParse(valuesToValidate).success;
+  const validationResult: any = { isFormValid: isFormValid };
 
   Object.entries(valuesToValidate).forEach(
     ([validatorName, valueToValidate]) => {
-      validationResult[validatorName.toString()] = checkFormValue(
+      const validatorNameStr = capitalizeFirstLetter(validatorName);
+      validationResult[`is${validatorNameStr}Valid`] = checkFormValue(
         validator,
         validatorName,
         valueToValidate

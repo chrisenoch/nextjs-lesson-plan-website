@@ -75,12 +75,12 @@ export function AddJob() {
   const shouldHideMessage = useHideMessageOnNavAway(addJobInfo);
 
   const {
-    isValid: isFormValid,
-    jobTitle: jobTitleIsValid,
-    jobDescription: jobDescriptionIsValid,
-    jobLocation: jobLocationIsValid,
-    jobCompany: jobCompanyIsValid,
-    jobSalary: jobSalaryIsValid,
+    isFormValid,
+    isJobTitleValid,
+    isJobDescriptionValid,
+    isJobLocationValid,
+    isJobCompanyValid,
+    isJobSalaryValid,
   } = isAddJobValid({
     jobTitle,
     jobDescription,
@@ -150,10 +150,10 @@ export function AddJob() {
                 setJobTitle(event.target.value);
               }}
               error={
-                !jobTitleIsValid && formStatus?.get(fields.jobTitle)?.isTouched
+                !isJobTitleValid && formStatus?.get(fields.jobTitle)?.isTouched
               }
               helperText={
-                !jobTitleIsValid &&
+                !isJobTitleValid &&
                 (formStatus?.get(fields.jobTitle)?.hasBeenFocused ||
                   formStatus?.get(fields.jobTitle)?.isTouched) &&
                 "Insert two or more characters"
@@ -171,11 +171,11 @@ export function AddJob() {
                 setJobLocation(event.target.value);
               }}
               error={
-                !jobLocationIsValid &&
+                !isJobLocationValid &&
                 formStatus?.get(fields.jobLocation)?.isTouched
               }
               helperText={
-                !jobLocationIsValid &&
+                !isJobLocationValid &&
                 (formStatus?.get(fields.jobLocation)?.hasBeenFocused ||
                   formStatus?.get(fields.jobLocation)?.isTouched) &&
                 "Insert two or more characters"
@@ -195,11 +195,11 @@ export function AddJob() {
                 setJobCompany(event.target.value);
               }}
               error={
-                !jobCompanyIsValid &&
+                !isJobCompanyValid &&
                 formStatus?.get(fields.jobCompany)?.isTouched
               }
               helperText={
-                !jobCompanyIsValid &&
+                !isJobCompanyValid &&
                 (formStatus?.get(fields.jobCompany)?.hasBeenFocused ||
                   formStatus?.get(fields.jobCompany)?.isTouched) &&
                 "Insert two or more characters"
@@ -217,11 +217,11 @@ export function AddJob() {
                 setJobSalary(event.target.value);
               }}
               error={
-                !jobSalaryIsValid &&
+                !isJobSalaryValid &&
                 formStatus?.get(fields.jobSalary)?.isTouched
               }
               helperText={
-                !jobSalaryIsValid &&
+                !isJobSalaryValid &&
                 (formStatus?.get(fields.jobSalary)?.hasBeenFocused ||
                   formStatus?.get(fields.jobSalary)?.isTouched) &&
                 "Insert four or more characters"
@@ -243,11 +243,11 @@ export function AddJob() {
                 setJobDescription(event.target.value);
               }}
               error={
-                !jobDescriptionIsValid &&
+                !isJobDescriptionValid &&
                 formStatus?.get(fields.jobDescription)?.isTouched
               }
               helperText={
-                !jobDescriptionIsValid &&
+                !isJobDescriptionValid &&
                 (formStatus?.get(fields.jobDescription)?.hasBeenFocused ||
                   formStatus?.get(fields.jobDescription)?.isTouched) &&
                 "Insert two or more characters"
