@@ -3,11 +3,11 @@
 import { useCallback, useMemo, useState } from "react";
 import SearchLessonPlans from "./SearchLessonPlans";
 import AutoCompleteMultiSelect from "../Forms/AutoCompleteMultiSelect";
-import { LessonPlan } from "@/models/types/LessonPlans/LessonPlan";
 import { LessonPlanCategory } from "@/models/types/LessonPlans/LessonPlanCategory";
 import { LessonPlanSubCategory } from "@/models/types/LessonPlans/LessonPlanSubCategory";
 import { SxProps, Theme } from "@mui/material";
 import DisplayLessonPlans from "./DisplayLessonPlans";
+import { LessonPlanCardSummary } from "@/models/types/LessonPlans/LessonPlanCardSummary";
 
 export default function SearchAndDisplayLessonPlans({
   lessonPlans,
@@ -19,7 +19,7 @@ export default function SearchAndDisplayLessonPlans({
   sxSearchLessonPlansInnerContainer,
   sxSearchLessonPlansTitle,
 }: {
-  lessonPlans: LessonPlan[];
+  lessonPlans: LessonPlanCardSummary[];
   searchTitle: string;
   showLoadingSpinner: boolean;
   showOnlyBookmarkedLessonPlans: boolean;
@@ -100,7 +100,7 @@ export default function SearchAndDisplayLessonPlans({
 }
 
 function filterLessonPlans(
-  lessonPlans: LessonPlan[],
+  lessonPlans: LessonPlanCardSummary[],
   selectedLessonPlanCategories: {
     title: string;
     category: LessonPlanCategory;
@@ -112,7 +112,7 @@ function filterLessonPlans(
   });
 
   const selectedLessonPlanTitlesArr = Array.from(selectedLessonPlanTitles);
-  const filteredLessonPlans: LessonPlan[] = [];
+  const filteredLessonPlans: LessonPlanCardSummary[] = [];
   lessonPlans.forEach((lessonPlan) => {
     const chipTitles = new Set<string>();
     lessonPlan.chips.forEach((chip) => {

@@ -55,6 +55,7 @@ export function SignIn() {
     );
   }
 
+  //redirectPath can be set in the middleware
   if (userSessionStatus === "ACTIVE") {
     if (redirectPath) {
       redirect(redirectPath);

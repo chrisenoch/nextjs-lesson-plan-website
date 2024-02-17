@@ -1,7 +1,6 @@
 "use client";
 import { Box, Grid, Stack, Theme, Typography, useTheme } from "@mui/material";
 import LessonPlanCard from "./LessonPlanCard";
-import { LessonPlan } from "../../models/types/LessonPlans/LessonPlan";
 import {
   selectAllBookmarks,
   selectFetchBookmarks,
@@ -19,6 +18,7 @@ import { LessonPlanCategory } from "@/models/types/LessonPlans/LessonPlanCategor
 import LoadingSpinner from "../Presentation/LoadingSpinner";
 import { StandardResponseInfo } from "@/models/types/DataFetching/StandardResponseInfo";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { LessonPlanCardSummary } from "@/models/types/LessonPlans/LessonPlanCardSummary";
 
 export default function DisplayLessonPlans({
   totalLessonPlansBeforeFiltered,
@@ -29,7 +29,7 @@ export default function DisplayLessonPlans({
   shouldRedirectWhenLogout,
 }: {
   totalLessonPlansBeforeFiltered: number;
-  filteredLessonPlans: LessonPlan[];
+  filteredLessonPlans: LessonPlanCardSummary[];
   selectedLessonPlanCategories: {
     title: string;
     category: LessonPlanCategory;

@@ -1,9 +1,9 @@
 import { UserSessionStatus } from "../Auth/UserSession";
-import { LessonPlan } from "./LessonPlan";
 import { LessonPlanBookmarkStatus } from "./LessonPlanBookmarkStatus";
 import { SxProps, Theme } from "@mui/material";
+import { LessonPlanCardSummary } from "./LessonPlanCardSummary";
 
-export type LessonPlanCard = LessonPlan & {
+export type LessonPlanCard = LessonPlanCardSummary & {
   isBookmarked: LessonPlanBookmarkStatus;
   handleToggleBookmark: (lessonPlanId: string) => void;
   userSessionStatus: UserSessionStatus;
