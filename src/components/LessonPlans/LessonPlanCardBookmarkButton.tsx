@@ -1,22 +1,23 @@
 "use client";
 
+import { UserSessionStatus } from "@/models/types/Auth/UserSession";
 import { Done, RocketLaunch } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import { Button } from "@mui/material";
 
 export default function LessonPlanCardBookmarkButton({
-  loginStatus,
+  userSessionStatus,
   isBookmarked,
   handleToggleBookmark,
   id,
 }: {
-  loginStatus: string;
+  userSessionStatus: UserSessionStatus;
   isBookmarked: string;
   handleToggleBookmark: (lessonPlanId: string) => void;
   id: string;
 }) {
   const bookmarkButton = hydrateAndSelectBookmarkButton(
-    loginStatus,
+    userSessionStatus,
     isBookmarked,
     handleToggleBookmark,
     id
@@ -25,13 +26,13 @@ export default function LessonPlanCardBookmarkButton({
   return <>{bookmarkButton}</>;
 
   function hydrateAndSelectBookmarkButton(
-    loginStatus: string,
+    userSessionStatus: UserSessionStatus,
     isBookmarked: string,
     handleToggleBookmark: (lessonPlanId: string) => void,
     id: string
   ) {
     let bookmarkButton;
-    if (loginStatus === "LOGGED_IN" && isBookmarked === "IS_BOOKMARKED") {
+    if (userSessionStatus === "ACTIVE" && isBookmarked === "IS_BOOKMARKED") {
       bookmarkButton = (
         <Button
           onClick={() => handleToggleBookmark(id)}
@@ -42,7 +43,7 @@ export default function LessonPlanCardBookmarkButton({
         </Button>
       );
     } else if (
-      loginStatus === "LOGGED_IN" &&
+      userSessionStatus === "ACTIVE" &&
       isBookmarked === "IS_NOT_BOOKMARKED"
     ) {
       bookmarkButton = (
@@ -55,7 +56,7 @@ export default function LessonPlanCardBookmarkButton({
         </Button>
       );
     } else if (
-      loginStatus === "LOGGED_IN" &&
+      userSessionStatus === "ACTIVE" &&
       isBookmarked === "BOOKMARKS_NOT_READY"
     ) {
       bookmarkButton = (

@@ -1,5 +1,6 @@
 "use client";
 
+import { getKeysAsValues } from "@/utils/object-functions";
 import {
   Dispatch,
   MutableRefObject,
@@ -10,119 +11,101 @@ import {
 } from "react";
 
 export default function useFormClientStatus(
-  inputRefsToTrack: Map<string, MutableRefObject<HTMLInputElement | null>>
+  formFieldRefsToTrack: FormFieldRefsToTrack
 ) {
-  const [elementsStatus, setElementsStatus] = useState<null | Map<
-    string,
-    {
-      isTouched: boolean;
-      hasBeenFocused: boolean;
-    }
-  >>(null);
+  const [formFieldsStatus, setFormFieldsStatus] =
+    useState<FormFieldsStatus>(null);
+  const formFieldRefsListeners = useRef<FormFieldRefsListeners>(new Map());
 
-  const refsListeners = useRef<
-    Map<
-      string,
-      {
-        eventListeners: any[];
-        ref: MutableRefObject<HTMLInputElement | null>;
-      }
-    >
-  >(new Map());
-
-  //create the elementStatusObjects. Run useeffect once to init the objects for each ref.
   useEffect(() => {
-    initAllElements(inputRefsToTrack, setElementsStatus, refsListeners);
-  }, [inputRefsToTrack]);
+    initAllFormFields(
+      formFieldRefsToTrack,
+      setFormFieldsStatus,
+      formFieldRefsListeners
+    );
+  }, [formFieldRefsToTrack]);
 
-  //manage event listeners. Should run every render.
+  //Manage event listeners.
   useEffect(() => {
-    const refsListenersToCleanUp = refsListeners.current; //As far as I understand, if we use
-    //refsListeners.current in the return cleanup function, the return function will close over
-    //refsListeners.current and then it could become stale.
+    const formFieldRefsListenersToCleanUp = formFieldRefsListeners.current; //As far as I understand, if we use
+    //formFieldRefsListeners.current in the return cleanup function, the return function will close over
+    //formFieldRefsListeners.current and then it could become stale. See the ESLint warnign if you replace formFieldRefsListenersToCleanUp with
+    //formFieldRefsListeners.current in the dependencies of this useEffect.
 
     //ensures only starts to run after the second render as during
-    //the first render elementsStatus should be equal to null.
-    if (elementsStatus !== null) {
-      elementsStatus.forEach((status, id) => {
-        //init event listeners if not already initialised
+    //the first render formFieldsStatus should be equal to null.
+    if (formFieldsStatus !== null) {
+      formFieldsStatus.forEach((_, id) => {
+        //init event listeners for the form field if not already initialised
         if (
-          refsListeners.current.get(id)?.ref.current !== null &&
-          refsListeners.current.get(id)!.eventListeners.length < 1
+          formFieldRefsListeners.current.get(id)?.formFieldRef.current !==
+            null &&
+          formFieldRefsListeners.current.get(id)!.eventListeners.length < 1
         ) {
-          //create event listener function
+          //create event listener functions
           const updateTouched = function updateTouch() {
-            const nextElementsStatus = new Map(elementsStatus);
-            const currentStatus = nextElementsStatus.get(id);
+            const nextFormFieldsStatus = new Map(formFieldsStatus);
+            const currentStatus = nextFormFieldsStatus.get(id);
             if (currentStatus) {
-              const nextStatus = { ...currentStatus };
-              nextStatus.isTouched = true;
-              nextElementsStatus.set(id, nextStatus);
-              setElementsStatus(nextElementsStatus);
+              const nextFormFieldStatus = { ...currentStatus };
+              nextFormFieldStatus.isTouched = true;
+              nextFormFieldsStatus.set(id, nextFormFieldStatus);
+              setFormFieldsStatus(nextFormFieldsStatus);
             }
           };
-
           const updateFocused = function updateFocus() {
-            const nextElementsStatus = new Map(elementsStatus);
-            const currentStatus = nextElementsStatus.get(id);
+            const nextFormfieldsStatus = new Map(formFieldsStatus);
+            const currentStatus = nextFormfieldsStatus.get(id);
             if (currentStatus) {
-              const nextStatus = { ...currentStatus };
-              nextStatus.hasBeenFocused = true;
-              nextElementsStatus.set(id, nextStatus);
-              setElementsStatus(nextElementsStatus);
+              const nextFormFieldStatus = { ...currentStatus };
+              nextFormFieldStatus.hasBeenFocused = true;
+              nextFormfieldsStatus.set(id, nextFormFieldStatus);
+              setFormFieldsStatus(nextFormfieldsStatus);
             }
           };
 
-          refsListeners.current
-            .get(id)
-            ?.eventListeners.push({ event: "blur", fn: updateTouched });
-          refsListeners.current
-            .get(id)
-            ?.eventListeners.push({ event: "focus", fn: updateFocused });
-          refsListeners.current
-            .get(id)
-            ?.ref.current?.addEventListener("blur", updateTouched);
-          refsListeners.current
-            .get(id)
-            ?.ref.current?.addEventListener("focus", updateFocused);
+          setEventListener(id, formFieldRefsListeners, updateTouched, "blur");
+          setEventListener(id, formFieldRefsListeners, updateFocused, "focus");
         }
       });
     }
 
     return () => {
-      // if (elementsStatus) {
-      //   removeEventListeners(refsListeners.current);
-      // } //Changed due to ESLint warning.
-      if (elementsStatus) {
-        removeEventListeners(refsListenersToCleanUp);
+      if (formFieldsStatus) {
+        removeEventListeners(formFieldRefsListenersToCleanUp); //removeEventListeners(refsListeners.current)- Changed due to ESLint warning.
       }
     };
-  });
+  }, [formFieldsStatus]);
 
   return {
-    elementsStatus,
-    resetElement,
-    resetAll,
+    formFieldsStatus,
+    resetField,
+    resetAllFields,
     setAllToTouched,
+    getFieldNames,
   };
 
   /*
   Hook utility functions
    */
 
-  function resetElement(id: string) {
-    const status = elementsStatus?.get(id);
+  function getFieldNames() {
+    return getKeysAsValues(formFieldRefsToTrack);
+  }
+
+  function resetField(id: string) {
+    const status = formFieldsStatus?.get(id);
     if (status) {
       const newStatus = { ...status, isTouched: false, hasBeenFocused: false };
-      const nextElementsStatus = new Map(elementsStatus);
-      nextElementsStatus.set(id, newStatus);
-      setElementsStatus(nextElementsStatus);
+      const nextFormFieldsStatus = new Map(formFieldsStatus);
+      nextFormFieldsStatus.set(id, newStatus);
+      setFormFieldsStatus(nextFormFieldsStatus);
     }
   }
 
-  function resetAll() {
-    const nextElementsStatus = new Map(elementsStatus);
-    elementsStatus?.forEach((status, id) => {
+  function resetAllFields() {
+    const nextFormFieldsStatus = new Map(formFieldsStatus);
+    formFieldsStatus?.forEach((status, id) => {
       if (status) {
         const newStatus = {
           ...status,
@@ -130,42 +113,46 @@ export default function useFormClientStatus(
           hasBeenFocused: false,
         };
 
-        nextElementsStatus.set(id, newStatus);
-        setElementsStatus(nextElementsStatus);
+        nextFormFieldsStatus.set(id, newStatus);
+        setFormFieldsStatus(nextFormFieldsStatus);
       }
     });
   }
 
   function setAllToTouched() {
-    if (elementsStatus !== null) {
-      const nextElementsStatus = new Map(elementsStatus);
-      elementsStatus.forEach((status, id) => {
+    if (formFieldsStatus !== null) {
+      const nextFormFieldsStatus = new Map(formFieldsStatus);
+      formFieldsStatus.forEach((status, id) => {
         const nextStatus = { ...status };
         nextStatus.isTouched = true;
-        nextElementsStatus.set(id, nextStatus);
+        nextFormFieldsStatus.set(id, nextStatus);
       });
-      setElementsStatus(nextElementsStatus);
+      setFormFieldsStatus(nextFormFieldsStatus);
     }
   }
 }
 
-function initAllElements(
-  inputRefsToTrack: Map<string, MutableRefObject<HTMLInputElement | null>>,
-  setElementsStatus: Dispatch<
-    SetStateAction<Map<
-      string,
-      { isTouched: boolean; hasBeenFocused: boolean }
-    > | null>
-  >,
-  refsListeners: MutableRefObject<
-    Map<
-      string,
-      { eventListeners: any[]; ref: MutableRefObject<HTMLInputElement | null> }
-    >
-  >
+function setEventListener(
+  id: string,
+  formFieldRefsListeners: MutableRefObject<FormFieldRefsListeners>,
+  callback: () => void,
+  eventName: string
 ) {
-  const nextElementsStatus = new Map();
-  inputRefsToTrack.forEach((ref, id) => {
+  formFieldRefsListeners.current
+    .get(id)
+    ?.eventListeners.push({ event: eventName, fn: callback });
+  formFieldRefsListeners.current
+    .get(id)
+    ?.formFieldRef.current?.addEventListener(eventName, callback);
+}
+
+function initAllFormFields(
+  formFieldRefsToTrack: FormFieldRefsToTrack,
+  setFormFieldsStatus: Dispatch<SetStateAction<FormFieldsStatus>>,
+  formFieldRefsListeners: MutableRefObject<FormFieldRefsListeners>
+) {
+  const nextFormFieldsStatus = new Map();
+  Object.entries(formFieldRefsToTrack).forEach(([id, ref]) => {
     //To do: add options for form as a whole and for dirty, pristine, etc.
     const status: {
       isTouched: boolean;
@@ -174,35 +161,27 @@ function initAllElements(
       isTouched: false,
       hasBeenFocused: false,
     };
-    nextElementsStatus.set(id, status);
-    setElementsStatus(nextElementsStatus);
+    nextFormFieldsStatus.set(id, status);
+    setFormFieldsStatus(nextFormFieldsStatus);
 
     const listeners: {
       eventListeners: any[];
-      ref: MutableRefObject<HTMLInputElement | null>;
+      formFieldRef: MutableRefObject<HTMLInputElement | null>;
     } = {
       eventListeners: [],
-      ref, //ref is null here because at first the element is not in the dom
+      formFieldRef: ref, //ref is null here because at first the element is not in the dom
     };
-    if (refsListeners.current) {
-      refsListeners.current.set(id, listeners);
+    if (formFieldRefsListeners.current) {
+      formFieldRefsListeners.current.set(id, listeners);
     }
   });
 }
 
-function removeEventListeners(
-  refsListeners: Map<
-    string,
-    {
-      eventListeners: any[];
-      ref: MutableRefObject<HTMLInputElement | null>;
-    }
-  >
-) {
-  refsListeners.forEach((status, id) => {
+function removeEventListeners(formFieldRefsListeners: FormFieldRefsListeners) {
+  formFieldRefsListeners.forEach((status) => {
     status.eventListeners.forEach((eventListener) => {
-      if (status.ref.current) {
-        status.ref.current.removeEventListener(
+      if (status.formFieldRef.current) {
+        status.formFieldRef.current.removeEventListener(
           eventListener.event,
           eventListener.fn
         );
@@ -211,3 +190,23 @@ function removeEventListeners(
     status.eventListeners = [];
   });
 }
+
+type FormFieldRefsToTrack = {
+  [key: string]: MutableRefObject<HTMLInputElement | null>;
+};
+
+type FormFieldsStatus = Map<
+  string,
+  {
+    isTouched: boolean;
+    hasBeenFocused: boolean;
+  }
+> | null;
+
+type FormFieldRefsListeners = Map<
+  string,
+  {
+    eventListeners: any[];
+    formFieldRef: MutableRefObject<HTMLInputElement | null>;
+  }
+>;

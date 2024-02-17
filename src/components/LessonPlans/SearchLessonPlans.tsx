@@ -1,8 +1,5 @@
 import { Stack, SxProps, Theme, Typography } from "@mui/material";
 import { ReactNode } from "react";
-import SVG from "../SVGs/SVG";
-import { underline } from "../SVGs/Paths";
-import { SVGPath } from "../SVGs/StyledSVGPath";
 import { setSXValues } from "@/component-functions/set-sx-values";
 import CurvedUnderlineTitle from "../Presentation/CurvedUnderline";
 import { orange } from "@mui/material/colors";

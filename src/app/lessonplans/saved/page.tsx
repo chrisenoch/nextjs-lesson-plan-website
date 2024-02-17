@@ -1,6 +1,5 @@
 import "server-only";
 import { fetchLessonPlans } from "@/server-only/lessonplans";
-import DisplayLessonPlansFactory from "@/components/LessonPlans/DisplayLessonPlansFactory";
 import SearchAndDisplayLessonPlans from "@/components/LessonPlans/SearchAndDisplayLessonPlans";
 
 export default async function SavedLessonPlans() {

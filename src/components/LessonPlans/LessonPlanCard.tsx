@@ -41,7 +41,7 @@ export default function LessonPlanCard({
   handleToggleBookmark,
   sxImage,
   sxDescription,
-  loginStatus,
+  userSessionStatus,
 }: LessonPlanCard) {
   const isHydrated = useHydrated();
 
@@ -146,7 +146,11 @@ export default function LessonPlanCard({
       </CardContent>
       <CardActions sx={{ padding: 2, pt: { xs: 0, md: 2 } }}>
         <Button
-          href={`/lessonplans/${id}`}
+          href={`${
+            isPremium
+              ? "/lessonplans/gold?id=" + id
+              : "/lessonplans/free?id=" + id
+          }`}
           variant={"contained"}
           size="small"
           startIcon={<ArrowForward />}
@@ -158,7 +162,7 @@ export default function LessonPlanCard({
         </Button>
         {isHydrated && (
           <LessonPlanCardBookmarkButton
-            loginStatus={loginStatus}
+            userSessionStatus={userSessionStatus}
             id={id}
             isBookmarked={isBookmarked}
             handleToggleBookmark={handleToggleBookmark}

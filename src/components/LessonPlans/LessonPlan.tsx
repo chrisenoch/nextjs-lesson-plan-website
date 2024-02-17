@@ -60,6 +60,7 @@ export default function LessonPlan({
   );
 
   let activeIntersection = useScrollSpy(memoizedTargetElementIds);
+  //let activeIntersection: any = null;
 
   const listItems: {
     href: string;
@@ -268,7 +269,9 @@ export default function LessonPlan({
           <Typography
             variant="body1"
             marginBottom={5}
-            sx={{ fontSize: { xs: "0.9375rem", sm: "1rem" } }}>
+            sx={{
+              fontSize: { xs: theme.typography.body15.fontSize, sm: "1rem" },
+            }}>
             {summary}
           </Typography>
 

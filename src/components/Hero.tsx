@@ -68,7 +68,7 @@ export default function Hero() {
   carouselStore.set("moveLeft", carouselMoveLeft);
   carouselStore.set("moveRight", carouselMoveRight);
   const [autoPlay, setAutoPlay] = useState<AutoPlay>({
-    enableAutoPlay: true,
+    enableAutoPlay: false,
     direction: "RIGHT",
     delay: 4500,
   });
@@ -278,15 +278,21 @@ export default function Hero() {
                       onClick={() => emit(carouselMoveLeft)}>
                       <ArrowBackIos />
                     </IconButton>
+                    <IconButton
+                      size="large"
+                      color="primary"
+                      onClick={() => emit(carouselMoveRight)}>
+                      <ArrowForwardIos />
+                    </IconButton>
                   </ColorFactory>
-                  <ColorFactory primary="#FFFFFF">
+                  {/* <ColorFactory primary="#FFFFFF">
                     <IconButton
                       size="small"
                       color="primary"
                       onClick={() => emit(carouselMoveRight)}>
                       <ArrowForwardIos />
                     </IconButton>
-                  </ColorFactory>
+                  </ColorFactory> */}
                 </Stack>
                 <Stack
                   direction={"row"}
@@ -328,9 +334,7 @@ export default function Hero() {
                         }}>
                         <CompareArrowsIcon />
                       </Button>
-                    </ColorFactory>
-                    {!autoPlay.enableAutoPlay && (
-                      <ColorFactory primary={grey[400]}>
+                      {!autoPlay.enableAutoPlay && (
                         <Button
                           variant="contained"
                           onClick={() =>
@@ -347,10 +351,8 @@ export default function Hero() {
                           }}>
                           <PlayArrowIcon />
                         </Button>
-                      </ColorFactory>
-                    )}
-                    {autoPlay.enableAutoPlay && (
-                      <ColorFactory primary={grey[400]}>
+                      )}
+                      {autoPlay.enableAutoPlay && (
                         <Button
                           variant="contained"
                           onClick={() =>
@@ -367,8 +369,8 @@ export default function Hero() {
                           }}>
                           <PauseIcon />
                         </Button>
-                      </ColorFactory>
-                    )}
+                      )}
+                    </ColorFactory>
                   </Stack>
                   <Stack direction={"row"}>
                     {areControlsVisible && (

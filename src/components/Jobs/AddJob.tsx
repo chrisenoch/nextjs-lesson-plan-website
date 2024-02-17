@@ -18,7 +18,7 @@ import {
 } from "@/store";
 import { JobsPreview } from "./JobsPreview";
 import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
-import useClearFormOnSuccess from "@/customHooks/useClearFormOnSuccess";
+import useOnSuccessfulHttpResponse from "@/customHooks/useOnSuccessfulHttpResponse";
 import useHideMessageOnNavAway from "@/customHooks/useHideMessageOnNavAway";
 import { isAddJobValid } from "@/validation/jobs/jobs-validators";
 import CurvedUnderlineTitle from "../Presentation/CurvedUnderline";
@@ -27,6 +27,9 @@ import NotificationBox from "../NotificationBox";
 import { StandardResponseInfo } from "@/models/types/DataFetching/StandardResponseInfo";
 import { Job } from "@/models/types/Jobs/Jobs";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { ValueOf } from "next/dist/shared/lib/constants";
+import { PropertyNamesAsStrings } from "@/models/types/TypeScriptHelpers/PropertyNamesAsStrings";
+import { getKeysAsValues } from "@/utils/object-functions";
 
 export function AddJob() {
   console.log("add job rendered");
@@ -46,61 +49,44 @@ export function AddJob() {
   const [jobSalary, setJobSalary] = useState<string>("");
   const [jobDescription, setJobDescription] = useState<string>("");
 
-  const fields = {
-    jobTitle: "jobTitle",
-    jobDescription: "jobDescription",
-    jobLocation: "jobLocation",
-    jobCompany: "jobCompany",
-    jobSalary: "jobSalary",
-  };
-
-  const inputRefs = useMemo(
-    () =>
-      new Map([
-        [fields.jobTitle, jobTitleRef],
-        [fields.jobDescription, jobDescriptionRef],
-        [fields.jobLocation, jobLocationRef],
-        [fields.jobCompany, jobCompanyRef],
-        [fields.jobSalary, jobSalaryRef],
-      ]),
-    [
-      fields.jobCompany,
-      fields.jobDescription,
-      fields.jobLocation,
-      fields.jobSalary,
-      fields.jobTitle,
-    ]
-  );
-  //To do Change inputRefs map for an object in useFormClientStatus so as to reduce code.
-  const {
-    elementsStatus: formStatus,
-    resetAll,
-    setAllToTouched,
-  } = useFormClientStatus(inputRefs);
+  const formFieldRefs = useMemo(() => {
+    return {
+      jobTitle: jobTitleRef,
+      jobDescription: jobDescriptionRef,
+      jobLocation: jobLocationRef,
+      jobCompany: jobCompanyRef,
+      jobSalary: jobSalaryRef,
+    };
+  }, []);
+  const { formFieldsStatus, resetAllFields, setAllToTouched, getFieldNames } =
+    useFormClientStatus(formFieldRefs);
+  const fields = getFieldNames() as PropertyNamesAsStrings<
+    typeof formFieldRefs
+  >;
 
   const dispatch = useAppDispatch();
   const addJobInfo: StandardResponseInfo = useAppSelector(selectAddJob);
   const fetchJobsInfo: StandardResponseInfo = useAppSelector(selectFetchJobs);
-
   const jobs: Job[] | undefined = useAppSelector(selectJobsByUserId);
 
-  useClearFormOnSuccess(addJobInfo, clearForm);
+  useOnSuccessfulHttpResponse(addJobInfo, clearForm);
   const shouldHideMessage = useHideMessageOnNavAway(addJobInfo);
 
-  const {
-    isValid: isFormValid,
-    jobTitle: jobTitleIsValid,
-    jobDescription: jobDescriptionIsValid,
-    jobLocation: jobLocationIsValid,
-    jobCompany: jobCompanyIsValid,
-    jobSalary: jobSalaryIsValid,
-  } = isAddJobValid({
+  const inputToValidate = {
     jobTitle,
     jobDescription,
     jobLocation,
     jobCompany,
     jobSalary,
-  });
+  };
+  const {
+    isFormValid,
+    isJobTitleValid,
+    isJobDescriptionValid,
+    isJobLocationValid,
+    isJobCompanyValid,
+    isJobSalaryValid,
+  } = isAddJobValid(inputToValidate);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -120,7 +106,7 @@ export function AddJob() {
     setJobLocation("");
     setJobCompany("");
     setJobSalary("");
-    resetAll();
+    resetAllFields();
   }
 
   useEffect(() => {
@@ -163,12 +149,13 @@ export function AddJob() {
                 setJobTitle(event.target.value);
               }}
               error={
-                !jobTitleIsValid && formStatus?.get(fields.jobTitle)?.isTouched
+                !isJobTitleValid &&
+                formFieldsStatus?.get(fields.jobTitle)?.isTouched
               }
               helperText={
-                !jobTitleIsValid &&
-                (formStatus?.get(fields.jobTitle)?.hasBeenFocused ||
-                  formStatus?.get(fields.jobTitle)?.isTouched) &&
+                !isJobTitleValid &&
+                (formFieldsStatus?.get(fields.jobTitle)?.hasBeenFocused ||
+                  formFieldsStatus?.get(fields.jobTitle)?.isTouched) &&
                 "Insert two or more characters"
               }
               sx={{ flexGrow: 1 }}
@@ -184,13 +171,13 @@ export function AddJob() {
                 setJobLocation(event.target.value);
               }}
               error={
-                !jobLocationIsValid &&
-                formStatus?.get(fields.jobLocation)?.isTouched
+                !isJobLocationValid &&
+                formFieldsStatus?.get(fields.jobLocation)?.isTouched
               }
               helperText={
-                !jobLocationIsValid &&
-                (formStatus?.get(fields.jobLocation)?.hasBeenFocused ||
-                  formStatus?.get(fields.jobLocation)?.isTouched) &&
+                !isJobLocationValid &&
+                (formFieldsStatus?.get(fields.jobLocation)?.hasBeenFocused ||
+                  formFieldsStatus?.get(fields.jobLocation)?.isTouched) &&
                 "Insert two or more characters"
               }
               sx={{ flexGrow: 1 }}
@@ -208,13 +195,13 @@ export function AddJob() {
                 setJobCompany(event.target.value);
               }}
               error={
-                !jobCompanyIsValid &&
-                formStatus?.get(fields.jobCompany)?.isTouched
+                !isJobCompanyValid &&
+                formFieldsStatus?.get(fields.jobCompany)?.isTouched
               }
               helperText={
-                !jobCompanyIsValid &&
-                (formStatus?.get(fields.jobCompany)?.hasBeenFocused ||
-                  formStatus?.get(fields.jobCompany)?.isTouched) &&
+                !isJobCompanyValid &&
+                (formFieldsStatus?.get(fields.jobCompany)?.hasBeenFocused ||
+                  formFieldsStatus?.get(fields.jobCompany)?.isTouched) &&
                 "Insert two or more characters"
               }
               sx={{ flexGrow: 1 }}
@@ -230,13 +217,13 @@ export function AddJob() {
                 setJobSalary(event.target.value);
               }}
               error={
-                !jobSalaryIsValid &&
-                formStatus?.get(fields.jobSalary)?.isTouched
+                !isJobSalaryValid &&
+                formFieldsStatus?.get(fields.jobSalary)?.isTouched
               }
               helperText={
-                !jobSalaryIsValid &&
-                (formStatus?.get(fields.jobSalary)?.hasBeenFocused ||
-                  formStatus?.get(fields.jobSalary)?.isTouched) &&
+                !isJobSalaryValid &&
+                (formFieldsStatus?.get(fields.jobSalary)?.hasBeenFocused ||
+                  formFieldsStatus?.get(fields.jobSalary)?.isTouched) &&
                 "Insert four or more characters"
               }
               sx={{ flexGrow: 1 }}
@@ -256,13 +243,13 @@ export function AddJob() {
                 setJobDescription(event.target.value);
               }}
               error={
-                !jobDescriptionIsValid &&
-                formStatus?.get(fields.jobDescription)?.isTouched
+                !isJobDescriptionValid &&
+                formFieldsStatus?.get(fields.jobDescription)?.isTouched
               }
               helperText={
-                !jobDescriptionIsValid &&
-                (formStatus?.get(fields.jobDescription)?.hasBeenFocused ||
-                  formStatus?.get(fields.jobDescription)?.isTouched) &&
+                !isJobDescriptionValid &&
+                (formFieldsStatus?.get(fields.jobDescription)?.hasBeenFocused ||
+                  formFieldsStatus?.get(fields.jobDescription)?.isTouched) &&
                 "Insert two or more characters"
               }
               multiline

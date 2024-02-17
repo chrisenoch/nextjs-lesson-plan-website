@@ -29,7 +29,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/models/types/Auth/UserSessiontsx"
+    "src/models/types/Auth/UserSessiontsx",
+    "src/models/types/LessonPlans/LessonPlanCardSummary.tsx"
   ],
   "exclude": ["node_modules"]
 }

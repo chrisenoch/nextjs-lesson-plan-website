@@ -1,18 +1,16 @@
 "use client";
 import { Box, Grid, Stack, Theme, Typography, useTheme } from "@mui/material";
 import LessonPlanCard from "./LessonPlanCard";
-import { LessonPlan } from "../../models/types/LessonPlans/LessonPlan";
 import {
   selectAllBookmarks,
   selectFetchBookmarks,
-  selectLoginStatus,
+  selectUserSessionStatus,
 } from "@/store";
 import { useEffect } from "react";
 import {
   fetchBookmarks,
   toggleBookmark,
 } from "@/store/slices/with-thunks/lessonplans-slice";
-import { LoginStatus } from "@/models/types/Auth/LoginStatus";
 import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 import { getBookmakedLessonPlanIds } from "@/component-functions/get-bookmarked-lessonplan-ids";
 import NotificationBox from "../NotificationBox";
@@ -20,6 +18,7 @@ import { LessonPlanCategory } from "@/models/types/LessonPlans/LessonPlanCategor
 import LoadingSpinner from "../Presentation/LoadingSpinner";
 import { StandardResponseInfo } from "@/models/types/DataFetching/StandardResponseInfo";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { LessonPlanCardSummary } from "@/models/types/LessonPlans/LessonPlanCardSummary";
 
 export default function DisplayLessonPlans({
   totalLessonPlansBeforeFiltered,
@@ -30,7 +29,7 @@ export default function DisplayLessonPlans({
   shouldRedirectWhenLogout,
 }: {
   totalLessonPlansBeforeFiltered: number;
-  filteredLessonPlans: LessonPlan[];
+  filteredLessonPlans: LessonPlanCardSummary[];
   selectedLessonPlanCategories: {
     title: string;
     category: LessonPlanCategory;
@@ -51,7 +50,7 @@ export default function DisplayLessonPlans({
   const fetchBookMarksInfo: StandardResponseInfo =
     useAppSelector(selectFetchBookmarks);
 
-  const loginStatus: LoginStatus = useAppSelector(selectLoginStatus);
+  const userSessionStatus = useAppSelector(selectUserSessionStatus);
 
   useEffect(() => {
     dispatch(fetchBookmarks());
@@ -122,7 +121,7 @@ export default function DisplayLessonPlans({
               : "IS_NOT_BOOKMARKED"
           }
           handleToggleBookmark={handleToggleBookmark}
-          loginStatus={loginStatus}
+          userSessionStatus={userSessionStatus}
         />
       </Stack>
     ));

@@ -1,7 +1,7 @@
 "use client";
 import {
   AppDispatch,
-  selectLoginStatus,
+  selectUserSessionStatus,
   selectUserLogin,
   userLogin,
 } from "@/store";
@@ -10,7 +10,6 @@ import { FormEvent, useState } from "react";
 import { redirect, useSearchParams } from "next/navigation";
 import useHideMessageOnNavAway from "@/customHooks/useHideMessageOnNavAway";
 import { LoadingButton } from "@mui/lab";
-import { LoginStatus } from "@/models/types/Auth/LoginStatus";
 import NotificationBox from "../NotificationBox";
 import CurvedUnderlineTitle from "../Presentation/CurvedUnderline";
 import { orange, blue } from "@mui/material/colors";
@@ -20,7 +19,7 @@ import { StandardResponseInfo } from "@/models/types/DataFetching/StandardRespon
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 export function SignIn() {
-  const loginStatus: LoginStatus = useAppSelector(selectLoginStatus);
+  const userSessionStatus = useAppSelector(selectUserSessionStatus);
   const dispatch = useAppDispatch();
   const searchParams = useSearchParams();
   const redirectPath = searchParams.get("redirect");
@@ -48,7 +47,7 @@ export function SignIn() {
     dispatch(userLogin({ email, password }));
   }
 
-  if (loginStatus === "LOGIN_NOT_PROCESSED" || !isHydrated) {
+  if (userSessionStatus === "PROCESSING" || !isHydrated) {
     return (
       <Box display="flex" justifyContent={"center"}>
         <LoadingSpinner />
@@ -56,7 +55,8 @@ export function SignIn() {
     );
   }
 
-  if (loginStatus === "LOGGED_IN") {
+  //redirectPath can be set in the middleware
+  if (userSessionStatus === "ACTIVE") {
     if (redirectPath) {
       redirect(redirectPath);
     } else {

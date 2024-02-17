@@ -1,6 +1,21 @@
-import { AuthPayloadOnError, UserRefreshPayload } from "./AuthPayloads";
+import { ValueOf } from "../TypeScriptHelpers/ValueOf";
 
-export type UserSession = Pick<
-  Exclude<UserRefreshPayload, AuthPayloadOnError>,
-  "email" | "exp" | "firstName" | "iat" | "id" | "role"
->;
+export type UserSession =
+  | {
+      email: string;
+      exp: number;
+      firstName: string;
+      iat: number;
+      id: string;
+      role: "EVERYBODY" | "USER" | "ADMIN";
+      status: "ACTIVE";
+    }
+  | {
+      status: "INACTIVE";
+    }
+  | {
+      status: "PROCESSING";
+    };
+
+type UserSessionStatusHelper = Pick<UserSession, "status">;
+export type UserSessionStatus = ValueOf<UserSessionStatusHelper>;

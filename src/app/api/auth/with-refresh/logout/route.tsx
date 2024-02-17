@@ -13,23 +13,8 @@ export async function POST(request: NextRequest) {
     { message: "JWT access cookie and refresh cookie deleted", isError: false },
     { status: 200 }
   );
-  const isDeleted = nextResponse.cookies.delete(
-    process.env.ACCESS_TOKEN_COOKIE_NAME!
-  );
-  const isRefreshDeleted = nextResponse.cookies.delete(
-    process.env.REFRESH_TOKEN_COOKIE_NAME!
-  );
-  if (isDeleted && isRefreshDeleted) {
-    return nextResponse;
-  } else if (isDeleted && !isRefreshDeleted) {
-    return NextResponse.json(
-      { message: "Refresh JWT cookie was not deleted", isError: true },
-      { status: 400 }
-    );
-  } else if (!isDeleted && isRefreshDeleted) {
-    return NextResponse.json(
-      { message: "Access JWT cookie was not deleted", isError: true },
-      { status: 400 }
-    );
-  }
+  nextResponse.cookies.delete(process.env.ACCESS_TOKEN_COOKIE_NAME!);
+  nextResponse.cookies.delete(process.env.REFRESH_TOKEN_COOKIE_NAME!);
+
+  return nextResponse;
 }

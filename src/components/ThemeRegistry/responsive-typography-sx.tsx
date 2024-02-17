@@ -1,39 +1,44 @@
 import { Theme } from "@mui/material";
 import muiTheme from "./theme";
-import { CSSProperties } from "@mui/material/styles/createTypography";
 
-// I want to use custom breakpoints and change the Typography variant with the sx prop according to screen width.
-// The UI jumps if I use useMediaQuery
-
-//Example argument:
-// const responsiveVariants = {
-//   xs: "h4",
-//   "630c": "h2",
-//   lg: "h1",
-// };
-//Example return value, which can be passed to the sx prop.
-// {
-//   "fontWeight": {
-//       "xs": "400",
-//       "630c": "400",
-//       "lg": 300
-//   },
-//   "fontSize": {
-//       "xs": "2.125rem",
-//       "630c": "3rem",
-//       "lg": "3.75rem"
-//   },
-//   "lineHeight": {
-//       "xs": "1.235",
-//       "630c": "1.167",
-//       "lg": 1.2
-//   },
-//   "letterSpacing": {
-//       "xs": "0.00735em",
-//       "630c": "0em",
-//       "lg": "-0.00833em"
-//   }
-// }
+/**
+ * Useful if you wish to use different MUI Typography variants (h1, h2, etc) at different media breakpoints.
+ * The UI jumps if we use useMediaQuery due to SSR in Next.js. However, using the sx prop for media queries does seem to work.
+ * @example
+ * //A possible argument for responsiveVariants:
+ * const responsiveVariants = {
+ *    xs: "h4",
+ *    md: "h2",
+ *    lg: "h1"
+ *    };
+ * //... would return the following values which can be added to the sx prop:
+ * {
+ *   "fontWeight": {
+ *       "xs": "400",
+ *       "md": "400",
+ *       "lg": 300
+ *   },
+ *   "fontSize": {
+ *       "xs": "2.125rem",
+ *       "md": "3rem",
+ *       "lg": "3.75rem"
+ *   },
+ *   "lineHeight": {
+ *       "xs": "1.235",
+ *       "md": "1.167",
+ *       "lg": 1.2
+ *   },
+ *   "letterSpacing": {
+ *       "xs": "0.00735em",
+ *       "md": "0em",
+ *       "lg": "-0.00833em"
+ *   }
+ * }
+ *
+ * @param responsiveVariants
+ * @param theme
+ * @returns The MUI sx props object to be added to the sx prop of the MUI component /component that wraps a MUI component
+ */
 export function getTypographyVariantSX(
   responsiveVariants: MediaQueryByTypographyVariant,
   theme?: Theme
