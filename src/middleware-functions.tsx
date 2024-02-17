@@ -10,7 +10,6 @@ import { UserRole, isUserRole } from "./models/types/Auth/UserRole";
 import { getArrayIntersection } from "./utils/array-functions";
 import { joseVerifyToken } from "./server-only/auth/check-permissions";
 
-//To do? Add :ANY PARAM. E.g. users/:ANY/profile  :ANY could be any number
 /**
  *
  * @param enteredUrlPath - must be lowercase and have the path segments separated by one slash and not multiple slashes
@@ -44,7 +43,8 @@ import { joseVerifyToken } from "./server-only/auth/check-permissions";
  * @param notLoggedInRedirectUrlPath
  * @param incorrectRoleRedirectUrlPath
  * @param superAdmin - a role that has access to everything if you decide such a role should exist.
- * @returns
+ * @returns - the new urlPath to navigate to. This will be unchanged if the user has the necessary permissions for the route. If not,
+ * it will be either the global or custom notLoggedInRedirectUrlPath or incorrectRoleRedirectUrlPath
  * @todo
  * - Add :ANY PARAM. E.g. users/:ANY/profile  :ANY could be any number
  * - Custom callbacks per route and return the response object alogn with the urlPath
@@ -284,7 +284,11 @@ export async function getAccessTokenRole(request: NextRequest) {
   return accessTokenRole;
 }
 
-//returns the role, or null if no role exists
+/**
+ * @param accessToken
+ * @param secret
+ * @returns the role, or null if no role exists
+ */
 async function extractRoleFromAccessToken(
   accessToken: string | undefined,
   secret: string

@@ -72,6 +72,13 @@ export function AddJob() {
   useOnSuccessfulHttpResponse(addJobInfo, clearForm);
   const shouldHideMessage = useHideMessageOnNavAway(addJobInfo);
 
+  const inputToValidate = {
+    jobTitle,
+    jobDescription,
+    jobLocation,
+    jobCompany,
+    jobSalary,
+  };
   const {
     isFormValid,
     isJobTitleValid,
@@ -79,13 +86,7 @@ export function AddJob() {
     isJobLocationValid,
     isJobCompanyValid,
     isJobSalaryValid,
-  } = isAddJobValid({
-    jobTitle,
-    jobDescription,
-    jobLocation,
-    jobCompany,
-    jobSalary,
-  });
+  } = isAddJobValid(inputToValidate);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
