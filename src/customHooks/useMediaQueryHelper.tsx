@@ -3,6 +3,7 @@ import { useMediaQuery } from "@mui/material";
 type Media = "matches0Up" | "matches630Up" | "matches900Up" | "matches1200Up";
 /**
  * Get your desired argument to the variant of an MUI component at a specific breakpoint.
+ * 
  * @example
  * 'Here, between 0 and 630px, the string value 'h4' will become the value of titleVariant, which will then become the Typography variant in the component below '
  * const { titleVariant, titleTextVariant } = useMediaQueryhelper({
@@ -41,7 +42,7 @@ export default function useMediaQueryHelper(valueObjectsByPropertyName: {
     matches1200Up,
   };
 
-  //I could improve this but I have other prriorities because useMediaQuery does not work with SSR so I will not use this hook.
+  //I could improve this but I have other priorities because useMediaQuery does not work with SSR so I will not use this hook.
   const variants: any = {};
   Object.entries(valueObjectsByPropertyName).forEach(
     ([propertyName, mediaQueriesByVariant]) => {

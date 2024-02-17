@@ -146,7 +146,11 @@ export default function LessonPlanCard({
       </CardContent>
       <CardActions sx={{ padding: 2, pt: { xs: 0, md: 2 } }}>
         <Button
-          href={`/lessonplans/${id}`}
+          href={`${
+            isPremium
+              ? "/lessonplans/gold?id=" + id
+              : "/lessonplans/free?id=" + id
+          }`}
           variant={"contained"}
           size="small"
           startIcon={<ArrowForward />}

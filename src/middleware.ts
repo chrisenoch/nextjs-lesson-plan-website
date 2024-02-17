@@ -85,36 +85,22 @@ const protectedRoutes: ProtectedRoutes = {
     roles: ["EVERYBODY"],
     children: [
       {
-        saved: {
-          roles: ["USER"],
-          notLoggedInRedirectUrlPath:
-            SIGNIN_REDIRECT_START + "lessonplans/saved",
-        },
-      },
-      {
-        1: {
+        free: {
           roles: ["EVERYBODY"],
         },
       },
       {
-        2: {
+        gold: {
           roles: ["USER"],
           notLoggedInRedirectUrlPath:
-            SIGNIN_REDIRECT_START + "lessonplans/2&member=gold",
+            SIGNIN_REDIRECT_START + "lessonplans/gold&member=gold",
         },
       },
       {
-        3: {
+        saved: {
           roles: ["USER"],
           notLoggedInRedirectUrlPath:
-            SIGNIN_REDIRECT_START + "lessonplans/3&member=gold",
-        },
-      },
-      {
-        4: {
-          roles: ["USER"],
-          notLoggedInRedirectUrlPath:
-            SIGNIN_REDIRECT_START + "lessonplans/4&member=gold",
+            SIGNIN_REDIRECT_START + "lessonplans/saved",
         },
       },
     ],
@@ -182,6 +168,9 @@ function getUrlPathBasedOnPermissions({
 }) {
   const allProtectedRoutes: Set<string> =
     getAllProtectedRoutes(protectedRoutes);
+
+  console.log("enteredUrlPath in getUrlPathBasedOnPermissions");
+  console.log(enteredUrlPath);
 
   //superAdmin has access to all routes if superAdmin exists
   //To do?: Change superAdmin to an array so that developer can assign multiple superAdmins

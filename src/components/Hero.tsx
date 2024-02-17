@@ -30,7 +30,6 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { grey } from "@mui/material/colors";
-import useMediaQueryHelper from "@/customHooks/useMediaQueryHelper";
 
 export default function Hero() {
   const theme = useTheme();
@@ -52,17 +51,6 @@ export default function Hero() {
     titleText,
     theme
   );
-
-  const obj = useMediaQueryHelper({
-    titleVariant: [
-      { h4: "matches0Up" },
-      { h3: "matches630Up" },
-      { h2: "matches1200Up" },
-    ],
-    titleTextVariant: [{ body1: "matches0Up" }, { h6: "matches900Up" }],
-  });
-  console.log("obj below");
-  console.log(obj);
 
   //This is my alternative to using useContext. I think it works very well for activating callbacks in response to events.
   const carouselMoveLeft: SubscriberConfigObject = useMemo(() => {

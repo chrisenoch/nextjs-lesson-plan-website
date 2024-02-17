@@ -1,7 +1,7 @@
 import { LessonPlanType } from "./LessonPlanCategoryShort";
 import { LessonPlanLevel } from "./LessonPlanLevel";
 
-export type LessonPlan = {
+export type LessonPlanCardSummary = {
   id: string;
   title: string;
   duration: string;

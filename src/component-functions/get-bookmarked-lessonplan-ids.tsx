@@ -1,7 +1,7 @@
-import { LessonPlan } from "@/models/types/LessonPlans/LessonPlan";
+import { LessonPlanCardSummary } from "@/models/types/LessonPlans/LessonPlanCardSummary";
 
 export function getBookmakedLessonPlanIds(
-  lessonPlans: LessonPlan[],
+  lessonPlans: LessonPlanCardSummary[],
   bookmarks: { userId: string; lessonPlanId: string }[]
 ) {
   const bookmarkedLessonPlanIds = new Set<string>();
