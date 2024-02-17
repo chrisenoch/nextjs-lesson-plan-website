@@ -1,10 +1,3 @@
-// superAdmin parameter is the role that you choose which has superAdmin powers
-// (access to everything), if you decide such a role should exist.
-// If the user does not have a role, pass an empty array for userRoles.
-// enteredUrlPath must be lowercase and have the path segments separated by one slash and not multiple slashes.
-// OK: http://localhost:3000/user/profile/
-// Not OK: http://localhost:3000/usER//profile/
-
 import { NextRequest } from "next/server";
 import {
   ProtectedRouteInfo,
@@ -18,6 +11,45 @@ import { getArrayIntersection } from "./utils/array-functions";
 import { joseVerifyToken } from "./server-only/auth/check-permissions";
 
 //To do? Add :ANY PARAM. E.g. users/:ANY/profile  :ANY could be any number
+/**
+ *
+ * @param enteredUrlPath - must be lowercase and have the path segments separated by one slash and not multiple slashes
+ * @example
+ * 'http://localhost:3000/user/profile/' //OK
+ * 'http://localhost:3000/usER//profile/' //NOT OK - note the extra slash and the capital letters
+ * @param protectedRoutes
+ * The routes to protect and the expected behaviour should a user not be logged-in or have the incorrect role.
+ * See the middlware.ts file in this project for an example.
+ * **Important**:
+ * - Child routes ARE NOT protected automatically. E.g. If you assign the admin role to the route 'lessonPlans' and do not include any children routes, then 'lessonPlans/1' will not be protected. The reason for this approach is that it offers unlimited flexibility and avoids complicated permissions waterfalls.
+ * - For childen, you MUST define the routes from least specific to most specific because the first match wins.
+ * @example
+ * //DO THIS:
+ * children: [
+ *  { shop: { roles: ["USER"] } },
+ *   { "shop/secret": { roles: ["ADMIN"] } },    // "shop/secret" is more specific than "shop" so it is defined after.
+ *   { "shop/account": { roles: ["USER"] } },
+ *],
+ * //DO NOT do this:
+ * children: [
+ *   { "shop/secret": { roles: ["ADMIN"] } },    // Danger! User with the role "USER" will be able to navigate here.
+ *   { shop: { roles: ["USER"] } },              // "shop" matches before "shop/secret"
+ *  { "shop/account": { roles: ["USER"] } },
+ * ],
+ *
+ * - If the route has the role EVERYBODY, the global notLoggedInRedirectUrlPath and incorrectRoleRedirectUrlPath always take effect. notLoggedInRedirectUrlPath and incorrectRoleRedirectUrlPath assigned to the route itself have no effect.
+ *
+ * @param userRoles - the roles of the user. It should include the "EVERYBODY role." The "EVERYBODY" role is for when you
+ * want to protect sub-routes but not the parent route. E.g. if you wish to protect foo/bar but do not want to protect /foo, you assign the EVERYBODY role to foo.
+ * @param notLoggedInRedirectUrlPath
+ * @param incorrectRoleRedirectUrlPath
+ * @param superAdmin - a role that has access to everything if you decide such a role should exist.
+ * @returns
+ * @todo
+ * - Add :ANY PARAM. E.g. users/:ANY/profile  :ANY could be any number
+ * - Custom callbacks per route and return the response object alogn with the urlPath
+ * - Protection by query params
+ */
 export function getUrlPathBasedOnPermissions({
   enteredUrlPath,
   protectedRoutes,
@@ -53,7 +85,6 @@ export function getUrlPathBasedOnPermissions({
 
   // If user doesn't have a role. E.g. he does not the 'EVERYBODY' role, does not have an auth cookie or
   // if his token is invalid.
-  // To do?: Change so that developer can add different failureRedirectPaths for different urls in 'protectedRoutes.'
   if (userRoles.length < 1) {
     return notLoggedInRedirectUrlPath;
   }
@@ -249,7 +280,6 @@ export async function getAccessTokenRole(request: NextRequest) {
       accessToken.value,
       process.env.ACCESS_TOKEN_SECRET!
     );
-    //accessTokenRole = await accessTokenRolePromise;
   }
   return accessTokenRole;
 }
@@ -270,7 +300,6 @@ async function extractRoleFromAccessToken(
       );
       //Token has been verified
       const userRole = accessTokenPayload.role;
-      //check is of UserRole type
       if (typeof userRole === "string") {
         return userRole;
       } else {
@@ -316,27 +345,6 @@ function getPrimaryUrlSegment(urlPath: string) {
   }
 }
 
-export function handleSecureNextLink(request: NextRequest) {
-  const originalPath = request.nextUrl.pathname.toLowerCase();
-  const {
-    nextUrl: { search },
-  } = request;
-  const params = new URLSearchParams(search);
-  let isNextLink;
-  if (params.get("next-link")) {
-    isNextLink = true;
-    params.delete("next-link");
-  }
-
-  if (isNextLink && params.size === 0) {
-    return originalPath;
-  } else if (isNextLink && params.size > 0) {
-    return originalPath + "?" + params.toString();
-  } else {
-    return null;
-  }
-}
-
 function setCustomUrlsIfExist({
   protectedRouteInfo,
   notLoggedInRedirectUrlPath,
@@ -366,4 +374,28 @@ export function removeExtraSlashes(request: NextRequest) {
     request.nextUrl.pathname.replaceAll(removeMultipleSlashes, "/")
   );
   return enteredUrlPathCleaned;
+}
+/**
+ *
+ *@see components/Utils/SecureNextLink for documentation and motivation
+ */
+export function handleSecureNextLink(request: NextRequest) {
+  const originalPath = request.nextUrl.pathname.toLowerCase();
+  const {
+    nextUrl: { search },
+  } = request;
+  const params = new URLSearchParams(search);
+  let isNextLink;
+  if (params.get("next-link")) {
+    isNextLink = true;
+    params.delete("next-link");
+  }
+
+  if (isNextLink && params.size === 0) {
+    return originalPath;
+  } else if (isNextLink && params.size > 0) {
+    return originalPath + "?" + params.toString();
+  } else {
+    return null;
+  }
 }
