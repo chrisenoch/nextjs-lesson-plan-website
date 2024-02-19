@@ -15,37 +15,9 @@ export default function PremiumPage() {
       marginTop={2}
       marginBottom={2}>
       <p>This is the premium area!</p>
-      <Box
-        component="p"
-        sx={(theme) => ({ fontSize: theme.typography.body15 })}>
-        Body 15 size
-      </Box>
-      <Box
-        component="p"
-        sx={(theme) => ({ fontSize: theme.typography.body18 })}>
-        Body 18 size
-      </Box>
-      <button onClick={() => setNum((c) => c + 1)}>Set Num</button>
-      {/* <Box // test custom breakpoints
-        sx={{
-          width: "100%",
-          height: 8,
-          display: {
-            "3sm": "block",
-            "2sm": "block", //430,
-            sm: "none", //600
-            md: "block",
-            lg: "none",
-          }, //also try with
-          backgroundColor: {
-            xs: "primary.main",
-            "3sm": "success.main", //350,
-            "2sm": "warning.main", //430,
-            sm: "secondary.main", //600
-            md: "error.main",
-            lg: "warning.main",
-          },
-        }}></Box> */}
+      <p>Number: {num}</p>
+
+      <button onClick={() => setNum((c) => c + 1)}>Increase number</button>
     </Stack>
   );
 }
