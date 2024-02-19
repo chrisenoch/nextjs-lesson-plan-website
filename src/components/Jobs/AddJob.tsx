@@ -30,9 +30,9 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ValueOf } from "next/dist/shared/lib/constants";
 import { PropertyNamesAsStrings } from "@/models/types/TypeScriptHelpers/PropertyNamesAsStrings";
 import { getKeysAsValues } from "@/utils/object-functions";
+import { delay } from "@/utils/delay";
 
 export function AddJob() {
-  console.log("add job rendered");
   useRedirectWhenLoggedOut("/auth/signin");
   const isMounted = useRef<boolean>(false);
 
@@ -89,6 +89,7 @@ export function AddJob() {
   } = isAddJobValid(inputToValidate);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    console.log("in handlesubmit");
     e.preventDefault();
     setAllToTouched();
     dispatch(
@@ -139,8 +140,11 @@ export function AddJob() {
           }}>
           <Stack direction={"row"} gap={2}>
             <TextField
-              id="job-title"
-              name="job-title"
+              inputProps={{
+                "data-testid": fields.jobTitle,
+              }}
+              id={fields.jobTitle}
+              name={fields.jobTitle}
               label="Job title"
               variant="outlined"
               inputRef={jobTitleRef}
@@ -161,8 +165,11 @@ export function AddJob() {
               sx={{ flexGrow: 1 }}
             />
             <TextField
-              id="job-location"
-              name="job-location"
+              inputProps={{
+                "data-testid": fields.jobLocation,
+              }}
+              id={fields.jobLocation}
+              name={fields.jobLocation}
               label="Job location"
               variant="outlined"
               inputRef={jobLocationRef}
@@ -185,8 +192,11 @@ export function AddJob() {
           </Stack>
           <Stack direction={"row"} gap={2}>
             <TextField
-              id="job-company"
-              name="job-company"
+              inputProps={{
+                "data-testid": fields.jobCompany,
+              }}
+              id={fields.jobCompany}
+              name={fields.jobCompany}
               label="Company name"
               variant="outlined"
               inputRef={jobCompanyRef}
@@ -207,8 +217,11 @@ export function AddJob() {
               sx={{ flexGrow: 1 }}
             />
             <TextField
-              id="job-salary"
-              name="job-salary"
+              inputProps={{
+                "data-testid": fields.jobSalary,
+              }}
+              id={fields.jobSalary}
+              name={fields.jobSalary}
               label="Salary"
               variant="outlined"
               inputRef={jobSalaryRef}
@@ -234,8 +247,11 @@ export function AddJob() {
             <Skeleton variant="rectangular" width={"100%"} height={125} />
           ) : (
             <TextField
-              id="job-description"
-              name="job-description"
+              inputProps={{
+                "data-testid": fields.jobDescription,
+              }}
+              id={fields.jobDescription}
+              name={fields.jobDescription}
               label="Job Description"
               inputRef={jobDescriptionRef}
               value={jobDescription}
@@ -258,6 +274,7 @@ export function AddJob() {
           )}
 
           <Button
+            data-testid="addJobSubmitButton"
             type="submit"
             disabled={addJobInfo.isLoading || !isFormValid}
             variant="contained"

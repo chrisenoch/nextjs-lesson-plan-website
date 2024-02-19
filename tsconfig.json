@@ -30,7 +30,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/models/types/Auth/UserSessiontsx",
-    "src/models/types/LessonPlans/LessonPlanCardSummary.tsx"
+    "src/models/types/LessonPlans/LessonPlanCardSummary.tsx",
+    "__tests__/foo/page.test.jsx"
   ],
   "exclude": ["node_modules"]
 }
