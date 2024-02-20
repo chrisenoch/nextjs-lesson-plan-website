@@ -3,3 +3,9 @@ export function delay(cb: () => void, duration: number) {
     setTimeout(() => resolve(cb()), duration);
   });
 }
+
+export function simpleDelay(delay: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, delay);
+  });
+}

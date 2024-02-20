@@ -10,7 +10,6 @@ export default function ThemeRegistry({
 }: {
   children: React.ReactNode;
 }) {
-  console.log("theme registry mounts");
   return (
     <NextAppDirEmotionCacheProvider options={{ key: "mui" }}>
       <ThemeProvider theme={theme}>
