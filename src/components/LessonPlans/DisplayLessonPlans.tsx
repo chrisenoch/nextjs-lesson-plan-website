@@ -27,6 +27,7 @@ export default function DisplayLessonPlans({
   showLoadingSpinner,
   showOnlyBookmarkedLessonPlans,
   shouldRedirectWhenLogout,
+  bookmarks,
 }: {
   totalLessonPlansBeforeFiltered: number;
   filteredLessonPlans: LessonPlanCardSummary[];
@@ -37,16 +38,15 @@ export default function DisplayLessonPlans({
   showLoadingSpinner: boolean;
   shouldRedirectWhenLogout: boolean;
   showOnlyBookmarkedLessonPlans: boolean;
+  bookmarks: {
+    userId: string;
+    lessonPlanId: string;
+  }[];
 }) {
   const dispatch = useAppDispatch();
-  console.log("LessonPlansCombined rendered");
   useRedirectWhenLoggedOut("/auth/signin", shouldRedirectWhenLogout);
   const muiTheme = useTheme();
 
-  const bookmarks: {
-    userId: string;
-    lessonPlanId: string;
-  }[] = useAppSelector(selectAllBookmarks);
   const fetchBookMarksInfo: StandardResponseInfo =
     useAppSelector(selectFetchBookmarks);
 
@@ -163,6 +163,7 @@ function getRenderedContent(
   if (totalLessonPlansBeforeFiltered < 1) {
     return (
       <NotificationBox
+        data-testid="noLessonPlansToDisplay"
         title="No lesson plans to display"
         message=" This may be due to an error. Please try refreshing the page."
         variant="error"
@@ -208,6 +209,7 @@ function getRenderedContent(
   ) {
     return (
       <NotificationBox
+        data-testid="tooManyFilters"
         title="Too many filters"
         message=" No lesson plans are available that match all the filters you selected. Please try removing some filters from the search box to find more lesson plans."
         sxOuterContainer={{
@@ -226,6 +228,7 @@ function getRenderedContent(
   if (showOnlyBookmarkedLessonPlans && bookmarks.length < 1) {
     return (
       <NotificationBox
+        data-testid="noSavedLessonPlans"
         message="You have not saved any lesson plans."
         sxOuterContainer={{
           marginTop: 2,

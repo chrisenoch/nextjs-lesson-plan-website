@@ -18,6 +18,19 @@ export function render(component: React.ReactNode) {
   });
 }
 
+export async function renderWithAct(component: React.ReactNode) {
+  const result = await act(async () => {
+    return testingLibraryRender(<>{component}</>, {
+      wrapper: ({ children }: { children: React.ReactNode }) => (
+        <ReduxProvider>
+          <ThemeRegistry>{children}</ThemeRegistry>
+        </ReduxProvider>
+      ),
+    });
+  });
+  return result;
+}
+
 export async function renderWithEssentialClientConfig(
   component: React.ReactNode
 ) {
@@ -35,10 +48,10 @@ export async function renderWithEssentialClientConfig(
   return result;
 }
 
-export async function renderWithAct(component: React.ReactNode) {
-  let result: RenderResult | null = null;
-  await act(async () => {
-    result = render(component);
-  });
-  return result!;
-}
+// export async function renderWithAct(component: React.ReactNode) {
+//   let result: RenderResult | null = null;
+//   await act(async () => {
+//     result = render(component);
+//   });
+//   return result!;
+// }

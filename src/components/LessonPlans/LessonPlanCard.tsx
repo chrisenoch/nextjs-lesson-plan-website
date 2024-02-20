@@ -76,6 +76,7 @@ export default function LessonPlanCard({
 
   return (
     <Card
+      data-testid="lessonPlanCard"
       sx={{
         borderRadius: 4,
       }}>
