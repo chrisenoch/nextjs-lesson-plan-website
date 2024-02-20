@@ -1,15 +1,9 @@
-//import { render } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { screen, fireEvent } from "@testing-library/dom";
-import { AddJob } from "@/components/Jobs/AddJob";
-import { render, renderWithAct } from "@/test-utils/render";
-import userEvent from "@testing-library/user-event";
-import { simpleDelay } from "@/utils/delay";
-import { act } from "@testing-library/react";
+import { screen } from "@testing-library/dom";
+import { renderWithAct } from "@/test-utils/render";
 import DisplayLessonPlans from "@/components/LessonPlans/DisplayLessonPlans";
 import { LessonPlanCardSummary } from "@/models/types/LessonPlans/LessonPlanCardSummary";
 import { LessonPlanCategory } from "@/models/types/LessonPlans/LessonPlanCategory";
-import { JSX } from "react";
 
 const filteredLessonPlans: LessonPlanCardSummary[] = [
   {

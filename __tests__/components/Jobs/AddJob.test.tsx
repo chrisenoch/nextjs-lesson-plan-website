@@ -4,8 +4,6 @@ import { screen, fireEvent } from "@testing-library/dom";
 import { AddJob } from "@/components/Jobs/AddJob";
 import { render } from "@/test-utils/render";
 import userEvent from "@testing-library/user-event";
-import { simpleDelay } from "@/utils/delay";
-import { act } from "@testing-library/react";
 
 let jobTitle: HTMLInputElement | null = null;
 let jobLocation: HTMLInputElement | null = null;
