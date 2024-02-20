@@ -163,6 +163,7 @@ function getRenderedContent(
   if (totalLessonPlansBeforeFiltered < 1) {
     return (
       <NotificationBox
+        data-testid="noLessonPlansToDisplay"
         title="No lesson plans to display"
         message=" This may be due to an error. Please try refreshing the page."
         variant="error"
@@ -208,6 +209,7 @@ function getRenderedContent(
   ) {
     return (
       <NotificationBox
+        data-testid="tooManyFilters"
         title="Too many filters"
         message=" No lesson plans are available that match all the filters you selected. Please try removing some filters from the search box to find more lesson plans."
         sxOuterContainer={{

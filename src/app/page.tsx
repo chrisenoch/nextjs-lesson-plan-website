@@ -6,7 +6,7 @@ import { fetchLessonPlans } from "../server-only/lessonplans";
 
 export default async function HomePage() {
   const lessonPlans = await fetchLessonPlans();
-  // const lessonPlans: any = [];
+  //const lessonPlans: any = [];
 
   console.log("lessonPlans in page");
 

@@ -14,6 +14,7 @@ export default function NotificationBox({
   titleVariant,
   variant,
   children,
+  ...props
 }: {
   title?: string;
   titleComponent?: any;
@@ -128,7 +129,7 @@ export default function NotificationBox({
   ]);
 
   return (
-    <Stack sx={sxOuterContainerFinal}>
+    <Stack {...props} sx={sxOuterContainerFinal}>
       <Stack sx={sxInnerContainerFinal}>
         {title && (
           <Typography
