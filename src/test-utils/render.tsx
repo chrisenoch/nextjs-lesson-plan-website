@@ -35,10 +35,10 @@ export async function renderWithEssentialClientConfig(
   return result;
 }
 
-// export async function renderWithAct(component: React.ReactNode) {
-//   let result: RenderResult | null = null;
-//   await act(async () => {
-//     result = render(component);
-//   });
-//   return result!;
-// }
+export async function renderWithAct(component: React.ReactNode) {
+  let result: RenderResult | null = null;
+  await act(async () => {
+    result = render(component);
+  });
+  return result!;
+}

@@ -129,6 +129,7 @@ export function AddJob() {
       />
       <Stack spacing={2} alignItems="center" marginTop={3}>
         <Box
+          data-testid="addJobForm"
           component="form"
           display="flex"
           flexDirection={"column"}
@@ -281,6 +282,7 @@ export function AddJob() {
             color="primary">
             Add Job
           </Button>
+
           {!shouldHideMessage && addJobInfo.message && (
             <NotificationBox
               message={addJobInfo.message}
