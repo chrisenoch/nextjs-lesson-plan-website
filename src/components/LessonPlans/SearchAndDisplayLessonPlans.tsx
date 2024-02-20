@@ -8,6 +8,8 @@ import { LessonPlanSubCategory } from "@/models/types/LessonPlans/LessonPlanSubC
 import { SxProps, Theme } from "@mui/material";
 import DisplayLessonPlans from "./DisplayLessonPlans";
 import { LessonPlanCardSummary } from "@/models/types/LessonPlans/LessonPlanCardSummary";
+import { useAppSelector } from "@/store/hooks";
+import { selectAllBookmarks } from "@/store";
 
 export default function SearchAndDisplayLessonPlans({
   lessonPlans,
@@ -30,6 +32,11 @@ export default function SearchAndDisplayLessonPlans({
 }) {
   const [selectedLessonPlanCategories, setSelectedLessonPlanCategories] =
     useState<{ title: string; category: LessonPlanCategory }[]>([]);
+
+  const bookmarks: {
+    userId: string;
+    lessonPlanId: string;
+  }[] = useAppSelector(selectAllBookmarks);
 
   //using useMemo as warned in MUI docs: https://mui.com/material-ui/react-autocomplete/#controlled-states
   const multiSelectOptionValues: {
@@ -94,6 +101,7 @@ export default function SearchAndDisplayLessonPlans({
         showLoadingSpinner={showLoadingSpinner}
         showOnlyBookmarkedLessonPlans={showOnlyBookmarkedLessonPlans}
         shouldRedirectWhenLogout={shouldRedirectWhenLogout}
+        bookmarks={bookmarks}
       />
     </>
   );

@@ -2,15 +2,16 @@
 import "@testing-library/jest-dom";
 import { screen, fireEvent } from "@testing-library/dom";
 import { AddJob } from "@/components/Jobs/AddJob";
-import { render } from "@/test-utils/render";
+import { render, renderWithAct } from "@/test-utils/render";
 import userEvent from "@testing-library/user-event";
 import { simpleDelay } from "@/utils/delay";
 import { act } from "@testing-library/react";
 import DisplayLessonPlans from "@/components/LessonPlans/DisplayLessonPlans";
 import { LessonPlanCardSummary } from "@/models/types/LessonPlans/LessonPlanCardSummary";
 import { LessonPlanCategory } from "@/models/types/LessonPlans/LessonPlanCategory";
+import { JSX } from "react";
 
-const lessonPlans: LessonPlanCardSummary[] = [
+const filteredLessonPlans: LessonPlanCardSummary[] = [
   {
     id: "1",
     title: "Driverless Cars",
@@ -139,8 +140,27 @@ const selectedLessonPlanCategories: {
   },
 ];
 
+const bookmarks = [
+  {
+    userId: "2",
+    lessonPlanId: "3",
+    id: 3,
+  },
+  {
+    userId: "1",
+    lessonPlanId: "2",
+    id: 4,
+  },
+  {
+    userId: "1",
+    lessonPlanId: "1",
+    id: 5,
+  },
+];
+
 describe("correct content should show", () => {
-  test("no-lesson-plans-to-display notification shows if there no lesson plans", async () => {
+  test(`no-lesson-plans-to-display notification shows if
+  - filteredLessonPlans.length < 1`, async () => {
     const fields = {
       totalLessonPlansBeforeFiltered: 0,
       filteredLessonPlans: [],
@@ -148,8 +168,9 @@ describe("correct content should show", () => {
       showLoadingSpinner: false,
       showOnlyBookmarkedLessonPlans: false,
       shouldRedirectWhenLogout: false,
+      bookmarks: bookmarks,
     };
-    render(<DisplayLessonPlans {...fields} />);
+    await renderWithAct(<DisplayLessonPlans {...fields} />);
     const notificationBox = screen.queryByTestId(
       "noLessonPlansToDisplay"
     ) as HTMLDivElement;
@@ -159,32 +180,59 @@ describe("correct content should show", () => {
     expect(notificationBox).toBeInTheDocument();
     expect(lessonPlanCards.length).toBe(0);
   });
-  test("show lesson plans if there are lesson-plans-to-display ", async () => {
+  test(`no-lesson-plans-to-display notification shows if:
+  - filteredLessonPlans.length < 1 &&
+  - selectedLessonPlanCategories.length > 0`, async () => {
     const fields = {
-      totalLessonPlansBeforeFiltered: lessonPlans.length,
-      filteredLessonPlans: lessonPlans,
-      selectedLessonPlanCategories: [],
-      showLoadingSpinner: false,
-      showOnlyBookmarkedLessonPlans: false,
-      shouldRedirectWhenLogout: false,
-    };
-    render(<DisplayLessonPlans {...fields} />);
-    const lessonPlanCards = screen.queryAllByTestId(
-      "lessonPlanCard"
-    ) as HTMLDivElement[];
-    expect(lessonPlanCards.length).toBe(4);
-  });
-  test(`too-many-filters notification shows if no lesson plans match the filters and 
-  selectedLessonPlanCategories.length > 0 && !showOnlyBookmarkedLessonPlans`, async () => {
-    const fields = {
-      totalLessonPlansBeforeFiltered: lessonPlans.length,
+      totalLessonPlansBeforeFiltered: 0,
       filteredLessonPlans: [],
       selectedLessonPlanCategories: selectedLessonPlanCategories,
       showLoadingSpinner: false,
       showOnlyBookmarkedLessonPlans: false,
       shouldRedirectWhenLogout: false,
+      bookmarks: bookmarks,
     };
-    render(<DisplayLessonPlans {...fields} />);
+    await renderWithAct(<DisplayLessonPlans {...fields} />);
+    const notificationBox = screen.queryByTestId(
+      "noLessonPlansToDisplay"
+    ) as HTMLDivElement;
+    const lessonPlanCards = screen.queryAllByTestId(
+      "lessonPlanCard"
+    ) as HTMLDivElement[];
+    expect(notificationBox).toBeInTheDocument();
+    expect(lessonPlanCards.length).toBe(0);
+  });
+  test(`show lesson plans if:
+  - filteredLessonPlans.length > 0 `, async () => {
+    const fields = {
+      totalLessonPlansBeforeFiltered: filteredLessonPlans.length,
+      filteredLessonPlans: filteredLessonPlans,
+      selectedLessonPlanCategories: [],
+      showLoadingSpinner: false,
+      showOnlyBookmarkedLessonPlans: false,
+      shouldRedirectWhenLogout: false,
+      bookmarks: bookmarks,
+    };
+    await renderWithAct(<DisplayLessonPlans {...fields} />);
+    const lessonPlanCards = screen.queryAllByTestId(
+      "lessonPlanCard"
+    ) as HTMLDivElement[];
+    expect(lessonPlanCards.length).toBe(4);
+  });
+  test(`too-many-filters notification shows if:
+  - filteredLessonPlans.length < 1 &&
+  - selectedLessonPlanCategories.length > 0 &&
+  - !showOnlyBookmarkedLessonPlans`, async () => {
+    const fields = {
+      totalLessonPlansBeforeFiltered: filteredLessonPlans.length,
+      filteredLessonPlans: [],
+      selectedLessonPlanCategories: selectedLessonPlanCategories,
+      showLoadingSpinner: false,
+      showOnlyBookmarkedLessonPlans: false,
+      shouldRedirectWhenLogout: false,
+      bookmarks: bookmarks,
+    };
+    await renderWithAct(<DisplayLessonPlans {...fields} />);
     const lessonPlanCards = screen.queryAllByTestId(
       "lessonPlanCard"
     ) as HTMLDivElement[];
@@ -195,26 +243,78 @@ describe("correct content should show", () => {
     expect(notificationBox).toBeInTheDocument();
   });
 
-  // test(`too-many-filters notification shows if if no lesson plans match the filters and
-  // selectedLessonPlanCategories.length > 0 &&
-  // showOnlyBookmarkedLessonPlans &&
-  // bookmarks.length > 0`, async () => {
-  //   const fields = {
-  //     totalLessonPlansBeforeFiltered: lessonPlans.length,
-  //     filteredLessonPlans: [],
-  //     selectedLessonPlanCategories: selectedLessonPlanCategories,
-  //     showLoadingSpinner: false,
-  //     showOnlyBookmarkedLessonPlans: true,
-  //     shouldRedirectWhenLogout: false,
-  //   };
-  //   render(<DisplayLessonPlans {...fields} />);
-  //   const lessonPlanCards = screen.queryAllByTestId(
-  //     "lessonPlanCard"
-  //   ) as HTMLDivElement[];
-  //   const notificationBox = screen.queryByTestId(
-  //     "tooManyFilters"
-  //   ) as HTMLDivElement;
-  //   expect(lessonPlanCards.length).toBe(0);
-  //   expect(notificationBox).toBeInTheDocument();
-  // });
+  test(`too-many-filters notification shows if:
+  - filteredLessonPlans.length < 1  &&
+  - selectedLessonPlanCategories.length > 0  &&
+  - showOnlyBookmarkedLessonPlans &&
+  - bookmarks.length > 0`, async () => {
+    const fields = {
+      totalLessonPlansBeforeFiltered: filteredLessonPlans.length,
+      filteredLessonPlans: [],
+      selectedLessonPlanCategories: selectedLessonPlanCategories,
+      showLoadingSpinner: false,
+      showOnlyBookmarkedLessonPlans: true,
+      shouldRedirectWhenLogout: false,
+      bookmarks: bookmarks,
+    };
+    await renderWithAct(<DisplayLessonPlans {...fields} />);
+    const lessonPlanCards = screen.queryAllByTestId(
+      "lessonPlanCard"
+    ) as HTMLDivElement[];
+    const notificationBox = screen.queryByTestId(
+      "tooManyFilters"
+    ) as HTMLDivElement;
+    expect(lessonPlanCards.length).toBe(0);
+    expect(notificationBox).toBeInTheDocument();
+  });
+
+  test(`no-saved-lesson-plans notification shows if:
+  - filteredLessonPlans.length < 1 &&
+  - selectedLessonPlanCategories.length === 0 &&
+  - showOnlyBookmarkedLessonPlans &&
+  - bookmarks.length === 0`, async () => {
+    const fields = {
+      totalLessonPlansBeforeFiltered: filteredLessonPlans.length,
+      filteredLessonPlans: [],
+      selectedLessonPlanCategories: [],
+      showLoadingSpinner: false,
+      showOnlyBookmarkedLessonPlans: true,
+      shouldRedirectWhenLogout: false,
+      bookmarks: [],
+    };
+    await renderWithAct(<DisplayLessonPlans {...fields} />);
+    const lessonPlanCards = screen.queryAllByTestId(
+      "lessonPlanCard"
+    ) as HTMLDivElement[];
+    const notificationBox = screen.queryByTestId(
+      "noSavedLessonPlans"
+    ) as HTMLDivElement;
+    expect(lessonPlanCards.length).toBe(0);
+    expect(notificationBox).toBeInTheDocument();
+  });
+
+  test(`no-saved-lesson-plans notification shows if:
+  - filteredLessonPlans.length > 0  &&
+  - selectedLessonPlanCategories.length === 0  &&
+  - showOnlyBookmarkedLessonPlans  &&
+  - bookmarks.length === 0`, async () => {
+    const fields = {
+      totalLessonPlansBeforeFiltered: filteredLessonPlans.length,
+      filteredLessonPlans: filteredLessonPlans,
+      selectedLessonPlanCategories: [],
+      showLoadingSpinner: false,
+      showOnlyBookmarkedLessonPlans: true,
+      shouldRedirectWhenLogout: false,
+      bookmarks: [],
+    };
+    await renderWithAct(<DisplayLessonPlans {...fields} />);
+    const lessonPlanCards = screen.queryAllByTestId(
+      "lessonPlanCard"
+    ) as HTMLDivElement[];
+    const notificationBox = screen.queryByTestId(
+      "noSavedLessonPlans"
+    ) as HTMLDivElement;
+    expect(lessonPlanCards.length).toBe(0);
+    expect(notificationBox).toBeInTheDocument();
+  });
 });

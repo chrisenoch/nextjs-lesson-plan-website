@@ -27,6 +27,7 @@ export default function DisplayLessonPlans({
   showLoadingSpinner,
   showOnlyBookmarkedLessonPlans,
   shouldRedirectWhenLogout,
+  bookmarks,
 }: {
   totalLessonPlansBeforeFiltered: number;
   filteredLessonPlans: LessonPlanCardSummary[];
@@ -37,16 +38,15 @@ export default function DisplayLessonPlans({
   showLoadingSpinner: boolean;
   shouldRedirectWhenLogout: boolean;
   showOnlyBookmarkedLessonPlans: boolean;
+  bookmarks: {
+    userId: string;
+    lessonPlanId: string;
+  }[];
 }) {
   const dispatch = useAppDispatch();
-  console.log("LessonPlansCombined rendered");
   useRedirectWhenLoggedOut("/auth/signin", shouldRedirectWhenLogout);
   const muiTheme = useTheme();
 
-  const bookmarks: {
-    userId: string;
-    lessonPlanId: string;
-  }[] = useAppSelector(selectAllBookmarks);
   const fetchBookMarksInfo: StandardResponseInfo =
     useAppSelector(selectFetchBookmarks);
 
@@ -228,6 +228,7 @@ function getRenderedContent(
   if (showOnlyBookmarkedLessonPlans && bookmarks.length < 1) {
     return (
       <NotificationBox
+        data-testid="noSavedLessonPlans"
         message="You have not saved any lesson plans."
         sxOuterContainer={{
           marginTop: 2,
