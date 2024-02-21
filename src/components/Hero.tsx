@@ -65,6 +65,10 @@ export default function Hero() {
     };
   }, []);
 
+  // Assign to the store, so we can control the carousel from any component tree.
+  // E.g. In another component, we could so:
+  // 1. const carouselMoveLeft = carouselStore.get("moveLeft");
+  // 2. onClick={() => emit(carouselMoveLeft)}
   carouselStore.set("moveLeft", carouselMoveLeft);
   carouselStore.set("moveRight", carouselMoveRight);
   const [autoPlay, setAutoPlay] = useState<AutoPlay>({
