@@ -11,11 +11,11 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import FloatingId from "@/components/layout/FloatingId";
+import FloatingId from "@/components/layout-c/FloatingId";
 import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 import { Fragment, useMemo } from "react";
 import InsecureNextLink from "next/link";
-import CurvedUnderlineTitle from "../presentation/CurvedUnderline";
+import CurvedUnderlineTitle from "../presentation-c/CurvedUnderline";
 import { orange } from "@mui/material/colors";
 
 export default function LessonPlan({

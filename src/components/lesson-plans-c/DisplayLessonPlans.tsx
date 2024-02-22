@@ -15,7 +15,7 @@ import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 import { getBookmakedLessonPlanIds } from "@/component-functions/get-bookmarked-lessonplan-ids";
 import NotificationBox from "../NotificationBox";
 import { LessonPlanCategory } from "@/models/types/LessonPlans/LessonPlanCategory";
-import LoadingSpinner from "../presentation/LoadingSpinner";
+import LoadingSpinner from "../presentation-c/LoadingSpinner";
 import { StandardResponseInfo } from "@/models/types/DataFetching/StandardResponseInfo";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { LessonPlanCardSummary } from "@/models/types/LessonPlans/LessonPlanCardSummary";

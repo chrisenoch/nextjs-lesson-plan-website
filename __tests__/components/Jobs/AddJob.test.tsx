@@ -1,7 +1,7 @@
 //import { render } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { screen, fireEvent } from "@testing-library/dom";
-import { AddJob } from "@/components/jobs/AddJob";
+import { AddJob } from "@/components/jobs-c/AddJob";
 import { render } from "@/test-utils/render";
 import userEvent from "@testing-library/user-event";
 let jobTitle: HTMLInputElement | null = null;

@@ -1,6 +1,6 @@
 "use client";
 
-import LoadingSpinner from "@/components/presentation/LoadingSpinner";
+import LoadingSpinner from "@/components/presentation-c/LoadingSpinner";
 import { Box } from "@mui/material";
 
 export default function Loading() {

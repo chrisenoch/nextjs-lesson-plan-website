@@ -4,8 +4,8 @@ import {
   RenderResult,
   render as testingLibraryRender,
 } from "@testing-library/react";
-import ReduxProvider from "@/components/redux-store/ReduxProvider";
-import ThemeRegistry from "@/components/theme-registry/ThemeRegistry";
+import ReduxProvider from "@/components/redux-store-c/ReduxProvider";
+import ThemeRegistry from "@/components/theme-registry-c/ThemeRegistry";
 import EssentialClientConfig from "@/components/EssentialClientConfig";
 
 export function render(component: React.ReactNode) {

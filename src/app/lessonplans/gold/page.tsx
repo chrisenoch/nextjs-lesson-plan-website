@@ -1,5 +1,5 @@
-import LessonPlan from "@/components/lesson-plans/LessonPlan";
-import LessonPlanDynamic from "@/components/lesson-plans/LessonPlanDynamic";
+import LessonPlan from "@/components/lesson-plans-c/LessonPlan";
+import LessonPlanDynamic from "@/components/lesson-plans-c/LessonPlanDynamic";
 
 async function getLessonPlanContents() {
   let lessonPlans: {

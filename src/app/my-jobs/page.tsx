@@ -1,4 +1,4 @@
-import { AddJob } from "@/components/jobs/AddJob";
+import { AddJob } from "@/components/jobs-c/AddJob";
 import { Stack } from "@mui/material";
 
 export default function JobsPage() {
