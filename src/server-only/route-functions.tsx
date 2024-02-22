@@ -14,7 +14,7 @@ export async function fetchCollection(
       {
         message: successMessage,
         isError: false,
-        [collectionName]: data,
+        [collectionName]: prepareFireBase(data),
       },
       { status: 200 }
     );
@@ -27,4 +27,13 @@ export async function fetchCollection(
       { status: 500 }
     );
   }
+}
+
+function prepareFireBase(data: { [key: string]: { [key: string]: any } }) {
+  const transformedData = Object.entries(data).map(([id, otherFields]) => {
+    const onlyId: { id?: string } = {};
+    onlyId.id = id;
+    return { ...onlyId, ...otherFields };
+  });
+  return transformedData;
 }

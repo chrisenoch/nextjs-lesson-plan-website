@@ -9,35 +9,6 @@ export const revalidate = 0;
 export async function GET(request: NextRequest) {
   console.log("in lessonPlanBookmarks get method");
 
-  // const fetchedBookMarks = await getLessonPlanBookmarks();
-  // const fetchBookmarksResponse = NextResponse.json(
-  //   {
-  //     message: "Successfully fetched lesson plan bookmarks",
-  //     isError: false,
-  //     bookmarks: fetchedBookMarks,
-  //   },
-  //   { status: 200 }
-  // );
-
-  // const test = await fetchCollection(
-  //   "https://nextjs-lesson-plans-default-rtdb.europe-west1.firebasedatabase.app/lesson-plan-bookmarks.json",
-  //   "Successfully fetched lesson plan bookmarks",
-  //   "Unable to fetch lesson plan bookmarks.",
-  //   "bookmarks"
-  // );
-  // const test1 = await test.json();
-  // console.log("test1 in bookmarks");
-  // console.log(test1);
-
-  const fetchBookmarksResponse = await fetchCollection(
-    "http://localhost:3001/lesson-plan-bookmarks",
-    "Successfully fetched lesson plan bookmarks",
-    "Unable to fetch lesson plan bookmarks.",
-    "bookmarks"
-  );
-
-  const fetchBookmarksPayload = await fetchBookmarksResponse.json();
-
   const { userId, errorResponse } = await getUserIdOnSuccessOrErrorResponse({
     request,
     failureMessage: "Error saving lesson plan.",
@@ -49,6 +20,14 @@ export async function GET(request: NextRequest) {
     return errorResponse;
   }
 
+  const fetchBookmarksResponse = await fetchCollection(
+    "https://nextjs-lesson-plans-default-rtdb.europe-west1.firebasedatabase.app/lesson-plan-bookmarks.json",
+    "Successfully fetched lesson plan bookmarks",
+    "Unable to fetch lesson plan bookmarks.",
+    "bookmarks"
+  );
+
+  const fetchBookmarksPayload = await fetchBookmarksResponse.json();
   const { bookmarks: allBookmarks } = fetchBookmarksPayload as {
     message: string;
     isError: boolean;
@@ -95,7 +74,7 @@ export async function POST(request: NextRequest) {
   let fetchBookmarksPayload;
   try {
     fetchBookmarksResponse = await fetchCollection(
-      "http://localhost:3001/lesson-plan-bookmarks",
+      "https://nextjs-lesson-plans-default-rtdb.europe-west1.firebasedatabase.app/lesson-plan-bookmarks.json",
       "Successfully fetched lesson plan bookmarks",
       "Unable to fetch lesson plan bookmarks.",
       "bookmarks"
@@ -133,8 +112,8 @@ export async function POST(request: NextRequest) {
   //If the bookmark was not found, then it was not bookmarked in the first place. So we need to add the new bookmark.
   if (existingBookmark === undefined) {
     try {
-      const addBookmarkResponse = await fetch(
-        "http://localhost:3001/lesson-plan-bookmarks",
+      const response = await fetch(
+        "https://nextjs-lesson-plans-default-rtdb.europe-west1.firebasedatabase.app/lesson-plan-bookmarks.json",
         {
           method: "POST",
           headers: {
@@ -146,8 +125,19 @@ export async function POST(request: NextRequest) {
           }),
         }
       );
-      const newBookmark = await addBookmarkResponse.json();
-      const newBookmarks = [...userBookmarks, newBookmark];
+
+      const data = await response.json();
+      const newBookmarks = [
+        ...userBookmarks,
+        {
+          id: data.name,
+          userId,
+          lessonPlanId,
+        },
+      ];
+
+      console.log("newbookmaks");
+      console.log(newBookmarks);
 
       return NextResponse.json(
         {
@@ -172,7 +162,7 @@ export async function POST(request: NextRequest) {
   //If get to here, we need to delete the bookmark from the json-server database.
   try {
     const response = await fetch(
-      `http://localhost:3001/lesson-plan-bookmarks/${existingBookmark.id}`,
+      `https://nextjs-lesson-plans-default-rtdb.europe-west1.firebasedatabase.app/lesson-plan-bookmarks/${existingBookmark.id}.json`,
       {
         method: "DELETE",
         headers: {
@@ -196,7 +186,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         message:
-          "Failed to delete job due to an error. Please contact our support team.",
+          "Failed to delete lesson plan due to an error. Please contact our support team.",
         isError: true,
       },
       { status: 500 }
