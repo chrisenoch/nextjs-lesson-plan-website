@@ -110,7 +110,9 @@ export const fetchJobs = createAsyncThunk(
   "jobsSlice/fetchJobs",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/jobs`);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/jobs`
+      );
       const payload = await response.json();
       return { ...payload, status: response.status };
     } catch (error) {
@@ -123,13 +125,16 @@ export const deleteJob = createAsyncThunk(
   "jobsSlice/delete-job",
   async (id: number, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/jobs`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(id),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/jobs`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(id),
+        }
+      );
       const payload = await response.json();
       return { ...payload, status: response.status };
     } catch (error) {
@@ -151,13 +156,16 @@ export const addJob = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await fetch("http://localhost:3000/api/jobs", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/jobs`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
       const payload = await response.json();
       return { ...payload, status: response.status };
     } catch (error) {

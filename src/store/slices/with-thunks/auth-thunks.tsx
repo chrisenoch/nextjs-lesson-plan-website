@@ -1,20 +1,20 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { increaseLogoutCount } from "./auth-slice";
-import { delay } from "../../../utils/delay";
-
-const API_URL = "http://localhost:3000/api";
 
 export const userLogin = createAsyncThunk(
   "authSlice/login",
   async (data: { email: string; password: string }, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${API_URL}/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       const payload = await response.json();
       //const delayForDev = await delay(() => console.log("delay for dev"), 500);
@@ -31,13 +31,16 @@ export const userLogout = createAsyncThunk(
   "authSlice/logout",
   async (_: void, { rejectWithValue, dispatch }) => {
     try {
-      const response = await fetch(`${API_URL}/auth/with-refresh/logout`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        //body: JSON.stringify({shouldLogout:true}),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/with-refresh/logout`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          //body: JSON.stringify({shouldLogout:true}),
+        }
+      );
       const payload = await response.json();
       dispatch(increaseLogoutCount());
       //If successful, http-only cookie with jwt token will have been set on the server
@@ -55,12 +58,15 @@ export const getAccessTokenWithRefreshToken = createAsyncThunk(
   async (_: void, { rejectWithValue }) => {
     console.log("sending getAccessTokenWithRefreshToken");
     try {
-      const response = await fetch(`${API_URL}/auth/with-refresh/refresh`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/with-refresh/refresh`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const payload = await response.json();
       //If successful, http-only cookie with jwt token will have been set on the server
       return { ...payload, status: response.status };
@@ -76,12 +82,15 @@ export const getAccessTokenWithRefreshTokenOnAppMount = createAsyncThunk(
   "authSlice/refresh-on-app-mount",
   async (_: void, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${API_URL}/auth/with-refresh/refresh`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/with-refresh/refresh`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const payload = await response.json();
       //If successful, http-only cookie with jwt token will have been set on the server
       return { ...payload, status: response.status };

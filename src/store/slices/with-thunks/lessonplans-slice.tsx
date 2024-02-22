@@ -81,7 +81,7 @@ export const fetchBookmarks = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/lesson-plan-bookmarks`
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/lesson-plan-bookmarks`
       );
       const payload = await response.json();
       return { ...payload, status: response.status };
@@ -96,7 +96,7 @@ export const toggleBookmark = createAsyncThunk(
   async (lessonPlanId: string, { rejectWithValue }) => {
     try {
       const response = await fetch(
-        "http://localhost:3000/api/lesson-plan-bookmarks",
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/lesson-plan-bookmarks`,
         {
           method: "POST",
           headers: {
