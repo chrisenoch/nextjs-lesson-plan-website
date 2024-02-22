@@ -3,7 +3,7 @@
 import useHandleLoginStatus from "@/customHooks/useHandleLoginStatus";
 import { getAccessTokenWithRefreshTokenOnAppMount } from "@/store";
 import { useState, useEffect } from "react";
-import { LogoutWarning } from "./auth/LogoutWarning";
+import { LogoutWarning } from "./auth-c/LogoutWarning";
 import { useAppDispatch } from "@/store/hooks";
 
 export default function EssentialClientConfig({

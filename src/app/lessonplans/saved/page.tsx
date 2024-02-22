@@ -1,6 +1,6 @@
 import "server-only";
 import { fetchLessonPlans } from "@/server-only/lessonplans";
-import SearchAndDisplayLessonPlans from "@/components/lesson-plans/SearchAndDisplayLessonPlans";
+import SearchAndDisplayLessonPlans from "@/components/lesson-plans-c/SearchAndDisplayLessonPlans";
 
 export default async function SavedLessonPlans() {
   const lessonPlans = await fetchLessonPlans();
