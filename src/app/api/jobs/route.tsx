@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { checkPermissions } from "@/server-only/auth/check-permissions";
 import { getAccessTokenInfo } from "@/server-only/auth/get-access-token-info";
 import { isAddJobValid } from "@/validation/jobs/jobs-validators";
-import { getUserIdOrErrorResponse } from "@/server-only/auth/get-userId-or-error-response";
+import { getUserIdOnSuccessOrErrorResponse } from "@/server-only/auth/get-userId-or-error-response";
 import { AddedJob } from "@/models/types/Jobs/Jobs";
 
 export const dynamic = "force-dynamic";
@@ -46,17 +46,14 @@ export async function POST(request: NextRequest) {
   }: AddedJob = await request.json();
 
   //check user is logged in
-  const userIdOrErrorResponse = await getUserIdOrErrorResponse({
+  const { userId, errorResponse } = await getUserIdOnSuccessOrErrorResponse({
     request,
     failureMessage: "Error adding job.",
     validUserRoles: ["USER"],
     superAdmins: ["ADMIN"],
   });
-  let userId: string | undefined;
-  if (typeof userIdOrErrorResponse !== "string") {
-    return userIdOrErrorResponse;
-  } else {
-    userId = userIdOrErrorResponse;
+  if (errorResponse) {
+    return errorResponse;
   }
 
   const { isFormValid } = isAddJobValid({

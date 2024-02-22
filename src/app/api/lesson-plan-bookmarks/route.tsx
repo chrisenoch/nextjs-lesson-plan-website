@@ -1,4 +1,5 @@
-import { getUserIdOrErrorResponse } from "@/server-only/auth/get-userId-or-error-response";
+import { getLessonPlanBookmarks } from "@/db-fake";
+import { getUserIdOnSuccessOrErrorResponse } from "@/server-only/auth/get-userId-or-error-response";
 import { fetchCollection } from "@/server-only/route-functions";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -7,6 +8,26 @@ export const revalidate = 0;
 
 export async function GET(request: NextRequest) {
   console.log("in lessonPlanBookmarks get method");
+
+  // const fetchedBookMarks = await getLessonPlanBookmarks();
+  // const fetchBookmarksResponse = NextResponse.json(
+  //   {
+  //     message: "Successfully fetched lesson plan bookmarks",
+  //     isError: false,
+  //     bookmarks: fetchedBookMarks,
+  //   },
+  //   { status: 200 }
+  // );
+
+  // const test = await fetchCollection(
+  //   "https://nextjs-lesson-plans-default-rtdb.europe-west1.firebasedatabase.app/lesson-plan-bookmarks.json",
+  //   "Successfully fetched lesson plan bookmarks",
+  //   "Unable to fetch lesson plan bookmarks.",
+  //   "bookmarks"
+  // );
+  // const test1 = await test.json();
+  // console.log("test1 in bookmarks");
+  // console.log(test1);
 
   const fetchBookmarksResponse = await fetchCollection(
     "http://localhost:3001/lesson-plan-bookmarks",
@@ -17,18 +38,15 @@ export async function GET(request: NextRequest) {
 
   const fetchBookmarksPayload = await fetchBookmarksResponse.json();
 
-  //only return the bookmarks for the current logged-in user
-  const userIdOrErrorResponse = await getUserIdOrErrorResponse({
+  const { userId, errorResponse } = await getUserIdOnSuccessOrErrorResponse({
     request,
     failureMessage: "Error saving lesson plan.",
     validUserRoles: ["USER"],
     superAdmins: ["ADMIN"],
   });
-  let userId: string | undefined;
-  if (typeof userIdOrErrorResponse !== "string") {
-    return userIdOrErrorResponse;
-  } else {
-    userId = userIdOrErrorResponse;
+
+  if (errorResponse) {
+    return errorResponse;
   }
 
   const { bookmarks: allBookmarks } = fetchBookmarksPayload as {
@@ -41,6 +59,7 @@ export async function GET(request: NextRequest) {
     }[];
   };
 
+  //only return the bookmarks for the current logged-in user
   const userBookmarks = allBookmarks.filter(
     (bookmark) => bookmark.userId === userId
   );
@@ -60,17 +79,15 @@ export async function POST(request: NextRequest) {
 
   const lessonPlanId = await request.json();
   //check user is logged in
-  const userIdOrErrorResponse = await getUserIdOrErrorResponse({
+  const { userId, errorResponse } = await getUserIdOnSuccessOrErrorResponse({
     request,
     failureMessage: "Error saving lesson plan.",
     validUserRoles: ["USER"],
     superAdmins: ["ADMIN"],
   });
-  let userId: string | undefined;
-  if (typeof userIdOrErrorResponse !== "string") {
-    return userIdOrErrorResponse;
-  } else {
-    userId = userIdOrErrorResponse;
+
+  if (errorResponse) {
+    return errorResponse;
   }
 
   //Get bookmarks: If bookmark is present, delete bookmark. If bookmark is not present, add it.
