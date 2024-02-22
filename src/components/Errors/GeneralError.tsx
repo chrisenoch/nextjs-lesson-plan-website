@@ -1,7 +1,7 @@
 "use client";
 
 import NotificationBox from "@/components/NotificationBox";
-import SecureNextLink from "@/components/Utils/SecureNextLink";
+import SecureNextLink from "@/components/SecureNextLink";
 import { Button, Stack } from "@mui/material";
 
 export default function GeneralError({

@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { screen } from "@testing-library/dom";
 import { renderWithAct } from "@/test-utils/render";
-import DisplayLessonPlans from "@/components/LessonPlans/DisplayLessonPlans";
+import DisplayLessonPlans from "@/components/lesson-plans/DisplayLessonPlans";
 import { LessonPlanCardSummary } from "@/models/types/LessonPlans/LessonPlanCardSummary";
 import { LessonPlanCategory } from "@/models/types/LessonPlans/LessonPlanCategory";
 

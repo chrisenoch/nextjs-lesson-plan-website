@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import Circle from "@mui/icons-material/Circle";
 import Diamond from "@mui/icons-material/Diamond";
-import SecureNextLink from "../Utils/SecureNextLink";
+import SecureNextLink from "../SecureNextLink";
 import { LoadingButton } from "@mui/lab";
 import { LessonPlanCard } from "@/models/types/LessonPlans/LessonPlanCard";
 import { ArrowForward, Done, RocketLaunch } from "@mui/icons-material";

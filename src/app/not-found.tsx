@@ -1,6 +1,6 @@
 "use client";
 
-import GeneralError from "@/components/Errors/GeneralError";
+import GeneralError from "@/components/errors/GeneralError";
 
 export default function NotFound({ reset }: { reset: () => void }) {
   return (

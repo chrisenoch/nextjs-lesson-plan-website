@@ -2,7 +2,7 @@
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { cloneElement, useState } from "react";
-import SecureNextLink from "./Utils/SecureNextLink";
+import SecureNextLink from "./SecureNextLink";
 
 export default function MenuButton({
   buttonComponent,
