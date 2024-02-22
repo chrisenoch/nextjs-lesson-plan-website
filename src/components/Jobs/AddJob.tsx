@@ -21,7 +21,7 @@ import useRedirectWhenLoggedOut from "@/customHooks/useRedirectWhenLoggedOut";
 import useOnSuccessfulHttpResponse from "@/customHooks/useOnSuccessfulHttpResponse";
 import useHideMessageOnNavAway from "@/customHooks/useHideMessageOnNavAway";
 import { isAddJobValid } from "@/validation/jobs/jobs-validators";
-import CurvedUnderlineTitle from "../Presentation/CurvedUnderline";
+import CurvedUnderlineTitle from "../presentation/CurvedUnderline";
 import { orange, red } from "@mui/material/colors";
 import NotificationBox from "../NotificationBox";
 import { StandardResponseInfo } from "@/models/types/DataFetching/StandardResponseInfo";

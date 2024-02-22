@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import SearchLessonPlans from "./SearchLessonPlans";
-import AutoCompleteMultiSelect from "../Forms/AutoCompleteMultiSelect";
+import AutoCompleteMultiSelect from "../forms/AutoCompleteMultiSelect";
 import { LessonPlanCategory } from "@/models/types/LessonPlans/LessonPlanCategory";
 import { LessonPlanSubCategory } from "@/models/types/LessonPlans/LessonPlanSubCategory";
 import { SxProps, Theme } from "@mui/material";

@@ -1,7 +1,7 @@
 import { Stack, SxProps, Theme, Typography } from "@mui/material";
 import { ReactNode } from "react";
 import { setSXValues } from "@/component-functions/set-sx-values";
-import CurvedUnderlineTitle from "../Presentation/CurvedUnderline";
+import CurvedUnderlineTitle from "../presentation/CurvedUnderline";
 import { orange } from "@mui/material/colors";
 
 export default function SearchLessonPlans({

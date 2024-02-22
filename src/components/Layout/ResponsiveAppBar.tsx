@@ -23,7 +23,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { useState } from "react";
 import React from "react";
 import { selectUserSessionStatus, userLogout } from "@/store";
-import SecureNextLink from "../Utils/SecureNextLink";
+import SecureNextLink from "../SecureNextLink";
 import InSecureNextLink from "next/link";
 import MenuButton from "../MenuButton";
 import LogoutIcon from "@mui/icons-material/Logout";

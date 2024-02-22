@@ -1,4 +1,4 @@
-import SearchAndDisplayLessonPlans from "@/components/LessonPlans/SearchAndDisplayLessonPlans";
+import SearchAndDisplayLessonPlans from "@/components/lesson-plans/SearchAndDisplayLessonPlans";
 import { fetchLessonPlans } from "@/server-only/lessonplans";
 
 export default async function LessonPlansPage() {

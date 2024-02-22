@@ -8,7 +8,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { Carousel } from "./Carousel/Carousel";
+import { Carousel } from "../carousel/Carousel";
 import { useMemo, useState } from "react";
 import { AutoPlay, Transitions } from "@/models/types/Carousel/AutoPlay";
 import { carouselStore } from "@/services/my-custom-event-emitter/SubscriberConfigObjectStore";
@@ -16,13 +16,13 @@ import {
   SubscriberConfigObject,
   emit,
 } from "@/services/my-custom-event-emitter/SubscriberService";
-import ColorFactory from "./Utils/ColorFactory";
+import ColorFactory from "../presentation/ColorFactory";
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
 import Image from "next/image";
 import {
   MediaQueryByTypographyVariant,
   getTypographyVariantSX,
-} from "./ThemeRegistry/responsive-typography-sx";
+} from "../theme-registry/responsive-typography-sx";
 import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";

@@ -1,8 +1,8 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import ThemeRegistry from "@/components/ThemeRegistry/ThemeRegistry";
-import ResponsiveAppBar from "@/components/Layout/ResponsiveAppBar";
-import ReduxProvider from "@/components/ReduxStore/ReduxProvider";
+import ThemeRegistry from "@/components/theme-registry/ThemeRegistry";
+import ResponsiveAppBar from "@/components/layout/ResponsiveAppBar";
+import ReduxProvider from "@/components/redux-store/ReduxProvider";
 import EssentialClientConfig from "@/components/EssentialClientConfig";
 import HomeIcon from "@mui/icons-material/Home";
 import StarIcon from "@mui/icons-material/Star";

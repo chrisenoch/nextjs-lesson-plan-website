@@ -22,7 +22,7 @@ import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import EuroOutlinedIcon from "@mui/icons-material/EuroOutlined";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import { Masonry } from "@mui/lab";
-import LoadingSpinner from "../Presentation/LoadingSpinner";
+import LoadingSpinner from "../presentation/LoadingSpinner";
 import { Job } from "@/models/types/Jobs/Jobs";
 import { setSXValues } from "@/component-functions/set-sx-values";
 

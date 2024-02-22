@@ -1,7 +1,7 @@
 "use client";
 
-import GeneralError from "@/components/Errors/GeneralError";
-import ThemeRegistry from "@/components/ThemeRegistry/ThemeRegistry";
+import GeneralError from "@/components/errors/GeneralError";
+import ThemeRegistry from "@/components/theme-registry/ThemeRegistry";
 import { Box } from "@mui/material";
 
 export const metadata = {

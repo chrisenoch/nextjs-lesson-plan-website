@@ -1,7 +1,7 @@
 import "server-only";
 import * as React from "react";
-import Hero from "@/components/Hero";
-import SearchAndDisplayLessonPlans from "@/components/LessonPlans/SearchAndDisplayLessonPlans";
+import Hero from "@/components/layout/Hero";
+import SearchAndDisplayLessonPlans from "@/components/lesson-plans/SearchAndDisplayLessonPlans";
 import { fetchLessonPlans } from "../server-only/lessonplans";
 
 export default async function HomePage() {
