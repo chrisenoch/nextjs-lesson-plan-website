@@ -10,22 +10,22 @@ export async function fetchCollection(
   try {
     const response = await fetch(url); // Used in place of a database.
     const data = await response.json();
-    return NextResponse.json(
-      {
-        message: successMessage,
-        isError: false,
-        [collectionName]: prepareFireBase(data),
-      },
-      { status: 200 }
-    );
-  } catch {
-    return NextResponse.json(
-      {
+    if (!response.ok) {
+      return {
         message: failureMessage,
         isError: true,
-      },
-      { status: 500 }
-    );
+      };
+    }
+    return {
+      message: successMessage,
+      isError: false,
+      [collectionName]: prepareFireBase(data),
+    };
+  } catch {
+    return {
+      message: failureMessage,
+      isError: true,
+    };
   }
 }
 

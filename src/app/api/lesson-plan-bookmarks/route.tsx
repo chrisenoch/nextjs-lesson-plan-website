@@ -20,14 +20,17 @@ export async function GET(request: NextRequest) {
     return errorResponse;
   }
 
-  const fetchBookmarksResponse = await fetchCollection(
+  const fetchBookmarksPayload = await fetchCollection(
     "https://nextjs-lesson-plans-default-rtdb.europe-west1.firebasedatabase.app/lesson-plan-bookmarks.json",
     "Successfully fetched lesson plan bookmarks",
     "Unable to fetch lesson plan bookmarks.",
     "bookmarks"
   );
 
-  const fetchBookmarksPayload = await fetchBookmarksResponse.json();
+  if (fetchBookmarksPayload.isError) {
+    return NextResponse.json(fetchBookmarksPayload, { status: 200 });
+  }
+
   const { bookmarks: allBookmarks } = fetchBookmarksPayload as {
     message: string;
     isError: boolean;
@@ -70,25 +73,16 @@ export async function POST(request: NextRequest) {
   }
 
   //Get bookmarks: If bookmark is present, delete bookmark. If bookmark is not present, add it.
-  let fetchBookmarksResponse;
-  let fetchBookmarksPayload;
-  try {
-    fetchBookmarksResponse = await fetchCollection(
-      "https://nextjs-lesson-plans-default-rtdb.europe-west1.firebasedatabase.app/lesson-plan-bookmarks.json",
-      "Successfully fetched lesson plan bookmarks",
-      "Unable to fetch lesson plan bookmarks.",
-      "bookmarks"
-    );
-    fetchBookmarksPayload = await fetchBookmarksResponse.json();
-  } catch {
-    return NextResponse.json(
-      {
-        message:
-          "Failed to save/unsave lesson plan due to an error. Please contact our support team.",
-        isError: true,
-      },
-      { status: 500 }
-    );
+
+  const fetchBookmarksPayload = await fetchCollection(
+    "https://nextjs-lesson-plans-default-rtdb.europe-west1.firebasedatabase.app/lesson-plan-bookmarks.json",
+    "Successfully fetched lesson plan bookmarks",
+    "Unable to fetch lesson plan bookmarks.",
+    "bookmarks"
+  );
+
+  if (fetchBookmarksPayload.isError) {
+    return NextResponse.json(fetchBookmarksPayload, { status: 500 });
   }
 
   const { bookmarks: allBookmarks } = fetchBookmarksPayload as {
