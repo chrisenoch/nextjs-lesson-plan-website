@@ -28,14 +28,13 @@ export function LogoutWarning({
         </DialogContentText>
         <Divider />
         <DialogContentText sx={{ mt: 1, mb: 1 }}>
-          - In reality, the refresh token would last longer than 2 minutes. This
-          notification shows what happens when the refresh token expires and the
-          user is automatically logged out.
+          - In reality, the refresh token would last longer than 10 minutes.
+          This shows what happens when the refresh token expires.
         </DialogContentText>
         <DialogContentText sx={{ mb: 1 }}>
           - You can check the console to see the automatic refresh token
-          behaviour I implemented with my cutom hook:
-          <strong> useAutoLogoutWhenJwtTokenExpires</strong>
+          behaviour I implemented with my custom hook:
+          <strong> useHandleLoginStatus</strong>
         </DialogContentText>
       </DialogContent>
       <DialogActions>
