@@ -1,36 +1,17 @@
-import LessonPlan from "@/components/lesson-plans-c/LessonPlan";
 import LessonPlanDynamic from "@/components/lesson-plans-c/LessonPlanDynamic";
+import { LessonPlanContent } from "@/models/types/LessonPlans/LessonPlanContent";
+import { getLessonPlanContents } from "@/server-only/lessonplans";
 
-async function getLessonPlanContents() {
-  let lessonPlans: {
-    id: string;
-    isPremium: boolean;
-    title: string;
-    summary: string;
-    warmer: string;
-    teachVocabulary: string;
-    vocabularyExercises: string;
-    teachSpeakingPhrases: string;
-    rolePlay: string;
-    feedback: string;
-    plenary: string;
-  }[];
-  try {
-    const response = await fetch(`http://localhost:3001/lesson-plan-content`);
-    if (!response.ok) {
-      throw new Error("Unable to fetch lesson plans");
-    }
-    lessonPlans = await response.json();
-  } catch (err) {
-    console.log(err);
-    lessonPlans = [];
-  }
-  //Get only the premium lesson plans.
-  //To do: get the correct ids directly from an endpoint.
-  lessonPlans = lessonPlans.filter((lessonPlan) => lessonPlan.id !== "1");
-  return lessonPlans;
+async function getGoldLessonPlanContents() {
+  let lessonPlanContents = await getLessonPlanContents();
+  const finalLessonPlanContents = lessonPlanContents.filter(
+    (lessonPlanContent: LessonPlanContent) =>
+      lessonPlanContent.id !== "-NrGKdP73hkXKS97Cce5" // To do: get these from server
+  );
+  return finalLessonPlanContents;
 }
-export default async function TestThree() {
-  const lessonPlanContents = await getLessonPlanContents();
+
+export default async function GoldLessonPlanPage() {
+  const lessonPlanContents = await getGoldLessonPlanContents();
   return <LessonPlanDynamic content={lessonPlanContents} />;
 }

@@ -2,13 +2,11 @@ import "server-only";
 import * as React from "react";
 import Hero from "@/components/layout-c/Hero";
 import SearchAndDisplayLessonPlans from "@/components/lesson-plans-c/SearchAndDisplayLessonPlans";
-import { fetchLessonPlans } from "../server-only/lessonplans";
+import { fetchLessonPlanCardSummaries } from "@/server-only/lessonplans";
 
 export default async function HomePage() {
-  const lessonPlans = await fetchLessonPlans();
+  const lessonPlans = await fetchLessonPlanCardSummaries();
   //const lessonPlans: any = [];
-
-  console.log("lessonPlans in page");
 
   return (
     <>

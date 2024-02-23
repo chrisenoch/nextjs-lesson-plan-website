@@ -1,10 +1,10 @@
 import "server-only";
-import { fetchLessonPlans } from "@/server-only/lessonplans";
 import SearchAndDisplayLessonPlans from "@/components/lesson-plans-c/SearchAndDisplayLessonPlans";
+import { firebaseGETCollection } from "@/server-only/route-functions";
+import { fetchLessonPlanCardSummaries } from "@/server-only/lessonplans";
 
 export default async function SavedLessonPlans() {
-  const lessonPlans = await fetchLessonPlans();
-  //const lessonPlans: any = [];
+  const lessonPlans = await fetchLessonPlanCardSummaries();
 
   return (
     <SearchAndDisplayLessonPlans

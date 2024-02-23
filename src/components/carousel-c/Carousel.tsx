@@ -74,9 +74,7 @@ export function Carousel({
   const LEFT_EVEN_ITEMS_TO_MOVE = Math.floor(TOTAL_ITEMS / 2) - 1;
   const RIGHT_ODD_ITEMS_TO_MOVE = Math.floor(TOTAL_ITEMS / 2) * -1;
   const RIGHT_EVEN_ITEMS_TO_MOVE = (TOTAL_ITEMS / 2) * -1;
-
   const firstItemIndex = isOdd ? Math.floor(TOTAL_ITEMS / 2) : TOTAL_ITEMS / 2;
-  console.log("firstItemIndex " + firstItemIndex);
 
   const [isOverFlowShown, setIsOverflowShown] = useState<boolean>(false); //isOverFlowShown is for dveelopment
   const [itemsOne, setItemsOne] = useState<CarouselElement[]>(items);
@@ -109,8 +107,6 @@ export function Carousel({
   } = initSXProps();
 
   const updateItemsOne = useCallback(() => {
-    console.log("Transition ended itemOneRow");
-    console.log("starting updateItemssOne");
     //Move items left
     if (itemOneRowRight === MAX_WIDTH_TO_RIGHT_OF_DISPLAY_ITEM) {
       let newItemsRowTwo = itemsTwo.slice();
@@ -171,7 +167,6 @@ export function Carousel({
         : newItemsRowOne.slice(0, RIGHT_EVEN_ITEMS_TO_MOVE);
       setItemsOne(newItemsRowOne);
     }
-    console.log("finished updateItemsOne");
   }, [
     LEFT_EVEN_ITEMS_TO_MOVE,
     LEFT_ODD_ITEMS_TO_MOVE,
@@ -186,8 +181,6 @@ export function Carousel({
   ]);
 
   const updateItemsTwo = useCallback(() => {
-    console.log("starting updateItemsTwo");
-    console.log("Transition ended itemTwoRow");
     //Move items left
     if (itemTwoRowRight === MAX_WIDTH_TO_RIGHT_OF_DISPLAY_ITEM) {
       let newItemsRowOne = itemsOne.slice();
@@ -246,7 +239,6 @@ export function Carousel({
         : newItemsRowTwo.slice(0, RIGHT_EVEN_ITEMS_TO_MOVE);
       setItemsTwo(newItemsRowTwo);
     }
-    console.log("finished updateItemsTwo");
   }, [
     LEFT_EVEN_ITEMS_TO_MOVE,
     LEFT_ODD_ITEMS_TO_MOVE,
@@ -288,9 +280,6 @@ export function Carousel({
       }, delay);
 
       autoPlayIntervalIds.current.push(intervalId);
-      console.log(
-        "number of interval ids " + autoPlayIntervalIds.current.length
-      );
     },
     [moveLeftWithAutoPlay, moveRightWithAutoPlay]
   );
@@ -504,7 +493,6 @@ export function Carousel({
 
   const moveLeftSubscription = useMemo(() => {
     function moveLeftManualControls() {
-      console.log("in moveLeftManualControls");
       stopAutoPlay();
       restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
       if (!disableControls.current) {
@@ -519,7 +507,6 @@ export function Carousel({
   }, [ITEM_DISPLAY_WIDTH, RESTART_AUTOPLAY_DELAY, restartAutoPlayUponIdle]);
   const moveRightSubscription = useMemo(() => {
     function moveRightManualControls() {
-      console.log("in moveRightManualControls");
       stopAutoPlay();
       restartAutoPlayUponIdle(RESTART_AUTOPLAY_DELAY);
       if (!disableControls.current) {
