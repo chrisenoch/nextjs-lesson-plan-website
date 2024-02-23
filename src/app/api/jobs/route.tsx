@@ -1,37 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
-import { checkPermissions } from "@/server-only/auth/check-permissions";
 import { getAccessTokenInfo } from "@/server-only/auth/get-access-token-info";
 import { isAddJobValid } from "@/validation/jobs/jobs-validators";
-import { getUserIdOrErrorResponse } from "@/server-only/auth/get-userId-or-error-response";
+import { getUserIdOnSuccessOrErrorResponse } from "@/server-only/auth/get-userId-or-error-response";
 import { AddedJob } from "@/models/types/Jobs/Jobs";
+import {
+  firebaseDELETE,
+  firebaseGETById,
+  firebaseGETCollection,
+  firebasePOST,
+} from "@/server-only/route-functions";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   console.log("in jobs get method");
 
-  //All users are granted GET access to all jobs
-  try {
-    const response = await fetch("http://localhost:3001/jobs"); // Used in place of a database.
-    const jobs = await response.json();
-    return NextResponse.json(
-      {
-        message: `Successfully fetched jobs.`,
-        isError: false,
-        jobs,
-      },
-      { status: 200 }
-    );
-  } catch {
-    return NextResponse.json(
-      {
-        message: "Unable to fetch jobs.",
-        isError: true,
-      },
-      { status: 500 }
-    );
+  const fetchJobsPayload = await firebaseGETCollection(
+    `${process.env.FIREBASE_DB_URL}/jobs.json`,
+    "Successfully fetched jobs.",
+    "Unable to fetch jobs."
+  );
+
+  if (fetchJobsPayload.isError) {
+    return NextResponse.json(fetchJobsPayload, { status: 500 });
   }
+  return NextResponse.json(fetchJobsPayload, { status: 200 });
 }
 
 export async function POST(request: NextRequest) {
@@ -46,26 +40,25 @@ export async function POST(request: NextRequest) {
   }: AddedJob = await request.json();
 
   //check user is logged in
-  const userIdOrErrorResponse = await getUserIdOrErrorResponse({
+  const { userId, errorResponse } = await getUserIdOnSuccessOrErrorResponse({
     request,
     failureMessage: "Error adding job.",
     validUserRoles: ["USER"],
     superAdmins: ["ADMIN"],
   });
-  let userId: string | undefined;
-  if (typeof userIdOrErrorResponse !== "string") {
-    return userIdOrErrorResponse;
-  } else {
-    userId = userIdOrErrorResponse;
+  if (errorResponse) {
+    return errorResponse;
   }
 
-  const { isFormValid } = isAddJobValid({
+  const jobFields = {
     jobTitle,
     jobDescription,
     jobLocation,
     jobCompany,
     jobSalary,
-  });
+  };
+
+  const { isFormValid } = isAddJobValid(jobFields);
   if (!isFormValid) {
     return NextResponse.json(
       {
@@ -78,54 +71,45 @@ export async function POST(request: NextRequest) {
   }
 
   //add to "database"
-  try {
-    // Used in place of a database.
-    const response = await fetch("http://localhost:3001/jobs", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId,
-        jobTitle,
-        jobDescription,
-        jobLocation,
-        jobCompany,
-        jobSalary,
-      }),
-    });
-    const job = await response.json();
+  const payload = await firebasePOST(
+    `${process.env.FIREBASE_DB_URL}/jobs.json`,
+    `Added job ${jobTitle}`,
+    "Failed to create job due to an error. Please contact our support team.",
+    {
+      userId,
+      ...jobFields,
+    }
+  );
 
-    return NextResponse.json(
-      {
-        message: `Added job ${jobTitle}`,
-        isError: false,
-        job,
-      },
-      { status: 200 }
-    );
-  } catch {
-    return NextResponse.json(
-      {
-        message:
-          "Failed to create job due to an error. Please contact our support team.",
-        isError: true,
-      },
-      { status: 500 }
-    );
+  if (payload.isError) {
+    return NextResponse.json(payload, { status: 500 });
   }
+  const job = {
+    id: payload.id,
+    userId,
+    ...jobFields,
+  };
+  return NextResponse.json(
+    {
+      message: `Added job ${jobTitle}`,
+      isError: false,
+      job,
+    },
+    { status: 200 }
+  );
 }
 
 export async function DELETE(request: NextRequest) {
   console.log("in jobs delete method");
-
   const id = await request.json();
-  let jobToBeDeleted;
-  let jobData;
-  try {
-    jobData = await fetch(`http://localhost:3001/jobs/${id}`); // Used in place of a database.
-    jobToBeDeleted = await jobData.json();
-  } catch {
+
+  const fetchJobPayload = await firebaseGETById(
+    `${process.env.FIREBASE_DB_URL}/jobs/${id}.json`,
+    "Successfully fetched job",
+    "Unable to fetch job."
+  );
+
+  if (fetchJobPayload.isError) {
     return NextResponse.json(
       {
         message: "Unable to delete job.",
@@ -134,8 +118,7 @@ export async function DELETE(request: NextRequest) {
       { status: 500 }
     );
   }
-
-  //get userId
+  const jobToBeDeleted = fetchJobPayload.entry;
   const accessTokenInfo = await getAccessTokenInfo({
     request,
     accessTokenName: process.env.ACCESS_TOKEN_COOKIE_NAME!,
@@ -158,31 +141,21 @@ export async function DELETE(request: NextRequest) {
   }
 
   //delete job from "database"
-  try {
-    //used in place of a database
-    const response = await fetch(`http://localhost:3001/jobs/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    return NextResponse.json(
-      {
-        message: `Job deleted`,
-        isError: false,
-        id,
-      },
-      { status: 200 }
-    );
-  } catch (error) {
-    return NextResponse.json(
-      {
-        message:
-          "Failed to delete job due to an error. Please contact our support team.",
-        isError: true,
-      },
-      { status: 500 }
-    );
+  const deleteJobPayload = await firebaseDELETE(
+    `${process.env.FIREBASE_DB_URL}/jobs/${id}.json`,
+    "Lesson plan deleted.",
+    "Failed to delete lesson plan due to an error. Please contact our support team."
+  );
+  if (deleteJobPayload.isError) {
+    return NextResponse.json(deleteJobPayload, { status: 500 });
   }
+
+  return NextResponse.json(
+    {
+      message: `Job deleted`,
+      isError: false,
+      id,
+    },
+    { status: 200 }
+  );
 }
