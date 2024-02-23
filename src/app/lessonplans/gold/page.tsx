@@ -1,6 +1,6 @@
 import LessonPlanDynamic from "@/components/lesson-plans-c/LessonPlanDynamic";
 import { LessonPlanContent } from "@/models/types/LessonPlans/LessonPlanContent";
-import { getLessonPlanContents } from "@/server-only/lessonplans";
+import { getLessonPlanContents } from "@/server-only/lessonplan-functions";
 
 async function getGoldLessonPlanContents() {
   let lessonPlanContents = await getLessonPlanContents();
