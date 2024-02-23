@@ -4,9 +4,18 @@ import "server-only";
 export async function firebaseGET(
   url: string,
   successMessage: string,
-  failureMessage: string,
-  collectionName: string
-) {
+  failureMessage: string
+): Promise<
+  | {
+      message: string;
+      isError: true;
+    }
+  | {
+      message: string;
+      isError: false;
+      data: any;
+    }
+> {
   try {
     const response = await fetch(url);
     const data = await response.json();
@@ -19,7 +28,7 @@ export async function firebaseGET(
     return {
       message: successMessage,
       isError: false,
-      [collectionName]: prepareFireBase(data),
+      data: prepareFireBase(data),
     };
   } catch {
     return {
@@ -33,9 +42,19 @@ export async function firebasePOST(
   url: string,
   successMessage: string,
   failureMessage: string,
-  collectionName: string,
+  //collectionName: string,
   dataToPost: any
-) {
+): Promise<
+  | {
+      message: string;
+      isError: true;
+    }
+  | {
+      message: string;
+      isError: false;
+      data: any;
+    }
+> {
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -54,7 +73,7 @@ export async function firebasePOST(
     return {
       message: successMessage,
       isError: false,
-      [collectionName]: data.name,
+      data: data.name,
     };
   } catch {
     return {

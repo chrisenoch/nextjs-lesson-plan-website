@@ -6,6 +6,7 @@ import {
   firebasePOST,
 } from "@/server-only/route-functions";
 import { NextRequest, NextResponse } from "next/server";
+import { LessonPlanBoomark } from "@/models/types/LessonPlans/LessonPlanBookmark";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -27,23 +28,18 @@ export async function GET(request: NextRequest) {
   const fetchBookmarksPayload = await firebaseGET(
     "https://nextjs-lesson-plans-default-rtdb.europe-west1.firebasedatabase.app/lesson-plan-bookmarks.json",
     "Successfully fetched lesson plan bookmarks.",
-    "Unable to fetch lesson plan bookmarks.",
-    "bookmarks"
+    "Unable to fetch lesson plan bookmarks."
   );
 
   if (fetchBookmarksPayload.isError) {
     return NextResponse.json(fetchBookmarksPayload, { status: 200 });
   }
 
-  const { bookmarks: allBookmarks } = fetchBookmarksPayload as {
-    message: string;
-    isError: boolean;
-    bookmarks: {
-      id: string;
-      userId: string;
-      lessonPlanId: string;
-    }[];
-  };
+  const {
+    data: allBookmarks,
+  }: {
+    data: LessonPlanBoomark[];
+  } = fetchBookmarksPayload;
 
   //only return the bookmarks for the current logged-in user
   const userBookmarks = allBookmarks.filter(
@@ -80,23 +76,18 @@ export async function POST(request: NextRequest) {
   const fetchBookmarksPayload = await firebaseGET(
     "https://nextjs-lesson-plans-default-rtdb.europe-west1.firebasedatabase.app/lesson-plan-bookmarks.json",
     "Successfully fetched lesson plan bookmarks.",
-    "Unable to fetch lesson plan bookmarks.",
-    "bookmarks"
+    "Unable to fetch lesson plan bookmarks."
   );
 
   if (fetchBookmarksPayload.isError) {
     return NextResponse.json(fetchBookmarksPayload, { status: 500 });
   }
 
-  const { bookmarks: allBookmarks } = fetchBookmarksPayload as {
-    message: string;
-    isError: boolean;
-    bookmarks: {
-      id: string;
-      userId: string;
-      lessonPlanId: string;
-    }[];
-  };
+  const {
+    data: allBookmarks,
+  }: {
+    data: LessonPlanBoomark[];
+  } = fetchBookmarksPayload;
 
   const userBookmarks = allBookmarks.filter(
     (bookmark) => bookmark.userId === userId
@@ -107,20 +98,15 @@ export async function POST(request: NextRequest) {
 
   //If the bookmark was not found, then it was not bookmarked in the first place. So we need to add the new bookmark.
   if (existingBookmark === undefined) {
-    const payload = (await firebasePOST(
+    const payload = await firebasePOST(
       "https://nextjs-lesson-plans-default-rtdb.europe-west1.firebasedatabase.app/lesson-plan-bookmarks.json",
       "Successfully added lesson plan bookmark.",
       "Failed to save lesson plan due to an error. Please contact our support team.",
-      "id",
       {
         userId,
         lessonPlanId,
       }
-    )) as {
-      message: string;
-      isError: boolean;
-      id: string;
-    };
+    );
 
     if (payload.isError) {
       return NextResponse.json(payload, { status: 500 });
@@ -129,7 +115,7 @@ export async function POST(request: NextRequest) {
     const newBookmarks = [
       ...userBookmarks,
       {
-        id: payload.id,
+        id: payload.data,
         userId,
         lessonPlanId,
       },
