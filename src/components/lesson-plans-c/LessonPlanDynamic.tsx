@@ -14,7 +14,9 @@ export default function LessonPlanDynamic({
 }) {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-  const lessonPlanContent = content.find((content) => content.id === id);
+  const lessonPlanContent = content.find(
+    (content) => content["lesson-plan-card-summary-id"] === id
+  );
 
   if (!lessonPlanContent) {
     redirect("/lessonplans");
