@@ -2,7 +2,7 @@ import "server-only";
 import * as React from "react";
 import Hero from "@/components/layout-c/Hero";
 import SearchAndDisplayLessonPlans from "@/components/lesson-plans-c/SearchAndDisplayLessonPlans";
-import { fetchLessonPlanCardSummaries } from "@/server-only/lessonplans";
+import { fetchLessonPlanCardSummaries } from "@/server-only/lessonplan-functions";
 
 export default async function HomePage() {
   const lessonPlans = await fetchLessonPlanCardSummaries();

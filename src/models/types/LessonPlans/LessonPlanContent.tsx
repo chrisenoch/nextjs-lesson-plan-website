@@ -1,13 +1,6 @@
-export type LessonPlanContent = {
+import { LessonPlan } from "./LessonPlan";
+
+export type LessonPlanContent = LessonPlan & {
   id: string;
-  isPremium: boolean;
-  title: string;
-  summary: string;
-  warmer: string;
-  teachVocabulary: string;
-  vocabularyExercises: string;
-  teachSpeakingPhrases: string;
-  rolePlay: string;
-  feedback: string;
-  plenary: string;
+  lessonPlanCardSummaryId: string;
 };
