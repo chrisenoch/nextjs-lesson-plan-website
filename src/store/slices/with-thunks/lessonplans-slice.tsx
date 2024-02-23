@@ -62,8 +62,6 @@ const lessonPlansSlice = createSlice({
       handleFulfilled("fetchBookmarks", state, action);
 
       if (!action.payload.isError) {
-        console.log("action.paylaod in fetchBookmarks");
-        console.log(action.payload);
         state.bookmarks = action.payload.bookmarks;
         state.fetchBookmarks.isError = false;
       } else {

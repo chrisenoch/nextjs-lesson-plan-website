@@ -4,6 +4,7 @@ import {
   firebaseGETCollection,
   firebaseDELETE,
   firebasePOST,
+  prepareFireBase,
 } from "@/server-only/route-functions";
 import { NextRequest, NextResponse } from "next/server";
 import { LessonPlanBoomark } from "@/models/types/LessonPlans/LessonPlanBookmark";
@@ -58,7 +59,6 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   console.log("in lesson-plan-bookmarks post method");
-
   const lessonPlanId = await request.json();
   //check user is logged in
   const { userId, errorResponse } = await getUserIdOnSuccessOrErrorResponse({

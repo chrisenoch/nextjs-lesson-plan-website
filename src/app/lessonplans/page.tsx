@@ -1,8 +1,8 @@
 import SearchAndDisplayLessonPlans from "@/components/lesson-plans-c/SearchAndDisplayLessonPlans";
-import { fetchLessonPlans } from "@/server-only/lessonplans";
+import { fetchLessonPlanCardSummaries } from "@/server-only/lessonplans";
 
 export default async function LessonPlansPage() {
-  const lessonPlans = await fetchLessonPlans();
+  const lessonPlans = await fetchLessonPlanCardSummaries();
 
   return (
     <SearchAndDisplayLessonPlans

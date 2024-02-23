@@ -19,6 +19,7 @@ export async function firebaseGETCollection(
     const response = await fetch(url);
     const data = await response.json();
     if (!response.ok) {
+      console.log("response not ok");
       return {
         message: failureMessage,
         isError: true,
@@ -148,7 +149,17 @@ export async function firebaseDELETE(
   }
 }
 
-function prepareFireBase(data: { [key: string]: { [key: string]: any } }) {
+export function prepareFireBase(
+  data:
+    | {
+        [key: string]: { [key: string]: any };
+      }
+    | null
+    | undefined
+) {
+  if (data === undefined || data === null) {
+    return [];
+  }
   const transformedData = Object.entries(data).map(([id, otherFields]) => {
     const onlyId: { id?: string } = {};
     onlyId.id = id;
