@@ -1,7 +1,7 @@
 import { getLessonPlanBookmarks } from "@/db-fake";
 import { getUserIdOnSuccessOrErrorResponse } from "@/server-only/auth/get-userId-or-error-response";
 import {
-  firebaseGET,
+  firebaseGETCollection,
   firebaseDELETE,
   firebasePOST,
 } from "@/server-only/route-functions";
@@ -25,14 +25,14 @@ export async function GET(request: NextRequest) {
     return errorResponse;
   }
 
-  const fetchBookmarksPayload = await firebaseGET(
+  const fetchBookmarksPayload = await firebaseGETCollection(
     "https://nextjs-lesson-plans-default-rtdb.europe-west1.firebasedatabase.app/lesson-plan-bookmarks.json",
     "Successfully fetched lesson plan bookmarks.",
     "Unable to fetch lesson plan bookmarks."
   );
 
   if (fetchBookmarksPayload.isError) {
-    return NextResponse.json(fetchBookmarksPayload, { status: 200 });
+    return NextResponse.json(fetchBookmarksPayload, { status: 500 });
   }
 
   const {
@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
   }
 
   //Get bookmarks: If bookmark is present, delete bookmark. If bookmark is not present, add it.
-  const fetchBookmarksPayload = await firebaseGET(
+  const fetchBookmarksPayload = await firebaseGETCollection(
     "https://nextjs-lesson-plans-default-rtdb.europe-west1.firebasedatabase.app/lesson-plan-bookmarks.json",
     "Successfully fetched lesson plan bookmarks.",
     "Unable to fetch lesson plan bookmarks."

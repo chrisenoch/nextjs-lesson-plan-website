@@ -51,6 +51,9 @@ const jobsSlice = createSlice({
       handleFulfilled("addJob", state, action);
 
       if (!action.payload.isError) {
+        console.log("action.payload addJob");
+        console.log(action.payload);
+
         console.log("action.payload.job");
         console.log(action.payload.job);
 
@@ -72,7 +75,7 @@ const jobsSlice = createSlice({
       handleFulfilled("fetchJobs", state, action);
 
       if (!action.payload.isError) {
-        state.jobs = action.payload.jobs;
+        state.jobs = action.payload.data;
         state.fetchJobs.isError = false;
       } else {
         state.fetchJobs.isError = true;

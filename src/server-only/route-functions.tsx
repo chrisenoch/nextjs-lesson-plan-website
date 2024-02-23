@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import "server-only";
 
-export async function firebaseGET(
+export async function firebaseGETCollection(
   url: string,
   successMessage: string,
   failureMessage: string
@@ -38,11 +38,47 @@ export async function firebaseGET(
   }
 }
 
+export async function firebaseGETById(
+  url: string,
+  successMessage: string,
+  failureMessage: string
+): Promise<
+  | {
+      message: string;
+      isError: true;
+    }
+  | {
+      message: string;
+      isError: false;
+      data: any;
+    }
+> {
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    if (!response.ok) {
+      return {
+        message: failureMessage,
+        isError: true,
+      };
+    }
+    return {
+      message: successMessage,
+      isError: false,
+      data,
+    };
+  } catch {
+    return {
+      message: failureMessage,
+      isError: true,
+    };
+  }
+}
+
 export async function firebasePOST(
   url: string,
   successMessage: string,
   failureMessage: string,
-  //collectionName: string,
   dataToPost: any
 ): Promise<
   | {
