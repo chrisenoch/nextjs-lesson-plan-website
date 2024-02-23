@@ -75,7 +75,7 @@ const jobsSlice = createSlice({
       handleFulfilled("fetchJobs", state, action);
 
       if (!action.payload.isError) {
-        state.jobs = action.payload.data;
+        state.jobs = action.payload.collection;
         state.fetchJobs.isError = false;
       } else {
         state.fetchJobs.isError = true;

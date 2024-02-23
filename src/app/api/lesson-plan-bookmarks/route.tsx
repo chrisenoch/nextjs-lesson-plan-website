@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
   }
 
   const fetchBookmarksPayload = await firebaseGETCollection(
-    "https://nextjs-lesson-plans-default-rtdb.europe-west1.firebasedatabase.app/lesson-plan-bookmarks.json",
+    `${process.env.FIREBASE_DB_URL}/lesson-plan-bookmarks.json`,
     "Successfully fetched lesson plan bookmarks.",
     "Unable to fetch lesson plan bookmarks."
   );
@@ -36,9 +36,9 @@ export async function GET(request: NextRequest) {
   }
 
   const {
-    data: allBookmarks,
+    collection: allBookmarks,
   }: {
-    data: LessonPlanBoomark[];
+    collection: LessonPlanBoomark[];
   } = fetchBookmarksPayload;
 
   //only return the bookmarks for the current logged-in user
@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
 
   //Get bookmarks: If bookmark is present, delete bookmark. If bookmark is not present, add it.
   const fetchBookmarksPayload = await firebaseGETCollection(
-    "https://nextjs-lesson-plans-default-rtdb.europe-west1.firebasedatabase.app/lesson-plan-bookmarks.json",
+    `${process.env.FIREBASE_DB_URL}/lesson-plan-bookmarks.json`,
     "Successfully fetched lesson plan bookmarks.",
     "Unable to fetch lesson plan bookmarks."
   );
@@ -84,9 +84,9 @@ export async function POST(request: NextRequest) {
   }
 
   const {
-    data: allBookmarks,
+    collection: allBookmarks,
   }: {
-    data: LessonPlanBoomark[];
+    collection: LessonPlanBoomark[];
   } = fetchBookmarksPayload;
 
   const userBookmarks = allBookmarks.filter(
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
   //If the bookmark was not found, then it was not bookmarked in the first place. So we need to add the new bookmark.
   if (existingBookmark === undefined) {
     const payload = await firebasePOST(
-      "https://nextjs-lesson-plans-default-rtdb.europe-west1.firebasedatabase.app/lesson-plan-bookmarks.json",
+      `${process.env.FIREBASE_DB_URL}/lesson-plan-bookmarks.json`,
       "Successfully added lesson plan bookmark.",
       "Failed to save lesson plan due to an error. Please contact our support team.",
       {
@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
     const newBookmarks = [
       ...userBookmarks,
       {
-        id: payload.data,
+        id: payload.id,
         userId,
         lessonPlanId,
       },
@@ -133,7 +133,7 @@ export async function POST(request: NextRequest) {
 
   //If get to here, we need to delete the bookmark
   const payload = await firebaseDELETE(
-    `https://nextjs-lesson-plans-default-rtdb.europe-west1.firebasedatabase.app/lesson-plan-bookmarks/${existingBookmark.id}.json`,
+    `${process.env.FIREBASE_DB_URL}/lesson-plan-bookmarks/${existingBookmark.id}.json`,
     "Lesson plan deleted.",
     "Failed to delete lesson plan due to an error. Please contact our support team."
   );

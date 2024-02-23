@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { checkPermissions } from "@/server-only/auth/check-permissions";
 import { getAccessTokenInfo } from "@/server-only/auth/get-access-token-info";
 import { isAddJobValid } from "@/validation/jobs/jobs-validators";
 import { getUserIdOnSuccessOrErrorResponse } from "@/server-only/auth/get-userId-or-error-response";
@@ -18,7 +17,7 @@ export async function GET() {
   console.log("in jobs get method");
 
   const fetchJobsPayload = await firebaseGETCollection(
-    "https://nextjs-lesson-plans-default-rtdb.europe-west1.firebasedatabase.app/jobs.json",
+    `${process.env.FIREBASE_DB_URL}/jobs.json`,
     "Successfully fetched jobs.",
     "Unable to fetch jobs."
   );
@@ -71,7 +70,7 @@ export async function POST(request: NextRequest) {
 
   //add to "database"
   const payload = await firebasePOST(
-    "https://nextjs-lesson-plans-default-rtdb.europe-west1.firebasedatabase.app/jobs.json",
+    `${process.env.FIREBASE_DB_URL}/jobs.json`,
     `Added job ${jobTitle}`,
     "Failed to create job due to an error. Please contact our support team.",
     {
@@ -88,7 +87,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(payload, { status: 500 });
   }
   const job = {
-    id: payload.data,
+    id: payload.id,
     userId,
     jobTitle,
     jobDescription,
@@ -110,13 +109,13 @@ export async function DELETE(request: NextRequest) {
   console.log("in jobs delete method");
   const id = await request.json();
 
-  const fetchJobsPayload = await firebaseGETById(
-    `https://nextjs-lesson-plans-default-rtdb.europe-west1.firebasedatabase.app/jobs/${id}.json`,
+  const fetchJobPayload = await firebaseGETById(
+    `${process.env.FIREBASE_DB_URL}/jobs/${id}.json`,
     "Successfully fetched job",
     "Unable to fetch job."
   );
 
-  if (fetchJobsPayload.isError) {
+  if (fetchJobPayload.isError) {
     return NextResponse.json(
       {
         message: "Unable to delete job.",
@@ -125,7 +124,7 @@ export async function DELETE(request: NextRequest) {
       { status: 500 }
     );
   }
-  const jobToBeDeleted = fetchJobsPayload.data;
+  const jobToBeDeleted = fetchJobPayload.entry;
   const accessTokenInfo = await getAccessTokenInfo({
     request,
     accessTokenName: process.env.ACCESS_TOKEN_COOKIE_NAME!,
@@ -149,7 +148,7 @@ export async function DELETE(request: NextRequest) {
 
   //delete job from "database"
   const deleteJobPayload = await firebaseDELETE(
-    `https://nextjs-lesson-plans-default-rtdb.europe-west1.firebasedatabase.app/lesson-plan-bookmarks/${id}.json`,
+    `${process.env.FIREBASE_DB_URL}/jobs/${id}.json`,
     "Lesson plan deleted.",
     "Failed to delete lesson plan due to an error. Please contact our support team."
   );

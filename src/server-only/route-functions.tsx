@@ -1,4 +1,3 @@
-import { NextResponse } from "next/server";
 import "server-only";
 
 export async function firebaseGETCollection(
@@ -13,7 +12,7 @@ export async function firebaseGETCollection(
   | {
       message: string;
       isError: false;
-      data: any;
+      collection: any;
     }
 > {
   try {
@@ -28,7 +27,7 @@ export async function firebaseGETCollection(
     return {
       message: successMessage,
       isError: false,
-      data: prepareFireBase(data),
+      collection: prepareFireBase(data),
     };
   } catch {
     return {
@@ -50,7 +49,7 @@ export async function firebaseGETById(
   | {
       message: string;
       isError: false;
-      data: any;
+      entry: any;
     }
 > {
   try {
@@ -65,7 +64,7 @@ export async function firebaseGETById(
     return {
       message: successMessage,
       isError: false,
-      data,
+      entry: data,
     };
   } catch {
     return {
@@ -88,7 +87,7 @@ export async function firebasePOST(
   | {
       message: string;
       isError: false;
-      data: any;
+      id: any;
     }
 > {
   try {
@@ -109,7 +108,7 @@ export async function firebasePOST(
     return {
       message: successMessage,
       isError: false,
-      data: data.name,
+      id: data.name,
     };
   } catch {
     return {
