@@ -17,6 +17,7 @@ import { Fragment, useMemo } from "react";
 import InsecureNextLink from "next/link";
 import CurvedUnderlineTitle from "../presentation-c/CurvedUnderline";
 import { orange } from "@mui/material/colors";
+import { LessonPlan } from "@/models/types/LessonPlans/LessonPlan";
 
 export default function LessonPlan({
   isPremium,
@@ -29,30 +30,19 @@ export default function LessonPlan({
   rolePlay,
   feedback,
   plenary,
-}: {
-  isPremium: boolean;
-  title: string;
-  summary: string;
-  warmer: string;
-  teachVocabulary: string;
-  vocabularyExercises: string;
-  teachSpeakingPhrases: string;
-  rolePlay: string;
-  feedback: string;
-  plenary: string;
-}) {
+}: LessonPlan) {
   console.log("LessonPlan rendered");
-  useRedirectWhenLoggedOut("/auth/signin", isPremium);
+  //useRedirectWhenLoggedOut("/auth/signin", isPremium);
   const theme = useTheme();
 
   const memoizedTargetElementIds = useMemo(
     () => [
       "summary",
       "warmer",
-      "teach-vocabulary",
-      "vocabulary-exercise",
-      "teach-speaking-phrases",
-      "role-play",
+      "teachVocabulary",
+      "vocabularyExercise",
+      "teachSpeakingPhrases",
+      "rolePlay",
       "feedback",
       "plenary",
     ],
@@ -60,7 +50,6 @@ export default function LessonPlan({
   );
 
   let activeIntersection = useScrollSpy(memoizedTargetElementIds);
-  //let activeIntersection: any = null;
 
   const listItems: {
     href: string;
@@ -68,42 +57,42 @@ export default function LessonPlan({
     targetElementId: string;
   }[] = [
     {
-      href: "#summary-floating",
+      href: "#summaryFloating",
       listItemTextPrimary: "Summary",
       targetElementId: "summary",
     },
     {
-      href: "#warmer-floating",
+      href: "#warmerFloating",
       listItemTextPrimary: "Warmer",
       targetElementId: "warmer",
     },
     {
-      href: "#teach-vocabulary-floating",
+      href: "#teachVocabularyFloating",
       listItemTextPrimary: "Teach Vocabulary",
-      targetElementId: "teach-vocabulary",
+      targetElementId: "teachVocabulary",
     },
     {
-      href: "#vocabulary-exercise-floating",
+      href: "#vocabularyExerciseFloating",
       listItemTextPrimary: "Vocabulary Exercise",
-      targetElementId: "vocabulary-exercise",
+      targetElementId: "vocabularyExercise",
     },
     {
-      href: "#teach-speaking-phrases-floating",
+      href: "#teachSpeakingPhrasesFloating",
       listItemTextPrimary: "Teach Speaking Phrases",
-      targetElementId: "teach-speaking-phrases",
+      targetElementId: "teachSpeakingPhrases",
     },
     {
-      href: "#role-play-floating",
+      href: "#rolePlayFloating",
       listItemTextPrimary: "Role Play",
-      targetElementId: "role-play",
+      targetElementId: "rolePlay",
     },
     {
-      href: "#feedback-floating",
+      href: "#feedbackFloating",
       listItemTextPrimary: "Feedback",
       targetElementId: "feedback",
     },
     {
-      href: "#plenary",
+      href: "#plenaryFloating",
       listItemTextPrimary: "Plenary",
       targetElementId: "plenary",
     },
@@ -116,43 +105,43 @@ export default function LessonPlan({
     content: string;
   }[] = [
     {
-      floatingId: "warmer-floating",
+      floatingId: "warmerFloating",
       sectionTitle: "Warmer",
       id: "warmer",
       content: warmer,
     },
     {
-      floatingId: "teach-vocabulary-floating",
+      floatingId: "teachVocabularyFloating",
       sectionTitle: "Teach Vocabulary",
-      id: "teach-vocabulary",
+      id: "teachVocabulary",
       content: teachVocabulary,
     },
     {
-      floatingId: "vocabulary-exercise-floating",
+      floatingId: "vocabularyExerciseFloating",
       sectionTitle: "Vocabulary Exercise",
-      id: "vocabulary-exercise",
+      id: "vocabularyExercise",
       content: vocabularyExercises,
     },
     {
-      floatingId: "teach-speaking-phrases-floating",
+      floatingId: "teachSpeakingPhrasesFloating",
       sectionTitle: "Teach Speaking Phrases",
-      id: "teach-speaking-phrases",
+      id: "teachSpeakingPhrases",
       content: teachSpeakingPhrases,
     },
     {
-      floatingId: "role-play-floating",
+      floatingId: "rolePlayFloating",
       sectionTitle: "Role Play",
-      id: "role-play",
+      id: "rolePlay",
       content: rolePlay,
     },
     {
-      floatingId: "feedback-floating",
+      floatingId: "feedbackFloating",
       sectionTitle: "Feedback",
       id: "feedback",
       content: feedback,
     },
     {
-      floatingId: "plenary-floating",
+      floatingId: "plenaryFloating",
       sectionTitle: "Plenary",
       id: "plenary",
       content: plenary,

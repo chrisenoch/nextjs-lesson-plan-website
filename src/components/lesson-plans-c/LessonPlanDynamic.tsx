@@ -2,6 +2,7 @@
 
 import { redirect, useSearchParams } from "next/navigation";
 import LessonPlan from "./LessonPlan";
+import { LessonPlanContent } from "@/models/types/LessonPlans/LessonPlanContent";
 
 /**
  * Renders the appropriate lesson plan that matches the id specified in the query parameter.
@@ -10,12 +11,12 @@ import LessonPlan from "./LessonPlan";
 export default function LessonPlanDynamic({
   content,
 }: {
-  content: { id: string; [key: string]: any }[];
+  content: LessonPlanContent[];
 }) {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const lessonPlanContent = content.find(
-    (content) => content["lesson-plan-card-summary-id"] === id
+    (content) => content.lessonPlanCardSummaryId === id
   );
 
   if (!lessonPlanContent) {
@@ -28,10 +29,10 @@ export default function LessonPlanDynamic({
       title={lessonPlanContent.title}
       summary={lessonPlanContent.summary}
       warmer={lessonPlanContent.warmer}
-      teachVocabulary={lessonPlanContent["teach-vocabulary"]}
-      vocabularyExercises={lessonPlanContent["vocabulary-exercises"]}
-      teachSpeakingPhrases={lessonPlanContent["teach-speaking-phrases"]}
-      rolePlay={lessonPlanContent["role-play"]}
+      teachVocabulary={lessonPlanContent.teachVocabulary}
+      vocabularyExercises={lessonPlanContent.vocabularyExercises}
+      teachSpeakingPhrases={lessonPlanContent.teachSpeakingPhrases}
+      rolePlay={lessonPlanContent.rolePlay}
       feedback={lessonPlanContent.feedback}
       plenary={lessonPlanContent.plenary}
     />
