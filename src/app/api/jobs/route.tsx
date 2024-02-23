@@ -50,13 +50,15 @@ export async function POST(request: NextRequest) {
     return errorResponse;
   }
 
-  const { isFormValid } = isAddJobValid({
+  const jobFields = {
     jobTitle,
     jobDescription,
     jobLocation,
     jobCompany,
     jobSalary,
-  });
+  };
+
+  const { isFormValid } = isAddJobValid(jobFields);
   if (!isFormValid) {
     return NextResponse.json(
       {
@@ -75,11 +77,7 @@ export async function POST(request: NextRequest) {
     "Failed to create job due to an error. Please contact our support team.",
     {
       userId,
-      jobTitle,
-      jobDescription,
-      jobLocation,
-      jobCompany,
-      jobSalary,
+      ...jobFields,
     }
   );
 
@@ -89,11 +87,7 @@ export async function POST(request: NextRequest) {
   const job = {
     id: payload.id,
     userId,
-    jobTitle,
-    jobDescription,
-    jobLocation,
-    jobCompany,
-    jobSalary,
+    ...jobFields,
   };
   return NextResponse.json(
     {
