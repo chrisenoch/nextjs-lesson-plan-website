@@ -19,6 +19,10 @@ export default function LessonPlanDynamic({
     (content) => content.lessonPlanCardSummaryId === id
   );
 
+  console.log("id in LessonPlanDynamic " + id);
+  console.log("content in LessonPlanDynamic ");
+  console.log(content);
+
   if (!lessonPlanContent) {
     redirect("/lessonplans");
   }
