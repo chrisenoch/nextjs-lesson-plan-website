@@ -15,7 +15,7 @@ export async function fetchLessonPlanCardSummaries() {
 
 export async function getLessonPlanContents() {
   const fetchLessonPlansPayload = await firebaseGETCollection(
-    `${process.env.FIREBASE_DB_URL}/lesson-plan-content.json`,
+    `${process.env.FIREBASE_DB_URL}/lesson-plans-content.json`,
     "Successfully fetched lesson plan contents.",
     "Unable to fetch lesson plan contents."
   );
