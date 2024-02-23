@@ -215,7 +215,7 @@ export default function Hero() {
               </Typography>
               <Button
                 download="Free lesson plans"
-                href={"http://localhost:3000/lessonplans/free-lesson-plans.txt"}
+                href={`${process.env.NEXT_PUBLIC_BASE_URL}/lessonplans/free-lesson-plans.txt`}
                 component="a"
                 variant={"contained"}
                 size="large"
