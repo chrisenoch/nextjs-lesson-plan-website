@@ -13,5 +13,7 @@ async function getFreeLessonPlanContents() {
 
 export default async function FreeLessonPlanPage() {
   const lessonPlanContents = await getFreeLessonPlanContents();
+  console.log("lessonplanContent in FreeLessonPlansPage");
+  console.log(lessonPlanContents);
   return <LessonPlanDynamic content={lessonPlanContents} />;
 }

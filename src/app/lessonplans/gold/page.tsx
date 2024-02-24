@@ -13,5 +13,7 @@ async function getGoldLessonPlanContents() {
 
 export default async function GoldLessonPlanPage() {
   const lessonPlanContents = await getGoldLessonPlanContents();
+  console.log("lessonplanContent in GoldLessonPlansPage");
+  console.log(lessonPlanContents);
   return <LessonPlanDynamic content={lessonPlanContents} />;
 }
