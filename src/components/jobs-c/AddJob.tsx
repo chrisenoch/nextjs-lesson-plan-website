@@ -72,6 +72,11 @@ export function AddJob() {
   useOnSuccessfulHttpResponse(addJobInfo, clearForm);
   const shouldHideMessage = useHideMessageOnNavAway(addJobInfo);
 
+  const timerConfig = {
+    timeBeforeDestroyedInMs: 5000,
+    equalityProp: addJobInfo,
+  };
+
   const inputToValidate = {
     jobTitle,
     jobDescription,
@@ -285,6 +290,7 @@ export function AddJob() {
 
           {!shouldHideMessage && addJobInfo.message && (
             <NotificationBox
+              timer={timerConfig}
               message={addJobInfo.message}
               sxOuterContainer={{
                 marginTop: 2,

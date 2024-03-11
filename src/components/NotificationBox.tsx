@@ -1,7 +1,9 @@
+"use client";
+
 import { setSXValues } from "@/component-functions/set-sx-values";
 import { Stack, Typography, Box, SxProps, Theme } from "@mui/material";
 import { blue, green, red } from "@mui/material/colors";
-import { ReactElement } from "react";
+import { ReactElement, useEffect, useRef, useState } from "react";
 
 export default function NotificationBox({
   title,
@@ -14,6 +16,7 @@ export default function NotificationBox({
   titleVariant,
   variant,
   children,
+  timer,
   ...props
 }: {
   title?: string;
@@ -26,7 +29,37 @@ export default function NotificationBox({
   sxMessage?: SxProps<Theme>;
   variant?: "success" | "info" | "error";
   children?: ReactElement;
+  timer?: { timeBeforeDestroyedInMs: number; equalityProp: any };
 }) {
+  const [shouldBeInDOM, setShouldBeInDOM] = useState<boolean>(true);
+  const [previousEqualityProp, setPreviousEqualityProp] = useState<any>(
+    timer?.equalityProp
+  );
+  const hasTimerRun = useRef<boolean>(false);
+
+  useEffect(() => {
+    let timeOut: any;
+    if (
+      timer &&
+      (!hasTimerRun.current || previousEqualityProp !== timer.equalityProp)
+    ) {
+      console.log("in if stmt");
+      console.log("timer");
+      console.log(timer);
+      hasTimerRun.current = true;
+      timeOut = setTimeout(() => {
+        console.log("setting should be in dom to false");
+        setShouldBeInDOM(false);
+        setPreviousEqualityProp(timer.equalityProp);
+      }, timer.timeBeforeDestroyedInMs);
+    }
+
+    return () => {
+      hasTimerRun.current = false;
+      timeOut && clearTimeout(timeOut);
+    };
+  }, [previousEqualityProp, timer]);
+
   let titleComponentFinal;
   if (!titleComponent) {
     titleComponentFinal = "p";
@@ -128,22 +161,26 @@ export default function NotificationBox({
     },
   ]);
 
-  return (
-    <Stack {...props} sx={sxOuterContainerFinal}>
-      <Stack sx={sxInnerContainerFinal}>
-        {title && (
-          <Typography
-            component={titleComponentFinal}
-            variant={titleVariantFinal}
-            sx={sxTitleFinal}>
-            {title}{" "}
-          </Typography>
-        )}
-        <Box component="p" sx={sxMessageFinal}>
-          {message}
-        </Box>
-        {children}
+  if (shouldBeInDOM) {
+    return (
+      <Stack {...props} sx={sxOuterContainerFinal}>
+        <Stack sx={sxInnerContainerFinal}>
+          {title && (
+            <Typography
+              component={titleComponentFinal}
+              variant={titleVariantFinal}
+              sx={sxTitleFinal}>
+              {title}{" "}
+            </Typography>
+          )}
+          <Box component="p" sx={sxMessageFinal}>
+            {message}
+          </Box>
+          {children}
+        </Stack>
       </Stack>
-    </Stack>
-  );
+    );
+  } else {
+    return null;
+  }
 }
