@@ -5,6 +5,10 @@ import { Stack, Typography, Box, SxProps, Theme } from "@mui/material";
 import { blue, green, red } from "@mui/material/colors";
 import { ReactElement, useEffect, useRef, useState } from "react";
 
+/**
+ *
+ * @param timer - timeBeforeDestroyedInMs - time before the NotificationBox is removed from the DOM. equalityProp - when the equality prop changes, the NotificationBox is readded to the DOM and the timer to destroy it restarts.
+ */
 export default function NotificationBox({
   title,
   message,
@@ -43,12 +47,8 @@ export default function NotificationBox({
       timer &&
       (!hasTimerRun.current || previousEqualityProp !== timer.equalityProp)
     ) {
-      console.log("in if stmt");
-      console.log("timer");
-      console.log(timer);
       hasTimerRun.current = true;
       timeOut = setTimeout(() => {
-        console.log("setting should be in dom to false");
         setShouldBeInDOM(false);
         setPreviousEqualityProp(timer.equalityProp);
       }, timer.timeBeforeDestroyedInMs);
