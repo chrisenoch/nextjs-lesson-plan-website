@@ -83,11 +83,11 @@ export default function LessonPlanCard({
         borderRadius: 4,
       }}>
       <CardMedia sx={sxImageFinal}>
-        {/* <DynamicImage /> */}
-        <Skeleton
+        <DynamicImage />
+        {/* <Skeleton
           width="100%"
           height="200px"
-          sx={{ transform: "scale(1,1)", animation: "none" }}></Skeleton>
+          sx={{ transform: "scale(1,1)", animation: "none" }}></Skeleton> */}
         {/* <Image
           alt={imageAlt}
           src={imageURL}
