@@ -1,5 +1,4 @@
 import * as React from "react";
-import Image from "next/image";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -7,14 +6,12 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import {
   Avatar,
-  IconButton,
   Divider,
   Stack,
   Chip,
   SxProps,
   Theme,
   CardMedia,
-  Skeleton,
 } from "@mui/material";
 import Circle from "@mui/icons-material/Circle";
 import Diamond from "@mui/icons-material/Diamond";
@@ -83,22 +80,12 @@ export default function LessonPlanCard({
         borderRadius: 4,
       }}>
       <CardMedia sx={sxImageFinal}>
-        <DynamicImage />
-        {/* <Skeleton
-          width="100%"
-          height="200px"
-          sx={{ transform: "scale(1,1)", animation: "none" }}></Skeleton> */}
-        {/* <Image
+        <DynamicImage
           alt={imageAlt}
           src={imageURL}
-          width={640}
-          height={480}
-          style={{
-            height: "100%",
-            width: "100%",
-            objectFit: "cover",
-          }}
-        /> */}
+          renderedWidth={640}
+          renderedHeight={480}
+        />
       </CardMedia>
 
       <CardContent>

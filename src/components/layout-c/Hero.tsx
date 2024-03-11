@@ -101,7 +101,7 @@ export default function Hero() {
         key: 1,
         element: (
           <Image
-            key={1}
+            placeholder="blur"
             alt="Woman relaxing on hammock"
             src={womanOnHammock}
             priority
@@ -119,6 +119,7 @@ export default function Hero() {
         key: 2,
         element: (
           <Image
+            placeholder="blur"
             alt="Backpackers with a mountain in the background"
             src={backpackers}
             width={2400}
@@ -135,6 +136,7 @@ export default function Hero() {
         key: 3,
         element: (
           <Image
+            placeholder="blur"
             alt="Four women drinking and smilingk"
             src={fourWomenWithDrinks}
             width={2400}
@@ -151,6 +153,7 @@ export default function Hero() {
         key: 4,
         element: (
           <Image
+            placeholder="blur"
             alt="Man in the sea reading a book"
             src={manInWaterReadingBook}
             width={2400}

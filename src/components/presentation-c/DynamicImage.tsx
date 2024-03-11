@@ -2,7 +2,17 @@
 import { Skeleton } from "@mui/material";
 import Image from "next/image";
 import { useRef, useState } from "react";
-export default function CurvedUnderlineTitle() {
+export default function CurvedUnderlineTitle({
+  src,
+  alt,
+  renderedWidth,
+  renderedHeight,
+}: {
+  src: string;
+  alt: string;
+  renderedWidth: number;
+  renderedHeight: number;
+}) {
   const imageRef = useRef<HTMLImageElement>(null);
   const [imageVisibility, setImageVisibility] = useState<"hidden" | "visible">(
     "hidden"
@@ -31,10 +41,10 @@ export default function CurvedUnderlineTitle() {
           setImageVisibility("visible");
         }}
         ref={imageRef}
-        alt="Driverless Cars"
-        src="https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg"
-        width={640}
-        height={480}
+        alt={alt}
+        src={src}
+        width={renderedWidth}
+        height={renderedHeight}
         style={{
           height: "100%",
           width: "100%",
@@ -44,33 +54,4 @@ export default function CurvedUnderlineTitle() {
       />
     </Skeleton>
   );
-
-  //   return (
-  //     <Box
-  //       display="inline-block"
-  //       height="100%"
-  //       width="100%"
-  //       sx={{
-  //         backgroundColor: imageWrapperBackground,
-  //       }}>
-  //       <Image
-  //         onLoad={(img) => {
-  //           console.log("loading complete");
-  //           setImageWrapperBackground("transparent");
-  //           setImageVisibility("visible");
-  //         }}
-  //         ref={imageRef}
-  //         alt="Driverless Cars"
-  //         src="https://raw.githubusercontent.com/chrisenoch/assets/main/driverlesscars.jpg"
-  //         width={640}
-  //         height={480}
-  //         style={{
-  //           height: "100%",
-  //           width: "100%",
-  //           objectFit: "cover",
-  //           visibility: imageVisibility,
-  //         }}
-  //       />
-  //     </Box>
-  //   );
 }
