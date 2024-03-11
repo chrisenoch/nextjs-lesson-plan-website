@@ -1,5 +1,4 @@
 import * as React from "react";
-import Image from "next/image";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -7,7 +6,6 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import {
   Avatar,
-  IconButton,
   Divider,
   Stack,
   Chip,
@@ -25,6 +23,7 @@ import { useHydrated } from "@/customHooks/useHydrated";
 import LessonPlanCardBookmarkButton from "./LessonPlanCardBookmarkButton";
 import { log } from "util";
 import { setSXValues } from "@/component-functions/set-sx-values";
+import DynamicImage from "../presentation-c/DynamicImage";
 
 export default function LessonPlanCard({
   id,
@@ -81,17 +80,11 @@ export default function LessonPlanCard({
         borderRadius: 4,
       }}>
       <CardMedia sx={sxImageFinal}>
-        <Image
+        <DynamicImage
           alt={imageAlt}
           src={imageURL}
-          width={640}
-          height={480}
-          placeholder="blur"
-          style={{
-            height: "100%",
-            width: "100%",
-            objectFit: "cover",
-          }}
+          renderedWidth={640}
+          renderedHeight={480}
         />
       </CardMedia>
 
