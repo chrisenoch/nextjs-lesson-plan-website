@@ -86,6 +86,7 @@ export default function LessonPlanCard({
           src={imageURL}
           width={640}
           height={480}
+          placeholder="blur"
           style={{
             height: "100%",
             width: "100%",

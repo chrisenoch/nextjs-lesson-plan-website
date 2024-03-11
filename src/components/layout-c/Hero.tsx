@@ -101,6 +101,7 @@ export default function Hero() {
             alt="Woman relaxing on hammock"
             src={"/images/woman-on-hammock-2400-1600.jpg"}
             priority
+            placeholder="blur"
             width={2400}
             height={1600}
             style={{
@@ -115,6 +116,7 @@ export default function Hero() {
         key: 2,
         element: (
           <Image
+            placeholder="blur"
             alt="Backpackers with a mountain in the background"
             src={"/images/backpackers-by-mountain-2400-1600.jpg"}
             width={2400}
@@ -131,6 +133,7 @@ export default function Hero() {
         key: 3,
         element: (
           <Image
+            placeholder="blur"
             alt="Four women drinking and smilingk"
             src={"/images/four-women-with-drinks-2400-1709.jpg"}
             width={2400}
@@ -147,6 +150,7 @@ export default function Hero() {
         key: 4,
         element: (
           <Image
+            placeholder="blur"
             alt="Man in the sea reading a book"
             src={"/images/man-in-water-reading-book-2400-1600.jpg"}
             width={2400}
