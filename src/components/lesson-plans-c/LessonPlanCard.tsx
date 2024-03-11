@@ -14,6 +14,7 @@ import {
   SxProps,
   Theme,
   CardMedia,
+  Skeleton,
 } from "@mui/material";
 import Circle from "@mui/icons-material/Circle";
 import Diamond from "@mui/icons-material/Diamond";
@@ -25,6 +26,7 @@ import { useHydrated } from "@/customHooks/useHydrated";
 import LessonPlanCardBookmarkButton from "./LessonPlanCardBookmarkButton";
 import { log } from "util";
 import { setSXValues } from "@/component-functions/set-sx-values";
+import DynamicImage from "../presentation-c/DynamicImage";
 
 export default function LessonPlanCard({
   id,
@@ -81,18 +83,22 @@ export default function LessonPlanCard({
         borderRadius: 4,
       }}>
       <CardMedia sx={sxImageFinal}>
-        <Image
+        {/* <DynamicImage /> */}
+        <Skeleton
+          width="100%"
+          height="200px"
+          sx={{ transform: "scale(1,1)", animation: "none" }}></Skeleton>
+        {/* <Image
           alt={imageAlt}
           src={imageURL}
           width={640}
           height={480}
-          placeholder="blur"
           style={{
             height: "100%",
             width: "100%",
             objectFit: "cover",
           }}
-        />
+        /> */}
       </CardMedia>
 
       <CardContent>

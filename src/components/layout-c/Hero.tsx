@@ -30,6 +30,10 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { grey } from "@mui/material/colors";
+import womanOnHammock from "../../../public/images/woman-on-hammock-2400-1600.jpg";
+import backpackers from "../../../public/images/backpackers-by-mountain-2400-1600.jpg";
+import fourWomenWithDrinks from "../../../public/images/four-women-with-drinks-2400-1709.jpg";
+import manInWaterReadingBook from "../../../public/images/man-in-water-reading-book-2400-1600.jpg";
 
 export default function Hero() {
   const theme = useTheme();
@@ -99,9 +103,8 @@ export default function Hero() {
           <Image
             key={1}
             alt="Woman relaxing on hammock"
-            src={"/images/woman-on-hammock-2400-1600.jpg"}
+            src={womanOnHammock}
             priority
-            placeholder="blur"
             width={2400}
             height={1600}
             style={{
@@ -116,9 +119,8 @@ export default function Hero() {
         key: 2,
         element: (
           <Image
-            placeholder="blur"
             alt="Backpackers with a mountain in the background"
-            src={"/images/backpackers-by-mountain-2400-1600.jpg"}
+            src={backpackers}
             width={2400}
             height={1600}
             style={{
@@ -133,9 +135,8 @@ export default function Hero() {
         key: 3,
         element: (
           <Image
-            placeholder="blur"
             alt="Four women drinking and smilingk"
-            src={"/images/four-women-with-drinks-2400-1709.jpg"}
+            src={fourWomenWithDrinks}
             width={2400}
             height={1709}
             style={{
@@ -150,9 +151,8 @@ export default function Hero() {
         key: 4,
         element: (
           <Image
-            placeholder="blur"
             alt="Man in the sea reading a book"
-            src={"/images/man-in-water-reading-book-2400-1600.jpg"}
+            src={manInWaterReadingBook}
             width={2400}
             height={1600}
             style={{
