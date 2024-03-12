@@ -23,7 +23,7 @@ import { useHydrated } from "@/customHooks/useHydrated";
 import LessonPlanCardBookmarkButton from "./LessonPlanCardBookmarkButton";
 import { log } from "util";
 import { setSXValues } from "@/component-functions/set-sx-values";
-import DynamicImage from "../presentation-c/DynamicImage";
+import SkeletonImage from "../presentation-c/SkeletonImage";
 
 export default function LessonPlanCard({
   id,
@@ -80,7 +80,7 @@ export default function LessonPlanCard({
         borderRadius: 4,
       }}>
       <CardMedia sx={sxImageFinal}>
-        <DynamicImage
+        <SkeletonImage
           alt={imageAlt}
           src={imageURL}
           renderedWidth={640}

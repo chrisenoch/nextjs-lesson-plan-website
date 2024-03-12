@@ -27,15 +27,11 @@ import NotificationBox from "../NotificationBox";
 import { StandardResponseInfo } from "@/models/types/DataFetching/StandardResponseInfo";
 import { Job } from "@/models/types/Jobs/Jobs";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { ValueOf } from "next/dist/shared/lib/constants";
 import { PropertyNamesAsStrings } from "@/models/types/TypeScriptHelpers/PropertyNamesAsStrings";
-import { getKeysAsValues } from "@/utils/object-functions";
-import { delay } from "@/utils/delay";
 
 export function AddJob() {
   useRedirectWhenLoggedOut("/auth/signin");
   const isMounted = useRef<boolean>(false);
-
   const theme = useTheme();
 
   const jobTitleRef = useRef<null | HTMLInputElement>(null);
@@ -71,6 +67,11 @@ export function AddJob() {
 
   useOnSuccessfulHttpResponse(addJobInfo, clearForm);
   const shouldHideMessage = useHideMessageOnNavAway(addJobInfo);
+
+  const notificationBoxTimerConfig = {
+    timeBeforeDestroyedInMs: 5000,
+    equalityProp: addJobInfo,
+  };
 
   const inputToValidate = {
     jobTitle,
@@ -285,6 +286,7 @@ export function AddJob() {
 
           {!shouldHideMessage && addJobInfo.message && (
             <NotificationBox
+              timer={notificationBoxTimerConfig}
               message={addJobInfo.message}
               sxOuterContainer={{
                 marginTop: 2,

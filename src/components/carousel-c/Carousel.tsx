@@ -1,4 +1,11 @@
 "use client";
+/*
+IMPORTANT:
+I did this as a challenge to myself without consulting anything online. In a real job I would get an idea of the best ways to do something
+before starting a large project. I knew there must have been a better way but i didn't want to see if I could do it.
+I will soon change this to use an animation infinite scroll and transform translate.
+*/
+
 import { Box, Stack, SxProps, Theme } from "@mui/material";
 import {
   ReactElement,
@@ -364,6 +371,11 @@ export function Carousel({
     );
     autoPlayIntervalIds.current = [];
   }
+
+  //Clear interval ids on navaway.
+  useEffect(() => {
+    return () => stopAutoPlay();
+  }, []);
 
   useEffect(() => {
     const itemRowEle = document.querySelector("#item-row-1");

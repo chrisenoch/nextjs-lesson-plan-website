@@ -2,7 +2,7 @@
 import { Skeleton } from "@mui/material";
 import Image from "next/image";
 import { useRef, useState } from "react";
-export default function CurvedUnderlineTitle({
+export default function SkeletonImage({
   src,
   alt,
   renderedWidth,
