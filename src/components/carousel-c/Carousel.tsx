@@ -25,7 +25,7 @@ import {
   SubscriberConfigObject,
   subscribe,
   unsubscribe,
-} from "@/services/my-custom-event-emitter/SubscriberService";
+} from "@/services/SubscriberService";
 import {
   CarouselItemDisplayBox,
   CarouselItemRow,
