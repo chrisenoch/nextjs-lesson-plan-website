@@ -1,39 +1,11 @@
 "use client";
-import {
-  Box,
-  Button,
-  Grid,
-  IconButton,
-  Stack,
-  Typography,
-  useTheme,
-} from "@mui/material";
-import { Carousel } from "../carousel-c/Carousel";
-import { useMemo, useState } from "react";
-import { AutoPlay, Transitions } from "@/models/types/Carousel/AutoPlay";
-import { carouselStore } from "@/services/my-custom-event-emitter/SubscriberConfigObjectStore";
-import {
-  SubscriberConfigObject,
-  emit,
-} from "@/services/my-custom-event-emitter/SubscriberService";
-import ColorFactory from "../presentation-c/ColorFactory";
-import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
+import { Box, Button, Grid, Stack, Typography, useTheme } from "@mui/material";
 import Image from "next/image";
 import {
   MediaQueryByTypographyVariant,
   getTypographyVariantSX,
 } from "../theme-registry-c/responsive-typography-sx";
-import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import PauseIcon from "@mui/icons-material/Pause";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { grey } from "@mui/material/colors";
 import womanOnHammock from "../../../public/images/woman-on-hammock-2400-1600.jpg";
-import backpackers from "../../../public/images/backpackers-by-mountain-2400-1600.jpg";
-import fourWomenWithDrinks from "../../../public/images/four-women-with-drinks-2400-1709.jpg";
-import manInWaterReadingBook from "../../../public/images/man-in-water-reading-book-2400-1600.jpg";
 
 export default function Hero() {
   const theme = useTheme();
@@ -54,120 +26,6 @@ export default function Hero() {
   const { fontWeight: doNotUse, ...titleTextSX } = getTypographyVariantSX(
     titleText,
     theme
-  );
-
-  //This is my alternative to using useContext. I think it works very well for activating callbacks in response to events.
-  const carouselMoveLeft: SubscriberConfigObject = useMemo(() => {
-    return {
-      subscribers: new Set(),
-    };
-  }, []);
-
-  const carouselMoveRight: SubscriberConfigObject = useMemo(() => {
-    return {
-      subscribers: new Set(),
-    };
-  }, []);
-
-  // Assign to the store, so we can control the carousel from any component tree.
-  // E.g. In another component, we could do:
-  // 1. const carouselMoveLeft = carouselStore.get("moveLeft");
-  // 2. onClick={() => emit(carouselMoveLeft)}
-  carouselStore.set("moveLeft", carouselMoveLeft);
-  carouselStore.set("moveRight", carouselMoveRight);
-  const [autoPlay, setAutoPlay] = useState<AutoPlay>({
-    enableAutoPlay: false,
-    direction: "RIGHT",
-    delay: 5500,
-  });
-
-  const [areControlsVisible, setAreControlsVisible] = useState<boolean>(false);
-
-  const transitions: Transitions = {
-    durationMs: 1500,
-    easingFunction: "ease-out",
-  };
-
-  function toggleAutoPlayDirection() {
-    setAutoPlay({
-      ...autoPlay,
-      direction: autoPlay.direction === "RIGHT" ? "LEFT" : "RIGHT",
-    });
-  }
-
-  const images = useMemo(
-    () => [
-      {
-        key: 1,
-        element: (
-          <Image
-            placeholder="blur"
-            alt="Woman relaxing on hammock"
-            src={womanOnHammock}
-            priority
-            width={2400}
-            height={1600}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          />
-        ),
-      },
-      {
-        key: 2,
-        element: (
-          <Image
-            placeholder="blur"
-            alt="Backpackers with a mountain in the background"
-            src={backpackers}
-            width={2400}
-            height={1600}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          />
-        ),
-      },
-      {
-        key: 3,
-        element: (
-          <Image
-            placeholder="blur"
-            alt="Four women drinking and smilingk"
-            src={fourWomenWithDrinks}
-            width={2400}
-            height={1709}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          />
-        ),
-      },
-      {
-        key: 4,
-        element: (
-          <Image
-            placeholder="blur"
-            alt="Man in the sea reading a book"
-            src={manInWaterReadingBook}
-            width={2400}
-            height={1600}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          />
-        ),
-      },
-    ],
-    []
   );
 
   return (
