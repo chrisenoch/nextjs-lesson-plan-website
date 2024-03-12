@@ -7,8 +7,12 @@ export function getArrayIntersection<Type>(
 }
 
 export function checkEqualityByObjectProperty(
-  one,
-  two,
+  one: {
+    [key: string]: any;
+  }[],
+  two: {
+    [key: string]: any;
+  }[],
   objectProperty: string
 ) {
   if (one.length !== two.length) {
