@@ -125,6 +125,7 @@ export function SignIn() {
             id="password"
             name="password"
             label="Password"
+            type="password"
             variant="outlined"
             value={password}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {

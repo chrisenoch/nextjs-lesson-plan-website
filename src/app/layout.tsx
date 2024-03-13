@@ -9,6 +9,7 @@ import StarIcon from "@mui/icons-material/Star";
 import SchoolIcon from "@mui/icons-material/School";
 import WorkIcon from "@mui/icons-material/Work";
 import BadgeIcon from "@mui/icons-material/Badge";
+import StoreIcon from "@mui/icons-material/Store";
 
 export const metadata = {
   title: "Lesson Planz",
@@ -27,10 +28,12 @@ export default function RootLayout({
     { text: "Saved Lesson Plans", href: "/lessonplans/saved", icon: StarIcon },
     { text: "Jobs", href: "/all-jobs", icon: WorkIcon },
     { text: "My Jobs", href: "/my-jobs", icon: BadgeIcon },
+    { text: "Redux Clone", href: "/redux-clone", icon: StoreIcon },
   ];
   const navBarItems = [
     { title: "All Jobs", href: "/all-jobs" },
     { title: "My Jobs", href: "/my-jobs" },
+    { title: "Redux Clone", href: "/redux-clone" },
   ];
 
   return (
