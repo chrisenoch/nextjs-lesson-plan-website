@@ -105,7 +105,7 @@ export default function SliceSubscriber() {
   return (
     <>
       <Typography component="h3" variant="h4">
-        Component Tree 3
+        Component Tree 4
       </Typography>
       <Typography variant="subtitle1">
         (Component that subscribes to slices)
@@ -169,11 +169,26 @@ export default function SliceSubscriber() {
       <Typography marginTop="16px" variant="h5">
         Top Adult Players
       </Typography>
-      <Typography variant="subtitle1">(Component Tree 3)</Typography>
+      <Typography variant="subtitle1">(Component Tree 4)</Typography>
       <Box
         sx={{
           maxWidth: "600px",
         }}>
+        <Box
+          component="p"
+          display="inline-block"
+          marginRight={1}
+          fontWeight={"fontWeightMedium"}>
+          Top Adult Players:
+        </Box>
+        <Box
+          component="ul"
+          sx={{
+            display: "inline",
+            px: 0,
+          }}>
+          {renderedTopAdultPlayers}
+        </Box>
         <NotificationBox
           title="Equality function"
           message={
@@ -207,7 +222,7 @@ export default function SliceSubscriber() {
         </Box>
       </Box>
 
-      <Box
+      {/* <Box
         component="p"
         display="inline-block"
         marginRight={1}
@@ -222,7 +237,7 @@ export default function SliceSubscriber() {
           px: 0,
         }}>
         {renderedTopAdultPlayers}
-      </Box>
+      </Box> */}
     </>
   );
 }

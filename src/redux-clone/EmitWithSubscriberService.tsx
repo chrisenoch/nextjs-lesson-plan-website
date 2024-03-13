@@ -16,7 +16,7 @@ export default function EmitWithSubscriberService() {
   return (
     <>
       <Typography component="h3" variant="h4">
-        Component Tree 4
+        Component Tree 3
       </Typography>
       <Typography variant="subtitle1" marginBottom={1}>
         (Event emitters)

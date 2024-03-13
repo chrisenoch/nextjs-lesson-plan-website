@@ -1,9 +1,9 @@
-import EmitWithSubscriberService from "@/services/EmitWithSubscriberService";
-import SliceFetcher from "@/services/SliceFetcher";
-import StoreClientWrapper from "@/services/StoreClientWrapper";
-import SubscriberWithHooks from "@/services/SubscriberWithHooks";
-import SubscriberWithoutHooks from "@/services/SubscriberWithOutHooks";
-import SliceFetcherWrapper from "@/services/SliceFetcherWrapper";
+import EmitWithSubscriberService from "@/redux-clone/EmitWithSubscriberService";
+import SliceFetcher from "@/redux-clone/SliceFetcher";
+import StoreClientWrapper from "@/redux-clone/StoreClientWrapper";
+import SubscriberWithHooks from "@/redux-clone/SubscriberWithHooks";
+import SubscriberWithoutHooks from "@/redux-clone/SubscriberWithOutHooks";
+import SliceFetcherWrapper from "@/redux-clone/SliceFetcherWrapper";
 import {
   Box,
   Divider,
@@ -34,13 +34,22 @@ export default function MiniReduxClonePage() {
         <SubscriberWithHooks />
         <Box marginTop={4} marginBottom={4}></Box>
         <SubscriberWithoutHooks />
-        <Box marginTop={4} marginBottom={4}></Box>
-        <SliceFetcherWrapper />
-        <Box
+        <Divider
           sx={{
             marginY: 3,
-          }}></Box>
+          }}></Divider>
+        <Box marginTop={4} marginBottom={4}></Box>
         <EmitWithSubscriberService />
+        <Divider
+          sx={{
+            marginY: 4,
+          }}></Divider>
+        <Box
+          sx={{
+            marginY: 4,
+          }}></Box>
+
+        <SliceFetcherWrapper />
       </Box>
     </StoreClientWrapper>
   );

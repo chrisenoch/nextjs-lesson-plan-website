@@ -25,7 +25,7 @@ import {
   SubscriberConfigObject,
   subscribe,
   unsubscribe,
-} from "@/services/SubscriberService";
+} from "@/redux-clone/SubscriberService";
 import {
   CarouselItemDisplayBox,
   CarouselItemRow,
