@@ -47,58 +47,66 @@ export default function SubscriberWithHooks() {
 
   return (
     <>
-      <Typography variant="h4">Component Tree 1</Typography>
+      <Typography component="h3" variant="h4">
+        Component Tree 1
+      </Typography>
       <Typography variant="subtitle1">(Subscriber - With Hooks)</Typography>
-      <Box>
+      <Box marginTop={2} marginBottom={1}>
         <Button
-          sx={{ textTransform: "capitalize" }}
+          variant="outlined"
+          sx={{ textTransform: "capitalize", marginRight: 1 }}
           onClick={() => {
             unsubscribeFromLoginViaHook();
           }}>
-          Unsubscribe from userLogin - 1
+          Unsubscribe - userLogin 1
         </Button>
         <Button
+          variant="outlined"
           sx={{ textTransform: "capitalize" }}
           onClick={() => {
             subscribeToLoginViaHook();
           }}>
-          Susbcribe to userLogin - 1
+          Susbcribe - userLogin 1
         </Button>
       </Box>
-      <Box>
+      <Box marginBottom={1}>
         <Button
           color="secondary"
-          sx={{ textTransform: "capitalize" }}
+          variant="outlined"
+          sx={{ textTransform: "capitalize", marginRight: 1 }}
           onClick={() => {
             unsubscribeFromLoginViaHookTwo();
           }}>
-          Unsubcribe from userLogin - 2
+          Unsubcribe - userLogin 2
         </Button>
         <Button
           color="secondary"
-          sx={{ textTransform: "capitalize" }}
+          variant="outlined"
+          sx={{ textTransform: "capitalize", marginRight: 1 }}
           onClick={() => {
             subscribeToLoginViaHookTwo();
           }}>
-          Subscribe to userLogin - 2
+          Subscribe - userLogin 2
         </Button>
       </Box>
       <Box>
         <Button
+          variant="outlined"
           color="success"
           sx={{ textTransform: "capitalize" }}
           onClick={() => {
             unsubscribeFromLogoutViaHook();
           }}>
-          Unsubscribe userLogout
+          Unsubscribe - userLogout
         </Button>
         <Button
+          variant="outlined"
           color="success"
           sx={{ textTransform: "capitalize" }}
           onClick={() => {
             subscribeToLogoutViaHook();
           }}>
-          Subscribe userLogout
+          Subscribe - userLogout
         </Button>
       </Box>
     </>

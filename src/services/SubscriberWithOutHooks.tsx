@@ -47,56 +47,48 @@ export default function SubscriberWithoutHooks() {
 
   return (
     <>
-      <Typography variant="h4">Component Tree 2</Typography>
+      <Typography component="h3" variant="h4">
+        Component Tree 2
+      </Typography>
       <Typography variant="subtitle1">(Subscriber - No Hooks)</Typography>
-      <Box>
+      <Box marginTop={2} marginBottom={1}>
         <Button
-          sx={{ textTransform: "capitalize" }}
+          variant="outlined"
+          sx={{ textTransform: "capitalize", marginRight: 1 }}
           onClick={() => {
             userLogin && unsubscribe(userLogin, userLoginSubscription);
           }}>
-          Unsubscribe from userLogin
+          Unsubscribe - userLogin
         </Button>
         <Button
-          sx={{ textTransform: "capitalize" }}
+          variant="outlined"
+          sx={{ textTransform: "capitalize", marginRight: 1 }}
           onClick={() => {
             userLogin && subscribe(userLogin, userLoginSubscription);
           }}>
-          Subscribe to userLogin
+          Subscribe - userLogin
         </Button>
       </Box>
       <Box>
         <Button
-          sx={{ textTransform: "capitalize" }}
+          variant="outlined"
+          sx={{ textTransform: "capitalize", marginRight: 1 }}
           color="secondary"
           onClick={() => {
             userLogout && unsubscribe(userLogout, userLogoutSubscription);
           }}>
-          Unsubscribe userLogout
+          Unsubscribe - userLogout
         </Button>
         <Button
-          sx={{ textTransform: "capitalize" }}
+          variant="outlined"
+          sx={{ textTransform: "capitalize", marginRight: 1 }}
           color="secondary"
           onClick={() => {
             userLogout && subscribe(userLogout, userLogoutSubscription);
           }}>
-          Subscribe to userLogout
+          Subscribe - userLogout
         </Button>
       </Box>
     </>
   );
 }
-
-function sayHi() {
-  console.log("hi");
-}
-
-//   dispatcher.emit = function emit(...args) {
-//     dispatcher.callback(...args);
-//   };
-
-// function sayWhat(...args) {
-//     console.log(args);
-//   }
-
-//   dispatcher.callback = sayWhat;

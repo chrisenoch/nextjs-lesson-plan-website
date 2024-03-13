@@ -104,7 +104,9 @@ export default function SliceSubscriber() {
 
   return (
     <>
-      <Typography variant="h4">Component Tree 3</Typography>
+      <Typography component="h3" variant="h4">
+        Component Tree 3
+      </Typography>
       <Typography variant="subtitle1">
         (Component that subscribes to slices)
       </Typography>
@@ -151,7 +153,7 @@ export default function SliceSubscriber() {
             onClick={() => {
               addGameUnSubscribe();
             }}>
-            Unsubscribe from add games
+            Unsubscribe - add games
           </Button>
           <Button
             sx={{ textTransform: "capitalize" }}
@@ -159,7 +161,7 @@ export default function SliceSubscriber() {
             onClick={() => {
               addGameSubscribe();
             }}>
-            Subscribe to add games.
+            Subscribe - add games
           </Button>
         </Box>
         <Divider sx={{ width: "100%", marginY: 3 }}></Divider>
@@ -179,12 +181,14 @@ export default function SliceSubscriber() {
           }
           sxTitle={{ fontSize: "24px" }}
           sxOuterContainer={{
+            alignItems: "start",
             marginTop: 2,
             width: "fit-content",
 
             mx: 0,
           }}
           sxInnerContainer={{
+            alignItems: "start",
             mx: 0,
           }}
           variant={"info"}
@@ -196,7 +200,10 @@ export default function SliceSubscriber() {
           <Box component="strong" fontWeight="fontWeightMedium">
             adult player
           </Box>{" "}
-          has been added.
+          has been added.{" "}
+          <Box component="strong" fontWeight="fontWeightMedium">
+            the component is called SliceSubscriber.
+          </Box>{" "}
         </Box>
       </Box>
 
