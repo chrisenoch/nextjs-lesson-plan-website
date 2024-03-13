@@ -167,6 +167,36 @@ export default function ReduxCloneExplanation() {
           </ListItem>
         </List>
       </Box>
+      <Box marginBottom={2}>
+        <Typography component="h2" variant="h5" marginBottom={0.5}>
+          Source code
+        </Typography>
+        <List sx={{ py: 0 }}>
+          <ListItem sx={{ paddingBottom: 0, paddingTop: 0.5 }}>
+            <ListItemIcon sx={{ minWidth: "fit-content", paddingRight: 1 }}>
+              <CircleIcon sx={{ fontSize: "6px" }} />
+            </ListItemIcon>
+            <Typography component="span">
+              Find out more:{" "}
+              <Box
+                component="a"
+                href="https://github.com/chrisenoch/nextjs-lesson-plan-website/tree/develop/src/redux-clone"
+                fontWeight="fontWeightMedium"
+                paddingX={0.5}>
+                see the source code on GitHub
+              </Box>
+            </Typography>
+          </ListItem>
+          <ListItem sx={{ paddingBottom: 0, paddingTop: 0.5 }}>
+            <ListItemIcon sx={{ minWidth: "fit-content", paddingRight: 1 }}>
+              <CircleIcon sx={{ fontSize: "6px" }} />
+            </ListItemIcon>
+            <Typography component="span">
+              The comments explain how it works
+            </Typography>
+          </ListItem>
+        </List>
+      </Box>
     </>
   );
 }
