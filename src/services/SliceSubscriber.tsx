@@ -194,9 +194,9 @@ export default function SliceSubscriber() {
           variant={"info"}
         />
         <Box component="p">
-          - Click add top adult player and add child player in the emitters
-          section. Notice in the DevTools that the component only re-renders
-          when an{" "}
+          - Click <Box component="q">add top adult player</Box>
+          and <Box component="q">add child player</Box> in the emitters section.
+          Notice in the DevTools that the component only re-renders when an{" "}
           <Box component="strong" fontWeight="fontWeightMedium">
             adult player
           </Box>{" "}
