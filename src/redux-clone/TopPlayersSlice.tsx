@@ -6,7 +6,7 @@ import { delay } from "@/utils/delay";
 
 const topPlayersSlice: TopPlayersSlice = {
   subscribers: new Set(),
-  slice: { topPlayers: [], adultTopPlayers: [] }, //AdultTopPlayers is only needed here because we use an equality check. If other cases,
+  slice: { topPlayers: [], adultTopPlayers: [] }, //AdultTopPlayers is only needed here because we use an equality check. In other cases,
   //you can just derive the state in the selector function. (See: selectTopChildPlayers for an example).
 };
 gamesStore.set("topPlayersSlice", topPlayersSlice);
@@ -36,7 +36,7 @@ export function selectTopAdultPlayers() {
 
   // This is only needed if we have something unrelated to topPlayers in this slice.
   // E.g. If we had another array called topPlayerTips, this check would ensure that when topPlayers*Tips* is updated,
-  // subscribers to this slice who are only interested in topPlayers, will recieve the variable 'hasChanged' equal to false.
+  // subscribers to this slice who are only interested in topPlayers, will receive the variable 'hasChanged' equal to false.
   // They can use this information to decide to *not* re-render. Another option is to create a separate slice.
   // This check also stops expensive selector functions from being called if topPlayers has not changed.
   if (previous.topPlayers === topPlayersSlice.slice.topPlayers) {
@@ -92,7 +92,7 @@ export function addTopAdultPlayer() {
   //Hard-coded for testing. The information would be provided by a component.
   newTopPlayers.push({
     id: getId(), //Just for dev , to keep unique ids.
-    firstName: "Paul",
+    firstName: "Some Adult",
     lastName: "Wesley",
     age: 18,
   });

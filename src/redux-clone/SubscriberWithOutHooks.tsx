@@ -3,6 +3,7 @@
 import { useEffect, useMemo } from "react";
 import { authStore } from "./SubscriberConfigObjectStore";
 import { subscribe, unsubscribe } from "./SubscriberService";
+import { Box, Button, Typography } from "@mui/material";
 
 export default function SubscriberWithoutHooks() {
   console.log("SubscriberWithoutHooks Component rendered");
@@ -46,49 +47,48 @@ export default function SubscriberWithoutHooks() {
 
   return (
     <>
-      <h1>Subscriber Without Hooks</h1>
-      <div>
-        <button
+      <Typography component="h3" variant="h4">
+        Component Tree 2
+      </Typography>
+      <Typography variant="subtitle1">(Subscriber - No Hooks)</Typography>
+      <Box marginTop={2} marginBottom={1}>
+        <Button
+          variant="outlined"
+          sx={{ textTransform: "capitalize", marginRight: 1 }}
           onClick={() => {
             userLogin && unsubscribe(userLogin, userLoginSubscription);
           }}>
-          Unsubscribe userLogin;
-        </button>
-        <button
+          Unsubscribe - userLogin
+        </Button>
+        <Button
+          variant="outlined"
+          sx={{ textTransform: "capitalize", marginRight: 1 }}
           onClick={() => {
             userLogin && subscribe(userLogin, userLoginSubscription);
           }}>
-          Re-subscribe userLogin.
-        </button>
-      </div>
-      <div>
-        <button
+          Subscribe - userLogin
+        </Button>
+      </Box>
+      <Box>
+        <Button
+          variant="outlined"
+          sx={{ textTransform: "capitalize", marginRight: 1 }}
+          color="secondary"
           onClick={() => {
             userLogout && unsubscribe(userLogout, userLogoutSubscription);
           }}>
-          Unsubscribe userLogout.
-        </button>
-        <button
+          Unsubscribe - userLogout
+        </Button>
+        <Button
+          variant="outlined"
+          sx={{ textTransform: "capitalize", marginRight: 1 }}
+          color="secondary"
           onClick={() => {
             userLogout && subscribe(userLogout, userLogoutSubscription);
           }}>
-          Re-subscribe userLogout.
-        </button>
-      </div>
+          Subscribe - userLogout
+        </Button>
+      </Box>
     </>
   );
 }
-
-function sayHi() {
-  console.log("hi");
-}
-
-//   dispatcher.emit = function emit(...args) {
-//     dispatcher.callback(...args);
-//   };
-
-// function sayWhat(...args) {
-//     console.log(args);
-//   }
-
-//   dispatcher.callback = sayWhat;
