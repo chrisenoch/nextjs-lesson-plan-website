@@ -36,10 +36,7 @@ export async function initBooksSlice() {
     //Simulate a http request to pre-populate books. Could use generateStaticParams# here to increase speed.
     await delay(() => {
       console.log("after delay");
-      booksSlice.slice.books = [
-        "The Bourne Identity11111111",
-        "The Adventures of Sherlock Holmes",
-      ];
+      booksSlice.slice.books = ["The Bourne Identity", "Don Quixote"];
       emit(booksSlice);
     }, 1000);
     hasInit = true;

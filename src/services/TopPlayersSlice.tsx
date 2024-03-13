@@ -92,7 +92,7 @@ export function addTopAdultPlayer() {
   //Hard-coded for testing. The information would be provided by a component.
   newTopPlayers.push({
     id: getId(), //Just for dev , to keep unique ids.
-    firstName: "Paul",
+    firstName: "Some Adult",
     lastName: "Wesley",
     age: 18,
   });

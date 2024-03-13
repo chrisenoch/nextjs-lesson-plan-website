@@ -3,6 +3,7 @@
 import { useEffect, useMemo } from "react";
 import { authStore } from "./SubscriberConfigObjectStore";
 import { subscribe, unsubscribe } from "./SubscriberService";
+import { Box, Button, Typography } from "@mui/material";
 
 export default function SubscriberWithoutHooks() {
   console.log("SubscriberWithoutHooks Component rendered");
@@ -46,35 +47,42 @@ export default function SubscriberWithoutHooks() {
 
   return (
     <>
-      <h1>Subscriber Without Hooks</h1>
-      <div>
-        <button
+      <Typography variant="h4">Component Tree 2</Typography>
+      <Typography variant="subtitle1">(Subscriber - No Hooks)</Typography>
+      <Box>
+        <Button
+          sx={{ textTransform: "capitalize" }}
           onClick={() => {
             userLogin && unsubscribe(userLogin, userLoginSubscription);
           }}>
-          Unsubscribe userLogin;
-        </button>
-        <button
+          Unsubscribe from userLogin
+        </Button>
+        <Button
+          sx={{ textTransform: "capitalize" }}
           onClick={() => {
             userLogin && subscribe(userLogin, userLoginSubscription);
           }}>
-          Re-subscribe userLogin.
-        </button>
-      </div>
-      <div>
-        <button
+          Subscribe to userLogin
+        </Button>
+      </Box>
+      <Box>
+        <Button
+          sx={{ textTransform: "capitalize" }}
+          color="secondary"
           onClick={() => {
             userLogout && unsubscribe(userLogout, userLogoutSubscription);
           }}>
-          Unsubscribe userLogout.
-        </button>
-        <button
+          Unsubscribe userLogout
+        </Button>
+        <Button
+          sx={{ textTransform: "capitalize" }}
+          color="secondary"
           onClick={() => {
             userLogout && subscribe(userLogout, userLogoutSubscription);
           }}>
-          Re-subscribe userLogout.
-        </button>
-      </div>
+          Subscribe to userLogout
+        </Button>
+      </Box>
     </>
   );
 }

@@ -5,6 +5,7 @@ import { emit } from "./SubscriberService";
 import { addGame } from "./GamesSlice";
 import { addTopAdultPlayer, addTopChildPlayer } from "./TopPlayersSlice";
 import { addBook } from "./BooksSlice";
+import { Button, Typography } from "@mui/material";
 
 export default function EmitWithSubscriberService() {
   const userLogin = authStore.get("userLogin"); // Will always be the same object so don't need to use useMemo.
@@ -12,43 +13,60 @@ export default function EmitWithSubscriberService() {
 
   return (
     <>
-      <h1>Emitters</h1>
-      <button
+      <Typography variant="h4">Component Tree 4</Typography>
+      <Typography variant="subtitle1">(Event emitters)</Typography>
+      <Button
+        sx={{ textTransform: "capitalize", marginRight: 1 }}
+        variant="contained"
         onClick={() => {
           userLogin && emit(userLogin);
         }}>
-        Emit UserLogin
-      </button>
-      <button
+        Emit userLogin
+      </Button>
+      <Button
+        sx={{ textTransform: "capitalize", marginRight: 1 }}
+        variant="contained"
         onClick={() => {
           userLogout && emit(userLogout);
         }}>
-        Emit UserLogout
-      </button>
-      <button
+        Emit userLogout
+      </Button>
+      <Button
+        sx={{ textTransform: "capitalize", marginRight: 1 }}
+        color="secondary"
+        variant="contained"
         onClick={() => {
-          addGame("Sonic");
+          addGame("Example Game");
         }}>
         Add game
-      </button>
-      <button
+      </Button>
+      <Button
+        sx={{ textTransform: "capitalize", marginRight: 1 }}
+        color="secondary"
+        variant="contained"
+        onClick={() => {
+          addBook("Example Book");
+        }}>
+        Add book
+      </Button>
+      <Button
+        sx={{ textTransform: "capitalize", marginRight: 1 }}
+        color="success"
+        variant="contained"
         onClick={() => {
           addTopChildPlayer();
         }}>
         Add Top Child Player
-      </button>
-      <button
+      </Button>
+      <Button
+        sx={{ textTransform: "capitalize", marginRight: 1 }}
+        color="success"
+        variant="contained"
         onClick={() => {
           addTopAdultPlayer();
         }}>
         Add Top Adult Player
-      </button>
-      <button
-        onClick={() => {
-          addBook("Treasure Island");
-        }}>
-        Add Book
-      </button>
+      </Button>
     </>
   );
 }
