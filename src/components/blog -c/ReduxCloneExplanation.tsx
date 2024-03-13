@@ -1,5 +1,6 @@
 import { Box, List, ListItem, ListItemIcon, Typography } from "@mui/material";
 import CircleIcon from "@mui/icons-material/Circle";
+import { blue } from "@mui/material/colors";
 
 export default function ReduxCloneExplanation() {
   return (
@@ -11,7 +12,14 @@ export default function ReduxCloneExplanation() {
         <Typography variant="h5" marginBottom={0.5}>
           Note
         </Typography>
-        <Typography marginLeft={3}>
+        <Typography
+          marginLeft={3}
+          sx={{
+            backgroundColor: blue[50],
+            borderRadius: 4,
+            padding: 1,
+            display: "inline-block",
+          }}>
           This is the only page in my app that is{" "}
           <Box component="strong" fontWeight="fontWeightMedium">
             not responsive.
