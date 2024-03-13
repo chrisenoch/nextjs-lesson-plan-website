@@ -5,6 +5,9 @@ import { emit } from "./SubscriberService";
 import { addGame } from "./GamesSlice";
 import { addTopAdultPlayer, addTopChildPlayer } from "./TopPlayersSlice";
 import { addBook } from "./BooksSlice";
+import { Button, Typography } from "@mui/material";
+import ColorFactory from "@/components/presentation-c/ColorFactory";
+import { green, orange } from "@mui/material/colors";
 
 export default function EmitWithSubscriberService() {
   const userLogin = authStore.get("userLogin"); // Will always be the same object so don't need to use useMemo.
@@ -12,43 +15,67 @@ export default function EmitWithSubscriberService() {
 
   return (
     <>
-      <h1>Emitters</h1>
-      <button
+      <Typography component="h3" variant="h4">
+        Component Tree 4
+      </Typography>
+      <Typography variant="subtitle1" marginBottom={1}>
+        (Event emitters)
+      </Typography>
+      <Button
+        sx={{ textTransform: "capitalize", marginRight: 1 }}
+        variant="contained"
         onClick={() => {
           userLogin && emit(userLogin);
         }}>
-        Emit UserLogin
-      </button>
-      <button
+        Emit userLogin
+      </Button>
+      <Button
+        sx={{ textTransform: "capitalize", marginRight: 1 }}
+        variant="contained"
         onClick={() => {
           userLogout && emit(userLogout);
         }}>
-        Emit UserLogout
-      </button>
-      <button
+        Emit userLogout
+      </Button>
+      <Button
+        sx={{ textTransform: "capitalize", marginRight: 1 }}
+        color="secondary"
+        variant="contained"
         onClick={() => {
-          addGame("Sonic");
+          addGame("Example Game");
         }}>
         Add game
-      </button>
-      <button
+      </Button>
+      <Button
+        sx={{ textTransform: "capitalize", marginRight: 1 }}
+        color="secondary"
+        variant="contained"
         onClick={() => {
-          addTopChildPlayer();
+          addBook("Example Book");
         }}>
-        Add Top Child Player
-      </button>
-      <button
-        onClick={() => {
-          addTopAdultPlayer();
-        }}>
-        Add Top Adult Player
-      </button>
-      <button
-        onClick={() => {
-          addBook("Treasure Island");
-        }}>
-        Add Book
-      </button>
+        Add book
+      </Button>
+      <ColorFactory primary={orange[100]}>
+        <Button
+          sx={{ textTransform: "capitalize", marginRight: 1 }}
+          color="primary"
+          variant="contained"
+          onClick={() => {
+            addTopChildPlayer();
+          }}>
+          Add Top Child Player
+        </Button>
+
+        <Button
+          sx={{ textTransform: "capitalize", marginRight: 1 }}
+          color="primary"
+          variant="contained"
+          onClick={() => {
+            addTopAdultPlayer();
+          }}>
+          Add Top Adult Player
+        </Button>
+      </ColorFactory>
     </>
   );
 }

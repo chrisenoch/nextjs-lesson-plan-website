@@ -1,5 +1,6 @@
 "use client";
 
+import { Box, Button, Typography } from "@mui/material";
 import { authStore } from "./SubscriberConfigObjectStore";
 import useSubscriber from "./useSubscriber";
 
@@ -46,47 +47,68 @@ export default function SubscriberWithHooks() {
 
   return (
     <>
-      <h1>Subscriber With Hooks</h1>
-      <div>
-        <button
+      <Typography component="h3" variant="h4">
+        Component Tree 1
+      </Typography>
+      <Typography variant="subtitle1">(Subscriber - With Hooks)</Typography>
+      <Box marginTop={2} marginBottom={1}>
+        <Button
+          variant="outlined"
+          sx={{ textTransform: "capitalize", marginRight: 1 }}
           onClick={() => {
             unsubscribeFromLoginViaHook();
           }}>
-          Unsubcribe from userLogin - 1
-        </button>
-        <button
+          Unsubscribe - userLogin 1
+        </Button>
+        <Button
+          variant="outlined"
+          sx={{ textTransform: "capitalize" }}
           onClick={() => {
             subscribeToLoginViaHook();
           }}>
-          Re-subscribe to userLogin - 1.
-        </button>
-        <button
+          Susbcribe - userLogin 1
+        </Button>
+      </Box>
+      <Box marginBottom={1}>
+        <Button
+          color="secondary"
+          variant="outlined"
+          sx={{ textTransform: "capitalize", marginRight: 1 }}
           onClick={() => {
             unsubscribeFromLoginViaHookTwo();
           }}>
-          Unsubcribe from userLogin - 2
-        </button>
-        <button
+          Unsubcribe - userLogin 2
+        </Button>
+        <Button
+          color="secondary"
+          variant="outlined"
+          sx={{ textTransform: "capitalize", marginRight: 1 }}
           onClick={() => {
             subscribeToLoginViaHookTwo();
           }}>
-          Re-subscribe to userLogin - 2.
-        </button>
-      </div>
-      <div>
-        <button
+          Subscribe - userLogin 2
+        </Button>
+      </Box>
+      <Box>
+        <Button
+          variant="outlined"
+          color="success"
+          sx={{ textTransform: "capitalize" }}
           onClick={() => {
             unsubscribeFromLogoutViaHook();
           }}>
-          Unsubscribe userLogout.
-        </button>
-        <button
+          Unsubscribe - userLogout
+        </Button>
+        <Button
+          variant="outlined"
+          color="success"
+          sx={{ textTransform: "capitalize" }}
           onClick={() => {
             subscribeToLogoutViaHook();
           }}>
-          Re-subscribe userLogout.
-        </button>
-      </div>
+          Subscribe - userLogout
+        </Button>
+      </Box>
     </>
   );
 }
