@@ -217,7 +217,7 @@ export default function SliceSubscriber() {
           </Box>{" "}
           has been added.{" "}
           <Box component="strong" fontWeight="fontWeightMedium">
-            the component is called SliceSubscriber.
+            The component is called SliceSubscriber.
           </Box>{" "}
         </Box>
       </Box>

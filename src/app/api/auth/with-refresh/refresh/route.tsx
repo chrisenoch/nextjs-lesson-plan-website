@@ -122,6 +122,7 @@ export async function GET(request: NextRequest) {
         maxAge: oldAccessTokenClockToleranceAndCookieExpiry,
         httpOnly: true,
         sameSite: "strict",
+        secure: process.env.ARE_AUTH_COOKIES_SECURE === "false" ? false : true,
       });
     } catch {
       //Invalid jwt token.
