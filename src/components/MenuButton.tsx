@@ -27,6 +27,7 @@ export default function MenuButton({
       handleClick(e);
     },
     id,
+    textTransform: "none",
   });
 
   const renderedMenuItems = menuItems.map((menuItem) => (

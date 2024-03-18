@@ -43,7 +43,7 @@ const theme = createTheme({
       "430c": 430,
       sm: 600,
       "630c": 630,
-      "715c": 712,
+      "712c": 712,
       md: 900,
       lg: 1200,
       xl: 1536,
@@ -72,7 +72,7 @@ declare module "@mui/material/styles" {
     "350c": true;
     "430c": true;
     "630c": true;
-    "715c": true;
+    "712c": true;
   }
 }
 
