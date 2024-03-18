@@ -80,6 +80,7 @@ export async function POST(request: Request) {
         maxAge: refreshTokenCookieExpiry, //accessTokenCookieExpiry should be the same as refreshTokenCookieExpiry. An old access token (even if expired) is needed to get a new refresh token (See the auth/with-refresh/refresh.route.tsx). This ensures that the correct refresh token is associated with the correct user.
         httpOnly: true,
         sameSite: "strict",
+        secure: process.env.ARE_AUTH_COOKIES_SECURE === "false" ? false : true,
       }
     );
     nextResponse.cookies.set(
@@ -90,6 +91,7 @@ export async function POST(request: Request) {
         httpOnly: true,
         sameSite: "strict",
         path: "/api/auth/with-refresh", //Set the path so that the refresh token is not sent with every request. This reduces the possibility of it being stolen.
+        secure: process.env.ARE_AUTH_COOKIES_SECURE === "false" ? false : true,
       }
     );
     return nextResponse;

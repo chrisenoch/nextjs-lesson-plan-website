@@ -189,7 +189,7 @@ function getRenderedContent(
           gridTemplateColumns: {
             xs: "repeat(1,minmax(265px, 80%))",
             "430c": "repeat(1,minmax(265px, 320px))",
-            "715c": "repeat(2,minmax(265px, 320px))",
+            "712c": "repeat(2,minmax(265px, 320px))",
             md: "repeat(2,minmax(265px, 390px))",
             lg: "repeat(2,minmax(265px, 438px))",
           },

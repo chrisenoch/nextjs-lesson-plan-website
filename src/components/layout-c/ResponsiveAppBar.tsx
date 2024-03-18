@@ -17,6 +17,7 @@ import {
   Link,
   Icon,
   SvgIconTypeMap,
+  Stack,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -88,30 +89,43 @@ export default function ResponsiveAppBar({
               aria-label="open drawer"
               edge="start"
               onClick={handleDrawerToggle}
-              sx={{ mr: 2, display: { sm: "none" } }}>
+              sx={{ mr: 2, display: { "712c": "none" } }}>
               <MenuIcon />
             </IconButton>
             <Box
               sx={{
                 flexGrow: 1,
-                display: { xs: "none", sm: "block" },
+                display: { xs: "none", "712c": "block" },
                 fontSize: "h6.fontSize",
               }}>
               <Link
                 href="/"
                 underline="none"
                 component={SecureNextLink}
-                sx={{ fontWeight: "medium" }}>
+                sx={{ fontWeight: "medium", whiteSpace: "nowrap" }}>
                 Lesson Planz
               </Link>
             </Box>
-            <Box
+            <Stack
+              direction="row"
+              gap={1}
               sx={{
-                display: { xs: "none", sm: "block" },
+                display: { xs: "none", "712c": "flex" },
+                flexWrap: "wrap",
+                whiteSpace: "nowrap",
               }}>
               <MenuButton
                 id="lesson-plans-nav-button"
-                buttonComponent={<Button size="large">Lesson Plans</Button>}
+                buttonComponent={
+                  <Button
+                    size="large"
+                    sx={{
+                      textTransform: "none",
+                      fontSize: "1.0625rem",
+                    }}>
+                    Lesson Plans
+                  </Button>
+                }
                 menuItems={[
                   { name: "All Lesson Plans", href: "/lessonplans" },
                   { name: "Saved", href: "/lessonplans/saved" },
@@ -120,6 +134,10 @@ export default function ResponsiveAppBar({
               {navBarItems.map((item) => {
                 return (
                   <Button
+                    sx={{
+                      textTransform: "none",
+                      fontSize: "1.0625rem",
+                    }}
                     key={item.title}
                     href={item.href}
                     component={SecureNextLink}
@@ -132,6 +150,10 @@ export default function ResponsiveAppBar({
               {userSessionStatus === "ACTIVE" && (
                 <Button
                   key="Logout"
+                  sx={{
+                    textTransform: "none",
+                    fontSize: "1.0625rem",
+                  }}
                   onClick={() => {
                     dispatch(userLogout());
                   }}
@@ -142,6 +164,10 @@ export default function ResponsiveAppBar({
               {userSessionStatus === "INACTIVE" && (
                 <Button
                   key="Login"
+                  sx={{
+                    textTransform: "none",
+                    fontSize: "1.0625rem",
+                  }}
                   href={"/auth/signin"}
                   component={InSecureNextLink}
                   size="large">
@@ -152,6 +178,10 @@ export default function ResponsiveAppBar({
               {userSessionStatus === "PROCESSING" && (
                 <LoadingButton
                   key={"loading-placeholder"}
+                  sx={{
+                    textTransform: "none",
+                    fontSize: "1.0625rem",
+                  }}
                   loading
                   disabled
                   variant="outlined"
@@ -160,7 +190,7 @@ export default function ResponsiveAppBar({
                   Login
                 </LoadingButton>
               )}
-            </Box>
+            </Stack>
           </Toolbar>
         </AppBar>
       </ElevationScroll>
@@ -173,7 +203,7 @@ export default function ResponsiveAppBar({
             keepMounted: true, // Better open performance on mobile.
           }}
           sx={{
-            display: { xs: "block", sm: "none" },
+            display: { xs: "block", "712c": "none" },
             flexShrink: 0,
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
